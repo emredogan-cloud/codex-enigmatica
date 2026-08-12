@@ -355,9 +355,33 @@ def check_solution_leak(rep: Report, files: list[str]) -> None:
 
 
 def check_doc_links(rep: Report) -> None:
+    """Belge bağları — iki ayrı denetim.
+
+    ① KIRIK BAĞ      — hedef dosya var mı
+    ② DEPO SINIRI    — bağ deponun DIŞINA çıkıyor mu
+
+    ② NEDEN AYRI BİR DENETİM: bir bağ yerel makinede çözülüp CI'da
+    kırılabilir. `../PAZAR-RAPORU.html` kurucunun çalışma dizininde
+    VARDIR ama depoyu klonlayan kimsede YOKTUR — yani yerelde yeşil,
+    CI'da kırmızı. Bu tam olarak bootstrap sırasında yaşandı.
+
+    Depo sınırı denetimi bu ayrışmayı ortadan kaldırır: dosyanın var olup
+    olmadığına bakmadan, deponun dışına çıkan her bağ REDDEDİLİR. Böylece
+    yerel sonuç ile CI sonucu AYNI OLMAK ZORUNDADIR.
+
+    Kural: depo dışındaki bir kaynağa **künyeyle** atıf yapılır, bağ verilmez.
+    """
     print("\n── belge bağları ──")
     broken: list[str] = []
-    for rel in REQUIRED_FILES:
+    escaped: list[str] = []
+    root_abs = os.path.realpath(ROOT)
+
+    scan = list(REQUIRED_FILES)
+    for extra in ("02_MANUSCRIPT/README.md", "01_SOURCE/solutions/README.md"):
+        if os.path.isfile(os.path.join(ROOT, extra)):
+            scan.append(extra)
+
+    for rel in scan:
         if not rel.endswith(".md"):
             continue
         p = os.path.join(ROOT, rel)
@@ -370,8 +394,19 @@ def check_doc_links(rep: Report) -> None:
             if not target:
                 continue
             base = os.path.dirname(p)
-            if not os.path.exists(os.path.normpath(os.path.join(base, target))):
+            resolved = os.path.realpath(os.path.join(base, target))
+            # ② depo sınırı — dosyanın varlığından BAĞIMSIZ
+            if not (resolved == root_abs or resolved.startswith(root_abs + os.sep)):
+                escaped.append("%s → %s" % (rel, target))
+                continue
+            # ① kırık bağ
+            if not os.path.exists(resolved):
                 broken.append("%s → %s" % (rel, target))
+
+    rep.check(not escaped,
+              "hiçbir bağ deponun dışına çıkmıyor" +
+              ("" if not escaped else
+               " — SINIR İHLALİ (künyeye çevirin): %s" % escaped[:5]))
     rep.check(not broken,
               "belge içi bağlar çözülüyor" +
               ("" if not broken else " — KIRIK: %s" % broken[:5]))

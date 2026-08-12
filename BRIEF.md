@@ -1,7 +1,7 @@
 # BRIEF — Codex Enigmatica
 
 > Ürün, kitle, konumlanma ve ticari model. Sayılar
-> [`AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html`](../AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html)
+> `AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html`
 > § 11 · Kitap C ve § 16'dan alınmıştır.
 
 ---

@@ -26,7 +26,7 @@ bir alt tür var: *tek mistere bağlı, tasarlanmış bulmaca-macera kitabı.*
 Journal 29 ve Cain's Jawbone formun çalıştığını kanıtladı — ama dünyada bu
 formda **onlarca başlık var, binlerce değil.**
 
-Kaynak: [`AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html`](../AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html) § 8 · WS-3 ve § 11 · Kitap C.
+Kaynak: `AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html` § 8 · WS-3 ve § 11 · Kitap C.
 
 | | |
 |---|---|

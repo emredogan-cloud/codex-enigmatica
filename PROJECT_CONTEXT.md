@@ -15,8 +15,15 @@
 | Seri | **Codex** · Cilt 3 — *ad ortaklığı var, dosya ortaklığı yok* |
 | Depo | `emredogan-cloud/codex-enigmatica` |
 | Okur | 25–55 bulmaca meraklısı · **alıcı = okur** |
-| Kaynak | [`AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html`](../AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html) § 11 · Kitap C |
+| Kaynak | `AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html` § 11 · Kitap C |
 | Portföy yeri | **Kitap C · üçüncü** · premium / viral aday |
+
+
+> **Pazar raporu bu depoda DEĞİLDİR.** `AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html`
+> kurucunun çalışma dizininde duran **özel bir strateji belgesidir** ve üç
+> public depoya kopyalanmaz. Bu belgede ona **künyeyle** atıf yapılır, bağ
+> verilmez: bir depoyu klonlayan kişi o dosyaya ulaşamaz ve kırık bir bağ
+> görmemelidir.
 
 ---
 

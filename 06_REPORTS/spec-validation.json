@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "gate": "phase0",
+  "checks": 32,
+  "errors": [],
+  "warnings": [
+    "puzzle_index.json yok — phase0'da beklenen (Faz 1 üretir)"
+  ],
+  "facts": {
+    "royalty_hardcover": 9.85,
+    "printcost_hardcover": 8.15,
+    "royalty_paperback": 8.5,
+    "printcost_paperback": 3.5,
+    "games_total": 0
+  }
+}

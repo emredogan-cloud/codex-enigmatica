@@ -1,0 +1,9 @@
+{
+  "status": "pass",
+  "checks": 46,
+  "errors": [],
+  "warnings": [
+    "git takip listesi boş — depo henüz init edilmemiş olabilir; sızıntı denetimleri boş koşuyor"
+  ],
+  "trackedFiles": 0
+}

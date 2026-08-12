@@ -1,0 +1,99 @@
+# ─────────────────────────────────────────────────────────────────────────
+# CODEX ENIGMATICA — .gitignore
+# ─────────────────────────────────────────────────────────────────────────
+#
+# Depo PUBLIC'tir. Ama "depo public" ile "manuscript public" AYNI ŞEY
+# DEĞİLDİR. Bu dosya o ayrımı kurar.
+#
+# BU PROJEDE İÇERİK İKİ KATMANLIDIR ve ayrım varoluşsaldır:
+#
+# PUBLIC kalan:   kod · CI · şema · doğrulayıcı · üretim aracı · belgeler ·
+#                 bulmaca METADATASI (kimlik, kapı, zorluk, bağımlılık) ·
+#                 ölçüm raporları (çözüm içermeyen)
+# PROTECTED:      ÇÖZÜMLER · çözüm yolları · İPUÇLARI · bulmaca prozası ·
+#                 çözücü ham kayıtları · ham görsel · kimlik bilgisi
+#
+# ⚠ Bir bulmaca kitabının ÇÖZÜMLERİ ürünün kendisidir. Public depoda duran
+# bir çözüm, kitabı YAYIMLANMADAN değersizleştirir — ve hata GERİ ALINAMAZ:
+# git geçmişine giren bir çözümü silmek, geçmişi yeniden yazmak demektir.
+#
+# Ama KOD SIR DEĞİLDİR. Bir doğrulayıcının kendisi public kalır.
+#
+# ⚠ DİKKAT — buradaki her kalıp bir YOL kalıbıdır ve yeni bir ada konan
+# proza dosyasını YAKALAMAZ. Bu yüzden ikinci bir hat vardır:
+# `04_BUILD/validate_structure.py` → `check_manuscript_leak()` ve
+# `check_solution_leak()` takip edilen dosyaların İÇERİĞİNE bakar; bulmaca
+# metni veya ÇÖZÜM ALANI görürse CI'ı kırmızı yakar.
+# Politikayı disipline değil mekanizmaya bağlarız: disiplin unutulur.
+#
+# Karar: DECISIONS.md § A1 (bootstrap varsayımı — kurucu onayı bekliyor)
+
+# ① KİTABIN PROZASI ───────────────────────────────────────────────────────
+02_MANUSCRIPT/*
+!02_MANUSCRIPT/.gitkeep
+!02_MANUSCRIPT/README.md
+
+01_SOURCE/book.json
+01_SOURCE/book-*.json
+01_SOURCE/edits.json
+
+# ①b ⭑ ÇÖZÜM KATMANI — ÜRÜNÜN KENDİSİ ⭑
+# Bu dizinlerdeki HİÇBİR dosya takip edilemez. validate_structure.py
+# PROTECTED_DIRS listesiyle bunu ayrıca denetler: bu dizinlerde takip
+# edilen bir dosyanın VARLIĞI tek başına ihlaldir.
+01_SOURCE/solutions/*
+!01_SOURCE/solutions/.gitkeep
+!01_SOURCE/solutions/README.md
+
+09_ARCHIVE/solutions/*
+!09_ARCHIVE/solutions/.gitkeep
+
+# Çözücü test kayıtlarının HAM hâli. Depoda yalnızca ANONİM özet durur.
+06_REPORTS/solver/*
+!06_REPORTS/solver/.gitkeep
+
+# Bulmaca kayıtlarının PROTECTED nüshaları
+01_SOURCE/puzzles/*.private.json
+01_SOURCE/puzzles/*.solutions.json
+
+# ② ÖZEL EDİTORYAL VE ARAŞTIRMA MALZEMESİ ─────────────────────────────────
+00_CONTEXT/private/
+06_REPORTS/editorial/
+**/*.private.md
+**/*_PRIVATE.md
+
+# ③ GÖRSEL VARLIKLAR ──────────────────────────────────────────────────────
+# ~110 levha × 4 format çok büyüktür. Ayrıca bu projede levhalar BULMACA
+# TAŞIR: bir levhanın public depoda durması, çözümü sızdırabilir.
+07_ASSETS/raw/*
+07_ASSETS/processed/**/*
+07_ASSETS/print/**/*
+07_ASSETS/kindle/**/*
+07_ASSETS/web/**/*
+07_ASSETS/plates/**/*
+!07_ASSETS/**/.gitkeep
+!07_ASSETS/**/README.md
+
+# ④ FONTLAR ───────────────────────────────────────────────────────────────
+07_ASSETS/fonts/*.ttf
+07_ASSETS/fonts/*.otf
+07_ASSETS/fonts/*.woff*
+!07_ASSETS/fonts/.gitkeep
+
+# ⑤ ÜRETİLMİŞ YAYIN DOSYALARI ─────────────────────────────────────────────
+# Hepsi kaynaktan yeniden üretilebilir. Denetlenecek NÜSHA
+# 06_REPORTS/tracked/ altındadır (K18: rapor depoda durur, ürün durmaz).
+08_OUTPUT/**/*
+!08_OUTPUT/**/.gitkeep
+
+09_ARCHIVE/*
+!09_ARCHIVE/.gitkeep
+
+# ⑥ SIRLAR VE YEREL ORTAM ─────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+04_BUILD/.venv/
+__pycache__/
+*.pyc
+.DS_Store

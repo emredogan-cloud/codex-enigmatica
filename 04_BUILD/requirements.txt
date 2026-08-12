@@ -1,0 +1,5 @@
+# Ağır bağımlılıklar YALNIZCA görsel ve dizgi işleri içindir.
+# Kalite kapılarının hiçbiri bunlara ihtiyaç duymaz — validate.yml saniyeler
+# içinde biter ve hiçbir kuruluma bağlı değildir.
+Pillow>=10.0
+reportlab>=4.0

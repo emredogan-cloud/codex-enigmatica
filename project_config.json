@@ -1,0 +1,224 @@
+{
+  "$comment": [
+    "CODEX ENIGMATICA — makine okunur proje yapılandırması.",
+    "Bütün doğrulama betiklerinin TEK doğruluk kaynağı.",
+    "",
+    "Kaynak: AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html § 11 · Kitap C",
+    "",
+    "⚠ BU PROJEDE İKİ ŞEY DİĞER İKİ PROJEDEN FARKLIDIR:",
+    "  ① FAZ 2 BİR ÖLDÜRME KAPISIDIR (kill gate). 20 bulmaca 5 harici",
+    "     çözücüyle test edilir; geçemezse PROJE DURUR veya YENİDEN TASARLANIR.",
+    "  ② İÇERİK İKİ KATMANLIDIR: public (bulmaca metadatası) ve",
+    "     PROTECTED (çözümler). Çözümler ürünün kendisidir ve public",
+    "     depoya asla giremez."
+  ],
+
+  "project": {
+    "id": "codex-enigmatica",
+    "workingTitle": "Codex Enigmatica",
+    "title": "Codex Enigmatica",
+    "subtitleHypothesis": "One Hundred Engraved Enigmas and a Single Unbroken Mystery — A Puzzle Book Bound as a Grimoire",
+    "series": "Codex",
+    "volume": 3,
+    "seriesNote": "Codex hattının adını taşır ama REFERANS DEĞİL OYUNDUR — bilinçli marka genişlemesi (K3)",
+    "language": "en",
+    "documentLanguage": "tr",
+    "repository": "emredogan-cloud/codex-enigmatica",
+    "portfolioSlot": "Kitap C · üçüncü · premium / viral aday",
+    "sourceOfTruth": "AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html § 11 · Kitap C",
+    "isolatedFrom": ["CODEX_BESTIARIUM", "CODEX_MYTHOLOGICA",
+                     "THE-GREAT-BOOK-OF-WORLD-MYTHS",
+                     "THE-GREAT-BOOK-OF-WORLD-GAMES",
+                     "THE-MYTH-HUNTERS-FIELD-BOOK"]
+  },
+
+  "founder": {
+    "author": "Emre Doğan",
+    "publisher": "Vâliçe Press",
+    "isbn": {
+      "strategy": "kdp-free",
+      "label": "KDP-provided free ISBN",
+      "paperback": null,
+      "hardcover": null
+    },
+    "aiDisclosure": {"founderConfirmed": false},
+    "authorBio": null,
+    "authorBio$comment": "null iken Faz 6 KIRMIZI (World Myths'te KDP yer tutucuyu reddetti).",
+    "externalSolvers": {
+      "founderConfirmed": false,
+      "minSolvers": 5,
+      "$comment": [
+        "FAZ 2'NİN ÖLDÜRME KAPISI BUNA BAĞLIDIR.",
+        "Ajan bulmaca çözemez — çözümü zaten biliyor. Test HARİCİ",
+        "insanlarla yapılır. Çözücü bulunmazsa Faz 2 BLOKLANIR;",
+        "sahte test kaydı ÜRETİLMEZ."
+      ]
+    },
+    "validationSiteUrl": null,
+    "validationSiteUrl$comment": "Journal 29 modeli: okur cevabı girer, doğru/yanlış görür. Faz 5'te canlı olmalı."
+  },
+
+  "audience": {
+    "$comment": "ALICI = OKUR. Reklam matematiğini kolaylaştıran şey budur.",
+    "readerAgeMin": 16,
+    "readerAgeMax": 99,
+    "primaryReader": "25–55 bulmaca meraklısı · escape room oynayan · Cain's Jawbone / Journal 29 okuru",
+    "buyer": ["self", "gift-buyer"],
+    "bisacPrimary": "GAM014000",
+    "bisacSecondary": ["GAM019000", "FIC022000"]
+  },
+
+  "scope": {
+    "locked": false,
+    "lockedAtPhase": "phase1",
+    "puzzles": 100,
+    "puzzleCandidateMin": 130,
+    "gates": 5,
+    "puzzlesPerGate": 20,
+    "manuscriptWordTarget": 34000,
+    "pageTarget": 208,
+    "pageTolerancePct": 6,
+    "gateStructure": [
+      {"id": "threshold", "en": "The Threshold", "tr": "Eşik",      "difficulty": 1, "puzzles": 20,
+       "$comment": "BU KAPIYI GEÇEMEYEN OKUR KİTABI İADE EDER. En çok test edilen bölüm."},
+      {"id": "menagerie", "en": "The Menagerie", "tr": "Yaratıklar", "difficulty": 2, "puzzles": 20},
+      {"id": "calendar",  "en": "The Calendar",  "tr": "Takvim",     "difficulty": 2, "puzzles": 20},
+      {"id": "labyrinth", "en": "The Labyrinth", "tr": "Labirent",   "difficulty": 3, "puzzles": 20},
+      {"id": "mirror",    "en": "The Mirror",    "tr": "Ayna",       "difficulty": 3, "puzzles": 20}
+    ],
+    "metaMysteryRequired": true,
+    "metaMysteryNote": "100 bulmacanın çıktısı tek bir son soruya bağlanır. Cevap kitapta YOKTUR — doğrulama sayfasına girilir."
+  },
+
+  "solvability": {
+    "$comment": [
+      "BU PROJENİN TANIMLAYICI TEKNİK PROBLEMİ: ÇÖZÜLEBİLİRLİK.",
+      "",
+      "Bir bulmaca 'zekice göründüğü' için kabul EDİLEMEZ.",
+      "Deterministik olarak çözülemeyen bir bulmaca bir ÜRETİM HATASIDIR.",
+      "",
+      "Ve bu kitapta kusur asimetriktir: diğer iki kitapta %90 kalite",
+      "satılabilir bir üründür; burada %98 kalite bile 1 yıldızlarla",
+      "cezalandırılır — çünkü çözemeyen okur öfkelenir."
+    ],
+    "deterministicSolutionRequired": true,
+    "uniqueSolutionRequired": true,
+    "alternativeSolutionAnalysisRequired": true,
+    "maxAcceptableAmbiguityScore": 2,
+    "ambiguityScale": "1 = tek okuma · 2 = ikinci okuma zorlanarak mümkün · 3+ = KABUL EDİLMEZ",
+    "externalTestersPerPuzzle": 2,
+    "externalTestersForGateI": 5,
+    "noExternalKnowledgeRequired": true,
+    "noExternalKnowledgeNote": "Hiçbir bulmaca kitabın dışındaki bilgiyi gerektiremez. Sözleşme sayfasında okura bu söz verilir.",
+    "hintLadderLevels": 3,
+    "hintLadder": ["yönlendirme", "yöntem", "neredeyse-cevap"],
+    "hintMustNotContainAnswer": true,
+    "dependencyGraphMustBeAcyclic": true,
+    "gatePuzzleDependsOnlyOnPriorPuzzles": true
+  },
+
+  "killGate": {
+    "$comment": [
+      "FAZ 2 BİR ÖLDÜRME KAPISIDIR — bu, üç projede yalnızca burada vardır.",
+      "",
+      "Gerekçe: bozuk bir bulmaca sistemi üzerine 200 sayfa yazmak,",
+      "bu portföyün yapabileceği en pahalı hatadır. 20 bulmaca test",
+      "edilmeden 100 bulmaca yazılmaz."
+    ],
+    "phase": "phase2",
+    "puzzlesRequired": 20,
+    "solversRequired": 5,
+    "passCriteria": {
+      "solversCompletingGateI": 4,
+      "puzzlesUnsolvedByAllSolvers": 0,
+      "confirmedAlternativeSolutions": 0,
+      "medianCompletionMinutesMax": 240
+    },
+    "hardStopCriteria": {
+      "solversCompletingGateI": 3,
+      "$comment": "5 çözücüden 3'ünden AZI Kapı I'i bitirirse PROJE DURUR veya YENİDEN TASARLANIR. Yazıma DEVAM EDİLMEZ."
+    }
+  },
+
+  "contentProtection": {
+    "$comment": [
+      "İKİ KATMANLI İÇERİK — bu projeye özgü.",
+      "",
+      "Bir bulmaca kitabının ÇÖZÜMLERİ ürünün kendisidir. Public depoda",
+      "duran bir çözüm, kitabı yayımlanmadan değersizleştirir.",
+      "",
+      "Ama KOD ve TEST ALTYAPISI public kalabilir ve kalmalıdır: bir",
+      "doğrulayıcının kendisi sır değildir."
+    ],
+    "publicLayer": [
+      "01_SOURCE/puzzles/*.public.json — kimlik, kapı, zorluk, bağımlılık, durum",
+      "kod · CI · şema · doğrulayıcı · üretim aracı",
+      "belgeler · ölçüm raporları (çözüm içermeyen)"
+    ],
+    "protectedLayer": [
+      "01_SOURCE/solutions/ — çözümler, çözüm yolları, ipuçları",
+      "09_ARCHIVE/solutions/ — düşen bulmacaların çözümleri",
+      "02_MANUSCRIPT/ — bulmaca prozası",
+      "06_REPORTS/solver/ — çözücü test kayıtları (ham)"
+    ],
+    "solutionFieldNames": ["solution", "intendedSolution", "answer",
+                           "answerKey", "solutionPath", "hints"],
+    "$comment2": "validate_structure.py bu alan adlarını takip edilen dosyalarda ARAR. Bulursa CI KIRMIZI yanar."
+  },
+
+  "production": {
+    "trimPaperback": {"w": 6.0, "h": 9.0, "trimClass": "regular"},
+    "trimHardcover": {"w": 6.0, "h": 9.0, "trimClass": "regular"},
+    "ink": "black",
+    "paper": "cream",
+    "$comment": [
+      "6×9 NORMAL trimdir (genişlik ≤ 6,12 · yükseklik ≤ 9) ve sayfa başı",
+      "0,012 $ öder — büyük trimin 0,017 $'ının altında. Codex serisiyle",
+      "raf uyumu ve düşük baskı maliyeti aynı anda."
+    ],
+    "kdpPrintCost": {
+      "$comment": "KDP resmî formülleri · 12 Ağustos 2026 · Amazon.com",
+      "paperbackRegularTrimBW": {"fixed": 1.00, "perPage": 0.012, "minPages": 110, "maxPages": 828},
+      "hardcoverRegularTrimBW": {"fixed": 5.65, "perPage": 0.012, "minPages": 110, "maxPages": 550},
+      "royaltyRateAtOrAbove999": 0.60,
+      "royaltyRateBelow999": 0.50
+    },
+    "editionsHypothesis": [
+      {"id": "hardcover", "list": 29.99, "enabled": true,  "priority": 1},
+      {"id": "paperback", "list": 19.99, "enabled": true,  "priority": 2},
+      {"id": "kindle",    "list": null,  "enabled": false, "priority": 9,
+       "$comment": "ÖNERİLMEZ — görsel şifreler e-okuyucuda bozulur, iade ve kötü yorum üretir. İTİBAR KORUMASI."}
+    ],
+    "kdpSelect": false,
+    "plateResolutionCritical": true,
+    "plateResolutionNote": "Bir levhada kaybolan detay bulmacayı ÇÖZÜLEMEZ yapar. POD baskı testi Faz 5'te ZORUNLU."
+  },
+
+  "gates": {
+    "levels": ["phase0", "phase1", "phase2", "phase3", "phase4", "phase5", "release"],
+    "requirements": {
+      "phase0":  {"puzzlesCandidate": 0,   "puzzlesValidated": 0,   "puzzlesWritten": 0},
+      "phase1":  {"puzzlesCandidate": 130, "puzzlesValidated": 0,   "puzzlesWritten": 0},
+      "phase2":  {"puzzlesCandidate": 130, "puzzlesValidated": 20,  "puzzlesWritten": 20},
+      "phase3":  {"puzzlesCandidate": 130, "puzzlesValidated": 40,  "puzzlesWritten": 40},
+      "phase4":  {"puzzlesCandidate": 130, "puzzlesValidated": 100, "puzzlesWritten": 100},
+      "phase5":  {"puzzlesCandidate": 130, "puzzlesValidated": 100, "puzzlesWritten": 100},
+      "release": {"puzzlesCandidate": 130, "puzzlesValidated": 100, "puzzlesWritten": 100}
+    }
+  },
+
+  "style": {
+    "$comment": "Ayrıntı: 00_CONTEXT/STYLE.md",
+    "narrativeVoice": "kuru, kesin, hafif tekinsiz — bir kütüphanecinin sesi, bir sunucunun değil",
+    "instructionClarityAbsolute": true,
+    "instructionNote": "Anlatı süslü olabilir; TALİMAT ASLA. Belirsiz bir talimat, belirsiz bir bulmacadır.",
+    "forbiddenPatterns": [
+      "sadece … değil, aynı zamanda",
+      "not only … but also",
+      "Are you ready?",
+      "Can you solve it?",
+      "dive into",
+      "unlock the secrets"
+    ]
+  }
+}

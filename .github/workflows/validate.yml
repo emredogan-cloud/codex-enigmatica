@@ -1,0 +1,182 @@
+# =============================================================================
+# CODEX ENIGMATICA — KALİTE KAPILARI
+# =============================================================================
+# Her push'ta koşar. Kalite düşerse KIRMIZI yanar ve ilerleme durur.
+#
+# TASARIM: bu iş akışı ÜÇÜNCÜ TARAF PAKET KURMAZ. Bütün kalite kapıları
+# Python standart kütüphanesiyle yazıldı; iş akışı saniyeler içinde biter.
+# Yazım fazlarında günde onlarca push olur ve iki dakikalık kurulum beklemek
+# disiplini öldürür. Ağır bağımlılıklar build.yml'e aittir.
+# =============================================================================
+name: validate
+
+on:
+  push:
+    branches: [main, 'faz/**', 'fix/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: kapı seviyesini oku
+    runs-on: ubuntu-latest
+    outputs:
+      level: ${{ steps.read.outputs.level }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: |
+          LEVEL="phase0"
+          if [ -f .gate ]; then LEVEL="$(tr -d '[:space:]' < .gate)"; fi
+          case "$LEVEL" in
+            phase0|phase1|phase2|phase3|phase4|phase5|release) ;;
+            *) echo "::error::.gate geçersiz: '$LEVEL'"; exit 1 ;;
+          esac
+          echo "level=$LEVEL" >> "$GITHUB_OUTPUT"
+          echo "::notice::kapı seviyesi = $LEVEL"
+
+  data:
+    name: veri bütünlüğü ve kapsam
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: şema, kimlik ve kapsam
+        run: |
+          python3 04_BUILD/validate_spec.py \
+            --gate "${{ needs.gate.outputs.level }}" \
+            --verbose --json 06_REPORTS/spec-validation.json
+      - name: araştırma kayıtları (Faz 1'de doğar)
+        run: |
+          if [ -f 04_BUILD/validate_research.py ]; then
+            python3 04_BUILD/validate_research.py --verbose --json 06_REPORTS/research.json
+          else
+            echo "::notice::validate_research.py henüz yok — Faz 1 teslimatı"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: data-reports
+          path: 06_REPORTS/*.json
+          if-no-files-found: ignore
+
+  structure:
+    name: depo, belge ve manuscript koruması
+    runs-on: ubuntu-latest
+    steps:
+      # Sızıntı denetimi `git ls-files` okur — çalışan bir depo gerekir.
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      # ⭑ Bu adım ÇÖZÜM SIZINTISINI de denetler ve bu projede VAROLUŞSALDIR:
+      # public depoya giren bir çözüm ürünü yayımlanmadan değersizleştirir
+      # ve hata geri alınamaz (git geçmişi).
+      - name: yapı, belge ve ÇÖZÜM sızıntısı denetimi
+        run: python3 04_BUILD/validate_structure.py --verbose --json 06_REPORTS/structure.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: structure-report
+          path: 06_REPORTS/structure.json
+          if-no-files-found: ignore
+
+  gates-selftest:
+    name: KAPILARIN KENDİ TESTİ
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      # Bu, hattın EN ÖNEMLİ testidir. Metin yokken yeşil kalan bir hat,
+      # kusur geldiğinde de yeşil kalabilir. Bu test o riski kapatır.
+      - name: kapılar gerçekten ısırıyor mu
+        run: python3 05_TESTS/selftest.py --verbose
+
+  text:
+    name: metin kalite kapıları
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: manuscript bu depoda var mı
+        run: |
+          if [ -f 02_MANUSCRIPT/book.json ]; then
+            echo "::warning::02_MANUSCRIPT/book.json depoda GÖRÜNÜYOR — .gitignore § ① ihlali olabilir"
+          else
+            echo "::notice::manuscript depoda yok (.gitignore § ①) — metin kapıları boş koşar; körlüğü selftest kapatır"
+          fi
+      - name: metin kapıları (Faz 2'de doğar)
+        run: |
+          RAN=0
+          for g in qa_solvability qa_uniqueness qa_hints qa_dependency qa_meta qa_length qa_voice qa_echo qa_drift; do
+            if [ -f "04_BUILD/$g.py" ]; then
+              echo "▸ $g"
+              python3 "04_BUILD/$g.py" --verbose --json "06_REPORTS/${g//_/-}.json" || exit 1
+              RAN=$((RAN+1))
+            fi
+          done
+          echo "::notice::$RAN metin kapısı koştu"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: text-qa-reports
+          path: 06_REPORTS/qa-*.json
+          if-no-files-found: ignore
+
+  production-model:
+    name: sayfa bütçesi ve telif modeli
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      # SAYFA BÜTÇESİ ÇİFT İŞ GÖRÜR: fiyat modelini belirler VE Kapı V'i
+      # bağlar (öz-göndergesel bulmacalar sayfa numaralarına dayanır).
+      - name: sürüm, telif ve sayfa bütçesi
+        run: |
+          for s in editions page_budget; do
+            if [ -f "04_BUILD/$s.py" ]; then
+              python3 "04_BUILD/$s.py" --verbose --json "06_REPORTS/${s//_/-}.json" || exit 1
+            else
+              echo "::notice::$s.py henüz yok — Faz 1/2 teslimatı"
+            fi
+          done
+
+  summary:
+    name: özet
+    needs: [data, structure, gates-selftest, text, production-model]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          {
+            echo "## Codex Enigmatica · kalite kapıları"
+            echo ""
+            echo "| Kapı | Sonuç |"
+            echo "|---|---|"
+            echo "| veri bütünlüğü ve kapsam | ${{ needs.data.result }} |"
+            echo "| depo, belge, **ÇÖZÜM koruması** | ${{ needs.structure.result }} |"
+            echo "| **kapıların kendi testi** | ${{ needs.gates-selftest.result }} |"
+            echo "| metin kapıları | ${{ needs.text.result }} |"
+            echo "| sayfa bütçesi ve telif | ${{ needs.production-model.result }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then
+            {
+              echo ""
+              echo "**Kalite düştü. Düzeltilmeden ilerleme yok.**"
+              echo ""
+              echo "Yerelde aynı komutlar: \`./04_BUILD/qa_all.sh\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi

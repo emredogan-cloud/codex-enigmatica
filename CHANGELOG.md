@@ -5,6 +5,57 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.3.0] — 2026-08-13 · Kapı I YENİDEN TASARLANDI (B1–B6 onaylı)
+
+**Yirmi bulmaca yeniden yazıldı.** Elle yapılacak iş **486 → 184 işlem**;
+çabanın ima ettiği süre **162 → 61 dakika**; bütçesini aşan bulmaca
+**6 → 0**.
+
+### Değişti — beş tasarım kuralı
+
+- **K1 · anahtar aranmaz, VERİLİR.** Kaydırma miktarı levhada basılı;
+  okur işareti okur ve uygular. 84 işlem → **5**. Tekillik zayıflamadı:
+  ispat yine altmış üyeyi sayar
+- **K2 · her bulmaca kendi süre iddiasına sığar** — `qa_effort` ölçer
+- **K3 · ispat sayar, okur gezmez**
+- **K4 · her mekanizma çözülmüş bir örnekle önce öğretilir**
+- **K5 · "aha" işi transkripsiyon işine baskın gelir**
+
+### Karışım (B1)
+
+levha gözlemi 5→**6** · kısıt mantığı 5→**4** · yazı çözme 2→**3** ·
+levha içi şifre 2→**3** · yer değiştirme 3→**2** (anahtar basılı) ·
+sıra değiştirme 2→**1** (genişlik basılı) · kapı **1**
+
+- **B2** yansıma Kapı I'den **çıkarıldı** → Kapı IV
+- **B3** anahtarlı alfabe **ertelendi** → Kapı II
+- **B4** ⭑ **üç sayfalık ısınma bölümü YAZILDI** ⭑ — Faz 1'den beri
+  sayfa bütçesindeydi ve boştu; çözücülerin *"mantık sıçraması fazla
+  dik"* şikâyetinin doğrudan karşılığı
+- **B5** çaba çarpanı **ertelendi** — ikinci turda gerçek süreyle kalibre
+- **B6** ikinci tur kohortu: **2 dönen + 3 yeni**; aradaki fark öğrenme
+  etkisinin büyüklüğünü verir
+
+### Eklendi
+
+- İki yeni mekanizma türü: `reachable-by-printed-shift` ·
+  `reachable-by-printed-grid` — anahtarı basılı şifreler
+- Yeni levhalar: tablet · dokuz karo · işaretli halka · sunak kenarı
+- **Bulmaca başına kayıt formu** her bulmacanın altında basılı (B6):
+  birinci turda yoktu ve öldürme kapısının beş ölçütü bu yüzden
+  ölçülemedi
+
+### Üretim sırasında kapılar üç kez ısırdı
+
+- **üç sütun** birden "çentik = sütun numarası" eşitliğini sağlıyordu →
+  `qa_answerspace` "kabul edilen 3" dedi
+- bir levha etiketi (`KUYU`) sıradan bir Türkçe fiilin **içinde** geçiyordu
+  (`o-kuyu-n`) → `qa_answerspace ⑦` yakaladı
+- sözlük elemesi **33 işlem** tutuyordu (bütçe 21) → altı harfli adaya
+  taşındı, **18 işleme** indi
+
+---
+
 ## [0.2.1] — 2026-08-13 · A12 · ⛔ ÖLDÜRME KAPISI DÜŞTÜ
 
 **5 harici Türkçe çözücüden 1'i Kapı I'i bitirdi.** Eşik ≥4, sert

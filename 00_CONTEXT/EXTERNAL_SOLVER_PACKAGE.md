@@ -7,14 +7,33 @@
 
 ---
 
-## 0 · Durum
+## 0 · Durum — ⚠ BU İKİNCİ TURDUR
+
+**Birinci tur yapıldı ve ÖLDÜRME KAPISI DÜŞTÜ: 1/5 çözücü bitirdi.**
+Baskın bırakma sebebi *"çözemedim"* değil, **"sıkıldım"**dı.
+
+Kapı I **tamamen yeniden tasarlandı** (B1–B6 onaylı) ve elle yapılacak
+iş **486 → 184 işleme** indi. İkinci tur bunu ölçer.
 
 | | |
 |---|---|
-| **A3 — beş çözücü belirlendi** | ✅ kapandı · beşi de Türkçe konuşuyor |
-| Pilot yazıldı | ✅ 20 bulmaca · Türkçe · bütün teknik kapılar yeşil |
-| Test paketi hazır | ✅ bu belge + `08_OUTPUT/PILOT_TR/` |
-| **A12 — oturumlar yapıldı** | ⛔ **HAYIR · 0 / 5** |
+| Birinci tur | ⛔ **1/5 · HARD-STOP** |
+| Kapı I yeniden tasarımı | ✅ B1–B6 onaylı · yirmi bulmaca yeniden yazıldı |
+| Isınma bölümü (B4) | ✅ üç çözülmüş örnek |
+| Çaba bütçesi (`qa_effort`) | ✅ **20/20 bulmaca kendi süre iddiasına sığıyor** |
+| **Bulmaca başına kayıt formu** | ✅ **her bulmacanın altında basılı** |
+| **İkinci tur kohortu (B6)** | ⚑ **2 dönen + 3 yeni** |
+| **A12b — ikinci tur oturumları** | ⛔ **YAPILMADI · 0 / 5** |
+
+### ⚠ Birinci turun tek en pahalı eksiği
+
+Kayıtlar **oturum düzeyindeydi**. Bulmaca başına veri olmadığı için
+öldürme kapısının yedi ölçütünden **beşi ölçülemedi** ve yeniden tasarım
+hangi bulmacanın düştüğünü **veriyle değil, çaba ölçümüyle** seçmek
+zorunda kaldı.
+
+**İkinci turda bu tekrarlanmamalı.** Kayıt formu artık her bulmacanın
+altında basılıdır ve doldurulması iki dakika sürer.
 
 > ### Ajan bu testi YAPAMAZ.
 > Çözümü zaten bilir; bildiği bir şeyi "bulmak" bulmak değildir.

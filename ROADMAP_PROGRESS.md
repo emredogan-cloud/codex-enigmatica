@@ -48,7 +48,7 @@
 > sırrı kuruldu ve dört senaryoyla kanıtlandı.
 >
 > **Ama öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.**
-> Harici çözücü oturumu: **5 / 5**.
+> Harici çözücü oturumu: **0 / 5**.
 >
 > Kalan tek iş **kurucuya aittir** ve ajan onu yapamaz:
 > 1. **A12** — beş harici çözücüyle oturumları yürüt

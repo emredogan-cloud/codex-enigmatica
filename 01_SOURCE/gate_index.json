@@ -47,7 +47,17 @@
       "pageBudget": 34,
       "purpose": "Okuru içeri almak.",
       "note": "BU KAPIYI GEÇEMEYEN OKUR KİTABI İADE EDER. Faz 2'nin öldürme kapısı bu kapıyı ölçer; portföyün en çok test edilen bölümüdür.",
-      "allowedFamilies$comment": "plate-embedded-cipher Faz 1'de EKLENDİ: kitabın imza mekaniğinin zorluk-1 örneği hiçbir yerde yoktu ve okur onunla ilk kez ★★ kapısında karşılaşıyordu."
+      "allowedFamilies$comment": "plate-embedded-cipher Faz 1'de EKLENDİ: kitabın imza mekaniğinin zorluk-1 örneği hiçbir yerde yoktu ve okur onunla ilk kez ★★ kapısında karşılaşıyordu.",
+      "redesign$comment": [
+        "⛔ 13 Ağustos 2026 · öldürme kapısı düştü (1/5) ve bu kapı",
+        "YENİDEN TASARLANDI (B1–B6).",
+        "",
+        "B2: yansıma (reflection-map) buradan ÇIKARILDI → Kapı IV.",
+        "B3: anahtarlı alfabe ERTELENDİ → Kapı II.",
+        "K1: her şifrenin anahtarı levhada BASILIDIR; aranmaz.",
+        "",
+        "Ölçülen sonuç: elle yapılacak iş 486 → 184 işlem."
+      ]
     },
     {
       "id": "menagerie",
@@ -120,7 +130,8 @@
         "plate-embedded-cipher",
         "polyalphabetic-cipher",
         "transposition-cipher",
-        "gate-synthesis"
+        "gate-synthesis",
+        "reflection-map"
       ],
       "plates": {
         "opening": 1,
@@ -128,7 +139,8 @@
       },
       "pageBudget": 34,
       "purpose": "Uzamsal ve çok adımlı. Okurun kalem, kâğıt ve sabra ihtiyacı vardır.",
-      "note": "Kitap burada kendini referans etmeye başlar. back-reference ailesi her yeni bölümde YENİDEN denetlenir."
+      "note": "Kitap burada kendini referans etmeye başlar. back-reference ailesi her yeni bölümde YENİDEN denetlenir.",
+      "reflection$comment": "⭑ B2 · Kapı I'den TAŞINDI. 29 eksenin elle taranmasının ucuz bir hâli yok; ★ için fazla, ★★★ için yerinde. Okur buraya geldiğinde araçları öğrenmiştir ve iş beklemektedir."
     },
     {
       "id": "mirror",

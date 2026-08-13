@@ -20,7 +20,13 @@
 | **A10** | Faz 3'e **ikinci öldürme kapısı** eklensin mi | ORTA | Faz 3 başlamadan | AÇIK |
 | **A11** | `ENIGMATICA_CANARY_SALT` CI sırrı kurulsun | ORTA | **Faz 2 başlamadan** | ✅ **KAPANDI** → K19 · § aşağı |
 | **A12** | ⭑ **Harici çözücü oturumları** ⭑ | **KRİTİK** | Faz 2 | ⛔ **KAPANDI · BAŞARISIZ** → K23 · § aşağı |
-| **B1–B6** | ⭑ **Kapı I yeniden tasarım kararları** ⭑ | **KRİTİK** | **Faz 3 başlamadan** | ⛔ **AÇIK** → `GATE_1_REDESIGN_PROPOSAL.md § 6` |
+| **B1** | Yeni mekanizma karışımı | KRİTİK | — | ✅ **ONAYLANDI** → K26 |
+| **B2** | Yansıma Kapı IV'e taşınsın | KRİTİK | — | ✅ **ONAYLANDI** |
+| **B3** | Anahtarlı alfabe Kapı II'ye ertelensin | KRİTİK | — | ✅ **ONAYLANDI** |
+| **B4** | Isınma bölümü yazılsın | KRİTİK | — | ✅ **ONAYLANDI** → yazıldı |
+| **B5** | `qa_effort` çarpanı | ORTA | ikinci tur | ⏸ **ERTELENDİ** — gerçek süreyle kalibre |
+| **B6** | İkinci tur kohortu | KRİTİK | — | ✅ **C ONAYLANDI** · 2 dönen + 3 yeni |
+| **A12b** | ⭑ **İkinci tur oturumları** ⭑ | **KRİTİK** | **Faz 3 için** | ⛔ **AÇIK — TEK BLOKLAYICI** |
 
 ---
 
@@ -378,6 +384,37 @@ kaba kuvvetle geçmek mümkündür. Karşı önlem A7'nin yan kazancıdır:
 doğrulama sayfası **reddedilen dizeleri kaydeder** ve kaba kuvvet kalıbı
 (aynı bulmacaya kısa sürede çok sayıda farklı sözlük üyesi) tespit
 edilebilirdir. Bkz. `RED_TEAM_CHECKLIST § 4` bulgu **F2-14**.
+
+### K26 · ⭑ Kapı I yeniden tasarlandı — ve çaba yarıdan aza indi ⭑
+**13 Ağustos 2026 · B1–B6 onaylı.** Yirmi bulmaca yeniden yazıldı.
+
+| | Önce | **Sonra** |
+|---|---:|---:|
+| Elle işlem | 486 | **184** |
+| Çabanın ima ettiği süre | 162 dk | **61 dk** |
+| Bütçesini aşan bulmaca | 6 / 20 | **0 / 20** |
+| En kötü oran | 4,7× | **1,0×** |
+
+Beş tasarım kuralı config'de mekanik olarak durur
+(`scope.gateOneRedesign.designRules`):
+
+**K1 · Anahtar aranmaz, VERİLİR.** Şifrenin kaydırma miktarı levhada
+basılıdır. Aynı bulmaca 84 işlemden **5 işleme** indi ve tekillik
+ZAYIFLAMADI — çünkü ispat yine altmış üyeyi sayar.
+
+**K2 · Her bulmaca kendi süre iddiasına sığar.** `qa_effort` bunu ölçer.
+
+**K3 · İspat sayar, okur gezmez.** Alan basılı sözlüktür; mekanizma kabul
+yordamıdır.
+
+**K4 · Her mekanizma çözülmüş bir örnekle önce öğretilir.** Üç sayfalık
+ısınma bölümü **yazıldı** — Faz 1'den beri bütçedeydi ve boştu.
+
+**K5 · "Aha" işi, transkripsiyon işine baskın gelir.**
+
+Ve iki aile Kapı I'den **çıkarıldı**: yansıma → Kapı IV (B2), anahtarlı
+alfabe → Kapı II (B3). Bir mekanizmayı kaldırmak, onu kötü yapmaktan
+ucuzdur.
 
 ### K23 · ⭑ ÖLDÜRME KAPISI DÜŞTÜ — ve düşüren şey ÖLÇÜLMEYEN boyuttu ⭑
 **13 Ağustos 2026 · Faz 2 · A12.** 1/5 çözücü Kapı I'i bitirdi.

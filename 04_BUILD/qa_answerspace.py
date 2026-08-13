@@ -65,7 +65,8 @@ ACCEPTANCES = {"in-printed-lexicon", "in-printed-phrase-list",
                "satisfies-printed-constraints", "plate-attribute",
                "table-row", "reachable-via-number-table",
                "matches-positional-extraction",
-               "reachable-by-glyph-reading", "reachable-by-transposition"}
+               "reachable-by-glyph-reading", "reachable-by-transposition",
+               "reachable-by-printed-shift", "reachable-by-printed-grid"}
 
 # ⚠ FAZ 2 BULGUSU — MEKANİZMA ALANI İSPAT İÇİN YETERSİZ KALABİLİR.
 #
@@ -81,7 +82,15 @@ ACCEPTANCES = {"in-printed-lexicon", "in-printed-phrase-list",
 # YORDAMIDIR. İspat böylece güçlenir: yalnızca "ters okuma sözlükte yok"
 # demez, "altmış üyeden yalnızca biri bu gliflerden okunabilir" der.
 SMALL_MECHANISM_KINDS = {"reachable-by-glyph-reading",
-                         "reachable-by-transposition"}
+                         "reachable-by-transposition",
+                         "reachable-by-printed-shift",
+                         "reachable-by-printed-grid"}
+
+# ⭑ B1/K1 · ANAHTAR ARANMAZ, VERİLİR. ⭑
+# Faz 2 öldürme kapısını düşüren şey buydu: okur 28 kaydırmayı ELLE
+# deniyordu (84 elle işlem, en kötü 168). Anahtar levhada basılı olduğunda
+# aynı bulmaca 7 işleme iner ve TEKİLLİK HİÇ ZAYIFLAMAZ — çünkü ispat
+# yine altmış üyelik sözlüğün tamamını sayar, yalnızca OKUR gezmez (K25).
 FORBIDDEN_ACCEPTANCE = {"author-asserted", "prose"}
 
 
@@ -275,6 +284,18 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
     if kind == "reachable-by-transposition":
         ct = acc.get("input", "")
         return word in {col_read(ct, w) for w in acc.get("widths", [])}
+    if kind == "reachable-by-printed-shift":
+        # Alan basılı sözlüktür; kabul yordamı BASILI kaydırmadır.
+        # accept(w) ⟺ w'nin basılı k kadar kaydırılmışı, sayfadaki dizedir.
+        k, ct = acc.get("shift"), acc.get("input", "")
+        if k is None or not ct:
+            return False
+        return plate.shift(word, k) == ct
+
+    if kind == "reachable-by-printed-grid":
+        ct, w = acc.get("input", ""), acc.get("width")
+        return bool(ct) and w is not None and word == col_read(ct, w)
+
     if kind == "matches-positional-extraction":
         src, pos = acc.get("sources") or [], acc.get("positions") or []
         if not src or len(src) != len(pos):
@@ -324,6 +345,13 @@ def near_miss(domain: list[str], acc: dict, plate: Plate,
     elif kind == "reachable-by-transposition":
         ct = acc.get("input", "")
         out = [col_read(ct, w) for w in acc.get("widths", [])]
+    elif kind == "reachable-by-printed-grid":
+        ct = acc.get("input", "")
+        out = [col_read(ct, w) for w in (2, 3, 4, 5)]
+    elif kind == "reachable-by-printed-shift":
+        ct = acc.get("input", "")
+        out = [plate.shift(ct, -k % len(plate.alphabet))
+               for k in range(1, len(plate.alphabet))]
     elif kind == "satisfies-printed-constraints":
         cons = acc.get("constraints", [])
         for w in domain:

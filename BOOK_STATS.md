@@ -16,13 +16,13 @@
 | Yazılmış bulmaca (nihai) | **0** | 100 |
 | Kapı | **5** | 5 |
 | Mekanizma ailesi | **17** / 17 tanımlı | ≥10 |
-| Veri taşıyan levha adayı | **62** | — |
+| Veri taşıyan levha adayı | **64** | — |
 | Künye | **16** (0 doğrulanmış) | — |
 | `tested` durumundaki bulmaca | **0** | — |
 | **Onaylanmış alternatif çözüm** | **0** | **0** |
 | Belirsizlik puanı > 2 | **0** | **0** |
 | **Cevap uzayı bağımsız doğrulanmış** | **20 / 20** | tamamı |
-| **Elenen aday dize** (cevap uzayı toplamı) | **1072** | — |
+| **Elenen aday dize** (cevap uzayı toplamı) | **1152** | — |
 | İpucu (3 kademe) | **60** | 300 |
 
 ## 2. Öldürme kapısı (Faz 2)
@@ -30,7 +30,7 @@
 | Ölçüt | Ölçülen | Eşik |
 |---|---:|---:|
 | Çözücü **belirlendi** (A3) | **5** | 5 |
-| Oturum **yapıldı** (A12) | **5** | 5 |
+| Oturum **yapıldı** (A12) | **0** | 5 |
 | Kapı I'i bitiren çözücü | **ÖLÇÜLMEDİ** | ≥ 4 / 5 |
 | Hiç çözülemeyen bulmaca | ÖLÇÜLMEDİ | 0 |
 | Bulmaca başına bitiren çözücü | ÖLÇÜLMEDİ | ≥ 2 |
@@ -42,8 +42,8 @@
 > (`internalSolverCountsAsEvidence: false`). Sıfır oturumla bütün ölçütler
 > "ihlal edilmemiş" görünür — bu bir geçiş değil, bir **boşluktur**.
 
-Pilot kohort **20** bulmaca · modellenen oturum **198 dk**
-(tavanın %82'i).
+Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
+(tavanın %62'i).
 
 ## 3. Kapı dağılımı
 

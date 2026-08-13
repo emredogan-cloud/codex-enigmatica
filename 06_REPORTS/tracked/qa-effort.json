@@ -2,18 +2,16 @@
   "status": "pass",
   "checks": 3,
   "errors": [],
-  "warnings": [
-    "20 mahkûm kayıt bütçe denetiminden muaf tutuldu (GATE_1_REDESIGN_PROPOSAL.md)"
-  ],
+  "warnings": [],
   "facts": {
     "indexed": 151,
     "needProtected": 20,
     "solutionRecords": 20,
     "designRecords": 20,
     "protectedLayerPresent": true,
-    "totalExpectedEU": 485.7,
-    "declaredMinutes": 153,
-    "impliedMinutes": 162,
+    "totalExpectedEU": 183.8,
+    "declaredMinutes": 105,
+    "impliedMinutes": 61,
     "euPerMinute": 3,
     "perPuzzle": [
       {
@@ -36,167 +34,167 @@
       },
       {
         "puzzleId": "g1-003",
-        "expectedEU": 10,
-        "worstEU": 10,
-        "budgetEU": 15,
-        "declaredMinutes": 5,
-        "ratio": 0.67,
-        "basis": "5 glif × 2 okuma yönü"
-      },
-      {
-        "puzzleId": "g1-004",
         "expectedEU": 7,
         "worstEU": 7,
-        "budgetEU": 15,
-        "declaredMinutes": 5,
-        "ratio": 0.47,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.58,
         "basis": "7 etiketin niteliği sayılır"
       },
       {
-        "puzzleId": "g1-005",
-        "expectedEU": 6.0,
-        "worstEU": 6.0,
+        "puzzleId": "g1-004",
+        "expectedEU": 15,
+        "worstEU": 15,
         "budgetEU": 18,
         "declaredMinutes": 6,
-        "ratio": 0.33,
-        "basis": "60 üyelik listede 3 koşullu eleme"
+        "ratio": 0.83,
+        "basis": "5 satır × 3 süzgeç"
+      },
+      {
+        "puzzleId": "g1-005",
+        "expectedEU": 8,
+        "worstEU": 8,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.67,
+        "basis": "4 glif × 2 okuma yönü"
       },
       {
         "puzzleId": "g1-006",
-        "expectedEU": 84.0,
-        "worstEU": 168,
-        "budgetEU": 18,
-        "declaredMinutes": 6,
-        "ratio": 4.67,
-        "basis": "28 kaydırma × 6 harf arama"
+        "expectedEU": 5,
+        "worstEU": 5,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.42,
+        "basis": "5 etiketin niteliği sayılır"
       },
       {
         "puzzleId": "g1-007",
         "expectedEU": 5,
         "worstEU": 5,
-        "budgetEU": 18,
-        "declaredMinutes": 6,
-        "ratio": 0.28,
-        "basis": "5 etiketin niteliği sayılır"
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.33,
+        "basis": "5 satır × 1 süzgeç"
       },
       {
         "puzzleId": "g1-008",
-        "expectedEU": 32.6,
-        "worstEU": 32.6,
-        "budgetEU": 21,
-        "declaredMinutes": 7,
-        "ratio": 1.55,
-        "basis": "8 okuma × 4 kenar + 12 satırlık tablo"
+        "expectedEU": 8,
+        "worstEU": 8,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.67,
+        "basis": "4 glif × 2 okuma yönü"
       },
       {
         "puzzleId": "g1-009",
-        "expectedEU": 15,
-        "worstEU": 15,
-        "budgetEU": 21,
-        "declaredMinutes": 7,
-        "ratio": 0.71,
-        "basis": "5 satır × 3 süzgeç"
+        "expectedEU": 5.6,
+        "worstEU": 5.6,
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.37,
+        "basis": "çapa bulunur + 4 kenar sayılır + 12 satırlık tablo"
       },
       {
         "puzzleId": "g1-010",
-        "expectedEU": 34,
-        "worstEU": 34,
-        "budgetEU": 21,
-        "declaredMinutes": 7,
-        "ratio": 1.62,
-        "basis": "29 harflik alfabe kurulumu + 5 harf çevirme"
+        "expectedEU": 6,
+        "worstEU": 6,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.5,
+        "basis": "6 etiketin niteliği sayılır"
       },
       {
         "puzzleId": "g1-011",
-        "expectedEU": 30,
-        "worstEU": 30,
+        "expectedEU": 18.0,
+        "worstEU": 18.0,
         "budgetEU": 21,
         "declaredMinutes": 7,
-        "ratio": 1.43,
-        "basis": "3 ızgara genişliği × 10 harf yaz+oku"
+        "ratio": 0.86,
+        "basis": "60 üyelik listede 3 koşullu eleme"
       },
       {
         "puzzleId": "g1-012",
         "expectedEU": 10,
         "worstEU": 10,
-        "budgetEU": 24,
-        "declaredMinutes": 8,
-        "ratio": 0.42,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.83,
         "basis": "5 glif × 2 okuma yönü"
       },
       {
         "puzzleId": "g1-013",
         "expectedEU": 5,
         "worstEU": 5,
-        "budgetEU": 24,
-        "declaredMinutes": 8,
-        "ratio": 0.21,
-        "basis": "5 satır × 1 süzgeç"
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.33,
+        "basis": "basılı kaydırma okunur + 4 harf çevrilir"
       },
       {
         "puzzleId": "g1-014",
-        "expectedEU": 6,
-        "worstEU": 6,
-        "budgetEU": 24,
-        "declaredMinutes": 8,
-        "ratio": 0.25,
-        "basis": "6 etiketin niteliği sayılır"
+        "expectedEU": 9,
+        "worstEU": 9,
+        "budgetEU": 12,
+        "declaredMinutes": 4,
+        "ratio": 0.75,
+        "basis": "9 etiketin niteliği sayılır"
       },
       {
         "puzzleId": "g1-015",
-        "expectedEU": 72.5,
-        "worstEU": 145,
-        "budgetEU": 24,
-        "declaredMinutes": 8,
-        "ratio": 3.02,
-        "basis": "29 eksen × 5 harf arama"
+        "expectedEU": 5.6,
+        "worstEU": 5.6,
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.37,
+        "basis": "çapa bulunur + 4 kenar sayılır + 12 satırlık tablo"
       },
       {
         "puzzleId": "g1-016",
-        "expectedEU": 32.6,
-        "worstEU": 32.6,
-        "budgetEU": 27,
-        "declaredMinutes": 9,
-        "ratio": 1.21,
-        "basis": "8 okuma × 4 kenar + 12 satırlık tablo"
+        "expectedEU": 5,
+        "worstEU": 5,
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.33,
+        "basis": "5 satır × 1 süzgeç"
       },
       {
         "puzzleId": "g1-017",
-        "expectedEU": 42.0,
-        "worstEU": 42.0,
-        "budgetEU": 27,
-        "declaredMinutes": 9,
-        "ratio": 1.56,
-        "basis": "60 üyelik listede 4 koşullu eleme"
+        "expectedEU": 6,
+        "worstEU": 6,
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.4,
+        "basis": "basılı kaydırma okunur + 5 harf çevrilir"
       },
       {
         "puzzleId": "g1-018",
-        "expectedEU": 24,
-        "worstEU": 24,
-        "budgetEU": 27,
-        "declaredMinutes": 9,
-        "ratio": 0.89,
-        "basis": "3 ızgara genişliği × 8 harf yaz+oku"
+        "expectedEU": 8,
+        "worstEU": 8,
+        "budgetEU": 18,
+        "declaredMinutes": 6,
+        "ratio": 0.44,
+        "basis": "tek basılı genişlik · 8 harf yaz+oku"
       },
       {
         "puzzleId": "g1-019",
-        "expectedEU": 18.0,
-        "worstEU": 18.0,
-        "budgetEU": 30,
-        "declaredMinutes": 10,
-        "ratio": 0.6,
-        "basis": "60 üyelik listede 4 koşullu eleme"
+        "expectedEU": 5.6,
+        "worstEU": 5.6,
+        "budgetEU": 15,
+        "declaredMinutes": 5,
+        "ratio": 0.37,
+        "basis": "çapa bulunur + 4 kenar sayılır + 12 satırlık tablo"
       },
       {
         "puzzleId": "g1-020",
         "expectedEU": 38,
         "worstEU": 38,
-        "budgetEU": 60,
-        "declaredMinutes": 20,
-        "ratio": 0.63,
+        "budgetEU": 45,
+        "declaredMinutes": 15,
+        "ratio": 0.84,
         "basis": "19 cevaptan harf alma + grup denetimi"
       }
     ],
-    "condemned": 20
+    "condemned": 0
   }
 }

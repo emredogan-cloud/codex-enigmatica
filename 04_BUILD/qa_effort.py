@@ -109,6 +109,17 @@ def effort(space: dict, plate: Plate) -> tuple[float, float, str]:
         worst = keys * (N + L)
         return worst / 2, worst, "%d anahtar × (%d + %d)" % (keys, N, L)
 
+    if ak == "reachable-by-printed-shift":
+        # ⭑ B1/K1 · anahtar BASILI ⭑ — okur aramaz, okur ve uygular.
+        L = len(acc.get("input", ""))
+        c = 1 + L
+        return c, c, "basılı kaydırma okunur + %d harf çevrilir" % L
+
+    if ak == "reachable-by-printed-grid":
+        L = len(acc.get("input", ""))
+        c = 2 * L
+        return c, c, "tek basılı genişlik · %d harf yaz+oku" % (2 * L)
+
     if ak == "reachable-by-transposition":
         L = len(acc.get("input", ""))
         w = len(acc.get("widths") or [])
@@ -132,10 +143,17 @@ def effort(space: dict, plate: Plate) -> tuple[float, float, str]:
         return c, c, "%d satır × %d süzgeç" % (rows, f)
 
     if ak == "reachable-via-number-table":
-        r = len(acc.get("readings") or [acc.get("reading", "")])
+        # ⚠ İSPAT sekiz okumayı sayar (yanlış köşeden başlayan okurun
+        # geçerli bir cevaba düşemediğini göstermek için). OKUR ise TEK
+        # okuma yapar: levha künyesi başlangıç köşesini ve yönü basar.
+        #
+        # Bu varsayım boşta değildir — qa_readerpack § ①② künyenin basılı
+        # ve ayırt edici olduğunu DENETLER. İki kapı birbirine dayanır:
+        # biri varsayımı kurar, öteki onu doğrular. (K25: ispat sayar,
+        # okur gezmez.)
         rows = len(acc.get("table") or [])
-        c = r * 4 + rows / SKIM_PER_EU
-        return c, c, "%d okuma × 4 kenar + %d satırlık tablo" % (r, rows)
+        c = 1 + 4 + rows / SKIM_PER_EU
+        return c, c, "çapa bulunur + 4 kenar sayılır + %d satırlık tablo" % rows
 
     if ak == "satisfies-printed-constraints":
         cons = acc.get("constraints") or []

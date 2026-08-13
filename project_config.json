@@ -106,7 +106,7 @@
       "minSolvers": 5,
       "identifiedCount": 5,
       "solverLanguage": "tr",
-      "sessionsRecorded": 5,
+      "sessionsRecorded": 0,
       "$comment": [
         "FAZ 2'NİN ÖLDÜRME KAPISI BUNA BAĞLIDIR.",
         "Ajan bulmaca çözemez — çözümü zaten biliyor. Test HARİCİ",
@@ -127,7 +127,12 @@
       ],
       "sessionsRecordedAt": "2026-08-13",
       "gateCompletedBySolvers": 1,
-      "killGateOutcome": "HARD-STOP"
+      "killGateOutcome": "HARD-STOP (tur 1) · tur 2 bekleniyor",
+      "round": 2,
+      "roundTwoCohort": {
+        "returning": 2,
+        "new": 3
+      }
     },
     "validationSiteUrl": null,
     "validationSiteUrl$comment": "Journal 29 modeli: okur cevabı girer, doğru/yanlış görür. Faz 5'te canlı olmalı."
@@ -227,7 +232,38 @@
       }
     ],
     "metaMysteryRequired": true,
-    "metaMysteryNote": "100 bulmacanın çıktısı tek bir son soruya bağlanır. Cevap kitapta YOKTUR — doğrulama sayfasına girilir."
+    "metaMysteryNote": "100 bulmacanın çıktısı tek bir son soruya bağlanır. Cevap kitapta YOKTUR — doğrulama sayfasına girilir.",
+    "gateOneRedesign": {
+      "$comment": [
+        "B1–B6 kurucu kararları · 13 Ağustos 2026 · öldürme kapısı sonrası"
+      ],
+      "approvedAt": "2026-08-13",
+      "B1_mix": {
+        "plate-observation": 6,
+        "constraint-logic": 4,
+        "script-decoding": 3,
+        "plate-embedded-cipher": 3,
+        "substitution-cipher": 2,
+        "transposition-cipher": 1,
+        "gate-synthesis": 1
+      },
+      "B2_reflectionMovedTo": "labyrinth",
+      "B3_keyedAlphabetDeferredTo": "menagerie",
+      "B4_warmUpSections": 3,
+      "B5_effortMultiplier": "deferred",
+      "B6_secondRoundCohort": {
+        "returning": 2,
+        "new": 3,
+        "reason": "öğrenme etkisi ölçülebilir olsun"
+      },
+      "designRules": {
+        "K1": "anahtar aranmaz, levhada BASILIDIR",
+        "K2": "her bulmaca kendi süre iddiasına sığar",
+        "K3": "ispat sayar, okur gezmez",
+        "K4": "her mekanizma çözülmüş bir örnekle önce öğretilir",
+        "K5": "aha işi transkripsiyon işine baskın gelir"
+      }
+    }
   },
   "solvability": {
     "$comment": [
@@ -441,6 +477,26 @@
       "maxConfirmedAlternatives": 0,
       "maxAmbiguityScore": 2,
       "internalSolverCountsAsEvidence": false
+    },
+    "effortBudget": {
+      "$comment": [
+        "⭑ FAZ 2 ÖLDÜRME KAPISINI KAYBETTİREN ÖLÇÜM ⭑",
+        "Sekiz kapı yeşilken beş çözücüden dördü SIKILDIĞI için bıraktı.",
+        "Hiçbir kapı okurun kaç elle işlem yapacağını sormuyordu.",
+        "",
+        "Bütçe dışarıdan gelmez: bulmacanın KENDİ süre iddiasıdır.",
+        "expectedCompletionMinutes × euPerMinute.",
+        "",
+        "⚠ B5 ERTELENDİ: çarpan ikinci turda GERÇEK sürelerle kalibre",
+        "edilecek. Şu anki değer bir tahmindir ve öyle işaretlidir."
+      ],
+      "required": true,
+      "euPerMinute": 3,
+      "calibrated": false,
+      "calibrationDecision": "B5",
+      "calibrateAt": "ikinci harici tur",
+      "maxRatioPerPuzzle": 1.0,
+      "maxGateRatio": 1.5
     }
   },
   "killGate": {

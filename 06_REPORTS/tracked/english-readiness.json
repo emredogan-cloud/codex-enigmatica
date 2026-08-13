@@ -1,8 +1,8 @@
 {
   "pilotLanguage": "tr",
   "productionLanguage": "en",
-  "conversionAllowed": true,
-  "blockedBy": null,
+  "conversionAllowed": false,
+  "blockedBy": "A12",
   "requiresFullRetest": true,
   "forbidMachineTranslation": true,
   "retestGates": [
@@ -20,24 +20,24 @@
       "g1-001",
       "g1-002",
       "g1-003",
-      "g1-004",
+      "g1-005",
       "g1-006",
-      "g1-007",
       "g1-008",
+      "g1-009",
       "g1-010",
-      "g1-011",
       "g1-012",
+      "g1-013",
       "g1-014",
       "g1-015",
-      "g1-016",
-      "g1-018"
+      "g1-017",
+      "g1-018",
+      "g1-019"
     ],
     "lexical": [
-      "g1-005",
-      "g1-009",
-      "g1-013",
-      "g1-017",
-      "g1-019"
+      "g1-004",
+      "g1-007",
+      "g1-011",
+      "g1-016"
     ],
     "phonetic": [
       "g1-020"

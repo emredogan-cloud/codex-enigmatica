@@ -114,6 +114,12 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 [ -f 04_BUILD/qa_handoff.py ] && \
   run "DEVİR VE HATA DAVRANIŞI"  $PY 04_BUILD/qa_handoff.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-handoff.json
+# ⭑ OKUR PAKETİ: diğer bütün kapılar korumalı katmanı denetler; bu kapı
+# okurun ELİNE ne geçtiğine bakar. CI'da manuscript yoktur ve kapı boş
+# koşar — ama BUNU SÖYLER. Yerelde koşması ZORUNLUDUR.
+[ -f 04_BUILD/qa_readerpack.py ] && \
+  run "⭑ OKUR PAKETİ ⭑"          $PY 04_BUILD/qa_readerpack.py --gate "$GATE" \
+                                   --json 06_REPORTS/qa-readerpack.json
 [ -f 04_BUILD/qa_solvability.py ] && \
   run "ÇÖZÜLEBİLİRLİK"          $PY 04_BUILD/qa_solvability.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-solvability.json

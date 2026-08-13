@@ -95,6 +95,11 @@
 # Faz raporları ÜRETİLEN artefakt değil, elle yazılmış ve gözden geçirilmiş
 # belgelerdir; yol haritasının söz verdiği yerde dururlar.
 !06_REPORTS/PHASE_*_REPORT.md
+# ⭑ KARAR TAŞIYAN BELGELER DEPODA DURUR (K18: rapor durur, ÜRÜN durmaz).
+# Yeniden tasarım önerisi bir öldürme kapısı kararının gerekçesidir ve
+# başka belgeler ona BAĞ VERİR — gitignore'da kalması, klonda kırık bağ
+# demektir. (Faz 2'de tam olarak bu oldu ve belge bağı kapısı yakaladı.)
+!06_REPORTS/*_REDESIGN_PROPOSAL.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:

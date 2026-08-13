@@ -92,10 +92,16 @@ PROTECTED_PREFIXES = ("01_SOURCE/solutions/", "01_SOURCE/design/",
                       "09_ARCHIVE/solutions/", "06_REPORTS/solver/")
 
 _PUNCT = re.compile(r"[^\w\s]", re.UNICODE)
+# ⚠ _protected_layer.py § _TR_FOLD ile AYNI OLMAK ZORUNDA. Ayrışırlarsa
+# kanarya ile ipucu kapısı farklı iki dizeye bakar ve ayrışan taraf
+# sessizce körleşir. Gerekçenin tamamı orada yazılıdır: NFKD noktasız
+# 'ı' ile noktalı 'İ'yi ÇÖZMEZ, dolayısıyla Türkçe bir cevap iki farklı
+# normal biçime sahip olur.
+_TR_FOLD = str.maketrans({"ı": "i", "İ": "i", "I": "i", "ﬁ": "fi"})
 
 
 def norm(text: str) -> str:
-    t = unicodedata.normalize("NFKD", text or "")
+    t = unicodedata.normalize("NFKD", (text or "").translate(_TR_FOLD))
     t = "".join(c for c in t if not unicodedata.combining(c))
     return " ".join(_PUNCT.sub(" ", t.lower()).split())
 

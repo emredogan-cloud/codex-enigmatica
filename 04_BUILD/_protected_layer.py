@@ -182,12 +182,31 @@ def preflight(rep: Report, gate_level: str, kind: str) -> tuple[list, dict, dict
 # ── metin yardımcıları ─────────────────────────────────────────────────
 _WORD = re.compile(r"[^\w\s]", re.UNICODE)
 
+# ⚠ FAZ 2 BULGUSU — TÜRKÇE PİLOT BU KAPIYI KIRDI (K20'nin bedeli).
+#
+# NFKD çoğu Türkçe harfi çözer: ç→c+çengel, ş→s+çengel, ğ→g+kısa, ö→o+iki
+# nokta, ü→u+iki nokta. Ama NOKTASIZ 'ı' (U+0131) ve NOKTALI 'İ' (U+0130)
+# ayrışmaz — 'ı' bir taban harftir, aksanlı bir 'i' değildir.
+#
+# Sonucu şudur: "IŞIK" normalize edilince "isik", "ışık" ise "ışık" olur.
+# Yani aynı sözcüğün büyük ve küçük yazımı FARKLI iki dize sayılır — ve
+# ipucu sızıntısı denetimi ile kanarya, cevabı 'ışık' diye yazan bir
+# sızıntıyı KAÇIRIRDI.
+#
+# Bu, talimat § 17'nin uyardığı şeyin canlı örneğidir: bir dil değişimi
+# ÖLÇÜM MAKİNESİNİ de değiştirir. Katlama küçültmeden ÖNCE uygulanır.
+_TR_FOLD = str.maketrans({"ı": "i", "İ": "i", "I": "i", "ﬁ": "fi"})
+
 
 def norm(text: str) -> str:
     """Karşılaştırma için normalize: küçük harf, aksansız, noktalamasız,
     tek boşluklu. İpucu sızıntısı denetimi bunun üzerinden yürür —
-    'THE RAVEN' ile 'the raven!' aynı dizedir."""
-    t = unicodedata.normalize("NFKD", text or "")
+    'THE RAVEN' ile 'the raven!' aynı dizedir.
+
+    ⭑ Türkçe katlaması ı/İ/I → i. Gerekçe yukarıdadır ve bir kaçırılmış
+    sızıntıdır, bir üslup tercihi değil."""
+    t = (text or "").translate(_TR_FOLD)
+    t = unicodedata.normalize("NFKD", t)
     t = "".join(c for c in t if not unicodedata.combining(c))
     t = _WORD.sub(" ", t.lower())
     return " ".join(t.split())

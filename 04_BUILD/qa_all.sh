@@ -105,6 +105,15 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
                                    --json 06_REPORTS/qa-solution-leak.json
 
 # ── FAZ 2'DE DOĞACAK KAPILAR ───────────────────────────────────────────────
+# ⭑ CEVAP UZAYI önce koşar: tekillik ispatının TABANIDIR. Alternatif çözüm
+# analizi (qa_uniqueness) yazarın YAZDIĞINI denetler; cevap uzayı yazarın
+# YAZMADIĞINI arar. İkincisi başarısızsa birincisinin yeşili anlamsızdır.
+[ -f 04_BUILD/qa_answerspace.py ] && \
+  run "⭑ CEVAP UZAYI ⭑"          $PY 04_BUILD/qa_answerspace.py --gate "$GATE" \
+                                   --json 06_REPORTS/qa-answerspace.json
+[ -f 04_BUILD/qa_handoff.py ] && \
+  run "DEVİR VE HATA DAVRANIŞI"  $PY 04_BUILD/qa_handoff.py --gate "$GATE" \
+                                   --json 06_REPORTS/qa-handoff.json
 [ -f 04_BUILD/qa_solvability.py ] && \
   run "ÇÖZÜLEBİLİRLİK"          $PY 04_BUILD/qa_solvability.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-solvability.json

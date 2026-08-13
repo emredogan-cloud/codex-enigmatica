@@ -11,7 +11,7 @@ Ama bir ipucu iki yönden bozulabilir ve bu kapı ikisini de arar:
   EKSİK  → okur takılır ve pes eder            (rekabet farkı kaybolur)
   FAZLA  → ipucu cevabı verir                  (bulmaca yok olur)
 
-Yedi denetim:
+Sekiz denetim:
 
   ① tam ÜÇ kademe var ve hiçbiri boş değil
   ② hiçbir kademe cevabı İÇERMİYOR — dört gizleme biçimine karşı
@@ -19,6 +19,7 @@ Yedi denetim:
   ④ ipucu uzunluğu bandında (kademe başına ≤40 kelime)
   ⑤ ipucu metni bulmacadan UZUN değil
   ⑥ ⭑ MERDİVEN GERÇEKTEN YÜKSELİYOR ⭑ — kapsam monoton artıyor
+     ⭑ VE DÜZ DEĞİL ⭑ — 3. kademe 1.'den fazlasını veriyor (Faz 2)
   ⑦ ⭑ 3. KADEME SON ADIMI VERMİYOR ⭑
 
 ② NEDEN DÖRT BİÇİM: düz alt dize araması naiftir. Bir ipucu cevabı
@@ -113,7 +114,7 @@ def main() -> int:
     counts = {"records": 0, "hints": 0, "leaks": 0}
     missing_ladder, leaked, duplicated = [], [], []
     too_long, longer_than_puzzle = [], []
-    not_monotonic, gives_last_step = [], []
+    not_monotonic, gives_last_step, flat_ladder = [], [], []
 
     print("\n── ipucu kayıtları ──")
     for p in need:
@@ -175,6 +176,16 @@ def main() -> int:
             sizes = [len(c) for c in cov]
             if not (sizes[0] <= sizes[1] <= sizes[2]):
                 not_monotonic.append("%s (kapsam %s)" % (pid, sizes))
+            # ⭑ FAZ 2 EKLEMESİ — DÜZ MERDİVEN DE BİR KUSURDUR. ⭑
+            # Eski kural yalnızca AZALMAYI yakalıyordu, yani [4,4,4] geçiyordu:
+            # birinci kademe çözüm yolunun tamamına dokunuyor, üçüncü kademe
+            # ondan fazlasını vermiyor. Bu üç kademeli bir merdiven değil, üç
+            # kez tekrarlanan tek bir ipucudur — ve okur ikinci kademeye
+            # indiğinde hiçbir şey kazanmadığını görür.
+            # Pilotta bir bulmaca (g1-017) tam olarak buydu ve eski kuraldan
+            # GEÇMİŞTİ. Kural artık YÜKSELMEYİ arar, düzlüğü değil.
+            if sizes[0] >= sizes[2]:
+                flat_ladder.append("%s (kapsam %s)" % (pid, sizes))
             if (len(steps) - 1) in cov[2]:
                 gives_last_step.append(pid)
 
@@ -196,7 +207,10 @@ def main() -> int:
                  else " — AŞIM: %s" % longer_than_puzzle[:5]))
     rep.check(not not_monotonic,
               "⭑ MERDİVEN YÜKSELİYOR ⭑ (kapsam monoton artıyor)"
-              + ("" if not not_monotonic else " — DÜZ/İNEN: %s" % not_monotonic[:5]))
+              + ("" if not not_monotonic else " — İNEN: %s" % not_monotonic[:5]))
+    rep.check(not flat_ladder,
+              "⭑ MERDİVEN DÜZ DEĞİL ⭑ (3. kademe 1.'den GERÇEKTEN fazlasını veriyor)"
+              + ("" if not flat_ladder else " — ⛔ DÜZ: %s" % flat_ladder[:5]))
     rep.check(not gives_last_step,
               "⭑ 3. KADEME SON ADIMI VERMİYOR ⭑"
               + ("" if not gives_last_step

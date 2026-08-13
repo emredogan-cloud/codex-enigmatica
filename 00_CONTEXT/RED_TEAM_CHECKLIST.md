@@ -135,3 +135,232 @@ yerelde varken veya CI'da tuz kuruluyken.
 Bu sınır burada yazılıdır çünkü bir kapının ne **yapmadığını** bilmemek,
 onu olduğundan güçlü sanmaktır. Kapatılması `ENIGMATICA_CANARY_SALT`
 CI sırrının kurulmasına bağlıdır (**A11**).
+
+---
+
+## 5 · FAZ 2 BULGU DEFTERİ — pilot kohortu (Kapı I · 20 bulmaca)
+
+> Sürüm 1.1 · 13 Ağustos 2026
+>
+> Bu bölümdeki her bulgu **ölçülmüştür**, tahmin edilmemiştir. Her birinin
+> ya bir kapı denetimi ya da bir kasıtlı-kusur fikstürü vardır — **çoğunun
+> ikisi de**. Bir bulguyu düzeltip fikstürünü yazmamak, aynı kusuru bir
+> sonraki fazda yeniden bulmaya davetiyedir.
+
+### 5.1 · Bulguların kaynağı
+
+| Kaynak | Bulgu |
+|---|---:|
+| Ön denetim (bulmaca yazılmadan) | 2 |
+| Kapıların üretim verisinde yakaladığı | 9 |
+| Solver B — bağımsız iç çözücü | 12 |
+| Solver C — doğrulama geçişi | § 5.5 |
+| **Toplam kapatılan** | **23** |
+
+### 5.2 · ⭑ F2-01 · SAYI TABLOSU HATA TESPİT ETMİYORDU ⭑ — en ağır bulgu
+
+**Bulgu.** Levha içi şifre bulmacalarında (`g1-008`, `g1-016`) okur dört
+kenarı okur. Başlangıç köşesi ve yön yanlışsa **sekiz** farklı dörtlü
+çıkar. Tasarım *"yanlış okuma Çizelge E'de yoktur, yani hata tespit
+edilir"* diyordu.
+
+**Ölçüm.** Sekiz okumanın **beşi** tablodaydı. Yani her levha bulmacasının
+**beş ulaşılabilir cevabı** vardı — ve ikisi diğer bulmacanın doğru
+cevabıydı.
+
+**Neden hiçbir kapı görmedi.** `qa_answerspace` "tam olarak bir üye kabul
+ediliyor" diyordu ve **yanılıyordu**, çünkü kabul yordamı **doğru okumayı
+sabit yazıyordu**:
+
+```
+"acceptance": {"kind": "reachable-via-number-table", "reading": "2413"}
+                                                     ^^^^^^^^^^^^^^^^^
+                                     yazar doğru cevabı kapıya SÖYLÜYOR
+```
+
+Bu, K21'in öldürmeye çalıştığı totolojinin ta kendisidir — bu kez
+**kapının kendi içinde**. *Sayım alanını cevabı zaten bilen yazar
+tanımlıyordu.*
+
+**Kapatıldı.** Kabul yordamı artık **sekiz okumanın tamamını** taşır ve
+kapı tam olarak birinin tabloda bulunmasını arar. Çizelge E yeniden
+tasarlandı: iki levha **ayrı sayı kümesi** kullanır ({1,2,3,4} ve
+{1,2,3,5}), böylece birinin yanlış okuması ötekinin doğru okumasına
+düşemez. Fikstür: `selftest § ⑧ "SEKİZ OKUMANIN İKİSİ TABLODAYSA KIRMIZI"`.
+
+> **Ders.** Bir kapı, denetlediği şeyin **tanımını** yazardan alıyorsa
+> denetlemiyordur. Kabul yordamının parametreleri de üretilmelidir.
+
+### 5.3 · ⭑ F2-02 · BULMACALAR OKUR PAKETİNDE ÇÖZÜLEMİYORDU ⭑
+
+**Bulgu.** On bulmacanın levha **metni** vardı ama levha **verisi** yoktu.
+"Altı kemer, her birinin altında bir Sözlük numarası" yazıyordu; hangi
+kemerin kilit taşının çift olduğu **yalnızca cevap anahtarındaydı**.
+
+**Neden hiçbir kapı görmedi.** Sekiz kapının sekizi de **korumalı katmanı**
+denetliyordu. Hiçbiri okurun **eline ne geçtiğine** bakmıyordu. Kusursuz
+bir tekillik ispatı, çözülemeyen bir bulmacanın üzerinde duruyordu.
+
+**Kapatıldı.** `qa_readerpack.py` — yedi denetim, hepsi ters yönden sorar:
+*okur bunu çözebilir mi?* Ve levha şekilleri artık nitelik haritasından
+**türetilir**; elle çizilen bir levha ile kabul yordamı sessizce ayrışamaz.
+
+### 5.4 · Solver B bulguları — metin ile levha çelişkileri
+
+Bağımsız iç çözücü yirmi bulmacayı ipucusuz çözdü ama **on bir metin–levha
+çelişkisi** bildirdi. Hiçbiri çözümü engellemedi; hepsi çözücüyü **kendi
+doğru okumasından şüphe ettirdi**. *Zorluğu artırmadan sürtünme eklemek,
+en pahalı redaksiyon kusurudur.*
+
+| # | Bulmaca | Çelişki | Düzeltme |
+|---|---|---|---|
+| F2-03 | g1-003 | *"her grup farklı"* — **yanlış**, bir grup iki kez geçiyor | ifade düzeltildi |
+| F2-04 | g1-005 | *"dört koşul"* — sayfada **üç** madde | sayı düzeltildi |
+| F2-05 | g1-017 | *"üç koşul"* + başlıkta karşılıksız "Bir Sayı" — sayfada **dört** madde | başlık ve sayı düzeltildi |
+| F2-06 | g1-007 | *"tepesinde"* — Sözlük numaraları levhada **altta** | **ikinci cevap üretiyordu** (§ 5.6) |
+| F2-07 | g1-012 | *"iki yanına"* — işaretler **tek** yanda | ifade düzeltildi |
+| F2-08 | g1-016 | çatlak karonun koyu sayılıp sayılmadığı **hiçbir yerde yazmıyordu** | kural metne eklendi |
+| F2-09 | g1-011 | ızgaranın eksik son satırının nasıl dolduğu yazılmamıştı | kural metne eklendi |
+| F2-10 | g1-006 | kaydırma **yönü** tanımsızdı | yön metne eklendi |
+| F2-11 | g1-015 | *"karşılıklı iki nokta"* — 29 üyeli **tek sayılı** halkada matematiksel olarak yanlış | tanım düzeltildi |
+| F2-12 | g1-010 | madde *"numarası"*, dipnot *"cevabı"* diyordu | ifade düzeltildi |
+| F2-13 | g1-009 | *"dilllidir"* yazım hatası + "dilli"→sütun eşlemesi yazılı değildi | ifade düzeltildi |
+
+### 5.5 · ⭑ F2-06 · GERÇEK BİR İKİNCİ CEVAP — ve kaynağı bir yazım hatasıydı ⭑
+
+`g1-007`'de metin *"Her sütunun **tepesinde** bir Sözlük numarası vardır"*
+diyordu. Levhada tepede **sütun numarası**, altta Sözlük numarası vardı.
+
+Metni **birebir uygulayan** bir çözücü ikinci sütunun tepesindeki `2`'yi
+Sözlük numarası okur ve **kitabın kendi cümlesine dayanan** savunulabilir
+bir ikinci cevap üretir.
+
+> Bu, projenin en sinsi kusurunun canlı örneğidir: **cevabı doğru sanan
+> okur, çözemeyen okurdan daha öfkelidir.** Ve kaynağı bir mekanizma
+> hatası değil, **tek bir yanlış edattı**.
+
+`qa_answerspace` bunu yakalayamazdı: mekanizma doğruydu, **metin** yanlıştı.
+Bu kusur sınıfını yalnızca bir insan (veya bağımsız bir çözücü) bulur —
+harici çözücü testinin neden vazgeçilmez olduğunun mekanik kanıtı.
+
+### 5.6 · F2-14 · Basılı Sözlüğün bedeli — kabul edilmiş bir takas
+
+K22 kabul yordamını yazardan çizelgeye taşıdı ve tekilliği hesaplanabilir
+kıldı. Bedeli açıkça kaydedilir:
+
+Bir okur hiçbir şey çözmeden 60 üyeli Sözlük'ten tahmin yürütebilir
+(**1/60 ≈ %1,7**). On dokuz bulmacayı tahminle bitirme olasılığı 60⁻¹⁹'dur
+— sıfır. Ama **tek** bir bulmacayı kaba kuvvetle geçmek mümkündür.
+
+**Karşı önlem** A7'nin yan kazancıdır: doğrulama sayfası reddedilen
+dizeleri kaydeder ve kaba kuvvet kalıbı (aynı bulmacaya kısa sürede çok
+sayıda farklı Sözlük üyesi) **tespit edilebilirdir**.
+
+### 5.7 · F2-15 · Sayma yorgunluğu — bir dizgi tercihi değil, çözülebilirlik
+
+Eşik Alfabesi'nde `Ç` dört işaret, `D` beş işarettir. Bitişik bir dizide
+dördü beşten ayırmak **göz sayımına** bağlıdır ve iç çözücü bunu bir risk
+olarak bildirdi.
+
+**Kapatıldı (kısmen).** İşaretler artık **aralıklı** basılır: `' ' ' '`
+ile `' ' ' ' '` arasındaki fark, `''''` ile `'''''` arasındakinden
+ölçülebilir biçimde kolaydır.
+
+⚠ **Tam kapanış POD provasına bağlıdır (A9).** Kâğıtta aralık nokta
+yayılmasıyla kapanıyorsa mekanik yine kırılır. Prova kontrol listesinin
+**birinci** maddesi budur.
+
+### 5.8 · F2-16 · Kanarya kendi test dosyasını yakaladı
+
+Yeni selftest fikstürleri gerçek Sözlük'ten sözcük kullanıyordu ve
+kanarya `05_TESTS/selftest.py`'yi **sızıntı olarak** bildirdi. Haklıydı:
+bir fikstür cevabı gerçek bir cevapla aynıysa, o cevap public depoda düz
+metin olarak durur.
+
+Fikstür sözlüğü tamamen sentetik hâle getirildi ve gerçek Sözlük'le
+**hiçbir üye paylaşmaz**. Bu bulgu, kanaryanın gerçekten çalıştığının en
+temiz kanıtıdır — kendi yazarını yakaladı.
+
+### 5.9 · F2-17 · Bir cevap sözcüğü deponun kendi terimiyle çakıştı
+
+Bir Sözlük üyesi `g1-005`'in cevabıydı ve kanarya **üç dosyada** sızıntı
+bildirdi: sözcük aynı zamanda bir yazılım terimidir (*"window"*) ve deponun
+kendi kod yorumlarında (`kelime penceresi`, `karakter penceresi`) geçiyordu.
+
+**Kural doğdu:** bir cevap sözcüğü, deponun public prozasında geçen bir
+terim olamaz. Ölçüldü: altmış üyenin kanarya eşiğini aşan **on yedisinden
+yedisi** depo prozasında geçiyor. Cevap, depo prozasında geçmeyen bir Sözlük üyesiyle değiştirildi.
+
+### 5.10 · F2-18 · Türkçe pilot ölçüm makinesini kırdı
+
+`unicodedata.normalize("NFKD")` Türkçe harflerin çoğunu çözer ama
+**noktasız `ı`** (U+0131) ve **noktalı `İ`** (U+0130) taban harflerdir ve
+ayrışmazlar.
+
+Sonucu: `"IŞIK"` normalize edilince `isik`, `"ışık"` ise `ışık` oluyordu.
+Aynı sözcüğün iki farklı normal biçimi vardı — yani **ipucu sızıntısı
+denetimi ve kanarya, cevabı küçük harfle yazan bir sızıntıyı kaçırırdı.**
+
+**Kapatıldı.** `ı/İ/I → i` katlaması hem `_protected_layer` hem
+`qa_solution_leak` içinde, küçültmeden **önce** uygulanır. İki dosyanın
+ayrışmaması bir fikstürle korunur.
+
+> Bu, talimat § 17'nin uyardığı şeyin canlı örneğidir: **bir dil değişimi
+> ölçüm makinesinin kendisini de değiştirir.** İngilizce dönüşümde aynı
+> soru yeniden sorulacaktır.
+
+### 5.11 · F2-19 · Düz merdiven de bir kusurdur
+
+`qa_hints` merdivenin **azalmasını** yakalıyordu ama **düz kalmasını**
+yakalamıyordu: kapsam `[4,4,4]` geçiyordu. Bu üç kademeli bir merdiven
+değil, üç kez tekrarlanan tek bir ipucudur.
+
+Bir bulmaca (`g1-017`) tam olarak buydu ve eski kuraldan **geçmişti**.
+Kural artık **yükselmeyi** arar. Ve merdiven artık çözüm yolundan
+**türetilir** — bir yapı şartını disipline değil türetime bağlarız.
+
+### 5.12 · F2-20 · Levha etiketi nesnenin kendi adını taşıyamaz
+
+`qa_answerspace § ⑦` dört bulmacada ipucunun **yakın kaçırma** kümesinden
+bir üyeyi adıyla andığını bildirdi. Sebep: kemer bulmacasında etiketlerden
+biri `KEMER`, halka bulmacasında `HALKA`, sütun bulmacasında `SÜTUN`,
+basamak bulmacasında `BASAMAK` idi.
+
+*"Altı kemerin tepesine bakın"* cümlesi, levhadaki `KEMER` etiketini adıyla
+anıyor ve okuru yanlış bir üyeye götürüyordu. Sınıf adları etiketlerden
+çıkarıldı.
+
+### 5.13 · F2-21 · Sahte doğrulama tuzağı
+
+`g1-001`'de levha iki sayı satırı taşıyordu: kemer sıra numaraları
+(1–6) ve Sözlük numaraları. Birinci kemerin Sözlük numarası da **1**'di.
+
+Satırları karıştıran çözücü Sözlük'ün birinci satırına düşüyordu — ve o
+satır **nihai kapı sözünün anahtar sözcüğüydü**. Yani okur yanlış cevabını
+sonradan "doğru yoldayım" diye yorumlayabilirdi.
+
+> Sahte bir doğrulama hissi, çözememekten daha tehlikelidir.
+
+Sıra numarası satırı levhadan **kaldırıldı**.
+
+### 5.14 · Kapatılmayan sınırlar — açıkça yazılıdır
+
+| Sınır | Neden açık | Ne zaman kapanır |
+|---|---|---|
+| Gravür levhaların baskı davranışı | Pilot levhaları **tipografik şekildir**, gravür değil | Faz 5 · A9 |
+| Sayma yorgunluğu (4 ↔ 5 işaret) | Aralıklandırma yardım eder; kâğıtta ölçülmedi | POD provası · A9 |
+| 6 karakterden kısa cevapların kanarya koruması | `MIN_ANSWER_CHARS = 6`; kısaltmak yanlış pozitif üretir | Açık — kısa cevaplar alan adı hattıyla korunur |
+| İç çözücünün insan çözücüyü temsil etmesi | **Etmez.** İç çözücü kanıt değildir | **A12 · harici oturumlar** |
+
+### 5.15 · F2-22 · Bu defterin kendisi bir sızıntıydı
+
+Yukarıdaki F2-17 ilk yazımında düzeltmeyi anlatırken **yeni cevabı adıyla
+andı**. Kanarya bu dosyayı sızıntı olarak bildirdi ve haklıydı.
+
+> *"Bir sızıntı raporunun kendisinin sızıntı olması, bu depoda
+> düşülebilecek en gülünç tuzaktır."* — `qa_solution_leak.py` başlığı,
+> Faz 1'de yazıldı ve Faz 2'de **doğrulandı**.
+
+Kural: bulgu defteri ve faz raporları bir cevabı **adıyla anmaz**; kusuru
+ve düzeltmeyi anlatır, dizeyi anmaz. Bu, disipline değil kanaryaya
+bağlıdır — ve kanarya ısırdı.

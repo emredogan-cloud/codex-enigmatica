@@ -155,9 +155,15 @@ def main() -> int:
                 no_cipher.append(pid)
 
         # ⑤ glif dizisi şekilde
+        # ⚠ Karşılaştırma BOŞLUKSUZ yapılır: glif işaretleri levhada
+        # ARALIKLI basılır (sayma kolaylığı için) ama kayıtta da aynı
+        # biçimdedir; ayrılan tek şey satır kırılması ve girintidir.
         if acc.get("kind") in GLYPH_ACCEPTANCE:
-            groups = [g for g in (acc.get("glyphs") or "").split("·") if g]
-            if not groups or any(g not in fig for g in groups):
+            fig_sq = "".join(fig.split())
+            groups = ["".join(g.split())
+                      for g in (acc.get("glyphs") or "").split("│")]
+            groups = [g for g in groups if g]
+            if not groups or any(g not in fig_sq for g in groups):
                 no_glyph.append(pid)
 
         # ⑥ ⭑ cevap kendi sayfasında BEDAVA duramaz ⭑

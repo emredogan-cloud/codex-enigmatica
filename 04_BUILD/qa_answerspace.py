@@ -112,8 +112,8 @@ class Plate:
 
     def decode_glyphs(self, seq: str) -> str | None:
         out = []
-        for g in seq.split("·"):
-            g = g.strip()
+        for g in seq.split("│"):
+            g = "".join(g.split())
             if not g or len(set(g)) != 1 or g[0] not in "',+/\\x" or len(g) > 5:
                 return None
             i = "',+/\\x".index(g[0]) * 5 + len(g) - 1
@@ -186,10 +186,10 @@ def expand(gen: dict, plate: Plate) -> tuple[list[str], str | None]:
         return [col_read(ct, w) for w in widths if col_read(ct, w)], None
     if kind == "glyph-chart-reading":
         seq = gen.get("glyphs", "")
-        parts = seq.split("·")
+        parts = seq.split("│")
         out = []
         for name in gen.get("directions", ["forward", "reverse"]):
-            g = "·".join(parts if name == "forward" else list(reversed(parts)))
+            g = "│".join(parts if name == "forward" else list(reversed(parts)))
             d = plate.decode_glyphs(g)
             if d:
                 out.append(d)
@@ -247,19 +247,27 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
                 hits.append(row.get(take))
         return word in hits
     if kind == "reachable-via-number-table":
-        quad = acc.get("reading", "")
+        # ⭑ SEKİZ OKUMANIN TAMAMI AÇILIR. ⭑
+        # Eski kurgu yalnızca yazarın seçtiği okumaya bakıyordu ve bu bir
+        # totolojiydi: "doğru okuma doğru cevabı verir." Ölçüldüğünde
+        # sekiz okumanın beşi tabloda çıktı — yani okurun yanlış köşeden
+        # başlaması BEŞ ayrı geçerli cevap üretiyordu ve kapı bunu
+        # görmüyordu. Artık bütün okumalar tabloya vurulur.
         rows = acc.get("table", [])
-        for row in rows:
-            if row.get("dortlu") == quad:
-                idx = row.get("sozlukNo", 0)
-                if 1 <= idx <= len(plate.lexicon):
-                    return word == plate.lexicon[idx - 1]
+        quads = acc.get("readings") or [acc.get("reading", "")]
+        for q in quads:
+            for row in rows:
+                if row.get("dortlu") == q:
+                    idx = row.get("sozlukNo", 0)
+                    if 1 <= idx <= len(plate.lexicon) and \
+                            word == plate.lexicon[idx - 1]:
+                        return True
         return False
     if kind == "reachable-by-glyph-reading":
-        parts = acc.get("glyphs", "").split("·")
+        parts = acc.get("glyphs", "").split("│")
         reach = set()
         for name in acc.get("directions", ["forward", "reverse"]):
-            g = "·".join(parts if name == "forward" else list(reversed(parts)))
+            g = "│".join(parts if name == "forward" else list(reversed(parts)))
             d = plate.decode_glyphs(g)
             if d:
                 reach.add(d)
@@ -307,9 +315,9 @@ def near_miss(domain: list[str], acc: dict, plate: Plate,
             kind == "matches-positional-extraction":
         out = list(plate.phrases)
     elif kind == "reachable-by-glyph-reading":
-        parts = acc.get("glyphs", "").split("·")
+        parts = acc.get("glyphs", "").split("│")
         for name in ("forward", "reverse"):
-            g = "·".join(parts if name == "forward" else list(reversed(parts)))
+            g = "│".join(parts if name == "forward" else list(reversed(parts)))
             d = plate.decode_glyphs(g)
             if d:
                 out.append(d)

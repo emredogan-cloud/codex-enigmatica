@@ -151,11 +151,19 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
                                    --json 06_REPORTS/qa-meta.json
 [ -f 04_BUILD/qa_plate_readability.py ] && \
   run_optional "levha okunabilirliği" $VENV_PY 04_BUILD/qa_plate_readability.py --check
+# ⚑ Prova PAKETİNİ üretir; provayı ALMAZ (A9 kurucu işidir).
+[ -f 04_BUILD/plate_proof.py ] && \
+  run_optional "levha prova paketi"   $VENV_PY 04_BUILD/plate_proof.py
 
 # ── ÜRETİM MODELİ ──────────────────────────────────────────────────────────
 [ -f 04_BUILD/page_budget.py ] && \
   run "sayfa bütçesi"           $PY 04_BUILD/page_budget.py \
                                    --json 06_REPORTS/page-budget.json
+# ⭑ Modelin GERÇEK içerikle ilk yüzleşmesi. page_budget modeli kendi
+# içinde denetler; bu ölçüm modeli YAZILMIŞ metne vurur.
+[ -f 04_BUILD/pilot_pages.py ] && \
+  run "PİLOT SAYFA ÖLÇÜMÜ"      $PY 04_BUILD/pilot_pages.py \
+                                   --json 06_REPORTS/tracked/pilot-page-measure.json
 [ -f 04_BUILD/editions.py ] && \
   run "sürüm ve telif modeli"   $PY 04_BUILD/editions.py \
                                    --json 06_REPORTS/editions.json

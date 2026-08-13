@@ -596,7 +596,8 @@
       "screenTested": true,
       "physicalProofValidated": false,
       "physicalProofValidatedAt": null,
-      "proofPackageDir": "08_OUTPUT/PROOF/",
+      "proofPackageDir": "02_MANUSCRIPT/PROOF/",
+      "proofPackageDir$comment": "08_OUTPUT DEĞİL: orası YAYIN paketidir ve içinde çözüm bulunması Faz 6\u0027da kırmızıdır. Prova paketi bulmaca taşır, dolayısıyla korumalı katmana aittir.",
       "hardGateForPhase": "phase5"
     },
 

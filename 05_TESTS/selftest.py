@@ -1000,6 +1000,40 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     code, out = run_env_gate("qa_readerpack.py", d)
     rep.check(code != 0, "⭑ CEVABI KENDİ SAYFASINDA BEDAVA DURAN BULMACA ⭑", out)
 
+    # ── SAYI TABLOSU — Faz 2'nin EN AĞIR bulgusunun fikstürü ────────────
+    #
+    # Levha içi şifrede okur dört kenarı okur; başlangıç köşesi ve yön
+    # yanlışsa SEKİZ farklı dörtlü çıkar. Tasarım "yanlış okuma tabloda
+    # yoktur, yani hata tespit edilir" diyordu.
+    #
+    # ÖLÇÜLDÜĞÜNDE sekiz okumanın BEŞİ tablodaydı: her levha bulmacasının
+    # beş ulaşılabilir cevabı vardı. Kapı bunu GÖRMEMİŞTİ çünkü kabul
+    # yordamı yalnızca YAZARIN SEÇTİĞİ okumaya bakıyordu — K21'in öldürmeye
+    # çalıştığı totolojinin ta kendisi, bu kez kapının kendi içinde.
+    NUM_TABLE = [{"sira": 1, "dortlu": "2413", "sozlukNo": 1},
+                 {"sira": 2, "dortlu": "4132", "sozlukNo": 5},
+                 {"sira": 3, "dortlu": "1245", "sozlukNo": 9}]
+    ALL8 = ["2413", "4132", "1324", "3241", "2314", "3142", "1423", "4231"]
+
+    d = space_root({"generator": {"kind": "printed-lexicon"},
+                    "acceptance": {"kind": "reachable-via-number-table",
+                                   "readings": ["2413"],
+                                   "table": NUM_TABLE},
+                    "declaredAcceptedCount": 1}, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "sayı tablosu · TEK okuma bildirildiğinde geçer "
+                         "(eski, totolojik kurgu)", out)
+
+    d = space_root({"generator": {"kind": "printed-lexicon"},
+                    "acceptance": {"kind": "reachable-via-number-table",
+                                   "readings": ALL8, "table": NUM_TABLE},
+                    "declaredAcceptedCount": 1}, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0,
+              "⭑ SEKİZ OKUMANIN İKİSİ TABLODAYSA KIRMIZI ⭑ "
+              "(yanlış köşeden başlayan okur GEÇERLİ bir cevaba varıyor)",
+              out)
+
     # ── DEVİR — hata tespiti olmayan kapı bulmacası ─────────────────────
     def gate_root(acc, handoff, phrases=None):
         _RUN_SEQ[0] += 1

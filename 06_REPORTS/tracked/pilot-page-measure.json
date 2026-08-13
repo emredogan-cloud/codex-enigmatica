@@ -1,0 +1,167 @@
+{
+  "status": "pass",
+  "checks": 3,
+  "errors": [],
+  "warnings": [
+    "Kapı I gövdesi bütçenin yarısından az (7.9 / 34) — levha boyutları veya bulmaca başına sayfa yerleşimi Faz 5'te yeniden ölçülmeli"
+  ],
+  "facts": {
+    "gate": "threshold",
+    "puzzles": 20,
+    "bodyWords": 1396,
+    "figureLines": 165,
+    "hintWords": 1064,
+    "solutionWords": 588,
+    "wordsPerPage": 350,
+    "measuredBodyPages": 7.9,
+    "declaredBodyPages": 34,
+    "toolsPlatePages": 0.9,
+    "projectedBodyPages": 39.6,
+    "projectedHintPages": 15.2,
+    "declaredHintPages": 22,
+    "projectedSolutionPages": 8.4,
+    "declaredSolutionPages": 18,
+    "perPuzzle": [
+      {
+        "puzzleId": "g1-001",
+        "words": 77,
+        "figureLines": 9,
+        "hintWords": 52,
+        "solutionWords": 28
+      },
+      {
+        "puzzleId": "g1-002",
+        "words": 67,
+        "figureLines": 9,
+        "hintWords": 52,
+        "solutionWords": 28
+      },
+      {
+        "puzzleId": "g1-003",
+        "words": 71,
+        "figureLines": 8,
+        "hintWords": 54,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g1-004",
+        "words": 68,
+        "figureLines": 31,
+        "hintWords": 58,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g1-005",
+        "words": 65,
+        "figureLines": 0,
+        "hintWords": 59,
+        "solutionWords": 29
+      },
+      {
+        "puzzleId": "g1-006",
+        "words": 76,
+        "figureLines": 0,
+        "hintWords": 59,
+        "solutionWords": 33
+      },
+      {
+        "puzzleId": "g1-007",
+        "words": 73,
+        "figureLines": 13,
+        "hintWords": 58,
+        "solutionWords": 32
+      },
+      {
+        "puzzleId": "g1-008",
+        "words": 77,
+        "figureLines": 12,
+        "hintWords": 48,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g1-009",
+        "words": 57,
+        "figureLines": 11,
+        "hintWords": 45,
+        "solutionWords": 23
+      },
+      {
+        "puzzleId": "g1-010",
+        "words": 62,
+        "figureLines": 0,
+        "hintWords": 50,
+        "solutionWords": 29
+      },
+      {
+        "puzzleId": "g1-011",
+        "words": 66,
+        "figureLines": 0,
+        "hintWords": 56,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g1-012",
+        "words": 64,
+        "figureLines": 13,
+        "hintWords": 57,
+        "solutionWords": 31
+      },
+      {
+        "puzzleId": "g1-013",
+        "words": 58,
+        "figureLines": 11,
+        "hintWords": 44,
+        "solutionWords": 23
+      },
+      {
+        "puzzleId": "g1-014",
+        "words": 66,
+        "figureLines": 10,
+        "hintWords": 55,
+        "solutionWords": 29
+      },
+      {
+        "puzzleId": "g1-015",
+        "words": 62,
+        "figureLines": 0,
+        "hintWords": 55,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g1-016",
+        "words": 80,
+        "figureLines": 11,
+        "hintWords": 53,
+        "solutionWords": 31
+      },
+      {
+        "puzzleId": "g1-017",
+        "words": 74,
+        "figureLines": 0,
+        "hintWords": 57,
+        "solutionWords": 36
+      },
+      {
+        "puzzleId": "g1-018",
+        "words": 63,
+        "figureLines": 0,
+        "hintWords": 47,
+        "solutionWords": 28
+      },
+      {
+        "puzzleId": "g1-019",
+        "words": 74,
+        "figureLines": 0,
+        "hintWords": 53,
+        "solutionWords": 28
+      },
+      {
+        "puzzleId": "g1-020",
+        "words": 96,
+        "figureLines": 27,
+        "hintWords": 52,
+        "solutionWords": 30
+      }
+    ]
+  }
+}

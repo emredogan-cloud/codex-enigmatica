@@ -82,6 +82,30 @@ geçmiş sayan bir öldürme kapısı, olmayan bir kapıdan tehlikelidir.
 | Kapı sözü asgari Hamming mesafesi | **15** |
 | **Harici çözücü oturumu** | **0 / 5** |
 
+### Ses kalibrasyonu (kurucu geri bildirimi · A5)
+
+Kurucu pilot metinlerini *"mekanik olarak kusursuz ama anlatısal olarak
+ölü"* buldu. Üç iç çözücünün hiçbiri bunu bildirmemişti — **çünkü üçü de
+çözebiliyordu.** Okuma yorgunluğu yalnızca insanın ölçebileceği şeydir.
+
+Teşhis üslup değil **mimariydi**: `STYLE § 1` iki kayıt tanımlar ve
+pilotun yirmi bulmacası da **yalnızca talimat kaydında** yazılmıştı.
+
+- Her bulmacaya **anlatı satırı** eklendi — mekanik içerik taşımaz
+- Talimat sınav registerinden **arşivci** registerine taşındı; ≤20
+  kelime/cümle kuralı korundu (ölçülen medyan **7**)
+- İpuçlarındaki **kümülatif tekrar** kaldırıldı: üç kademe artık her biri
+  YENİ bir adım getirir, köprü cümlesi kapsamı taşır
+- Ön madde, sözleşme sayfası ve ipucu sayfası seslendirildi
+- **`STYLE.md` v2.0** — bantlar gerçek metinden ölçüldü
+- ⚠ Bulmaca metni bandı (90–220) **doğrulanmadı**: ölçülen medyan **51**.
+  Bant **düşürülmedi**; zorluğa göre ayrılması Faz 3'e ertelendi
+
+**Kanıt:** `qa_solvability` · `qa_hints` · `qa_uniqueness` yeniden koştu,
+üçü de yeşil. Belirsizlik, cevap uzayı ve merdiven kapsamı değişmedi.
+Geçiş sırasında kapı bir kez ısırdı: bir fısıltı son çözüm adımıyla iki
+içerik kelimesi paylaşıyordu ve *cevap anahtarı* olarak kırmızı yandı.
+
 ### Güvenlik
 
 - **`ENIGMATICA_CANARY_SALT`** üretildi (384 bit), GitHub Actions sırrı

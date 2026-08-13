@@ -22,7 +22,7 @@
 | Üç kademeli ipucu | **60** |
 | Yeni kalite kapısı | **4** (`answerspace` · `handoff` · `readerpack` · `kill_gate`) |
 | Kapıların kendi testi | **123 → 154** denetim |
-| Kırmızı takım bulgusu | **28** — hepsi kapatıldı |
+| Kırmızı takım bulgusu | **31** — 30 kapatıldı, 1 Faz 3'e |
 | İç çözücü | **3 bağımsız geçiş** — ⚠ **kanıt sayılmaz** |
 | **Harici çözücü oturumu** | ⛔ **0 / 5** |
 | **Öldürme kapısı** | ⛔ **BLOCKED** |
@@ -172,8 +172,9 @@ sekiz levha okumasının tamamı, üç eleme bulmacasının 60 üyelik alanı.
 > hiçbir veri satırı üretmez. İç çözücünün değeri kusur bulmaktır,
 > çözülebilirliği kanıtlamak değil.
 
-Ve tam olarak bunu yaptılar: **28 kusurun 28'ini** iç çözücüler ve kapılar
-buldu, hiçbiri okura ulaşmadan.
+Ve tam olarak bunu yaptılar: **31 kusurun 30'unu** iç çözücüler ve kapılar
+buldu, hiçbiri okura ulaşmadan. Otuz birincisini **kurucu** buldu (§ 6.8) —
+ve o, çözücülerin **tanımı gereği** bulamayacağı türdendi.
 
 ### 5.1 · Süre — ve iç çözücünün neden süreyi ölçemediği
 
@@ -189,7 +190,7 @@ Bu, harici testin ölçmesi gereken ilk şeydir.
 
 ---
 
-## 6 · Kırmızı takım — 28 bulgu
+## 6 · Kırmızı takım — 31 bulgu
 
 Tam defter: [`RED_TEAM_CHECKLIST.md § 5`](../00_CONTEXT/RED_TEAM_CHECKLIST.md).
 Buradaki üç tanesi en ağırlardır.
@@ -286,6 +287,55 @@ karşılaştığı anda doğdu.
 | Katman **var ama eksik** | **KIRMIZI** — yazar çözümü yazmayı unuttu |
 
 İkisinin de fikstürü yazıldı.
+
+### 6.8 · ⭑ Anlatı kaydı hiç yoktu — ve bunu hiçbir çözücü bulamazdı ⭑
+
+Kurucu, üç iç çözücü geçişinden **sonra** şunu bildirdi: metinler
+*"mekanik olarak kusursuz ama anlatısal olarak ölü — bir matematik sınavı
+gibi okunuyor."*
+
+Üç çözücünün hiçbiri bunu bildirmemişti ve sebebi öğreticidir: **üçü de
+çözebiliyordu.** Bir çözücü sıkılmaz, yorulmaz, okumayı bırakmaz. *Okuma
+yorgunluğu* yalnızca insanın ölçebileceği bir şeydir.
+
+> Bu, harici testin neden vazgeçilmez olduğunun **ikinci mekanik
+> kanıtıdır**. Birincisi § 6.3'teki ikinci cevaptı: makine mekanizmayı
+> ölçer, insan **deneyimi** ölçer.
+
+**Teşhis üslup değil mimariydi.** `STYLE § 1` iki kayıt tanımlar — anlatı
+ve talimat — ve pilotun yirmi bulmacasının yirmisi de **yalnızca talimat
+kaydında** yazılmıştı. Sınav gibi okunmasının sebebi talimatların kötü
+olması değil, **anlatının eksik olmasıydı.**
+
+Düzeltme buna göre biçimlendi: talimat **süslenmedi** (o,
+çözülebilirliği bozardı); eksik kayıt **eklendi**.
+
+| Yapıldı | YAPILMADI |
+|---|---|
+| Bulmaca başına **anlatı satırı** (mekanik içerik taşımaz) | Talimat süslenmedi |
+| Talimat sınav → **arşivci** registerine taşındı | Talimat uzatılmadı |
+| İpuçlarındaki **kümülatif tekrar** kaldırıldı | Merdiven yapısı değişmedi |
+| `STYLE.md` **v2.0**'a kalibre edildi (**A5**) | Bant ölçüme uydurulmadı |
+
+**Kanıt:** geçişten sonra `qa_solvability`, `qa_hints` ve `qa_uniqueness`
+yeniden koştu; **üçü de yeşil**. Belirsizlik puanı, cevap uzayı ve
+merdiven kapsamı **değişmedi**. Üslup mekanikten ayrı tutulabilir.
+
+⚠ Ve kapı geçiş sırasında **bir kez ısırdı**: bir fısıltı son çözüm
+adımıyla iki içerik kelimesi paylaşıyordu ve `qa_hints § ⑦` onu *cevap
+anahtarı* olarak kırmızı yaktı. Cümle güzel, kısa ve doğru görünüyordu;
+hiçbir insan okurken fark etmezdi. **Bir üslup geçişi "yalnızca
+kelimeler" değildir — kelimeler kapsamdır.**
+
+### 6.9 · Ölçüm hipotezi doğrulamadı — ve bant değiştirilmedi
+
+`STYLE § 4` bulmaca metnini 90–220 kelime bantlamıştı; yirmi gerçek
+bulmacada ölçülen **41–83, medyan 51**.
+
+Bant **düşürülmedi.** Bir hedefi ölçüme uydurmak, ölçmenin tersidir.
+Doğru hamle bandı zorluğa göre ayırmaktır ve bunun için ★★ ile ★★★
+ölçümü gerekir — karar **Faz 3'e ertelendi**. Bu, raporun kapatılmamış
+tek bulgusudur ve bilerek açık bırakılmıştır.
 
 ### 6.7 · Kanarya iki kez kendi yazarını yakaladı
 
@@ -565,7 +615,7 @@ değil, bir **boşluktur**.
 | Devir / hata davranışı | ✅ **ölçüldü** (Hamming 15) |
 | **Harici çözücü kayıtları gerçek** | ⛔ **KAYIT YOK — sahte üretilmedi** |
 | Sahte test kaydı yok | ✅ **mekanik olarak imkânsız** |
-| Belirsizlik bulguları çözüldü | ✅ 28/28 |
+| Belirsizlik bulguları çözüldü | ✅ 30/31 · 1 Faz 3'e (F2-27) |
 | Sayfa modeli gerçek içerikle ölçüldü | ✅ |
 | Arka madde modeli doğrulandı | ✅ |
 | Levha prova hattı hazırlandı | ✅ |

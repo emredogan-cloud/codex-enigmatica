@@ -159,8 +159,13 @@ def main() -> int:
         # — ve katmanlı bir zincir için 30 kelimede "neredeyse-cevap"
         # YAZILAMAZ. Bir kuralın diğerini yazılamaz kılması, kural değil
         # çelişkidir.
+        # ⚠ Kıyas metni OKURUN SAYFADA GÖRDÜĞÜDÜR. Anlatı satırı (flavour)
+        # STYLE § 1'in anlatı kaydıdır ve sayfada basılıdır; mekanik içerik
+        # taşımaz ama okurun okuduğu metnin parçasıdır. Onu saymamak,
+        # "ipucu bulmacadan uzun" ölçüsünü olduğundan sert yapardı.
         puzzle_text = " ".join(
-            [rec.get("objective", ""), rec.get("readerAction", "")]
+            [rec.get("flavour", ""), rec.get("objective", ""),
+             rec.get("readerAction", "")]
             + list(rec.get("clues") or []))
         if puzzle_text.strip():
             plen = len(pl.words(puzzle_text))

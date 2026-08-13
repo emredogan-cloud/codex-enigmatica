@@ -425,3 +425,56 @@ indi. Kalan üçü de bu fazda kapatıldı (§ 5.16).
 > çözdü; bir insan çözücünün bunu yapacağının **hiçbir göstergesi yoktur**.
 > Solver B'nin kendi tahmini insan için 3–5 kat süre. Öldürme kapısı bu
 > satırların hiçbirini saymaz.
+
+### 5.19 · ⭑ F2-25 · ANLATI KAYDI HİÇ YOKTU ⭑ — kurucu bulgusu
+
+Kurucu pilot metinleri için şunu bildirdi: *"mekanik olarak kusursuz ama
+anlatısal olarak ölü — bir matematik sınavı gibi okunuyor."*
+
+Bu, üç iç çözücünün **hiçbirinin** bulamadığı bir kusurdur ve sebebi
+öğreticidir: üçü de **çözebiliyorlardı**. Bir çözücü sıkılmaz, yorulmaz
+ve okumayı bırakmaz. *Okuma yorgunluğu* yalnızca insanın ölçebileceği bir
+şeydir — ve harici testin neden vazgeçilmez olduğunun ikinci mekanik
+kanıtıdır (birincisi F2-06'ydı).
+
+**Teşhis üslup değil mimariydi.** `STYLE.md § 1` iki kayıt tanımlar:
+anlatı (süslü olabilir) ve talimat (asla). Pilotun yirmi bulmacasının
+yirmisi de **yalnızca talimat kaydında** yazılmıştı.
+
+> Sınav gibi okunmasının sebebi talimatların kötü olması değil,
+> **anlatının eksik olmasıydı.**
+
+**Kapatıldı:** her bulmacaya mekanik içerik taşımayan bir **anlatı satırı**
+eklendi; talimat sınav registerinden arşivci registerine taşındı;
+ipuçlarındaki **kümülatif tekrar** kaldırıldı (üç kademe artık her biri
+YENİ bir adım getirir). `STYLE.md` v2.0'a kalibre edildi.
+
+**Kanıt:** geçişten sonra `qa_solvability` · `qa_hints` · `qa_uniqueness`
+yeniden koştu ve üçü de yeşil kaldı. Belirsizlik puanı, cevap uzayı ve
+merdiven kapsamı **değişmedi**.
+
+### 5.20 · F2-26 · Bir üslup geçişi mekaniği sessizce bozabilir
+
+Ses geçişi sırasında bir fısıltı — *"Dizeyi ondan geri okuyun"* — son
+çözüm adımıyla **iki içerik kelimesi** paylaşıyordu. `qa_hints § ⑦` onu
+**cevap anahtarı** olarak kırmızı yaktı.
+
+Hiçbir insan bunu okurken fark etmezdi: cümle güzel, kısa ve doğru
+görünüyordu. Yakalayan şey disiplin değil **kapıydı**.
+
+> Bir üslup geçişi "yalnızca kelimeler" değildir. Kelimeler kapsamdır.
+
+### 5.21 · F2-27 · Ölçüm hipotezi doğrulamadı — ve bant değiştirilmedi
+
+`STYLE § 4` bulmaca metnini **90–220 kelime** diye bantlamıştı. Yirmi
+gerçek bulmacada ölçülen: **41–83, medyan 51**.
+
+Bant tek bir bulmaca yazılmadan ve **kitabın tamamı için** konulmuştu;
+Kapı I ise zorluk ★'dır.
+
+> ⚠ Bant **düşürülmedi**. Bir hedefi ölçüme uydurmak, ölçmenin tersidir.
+
+Doğru hamle bandı zorluğa göre ayırmaktır ve bunun için Kapı II (★★) ile
+Kapı IV (★★★) ölçümü gerekir. Karar **Faz 3'e ertelendi** ve `STYLE § 4.1`
+bunu açıkça yazar: üç bant birden ölçülmeden tek bir sayı yazmak, aynı
+hatayı ikinci kez yapmaktır.

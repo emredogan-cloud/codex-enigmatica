@@ -1117,6 +1117,79 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
               "⭑ HATA TESPİT LİSTESİ BİR HARF UZAKLIKTA İFADE TAŞIRSA ⭑ "
               "(tek hata GİZLENİR, tespit edilmez)", out)
 
+    # ── ⛔ ÖLDÜRME KAPISI ⛔ ─────────────────────────────────────────────
+    #
+    # İKİ YÖNLÜ FİKSTÜR ve ikincisi birincisinden daha önemlidir:
+    #   ① veri yokken GEÇMEMELİ  — "boş veriyle yeşil yanan kapı" yalanı
+    #   ② veri varken GEÇMELİ    — hiç geçmemiş bir kapı, geçemiyor da
+    #                              olabilir ve bunu ancak denemek gösterir
+    def killgate_root(sessions_per_solver: int, alt: str = "",
+                      minutes: int = 8) -> str:
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "kill-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "06_REPORTS/solver",
+                    "06_REPORTS/tracked"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        c = json.loads(json.dumps(cfg))
+        c["founder"]["externalSolvers"]["sessionsRecorded"] = sessions_per_solver
+        c["founder"]["externalSolvers"]["identifiedCount"] = 5
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(c, ensure_ascii=False))
+        pz, recs = [], []
+        for i in range(1, 21):
+            pid = "fixture-%03d" % i
+            pz.append({"puzzleId": pid, "gate": "threshold", "type": "cipher",
+                       "mechanismFamily": "substitution-cipher",
+                       "status": "drafted", "testStatus": "external-pending",
+                       "leakClass": "protected", "ambiguityScore": 1,
+                       "pilotCohort": True})
+            tests = []
+            for s in range(1, sessions_per_solver + 1):
+                tests.append({"date": "2026-08-13", "solver": "solver-%02d" % s,
+                              "solverClass": "external", "usedHints": 0,
+                              "minutesToSolve": minutes, "result": "solved",
+                              "hintsUsedByLevel": [0, 0, 0],
+                              "alternativeOffered": alt if (i == 1 and s == 1)
+                              else ""})
+            recs.append({"puzzleId": pid, "finalAnswer": "MELTEM",
+                         "solverTests": tests})
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": pz}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": recs}, ensure_ascii=False))
+        for s in range(1, sessions_per_solver + 1):
+            write(os.path.join(d, "06_REPORTS/solver/solver-%02d.json" % s),
+                  json.dumps({"solver": "solver-%02d" % s,
+                              "gateCompleted": True}, ensure_ascii=False))
+        return d
+
+    d = killgate_root(0)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "BLOCKED" in out,
+              "⭑ ÖLDÜRME KAPISI VERİ YOKKEN 'GEÇTİ' DEMEZ (BLOCKED) ⭑", out)
+
+    d = killgate_root(5)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code == 0 and "PASS" in out,
+              "⭑ ÖLDÜRME KAPISI TAM VERİYLE GEÇEBİLİYOR ⭑ "
+              "(hiç geçmemiş bir kapı, geçemiyor da olabilir)", out)
+
+    d = killgate_root(2)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "BLOCKED" in out,
+              "eksik çözücü sayısı (2/5) BLOCKED verir", out)
+
+    d = killgate_root(5, alt="baska bir cevap")
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "REWORK" in out,
+              "⭑ BİR ÇÖZÜCÜ İKİNCİ CEVAP ÖNERİRSE REWORK ⭑", out)
+
+    d = killgate_root(5, minutes=30)          # 20 × 30 dk = 600 > 240 tavan
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0,
+              "medyan süre tavanı aşarsa GEÇMEZ (%d dk)" % 600, out)
+
     # ── TÜRKÇE KATLAMASI — pilot dilinin ölçüm makinesini kırdığı yer ──
     sys.path.insert(0, BUILD)
     import _protected_layer as _pl                             # noqa: E402

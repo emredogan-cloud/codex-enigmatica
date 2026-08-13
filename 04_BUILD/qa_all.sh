@@ -155,6 +155,29 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 [ -f 04_BUILD/plate_proof.py ] && \
   run_optional "levha prova paketi"   $VENV_PY 04_BUILD/plate_proof.py
 
+# ⚑ İngilizce dönüşümün İŞ LİSTESİNİ ölçer; dönüşümü BAŞLATMAZ (§ 23).
+[ -f 04_BUILD/english_readiness.py ] && \
+  run "İNGİLİZCE DÖNÜŞÜM HAZIRLIĞI" $PY 04_BUILD/english_readiness.py \
+                                   --json 06_REPORTS/tracked/english-readiness.json
+
+# ── ⛔ ÖLDÜRME KAPISI ⛔ ────────────────────────────────────────────────────
+# Karar üretir, kalite ölçmez — bu yüzden BLOKLAYICI OLARAK yalnızca phase2
+# ve sonrasında koşar. phase1'de bilgilendirir: kapı seviyesi henüz o kararı
+# GEREKTİRMİYOR ve gerektirmediği bir kararı kırmızı yakmak, kapıyı
+# gürültüye boğar. Ama SESSİZ de kalmaz — kararı her koşuda yazdırır.
+if [ -f 04_BUILD/kill_gate.py ]; then
+  case "$GATE" in
+    phase2|phase3|phase4|phase5|release)
+      run "⛔ ÖLDÜRME KAPISI ⛔"     $PY 04_BUILD/kill_gate.py ;;
+    *)
+      echo
+      echo "──────────────────────────────────────────────────────────────────────"
+      echo "▸ ⛔ ÖLDÜRME KAPISI ⛔  (kapı $GATE — bilgilendirme)"
+      echo "──────────────────────────────────────────────────────────────────────"
+      $PY 04_BUILD/kill_gate.py || true ;;
+  esac
+fi
+
 # ── ÜRETİM MODELİ ──────────────────────────────────────────────────────────
 [ -f 04_BUILD/page_budget.py ] && \
   run "sayfa bütçesi"           $PY 04_BUILD/page_budget.py \

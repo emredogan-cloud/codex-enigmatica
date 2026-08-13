@@ -1,0 +1,69 @@
+{
+  "phase": "phase2",
+  "gate": "threshold",
+  "puzzlesWritten": 20,
+  "puzzlesRequired": 20,
+  "solversIdentified": 5,
+  "sessionsRecorded": 0,
+  "externalTestRecords": 0,
+  "distinctExternalSolvers": 0,
+  "thresholds": {
+    "solversCompletingGateI": 4,
+    "puzzlesUnsolvedByAllSolvers": 0,
+    "confirmedAlternativeSolutions": 0,
+    "medianCompletionMinutesMax": 240,
+    "minSolversPerPuzzle": 2,
+    "minSolversPerPuzzle$comment": [
+      "⚠ FAZ 1 KIRMIZI TAKIM DÜZELTMESİ.",
+      "'Hiçbir çözücünün çözemediği bulmaca = 0' ölçütü, 5 çözücüden",
+      "YALNIZCA BİRİNİN çözdüğü bir bulmacayı GEÇİRİR. Okurların",
+      "%80'inin takıldığı bir bulmaca, bu ölçüte göre geçer bir",
+      "bulmacadır — ve tam olarak o bulmaca 1 yıldız üretir.",
+      "İkinci bir taban gerekir: her bulmacayı en az 2 çözücü bitirmeli."
+    ],
+    "maxSolversNeedingLevel3Hint": 2,
+    "maxSolversNeedingLevel3Hint$comment": [
+      "İpucu tüketimi ÖLÇÜLMEDEN 'zorluk ★' bir iddiadır.",
+      "Beş çözücünün beşinin 3. kademe ipucuna ihtiyaç duyduğu bir kapı,",
+      "bütün sayısal eşikleri geçer ve YİNE DE çok zordur.",
+      "İpucu merdiveni bir emniyet ağıdır; ana yol olursa zorluk eğrisi",
+      "kırıktır."
+    ],
+    "pilotSessionOverheadMinutes": 45,
+    "pilotSessionOverheadMinutes$comment": [
+      "Bulmaca sürelerinin toplamı, oturumun süresi DEĞİLDİR.",
+      "Modelin görmediği süre: sözleşme sayfası ve ısınma bölümünü",
+      "okumak, arka maddeye gidip TERS BASILMIŞ ipuçlarını çözmek,",
+      "başarısız denemeler, yeniden okumalar ve kapı bulmacası için",
+      "on dokuz cevabı tek tek aktarmak.",
+      "Bu kalem olmadan 'modellenen süre' iyimser bir kurgudur."
+    ],
+    "medianDefinition": "dnf-counts-as-cap",
+    "medianDefinition$comment": [
+      "Bitiremeyen bir çözücünün süresi TANIMSIZDIR ve tanımsız bir",
+      "değer medyanı istediğiniz yöne çeker: 5 kişinin medyanı ile",
+      "4 bitirenin medyanı FARKLI SAYILARDIR.",
+      "Kural: bitiremeyen çözücü tavan süreyi (240 dk) almış sayılır.",
+      "Böylece bir DNF medyanı İYİLEŞTİREMEZ. 'Eşikler sayısaldır,",
+      "yoruma yer yoktur' cümlesi ancak bu tanımla doğru olur."
+    ]
+  },
+  "criteria": {},
+  "verdict": "BLOCKED",
+  "reason": "Harici çözücü oturumları YAPILMADI. 0/5 çözücü kaydı var. Öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.",
+  "internalSolverCountsAsEvidence": false,
+  "blockingDecision": "A12",
+  "whatIsReady": [
+    "20 pilot bulmaca yazıldı ve bütün teknik kapılardan geçti",
+    "cevap uzayı bağımsız açıldı: 20/20 tam olarak bir kabul",
+    "harici çözücü paketi hazır: 00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md",
+    "kayıt şeması ve eşikler sayısal olarak tanımlı"
+  ],
+  "whatIsMissing": [
+    "5 harici çözücü oturumu (0 yapıldı)",
+    "bulmaca başına çözüm oranı",
+    "medyan tamamlama süresi",
+    "ipucu tüketimi",
+    "çözücülerin önerdiği alternatif cevaplar"
+  ]
+}

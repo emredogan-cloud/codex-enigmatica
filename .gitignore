@@ -26,7 +26,7 @@
 # metni veya ÇÖZÜM ALANI görürse CI'ı kırmızı yakar.
 # Politikayı disipline değil mekanizmaya bağlarız: disiplin unutulur.
 #
-# Karar: DECISIONS.md § A1 (bootstrap varsayımı — kurucu onayı bekliyor)
+# Karar: DECISIONS.md § K10 · K14 (A1 Faz 1'de kapandı — beş hatlı koruma)
 
 # ① KİTABIN PROZASI ───────────────────────────────────────────────────────
 02_MANUSCRIPT/*
@@ -52,15 +52,50 @@
 06_REPORTS/solver/*
 !06_REPORTS/solver/.gitkeep
 
-# Bulmaca kayıtlarının PROTECTED nüshaları
-01_SOURCE/puzzles/*.private.json
-01_SOURCE/puzzles/*.solutions.json
+# ①c ⭑ TASARIM KATMANI — mekanizmayı açık eder ⭑
+# Bir tasarım niyeti ("gravürün tarama yönü veri taşır") bir ÇÖZÜM DEĞİLDİR
+# ama okur onu önceden bilirse kitabın imza mekaniği HARCANMIŞ olur.
+# leakClass 'restricted' bu ara durumun adıdır ve bu dizin onun evidir.
+01_SOURCE/design/*
+!01_SOURCE/design/.gitkeep
+
+# Bulmaca kayıtları: İZİN LİSTESİ. Yasak listesi yalnızca AKLA GELEN
+# soneki durdurur; 01_SOURCE/puzzles/g1-007.json hiçbir yasağa takılmaz.
+# Bu yüzden hepsi kapalıdır ve yalnızca *.public.json açıktır.
+01_SOURCE/puzzles/*
+!01_SOURCE/puzzles/.gitkeep
+!01_SOURCE/puzzles/*.public.json
 
 # ② ÖZEL EDİTORYAL VE ARAŞTIRMA MALZEMESİ ─────────────────────────────────
 00_CONTEXT/private/
-06_REPORTS/editorial/
 **/*.private.md
 **/*_PRIVATE.md
+
+# ②b ⭑ RAPORLAR: İZİN LİSTESİ ⭑
+# Doğrulayıcı raporları YAPILARI GEREĞİ çözüm içeriğine yaklaşır:
+# qa_uniqueness "hangi alternatif adaylar reddedildi" sorusunu yanıtlar ve
+# o adaylar CEVAP ADAYLARIDIR. Bir kapının kendi raporu üzerinden sızıntı
+# yapması, bu depodaki en sinsi kaçış yoludur — ve CI bu dosyaları
+# ARTEFAKT olarak yükler, yani public depoya bakmayan biri bile indirir.
+#
+# Bu yüzden 06_REPORTS/ varsayılan olarak KAPALIDIR. Depoda yalnızca
+# 06_REPORTS/tracked/ altındaki, elle gözden geçirilmiş ÖZETLER durur.
+06_REPORTS/*
+!06_REPORTS/.gitkeep
+!06_REPORTS/tracked/
+!06_REPORTS/tracked/**
+# Faz raporları ÜRETİLEN artefakt değil, elle yazılmış ve gözden geçirilmiş
+# belgelerdir; yol haritasının söz verdiği yerde dururlar.
+!06_REPORTS/PHASE_*_REPORT.md
+
+# ⚠ ÜRETİLEN raporlar tracked/ altında da olsa DEPODA DURMAZ: her koşuda
+# yeniden yazılırlar ve çalışma ağacını kirletirler. Depoda duracak olan,
+# KARAR taşıyan raporlardır — öldürme kapısı kararı, POD baskı ölçümü,
+# kanarya künyesi (K18: rapor depoda durur, ÜRÜN durmaz).
+06_REPORTS/tracked/*-validation.json
+06_REPORTS/tracked/structure.json
+06_REPORTS/tracked/qa-*.json
+06_REPORTS/tracked/research.json
 
 # ③ GÖRSEL VARLIKLAR ──────────────────────────────────────────────────────
 # ~110 levha × 4 format çok büyüktür. Ayrıca bu projede levhalar BULMACA

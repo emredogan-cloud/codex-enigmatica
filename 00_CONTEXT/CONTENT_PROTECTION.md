@@ -45,17 +45,26 @@ Bir doğrulayıcının kendisi sır değildir. `qa_solvability.py`'nin nasıl
 
 ---
 
-## 3 · Mekanizma — üç hat
+## 3 · Mekanizma — BEŞ hat
 
-### Hat 1 · `.gitignore` (yol)
+> ⚠ **Faz 1'de üçten beşe çıktı.** Bağımsız bir saldırı, ilk üç hattın
+> yalnızca *alan adı* aradığını gösterdi: `BOOK_STATS.md` içine etiketsiz
+> bir cümleyle yazılmış bir cevap **hiçbir kapıya takılmıyordu**.
+
+### Hat 1 · `.gitignore` — YASAK değil İZİN listesi
 ```
-01_SOURCE/solutions/*
-09_ARCHIVE/solutions/*
-06_REPORTS/solver/*
-01_SOURCE/puzzles/*.private.json
-01_SOURCE/puzzles/*.solutions.json
+01_SOURCE/solutions/*      01_SOURCE/design/*
+09_ARCHIVE/solutions/*     06_REPORTS/solver/*
+01_SOURCE/puzzles/*        → yalnızca *.public.json açık
+06_REPORTS/*               → yalnızca tracked/ ve faz raporları açık
 02_MANUSCRIPT/*
 ```
+
+⚠ Faz 1'de iki dizin **yasak listesinden izin listesine** çevrildi.
+`01_SOURCE/puzzles/` yalnızca iki soneki dışlıyordu — `g1-007.json` hiçbir
+yasağa takılmıyordu. `06_REPORTS/` ise takip ediliyor **ve CI artefaktı
+olarak yükleniyordu**; `qa_uniqueness` yapısı gereği *reddedilmiş cevap
+adaylarını* yazacak bir kapıdır.
 
 ### Hat 2 · korumalı dizin denetimi (varlık)
 `validate_structure.py § PROTECTED_DIRS` — bu dizinlerde **takip edilen bir
@@ -64,48 +73,75 @@ dosyanın varlığı** tek başına ihlaldir. İçeriğe bakılmaz.
 Neden ayrı bir hat: `.gitignore` yalnızca *henüz takip edilmeyen* dosyaları
 dışlar. Bir dosya bir kez `git add` edilmişse `.gitignore` onu **durduramaz**.
 
-### Hat 3 · içerik taraması (alan adı)
-`validate_structure.py § check_solution_leak()` — takip edilen bütün
-dosyalarda çözüm **alan adlarını** arar:
+### Hat 3 · içerik taraması (alan adı **ve etiket**)
+`validate_structure.py § check_solution_leak()` iki şey arar:
 
-```
-"solution":  ·  "intendedSolution":  ·  "answer":
-"answerKey":  ·  "solutionPath":  ·  "hints":
-SOLUTION:  ·  ANSWER KEY
-```
+- **alan adı** — `"solution":` biçimindeki JSON anahtarları; kalıplar
+  `SOLUTION_FIELD_NAMES` listesinden **türetilir**, elle yazılmaz
+- **etiketli değer** — `SOLUTION: …` / `ÇÖZÜM: …` biçimi, **iki dilde**
 
-Neden üçüncü hat: bir çözüm **yeni bir ada konan** bir dosyaya taşınırsa
-yol kalıbı onu yakalamaz. Politikayı disipline değil mekanizmaya bağlarız.
+Faz 1 düzeltmeleri: tarama beş uzantıyla sınırlıydı ve `str.endswith`
+büyük/küçük harfe duyarlıydı (`ANSWERS.JSON` geçiyordu); Türkçe hiç yoktu;
+ve `git ls-files` çalışmazsa **bütün hat boş koşup yeşil yanıyordu**.
 
-### Ve bir dördüncü: şema düzeyi
-`validate_spec.py` `puzzle_index.json` içindeki **her kayıt** için yasak
-alan adlarını arar. Public indeks çözüm taşıyamaz.
+### Hat 4 · şema İZİN listesi
+`validate_spec.py` artık `puzzle.schema.json`'u **uygular**.
+`publicPuzzle` tanımı `additionalProperties: false` taşır — yani public
+indeks bir **yasak listesiyle** değil bir **izin listesiyle** korunur:
+akla gelmemiş bir alan adı da reddedilir.
+
+> Faz 1'e kadar bu şemayı **hiçbir kod okumuyordu**. Yalnızca "var mı"
+> diye denetleniyordu. 355 satırlık bir doğrulayıcı adı taşıyan tasarım
+> belgesiydi.
+
+### Hat 5 · ⭑ KANARYA — cevabın kendisi ⭑
+`qa_solution_leak.py` alan adı değil **cevabın kendisini** arar: takip
+edilen dosya içerikleri, **dosya adları** ve **commit mesajları**, ve
+Faz 6'da yayın paketi.
+
+Üç kipi vardır ve üçüncüsü sessiz kalmaz:
+
+| Kip | Koşul | Davranış |
+|---|---|---|
+| **A · yerel** | Korumalı katman diskte | Gerçek cevabı arar |
+| **B · CI** | Tuzlu künye + `ENIGMATICA_CANARY_SALT` sırrı | Karma pencere eşleşmesi; cevap açıkta durmaz |
+| **C · koşmadı** | İkisi de yok | Faz 2'den itibaren **KIRMIZI** |
+
+Künye **ters karmaları** da taşır: ipuçları ters basılır ve ters
+basılacak bir dizeyi düz aramak onu kaçırır.
 
 ---
 
-## 4 · Muafiyet listesi KISA tutulur
+## 4 · Muafiyet listesi DONDURULMUŞTUR
 
-`SOLUTION_SCAN_SKIP` yalnızca dört dosya içerir ve bu sayı
-`selftest.py § ④` tarafından **denetlenir**:
-
-```python
-rep.check(len(vs.SOLUTION_SCAN_SKIP) <= 4, "muafiyet listesi kısa")
-```
-
-Gerekçe: her muafiyet, çözüm sızıntısı kapısında açılmış bir deliktir.
-Gereksiz bir tanesi bile fazladır.
-
-Muaf dosyalar ve nedenleri:
+`SOLUTION_SCAN_SKIP` **tam olarak iki dosya** içerir ve `selftest § ④`
+**küme eşitliği** arar:
 
 | Dosya | Neden muaf |
 |---|---|
 | `01_SOURCE/puzzle.schema.json` | Alan adlarını **tanımlar**, değer taşımaz |
-| `04_BUILD/validate_structure.py` | Tarama kalıplarının kendisini taşır |
-| `05_TESTS/selftest.py` | Kurgu çözüm dizesiyle kapıyı test eder |
 | `00_CONTEXT/CONTENT_PROTECTION.md` | Bu belge — kalıpları açıklar |
 
-Ve her muafiyet **iki kez** denetlenir: dosya var mı, muafiyet gerçekten
-gerekli mi (yani muaf olmasaydı yakalanır mıydı).
+Listeye ekleme yapmak testi düzenlemeyi gerektirir, yani **gözden
+geçirilebilir bir eylemdir**.
+
+> ⚠ **Faz 1'de bulunan kusur.** Eski test bir muafiyetin "gerekli"
+> olduğunu, muaf dosyada bir çözüm işareti **arayarak** doğruluyordu.
+> Yani yeni bir muafiyeti meşrulaştırmanın yolu, o dosyaya bir çözüm
+> işareti koymaktı — test, saldırganın kontrol listesiydi. Bir POC bunu
+> gösterdi: public indeks muaf listeye alındı ve test `✓ muafiyet
+> GEREKLİ` yazdı.
+
+Ve muafiyet **yalnızca alan adı taramasını** kapsar. Değer tarafı
+taraması ve kanarya **hiçbir dosyayı** muaf tutmaz — yani bu iki dosyaya
+gerçek bir cevap yazmak yine yakalanır.
+
+### Korumalı dizin muafiyetleri TAM YOLDUR
+
+`README.md` ve `.gitkeep` muafiyeti eskiden **temel ada** bakıyordu, yani
+her alt dizin bedava bir serbest dosya kazanıyordu:
+`01_SOURCE/solutions/gate-1/README.md` bir cevap anahtarı taşıyabiliyordu
+ve kapı ona hiç bakmıyordu.
 
 ---
 

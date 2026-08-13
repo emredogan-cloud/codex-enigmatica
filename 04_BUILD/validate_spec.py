@@ -2,23 +2,36 @@
 """
 VERİ BÜTÜNLÜĞÜ VE KAPSAM KAPISI — Codex Enigmatica
 ================================================================================
-Bu kapı dört soruyu sorar:
+Bu kapı altı soruyu sorar:
 
   ① project_config.json kendi içinde tutarlı mı
-  ② puzzle_index.json şemaya uyuyor mu, kimlikler tekil mi
+  ② puzzle_index.json ŞEMAYA uyuyor mu, kimlikler tekil mi
   ③ .gate seviyesinin GEREKTİRDİĞİ kapsam sağlanmış mı
   ④ PUBLIC KATMANDA ÇÖZÜM VAR MI
+  ⑤ ⭑ 'tested' DURUMU KAZANILMIŞ MI ⭑
+  ⑥ gate_index ile config aynı kapıları mı tanıyor
 
-④ bu projeye özgüdür ve sert bir kuraldır: `puzzle_index.json` bulmacaların
-PUBLIC kaydıdır ve içinde ÇÖZÜM ALANI BULUNAMAZ. Bir çözüm public katmana
-yazılırsa ürün yayımlanmadan değersizleşir.
+────────────────────────────────────────────────────────────────────────
+② NEDEN YENİDEN YAZILDI: `puzzle.schema.json` 355 satır boyunca üç
+gizlilik sınıfı, `additionalProperties: false` ve alan tipleri tanımlıyordu
+— ve HİÇBİR SATIR KOD ONU OKUMUYORDU. Şema yalnızca "var mı" diye
+denetleniyordu. Yani şema bir doğrulayıcı adı taşıyan bir tasarım
+belgesiydi. Artık uygulanıyor: `additionalProperties: false` bu depodaki
+en güçlü tek gizlilik mekanizmasıdır, çünkü YASAK LİSTESİ DEĞİL İZİN
+LİSTESİDİR — akla gelmemiş bir alan adı da reddedilir.
 
-Ayrıca öldürme kapısı eşikleri (Faz 2) burada doğrulanır: eşikler SAYISALDIR
-ve config'de durur — yoruma yer yoktur.
+⑤ NEDEN VAROLUŞSAL: eskiden 140 kaydın `status` alanını elle "written"
+yapmak, projeyi phase1'den release'e kadar yürütüyordu — `testStatus`
+"untested", çözücü sayısı 0, alternatif analiz yapılmamışken. Faz 2'ye
+"ÖLDÜRME KAPISI" deniyordu ama mekanik olarak bir metin alanıydı.
+Artık 'tested' BEŞ ŞARTLA KAZANILIR ve iç çözücü kayıtları SAYILMAZ:
+ajan çözümü zaten bilir, yargısı kanıt değildir.
 
-TASARIM: yalnızca Python standart kütüphanesi. Üçüncü taraf paket YOK —
-yazım fazlarında günde onlarca push olur ve iki dakikalık kurulum beklemek
-disiplini öldürür. (World Myths kararı K7.)
+Ayrıca en ucuz gerçek kilit burada: kurucu harici çözücüleri ONAYLAMADAN
+hiçbir kayıt 'tested' olamaz. Sahte test kaydı üretme yolu böylece
+kapanır — belgeyle değil, mekanizmayla.
+
+TASARIM: yalnızca Python standart kütüphanesi (K7).
 
 Çıkış kodları:  0 = geçti   1 = kapı kırmızı   2 = kullanım hatası
 """
@@ -28,6 +41,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -36,17 +50,69 @@ ROOT = os.path.dirname(HERE)
 CONFIG = os.path.join(ROOT, "project_config.json")
 PUZZLE_INDEX = os.path.join(ROOT, "01_SOURCE", "puzzle_index.json")
 GATE_INDEX = os.path.join(ROOT, "01_SOURCE", "gate_index.json")
+SCHEMA = os.path.join(ROOT, "01_SOURCE", "puzzle.schema.json")
 
 VALID_GATES = ["phase0", "phase1", "phase2", "phase3", "phase4", "phase5", "release"]
-VALID_STATUS = ["candidate", "drafted", "validated", "written", "dropped"]
-VALID_PUZZLE_TYPE = ["observation", "cipher", "logic", "spatial",
-                     "self-referential", "gate", "meta"]
+PRINT_BOUND = ("validated", "written")
 
-# ④ PUBLIC KATMANDA BULUNAMAYACAK ALAN ADLARI.
-# Bu liste project_config.json § contentProtection.solutionFieldNames
-# ile senkron olmak ZORUNDADIR; check_config bunu denetler.
-FORBIDDEN_PUBLIC_FIELDS = ["solution", "intendedSolution", "answer",
-                          "answerKey", "solutionPath", "hints"]
+# validate_structure.py § SOLUTION_FIELD_NAMES ile SENKRON olmak ZORUNDA.
+# Bu liste İÇERİK taramasınındır: dar tutulur, çünkü bütün depoyu gezer.
+SCAN_FIELD_NAMES = ["solution", "intendedSolution", "answer", "answerKey",
+                    "solutionPath", "hints", "finalAnswer"]
+
+
+# ── küçük şema uygulayıcısı ────────────────────────────────────────────
+# JSON Schema'nın tamamı değil; bu şemanın KULLANDIĞI alt kümesi.
+# Üçüncü taraf paket YOK (K7) — validate.yml saniyeler içinde biter.
+def schema_errors(rec: dict, defn: dict, path: str = "") -> list[str]:
+    out: list[str] = []
+    props = defn.get("properties", {})
+
+    for key in defn.get("required", []):
+        if key not in rec:
+            out.append("%s: zorunlu alan eksik '%s'" % (path, key))
+
+    if defn.get("additionalProperties") is False:
+        for key in rec:
+            if key not in props:
+                out.append("%s: TANIMSIZ ALAN '%s'" % (path, key))
+
+    for key, val in rec.items():
+        spec = props.get(key)
+        if not spec:
+            continue
+        t = spec.get("type")
+        if t == "string" and not isinstance(val, str):
+            out.append("%s.%s: dize olmalı" % (path, key))
+            continue
+        if t == "integer" and not isinstance(val, int) or (
+                t == "integer" and isinstance(val, bool)):
+            out.append("%s.%s: tamsayı olmalı" % (path, key))
+            continue
+        if t == "boolean" and not isinstance(val, bool):
+            out.append("%s.%s: mantıksal olmalı" % (path, key))
+            continue
+        if t == "array" and not isinstance(val, list):
+            out.append("%s.%s: dizi olmalı" % (path, key))
+            continue
+        if "enum" in spec and val not in spec["enum"]:
+            out.append("%s.%s: geçersiz değer '%s'" % (path, key, val))
+        if "pattern" in spec and isinstance(val, str):
+            if not re.match(spec["pattern"], val):
+                out.append("%s.%s: kalıba uymuyor '%s'" % (path, key, val))
+        if isinstance(val, int) and not isinstance(val, bool):
+            if "minimum" in spec and val < spec["minimum"]:
+                out.append("%s.%s: %s < %s" % (path, key, val, spec["minimum"]))
+            if "maximum" in spec and val > spec["maximum"]:
+                out.append("%s.%s: %s > %s" % (path, key, val, spec["maximum"]))
+        if t == "array" and isinstance(val, list):
+            it = spec.get("items", {})
+            if it.get("type") == "string":
+                for v in val:
+                    if not isinstance(v, str):
+                        out.append("%s.%s: dizi öğeleri dize olmalı" % (path, key))
+                        break
+    return out
 
 
 class Report:
@@ -72,10 +138,7 @@ class Report:
         print("  ! %s" % label)
 
     def check(self, cond: bool, label: str) -> bool:
-        if cond:
-            self.ok(label)
-        else:
-            self.fail(label)
+        self.ok(label) if cond else self.fail(label)
         return cond
 
 
@@ -105,7 +168,8 @@ def check_config(cfg: dict, rep: Report) -> None:
     print("\n── yapılandırma bütünlüğü ──")
 
     for key in ("project", "founder", "audience", "scope", "solvability",
-                "killGate", "contentProtection", "production", "gates", "style"):
+                "killGate", "contentProtection", "production", "gates",
+                "style", "taxonomy"):
         rep.check(key in cfg, "config bloğu var: %s" % key)
 
     scope = cfg.get("scope", {})
@@ -121,7 +185,6 @@ def check_config(cfg: dict, rep: Report) -> None:
     ids = [g.get("id") for g in gates_]
     rep.check(len(ids) == len(set(ids)), "kapı kimlikleri tekil")
 
-    # Zorluk eğrisi monoton artmalı: bir kapı öncekinden KOLAY olamaz.
     diffs = [g.get("difficulty", 0) for g in gates_]
     rep.check(all(diffs[i] <= diffs[i + 1] for i in range(len(diffs) - 1)),
               "zorluk eğrisi monoton artıyor %s" % diffs)
@@ -140,6 +203,12 @@ def check_config(cfg: dict, rep: Report) -> None:
               "belirsizlik eşiği ≤2")
     rep.check(sol.get("dependencyGraphMustBeAcyclic") is True,
               "DAG döngüsüzlük şartı duruyor")
+    tsr = sol.get("testStatusRequirements", {})
+    rep.check(bool(tsr), "test durumu şartları tanımlı")
+    rep.check(tsr.get("internalSolverCountsAsEvidence") is False,
+              "⭑ iç çözücü KANIT SAYILMIYOR ⭑")
+    rep.check(tsr.get("minExternalSolversGateI", 0) >= 5,
+              "Kapı I için ≥5 harici çözücü şartı duruyor")
 
     # ÖLDÜRME KAPISI — eşikler sayısal olmalı
     kg = cfg.get("killGate", {})
@@ -152,29 +221,42 @@ def check_config(cfg: dict, rep: Report) -> None:
               "onaylanmış alternatif çözüm eşiği = 0")
     rep.check(hs.get("solversCompletingGateI", 99) <= 3,
               "sert durdurma eşiği ≤3/5 çözücü")
+    # Kırmızı takım bulgusu: "hiç çözülemeyen bulmaca 0" ölçütü, 5 çözücüden
+    # 1'inin çözdüğü bir bulmacayı GEÇİRİR. Okurların %80'inin takıldığı bir
+    # bulmaca geçer bir bulmacadır. İkinci bir taban gerekir.
+    rep.check(isinstance(pc_.get("minSolversPerPuzzle"), int)
+              and pc_["minSolversPerPuzzle"] >= 2,
+              "bulmaca başına en az çözücü tabanı tanımlı (≥2)")
+    rep.check(pc_.get("medianDefinition") in ("dnf-counts-as-cap",),
+              "medyan tanımı belirsizlik bırakmıyor (DNF tavan sayılır)")
 
-    # GİZLİLİK SÖZLEŞMESİ — iki liste senkron olmalı
+    # GİZLİLİK SÖZLEŞMESİ — iki liste, iki iş
     cp = cfg.get("contentProtection", {})
-    rep.check(set(cp.get("solutionFieldNames", [])) == set(FORBIDDEN_PUBLIC_FIELDS),
+    rep.check(set(cp.get("solutionFieldNames", [])) == set(SCAN_FIELD_NAMES),
               "çözüm alan adları config ile betik arasında SENKRON")
+    fpf = set(cp.get("forbiddenPublicFields", []))
+    rep.check(bool(fpf), "public katman yasak alan listesi tanımlı")
+    rep.check(set(SCAN_FIELD_NAMES).issubset(fpf),
+              "içerik taraması adları yasak public alanların ALT KÜMESİ")
+    rep.check(len(cp.get("protectedDirs", [])) >= 4,
+              "korumalı dizin listesi tanımlı")
 
     # Üretim ekonomisi: KDP formülünün kendisi burada doğrulanır.
     prod = cfg.get("production", {})
-    pc = prod.get("kdpPrintCost", {})
+    pcst = prod.get("kdpPrintCost", {})
     pages = scope.get("pageTarget", 0)
     for ed in prod.get("editionsHypothesis", []):
         if not ed.get("enabled") or ed.get("list") is None:
             continue
         eid, lst = ed["id"], ed["list"]
-        if eid == "paperback":
-            band = pc.get("paperbackRegularTrimBW", {})
-        elif eid == "hardcover":
-            band = pc.get("hardcoverRegularTrimBW", {})
-        else:
+        band = (pcst.get("paperbackRegularTrimBW", {}) if eid == "paperback"
+                else pcst.get("hardcoverRegularTrimBW", {}) if eid == "hardcover"
+                else None)
+        if band is None:
             continue
         cost = band.get("fixed", 0) + pages * band.get("perPage", 0)
-        rate = (pc.get("royaltyRateAtOrAbove999", 0.6) if lst >= 9.99
-                else pc.get("royaltyRateBelow999", 0.5))
+        rate = (pcst.get("royaltyRateAtOrAbove999", 0.6) if lst >= 9.99
+                else pcst.get("royaltyRateBelow999", 0.5))
         royalty = lst * rate - cost
         rep.facts["royalty_%s" % eid] = round(royalty, 2)
         rep.facts["printcost_%s" % eid] = round(cost, 2)
@@ -182,28 +264,54 @@ def check_config(cfg: dict, rep: Report) -> None:
                   "%s telifi pozitif: %.2f $ (baskı %.2f $ @ %d sayfa)"
                   % (eid, royalty, cost, pages))
 
-    # Kindle bu projede ÜRETİLMEZ (görsel şifreler e-okuyucuda bozulur).
     kindle = [e for e in prod.get("editionsHypothesis", [])
               if e.get("id") == "kindle"]
     rep.check(not kindle or not kindle[0].get("enabled"),
               "Kindle devre dışı (görsel şifre koruması)")
 
     fnd = cfg.get("founder", {})
-    isbn = fnd.get("isbn", {})
-    rep.check(isbn.get("strategy") in ("kdp-free", "own"),
+    rep.check(fnd.get("isbn", {}).get("strategy") in ("kdp-free", "own"),
               "ISBN stratejisi geçerli")
 
 
-def check_games(cfg: dict, games, fams, gate: str, rep: Report) -> None:
+def check_gate_index(cfg: dict, fams, rep: Report) -> set:
+    print("\n── kapı dizini ──")
+    conf_ids = {g["id"] for g in cfg["scope"]["gateStructure"]}
+    if not fams:
+        rep.warn("gate_index.json yok — config kapıları kullanılıyor")
+        return conf_ids
+    entries = fams.get("gates", []) if isinstance(fams, dict) else fams
+    gate_ids = {g.get("id") for g in entries}
+    missing = conf_ids - gate_ids
+    rep.check(not missing, "config'in her kapısı gate_index'te var"
+              + ("" if not missing else " — EKSİK: %s" % sorted(missing)))
+    extra = [g for g in entries
+             if g.get("id") not in conf_ids and not g.get("metaGate")]
+    rep.check(not extra,
+              "gate_index'teki fazla kayıtlar metaGate işaretli"
+              + ("" if not extra else " — İŞARETSİZ: %s"
+                 % [g.get("id") for g in extra]))
+    for g in entries:
+        if g.get("id") in conf_ids:
+            cg = next(c for c in cfg["scope"]["gateStructure"]
+                      if c["id"] == g["id"])
+            rep.check(g.get("difficulty") == cg.get("difficulty")
+                      and g.get("puzzles") == cg.get("puzzles"),
+                      "kapı '%s' zorluk ve bulmaca sayısı SENKRON" % g["id"])
+    return gate_ids
+
+
+def check_games(cfg: dict, games, gate_ids: set, gate: str, rep: Report,
+                schema: dict | None) -> list:
     print("\n── bulmaca envanteri (public katman) ──")
 
     if games is None:
         if gate == "phase0":
             rep.warn("puzzle_index.json yok — phase0'da beklenen (Faz 1 üretir)")
             rep.facts["games_total"] = 0
-            return
+            return []
         rep.fail("puzzle_index.json yok ama kapı %s" % gate)
-        return
+        return []
 
     entries = games.get("puzzles", []) if isinstance(games, dict) else games
     rep.facts["games_total"] = len(entries)
@@ -212,54 +320,163 @@ def check_games(cfg: dict, games, fams, gate: str, rep: Report) -> None:
     rep.check(len(ids) == len(set(ids)), "bulmaca kimlikleri tekil (%d)" % len(ids))
     rep.check(all(ids), "her bulmacanın puzzleId'si var")
 
-    gate_ids = set()
-    if fams:
-        gentries = fams.get("gates", []) if isinstance(fams, dict) else fams
-        gate_ids = {g.get("id") for g in gentries}
-    if not gate_ids:
-        gate_ids = {g["id"] for g in cfg["scope"]["gateStructure"]}
+    # ② ⭑ ŞEMA GERÇEKTEN UYGULANIYOR ⭑
+    if schema:
+        defn = schema.get("$defs", {}).get("publicPuzzle")
+        if defn:
+            errs: list[str] = []
+            for p in entries:
+                errs += schema_errors(p, defn, p.get("puzzleId", "?"))
+            rep.check(not errs,
+                      "⭑ her kayıt publicPuzzle ŞEMASINA uyuyor "
+                      "(izin listesi: tanımsız alan REDDEDİLİR) ⭑"
+                      + ("" if not errs else " — %d ihlal: %s"
+                         % (len(errs), errs[:5])))
+        else:
+            rep.fail("puzzle.schema.json § $defs.publicPuzzle bulunamadı")
+    else:
+        rep.fail("puzzle.schema.json okunamadı — şema uygulanamıyor")
 
     bad_gate = [p["puzzleId"] for p in entries if p.get("gate") not in gate_ids]
     rep.check(not bad_gate,
-              "her bulmaca tanımlı bir kapıya ait" +
-              ("" if not bad_gate else " — ihlal: %s" % bad_gate[:5]))
+              "her bulmaca tanımlı bir kapıya ait"
+              + ("" if not bad_gate else " — ihlal: %s" % bad_gate[:5]))
 
-    bad_status = [p["puzzleId"] for p in entries
-                  if p.get("status") not in VALID_STATUS]
-    rep.check(not bad_status,
-              "durum alanları geçerli" +
-              ("" if not bad_status else " — ihlal: %s" % bad_status[:5]))
+    # ④ ⭑ PUBLIC KATMANDA ÇÖZÜM OLAMAZ ⭑ — config'ten sürülen GENİŞ liste.
+    # Şema izin listesi bunu zaten kapsar; bu ikinci hat, şema bozulursa
+    # veya bir alan yanlışlıkla şemaya eklenirse devreye girer.
+    forbidden = cfg["contentProtection"]["forbiddenPublicFields"]
 
-    bad_type = [p["puzzleId"] for p in entries
-                if p.get("type") not in VALID_PUZZLE_TYPE]
-    rep.check(not bad_type,
-              "bulmaca tipleri geçerli" +
-              ("" if not bad_type else " — ihlal: %s" % bad_type[:5]))
+    def deep_scan(obj, prefix: str) -> list[str]:
+        hits = []
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if k in forbidden:
+                    hits.append("%s.%s" % (prefix, k))
+                hits += deep_scan(v, "%s.%s" % (prefix, k))
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                hits += deep_scan(v, "%s[%d]" % (prefix, i))
+        return hits
 
-    # ④ ⭑ PUBLIC KATMANDA ÇÖZÜM OLAMAZ ⭑
     leaked = []
     for p in entries:
-        for field in FORBIDDEN_PUBLIC_FIELDS:
-            if field in p:
-                leaked.append("%s.%s" % (p.get("puzzleId"), field))
+        leaked += deep_scan(p, p.get("puzzleId", "?"))
     rep.check(not leaked,
-              "⭑ PUBLIC KATMANDA ÇÖZÜM YOK ⭑" +
-              ("" if not leaked else " — SIZINTI: %s" % leaked[:5]))
+              "⭑ PUBLIC KATMANDA ÇÖZÜM YOK (iç içe alanlar dâhil) ⭑"
+              + ("" if not leaked else " — SIZINTI: %s" % leaked[:5]))
 
-    # Belirsizlik eşiği: validated bulmacalar eşiği aşamaz.
+    # Belirsizlik: eşik AŞIMI ve ALANIN YOKLUĞU ayrı iki kusurdur.
+    # Eskiden alan yoksa denetim sessizce atlanıyordu — yani kapıyı kapatmanın
+    # yolu alanı SİLMEKTİ.
     maxamb = cfg["solvability"]["maxAcceptableAmbiguityScore"]
-    over = [p["puzzleId"] for p in entries
-            if p.get("status") in ("validated", "written")
-            and isinstance(p.get("ambiguityScore"), (int, float))
-            and p["ambiguityScore"] > maxamb]
+    over, absent = [], []
+    for p in entries:
+        if p.get("status") not in PRINT_BOUND:
+            continue
+        v = p.get("ambiguityScore")
+        if not isinstance(v, int):
+            absent.append(p["puzzleId"])
+        elif v > maxamb:
+            over.append(p["puzzleId"])
+    rep.check(not absent,
+              "yazılmış/doğrulanmış her bulmacada belirsizlik puanı VAR"
+              + ("" if not absent else " — EKSİK: %s" % absent[:5]))
     rep.check(not over,
-              "doğrulanmış bulmacalarda belirsizlik ≤ %d" % maxamb +
-              ("" if not over else " — AŞAN: %s" % over[:5]))
+              "doğrulanmış bulmacalarda belirsizlik ≤ %d" % maxamb
+              + ("" if not over else " — AŞAN: %s" % over[:5]))
 
-    rep.facts["cultures_total"] = len({p.get("gate") for p in entries})
-    for st in VALID_STATUS:
+    for st in ("candidate", "drafted", "validated", "written", "dropped"):
         rep.facts["games_%s" % st] = sum(1 for p in entries
                                          if p.get("status") == st)
+    rep.facts["gates_used"] = len({p.get("gate") for p in entries})
+    rep.facts["pilotCohort"] = sum(1 for p in entries if p.get("pilotCohort"))
+    return entries
+
+
+def check_test_status(cfg: dict, entries: list, gate_ids: set, rep: Report) -> None:
+    """⑤ ⭑ 'tested' KAZANILIR, ELLE VERİLMEZ. ⭑"""
+    print("\n── ⭑ TEST DURUMU ⭑ ──")
+    if not entries:
+        print("  ⊘ envanter boş")
+        return
+
+    sol = cfg.get("solvability", {})
+    tsr = sol.get("testStatusRequirements", {})
+    kg = cfg.get("killGate", {}).get("passCriteria", {})
+    fnd = cfg.get("founder", {})
+
+    # En ucuz gerçek kilit: harici çözücü onaylanmadan hiçbir şey 'tested'
+    # olamaz. Sahte test kaydı üretme yolu burada kapanır.
+    confirmed = fnd.get("externalSolvers", {}).get("founderConfirmed") is True
+    tested = [p["puzzleId"] for p in entries if p.get("testStatus") == "tested"]
+    if not confirmed:
+        rep.check(not tested,
+                  "harici çözücü ONAYLANMADAN hiçbir kayıt 'tested' olamaz"
+                  + ("" if not tested else " — ⛔ SAHTE: %s" % tested[:5]))
+
+    # status ↔ testStatus BAĞI: 'validated'/'written' testsiz verilemez.
+    unbound = [p["puzzleId"] for p in entries
+               if p.get("status") in PRINT_BOUND
+               and p.get("testStatus") != "tested"]
+    rep.check(not unbound,
+              "⭑ 'validated'/'written' yalnızca 'tested' kayıtlarda ⭑"
+              + ("" if not unbound else " — ⛔ TESTSİZ YAZILMIŞ: %s" % unbound[:5]))
+
+    # 'internal-only' ne dediğini demelidir.
+    lying = [p["puzzleId"] for p in entries
+             if p.get("testStatus") == "internal-only"
+             and p.get("solverTestCount", 0) > 0]
+    rep.check(not lying,
+              "'internal-only' kayıtlarda harici çözücü sayısı 0"
+              + ("" if not lying else " — ÇELİŞKİ: %s" % lying[:5]))
+
+    # Sayaç akıl sağlığı: çözen sayısı, deneyen sayısını aşamaz; ve
+    # toplanan çözücü havuzundan fazla test olamaz (uydurma göstergesi).
+    pool = cfg.get("killGate", {}).get("solversRequired", 5) * 2
+    insane = [p["puzzleId"] for p in entries
+              if p.get("solverSolvedCount", 0) > p.get("solverTestCount", 0)
+              or p.get("solverTestCount", 0) > pool]
+    rep.check(not insane,
+              "çözücü sayaçları tutarlı (çözen ≤ deneyen ≤ havuz %d)" % pool
+              + ("" if not insane else " — ⛔ UYDURMA: %s" % insane[:5]))
+
+    # Beş şart — yalnızca 'tested' iddiasındaki kayıtlara.
+    first_gate = None
+    for g in cfg["scope"]["gateStructure"]:
+        first_gate = g["id"]
+        break
+    failures: list[str] = []
+    for p in entries:
+        if p.get("testStatus") != "tested":
+            continue
+        pid = p["puzzleId"]
+        need = (tsr.get("minExternalSolversGateI", 5)
+                if p.get("gate") == first_gate
+                else tsr.get("minExternalSolversDefault", 2))
+        if p.get("solverTestCount", 0) < need:
+            failures.append("%s: harici çözücü %d < %d"
+                            % (pid, p.get("solverTestCount", 0), need))
+        min_solved = (kg.get("solversCompletingGateI", 4)
+                      if p.get("gate") == first_gate
+                      else max(1, int(need * tsr.get("minSolvedRatio", 0.5))))
+        if p.get("solverSolvedCount", 0) < min_solved:
+            failures.append("%s: çözen %d < %d"
+                            % (pid, p.get("solverSolvedCount", 0), min_solved))
+        if tsr.get("requireAlternativeAnalysis") and \
+                p.get("alternativeSolutionAnalysisDone") is not True:
+            failures.append("%s: alternatif çözüm analizi yapılmamış" % pid)
+        if p.get("confirmedAlternativeSolutions", 0) > \
+                tsr.get("maxConfirmedAlternatives", 0):
+            failures.append("%s: onaylanmış alternatif çözüm var" % pid)
+        amb = p.get("ambiguityScore")
+        if not isinstance(amb, int) or amb > tsr.get("maxAmbiguityScore", 2):
+            failures.append("%s: belirsizlik puanı %s" % (pid, amb))
+
+    rep.check(not failures,
+              "⭑ 'tested' iddiası BEŞ ŞARTI da sağlıyor ⭑"
+              + ("" if not failures else " — ⛔ KAZANILMAMIŞ: %s" % failures[:6]))
+    rep.facts["tested"] = len(tested)
 
 
 def check_gate_scope(cfg: dict, gate: str, rep: Report) -> None:
@@ -271,6 +488,8 @@ def check_gate_scope(cfg: dict, gate: str, rep: Report) -> None:
         return
 
     total = rep.facts.get("games_total", 0)
+    # 'written' bir bulmaca zaten 'tested' olmak zorundadır (check_test_status),
+    # yani doğrulanmışlığı kapsar. Sayımın toplam olması bu yüzden geçerlidir.
     validated = (rep.facts.get("games_validated", 0)
                  + rep.facts.get("games_written", 0))
     written = rep.facts.get("games_written", 0)
@@ -313,9 +532,12 @@ def main() -> int:
         return 1
 
     check_config(cfg, rep)
+    fams = load_json(GATE_INDEX, rep, required=(gate != "phase0"))
+    schema = load_json(SCHEMA, rep, required=(gate != "phase0"))
+    gate_ids = check_gate_index(cfg, fams, rep)
     games = load_json(PUZZLE_INDEX, rep, required=(gate != "phase0"))
-    fams = load_json(GATE_INDEX, rep, required=False)
-    check_games(cfg, games, fams, gate, rep)
+    entries = check_games(cfg, games, gate_ids, gate, rep, schema)
+    check_test_status(cfg, entries, gate_ids, rep)
     check_gate_scope(cfg, gate, rep)
 
     print("\n" + "=" * 74)

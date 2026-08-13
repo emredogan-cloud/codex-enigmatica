@@ -212,10 +212,12 @@ SOLUTION_SCAN_SKIP = frozenset({
 # tek başına ihlaldir. project_config § contentProtection.protectedDirs
 # ile SENKRON olmak zorundadır (⑥).
 PROTECTED_DIRS = ("01_SOURCE/solutions/", "01_SOURCE/design/",
-                  "09_ARCHIVE/solutions/", "06_REPORTS/solver/")
+                  "01_SOURCE/playtests/", "09_ARCHIVE/solutions/",
+                  "06_REPORTS/solver/")
 # ⚠ TAM YOL muafiyeti. Eski kurgu TEMEL ADA bakıyordu, yani her alt dizin
 # bedava bir serbest dosya kazanıyordu: `01_SOURCE/solutions/gate-1/README.md`.
 PROTECTED_DIR_ALLOW = frozenset({
+    "01_SOURCE/playtests/.gitkeep",
     "01_SOURCE/solutions/.gitkeep",
     "01_SOURCE/solutions/README.md",
     "01_SOURCE/design/.gitkeep",

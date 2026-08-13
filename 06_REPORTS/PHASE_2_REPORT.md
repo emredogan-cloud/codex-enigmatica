@@ -2,11 +2,13 @@
 
 > **Codex Enigmatica** · 13 Ağustos 2026 · dal `faz/2-pilot` · kapı `phase1`
 >
-> ⛔ **ÖLDÜRME KAPISI KARARI: `BLOCKED`**
+> ⛔ **ÖLDÜRME KAPISI KARARI: `HARD-STOP`**
 >
-> Yirmi bulmaca yazıldı ve bütün teknik kapılardan geçti. Beş harici
-> çözücü **belirlendi**. **Hiçbir oturum yapılmadı.**
-> Öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.
+> Beş harici Türkçe çözücüden **1'i** Kapı I'i bitirdi (eşik ≥4, sert
+> durdurma <3). Baskın bırakma sebebi *"çözemedim"* **değil**, **"sıkıldım"**dı.
+>
+> Kurucu kararı: **YENİDEN TASARLA.** Faz 3 başlatılmadı.
+> → [`GATE_1_REDESIGN_PROPOSAL.md`](GATE_1_REDESIGN_PROPOSAL.md)
 
 ---
 
@@ -24,8 +26,10 @@
 | Kapıların kendi testi | **123 → 154** denetim |
 | Kırmızı takım bulgusu | **31** — 30 kapatıldı, 1 Faz 3'e |
 | İç çözücü | **3 bağımsız geçiş** — ⚠ **kanıt sayılmaz** |
-| **Harici çözücü oturumu** | ⛔ **0 / 5** |
-| **Öldürme kapısı** | ⛔ **BLOCKED** |
+| **Harici çözücü oturumu** | ✅ **5 / 5 yapıldı** |
+| **Kapı I'i bitiren** | ⛔ **1 / 5** (eşik ≥4) |
+| **Öldürme kapısı** | ⛔ **HARD-STOP** |
+| Ölçülmemiş boyut | **çaba** — `qa_effort` ile kapatıldı |
 | Public depoda çözüm sızıntısı | **0** |
 | CI | ✅ yeşil |
 
@@ -556,13 +560,78 @@ En önemli ikisi:
 ## 14 · ⛔ ÖLDÜRME KAPISI KARARI
 
 ```
-KARAR: BLOCKED
-SEBEP: Harici çözücü oturumları YAPILMADI (0/5).
-       Öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.
-BLOKLAYAN: A12
+KARAR: HARD-STOP
+SEBEP: 1/5 çözücü Kapı I'i bitirdi — sert durdurma eşiği 3'ün ALTINDA.
+KURUCU KARARI: YENİDEN TASARLA (terk etme).
 ```
 
-### 14.1 · Neden "BLOCKED" ve neden "PASS" değil
+### 14.0 · ⭑ Kapı çalıştı ⭑
+
+Bu fazın sorusu *"yirmi bulmaca yazılabilir mi"* değildi. Soru şuydu:
+**bulmaca sistemi gerçek insanlarda çalışıyor mu?** Cevap: **hayır.**
+
+Ve öğrenme **ucuz tarafta** oldu — yirmi bulmaca yazılmışken, yüz değil.
+Yol haritasının Faz 2'ye öldürme kapısı koymasının tek sebebi buydu ve
+kapı tam olarak beklendiği gibi davrandı.
+
+### 14.1 · Düşüren şey ÇÖZÜLEBİLİRLİK DEĞİLDİ
+
+> *"Mekanik yürütme — özellikle kaydırma, yansıma ve anahtarlı alfabe —
+> kâğıt kalemle aşırı **sıkıcı ve yorucuydu**."*
+
+Sekiz kapı yeşildi. Cevap uzayı 20/20 tekildi. Üç iç çözücü yirmisini de
+ipucusuz çözdü. **Ve hiçbiri okurun ne kadar İŞ yapacağını ölçmüyordu.**
+
+`qa_effort.py` yazıldı ve hangi bulmacaların şikâyet edildiğini
+**bilmeden** koştu:
+
+| Sıra | Bulmaca | Ölçülen | Bütçe | Kat | Çözücüler ne dedi |
+|---:|---|---:|---:|---:|---|
+| 1 | `g1-006` | 84 EU | 18 | **4,7×** | *"kaydırma"* |
+| 2 | `g1-015` | 72 EU | 24 | **3,0×** | *"yansıma"* |
+| 3 | `g1-010` | 34 EU | 21 | **1,6×** | *"anahtarlı alfabe"* |
+
+**Aynı üç bulmaca, aynı sırayla.** Kapının toplamı **486 elle işlem** =
+**162 dakika**, bildirilen 153 dakikaya karşı — ve altı bulmaca kendi
+süre iddiasını aşıyordu.
+
+### 14.2 · İki kök neden
+
+**① `expectedCompletionMinutes` yanlış şeyi ölçüyordu.** Yazar *"bu fikir
+ne kadar sürede anlaşılır"* diye tahmin etti; okur *"bu işi ne kadar
+sürede yaparım"* diye yaşadı. Bir bulmacada fark **dokuz kattı**.
+
+**② Tekillik kuralı tembelliği ödüllendirdi.** `minDomainSize: 6` ispatın
+sayım alanını büyütür — **makine sayar**. Ben birkaç bulmacayı okur alanı
+**elle taransın** diye kurdum. Kural bunu hiç istememişti ve hiçbir kapı
+okurun alanı gezip gezmediğini sormuyordu.
+
+> **İspat sayar; okur gezmez.** (K25)
+
+### 14.3 · Neyin ölçülemediği — açıkça
+
+Bulmaca başına kayıt **sağlanmadı** (yalnızca oturum düzeyi). Kalan beş
+ölçüt `measured: false` olarak kaydedildi:
+
+| Ölçüt | Durum |
+|---|---|
+| Kapı I'i bitiren çözücü | ✅ **ölçüldü: 1/5** |
+| Hiç çözülemeyen bulmaca | ⊘ **ölçülemedi** |
+| Bulmaca başına bitiren çözücü | ⊘ **ölçülemedi** |
+| 3. kademeye inen çözücü | ⊘ **ölçülemedi** |
+| Medyan tamamlama süresi | ⊘ **ölçülemedi** |
+| Onaylanmış alternatif çözüm | ⊘ **ölçülemedi** |
+
+*"İhlal edilmedi"* ile *"ölçülmedi"* aynı şey değildir ve rapor ikisini
+karıştırmaz.
+
+### 14.4 · Neden "BLOCKED" değil — veri geldi
+
+Faz 2'nin ara raporunda karar `BLOCKED`ti: veri yoktu. Şimdi veri var ve
+karar **HARD-STOP**. Bu, kapının iki farklı durumu ayırt ettiğinin
+kanıtıdır: *ölçemedim* ile *ölçtüm ve düştü* aynı şey değildir.
+
+### 14.5 · (ara rapordan) Neden "BLOCKED" ve neden "PASS" değil
 
 Sıfır oturumla **bütün ölçütler teknik olarak "ihlal edilmemiş"
 görünür**: hiçbir çözücü başarısız olmadı, hiçbir alternatif cevap
@@ -613,7 +682,6 @@ değil, bir **boşluktur**.
 | Çözülebilirlik | ✅ |
 | İpucu sistemi | ✅ |
 | Devir / hata davranışı | ✅ **ölçüldü** (Hamming 15) |
-| **Harici çözücü kayıtları gerçek** | ⛔ **KAYIT YOK — sahte üretilmedi** |
 | Sahte test kaydı yok | ✅ **mekanik olarak imkânsız** |
 | Belirsizlik bulguları çözüldü | ✅ 30/31 · 1 Faz 3'e (F2-27) |
 | Sayfa modeli gerçek içerikle ölçüldü | ✅ |
@@ -629,7 +697,8 @@ değil, bir **boşluktur**.
 | Gereksiz açık PR yok | ✅ |
 | Faz 2 raporu | ✅ bu belge |
 | Yol haritası ilerlemesi güncellendi | ✅ |
-| **ÖLDÜRME KAPISI GEÇTİ** | ⛔ **BLOCKED** |
+| **Harici çözücü kayıtları gerçek** | ✅ **5 oturum · uydurma yok** |
+| **ÖLDÜRME KAPISI GEÇTİ** | ⛔ **HARD-STOP · 1/5** |
 
 ⚠ `.gate` **`phase1`de kaldı**. `phase2` seviyesi 20 *doğrulanmış* bulmaca
 ister; `validated` durumu `tested` ister; `tested` beş harici çözücü ister.
@@ -642,11 +711,16 @@ Zincir **mekaniktir** ve belgeyle gevşetilemez — bu, kapının çalışmasıd
 > ### FAZ 3 BAŞLATILMADI VE BAŞLATILAMAZ.
 >
 > Yol haritası Faz 3'e girişi **öldürme kapısının GEÇMESİNE** bağlar.
-> Karar `BLOCKED`. Yirmi bulmacanın yazılmış olması bir geçiş değildir.
+> Karar **`HARD-STOP`**. Kapı I yeniden tasarlanır ve **ikinci bir harici
+> tur** yapılır.
+>
+> Öneri hazır: [`GATE_1_REDESIGN_PROPOSAL.md`](GATE_1_REDESIGN_PROPOSAL.md)
+> Bekleyen kararlar: **B1–B6**.
 
 | # | Ne | Kim | Aciliyet |
 |---|---|---|---|
-| **A12** | **Beş harici çözücü oturumu** | kurucu + 5 insan | ⛔ **ÖLDÜRME KAPISININ TEK BLOKLAYICISI** |
+| **B1–B6** | **Kapı I yeniden tasarım kararları** | kurucu | ⛔ **FAZ 3'ÜN BLOKLAYICISI** |
+| **A12b** | **İkinci harici tur** (öneri: 2 eski + 3 yeni çözücü) | kurucu | **KRİTİK** |
 | **A9** | Levha provası — paket hazır | kurucu | YÜKSEK |
 | **A2** | Beş kapı teması onayı | kurucu | YÜKSEK |
 | **A5** | Kalibre `STYLE.md` onayı | kurucu | ORTA |
@@ -673,7 +747,7 @@ Zincir **mekaniktir** ve belgeyle gevşetilemez — bu, kapının çalışmasıd
 
 ## 18 · Sonuç
 
-**FAZ 2 · TEKNİK İŞ TAMAMLANDI · ÖLDÜRME KAPISI BLOCKED.**
+**FAZ 2 · ÖLDÜRME KAPISI DÜŞTÜ · HARD-STOP.**
 
 Yirmi bulmaca var, hepsi çalışıyor, hepsi tekil, hepsi okur paketinde
 çözülebilir, hiçbiri cevabını sızdırmıyor. Ölçüm makinesi Faz 1'e göre
@@ -683,7 +757,16 @@ yazarlarını üç kez yakaladı**.
 Ama bu fazın sorusu *"yirmi bulmaca yazılabilir mi"* değildi. Soru şuydu:
 **bulmaca sistemi gerçek insanlarda çalışıyor mu?**
 
-O soru **hâlâ cevapsızdır** ve cevaplayacak olan ajan değildir.
+Cevap geldi: **hayır.** Beş çözücüden dördü, bulmacaları çözemedikleri
+için değil, **çözme işi yorucu olduğu için** bıraktı.
+
+Bu bir başarısızlık değil, **kapının çalışmasıdır**. Yüz bulmaca değil,
+yirmi bulmaca yazılmışken öğrenildi — Faz 2'nin var olma sebebi tam
+olarak buydu.
+
+Ve bir şey daha öğrenildi: **ölçülmeyen bir boyut, korunmayan bir
+boyuttur.** Projenin kurucu ilkesi bu kez projenin kendisine uygulandı
+ve `qa_effort` ile kapatıldı.
 
 > ### AJAN DURDU. FAZ 3 BAŞLATILMADI.
-> ### BEŞ GERÇEK OTURUM BEKLENİYOR (A12).
+> ### YENİ BULMACA YAZILMADI — ÖNCE B1–B6 KARARLARI.

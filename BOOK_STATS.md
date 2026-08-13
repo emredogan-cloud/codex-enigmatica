@@ -30,15 +30,15 @@
 | Ölçüt | Ölçülen | Eşik |
 |---|---:|---:|
 | Çözücü **belirlendi** (A3) | **5** | 5 |
-| Oturum **yapıldı** (A12) | **0** | 5 |
+| Oturum **yapıldı** (A12) | **5** | 5 |
 | Kapı I'i bitiren çözücü | **ÖLÇÜLMEDİ** | ≥ 4 / 5 |
 | Hiç çözülemeyen bulmaca | ÖLÇÜLMEDİ | 0 |
 | Bulmaca başına bitiren çözücü | ÖLÇÜLMEDİ | ≥ 2 |
 | Onaylanmış alternatif çözüm | 0 | 0 |
 | Medyan tamamlama (dakika) | ÖLÇÜLMEDİ | ≤ 240 |
-| **KARAR** | **BLOCKED** | PASS |
+| **KARAR** | **HARD-STOP** | PASS |
 
-> ⛔ **BLOCKED.** İç çözücü kayıtları öldürme kapısında **sayılmaz**
+> ⛔ **HARD-STOP.** İç çözücü kayıtları öldürme kapısında **sayılmaz**
 > (`internalSolverCountsAsEvidence: false`). Sıfır oturumla bütün ölçütler
 > "ihlal edilmemiş" görünür — bu bir geçiş değil, bir **boşluktur**.
 

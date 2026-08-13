@@ -19,11 +19,36 @@
 | **A9** | **Pilot levhaların POD provası** Faz 2'ye alınsın mı | **YÜKSEK** | **Faz 2 başlamadan** | ⚑ **KURUCUYA DEVREDİLDİ** · § aşağı |
 | **A10** | Faz 3'e **ikinci öldürme kapısı** eklensin mi | ORTA | Faz 3 başlamadan | AÇIK |
 | **A11** | `ENIGMATICA_CANARY_SALT` CI sırrı kurulsun | ORTA | **Faz 2 başlamadan** | ✅ **KAPANDI** → K19 · § aşağı |
-| **A12** | ⭑ **Harici çözücü oturumlarının yürütülmesi** ⭑ | **KRİTİK** | **Öldürme kapısı kararı için** | ⛔ **AÇIK — ÖLDÜRME KAPISININ TEK BLOKLAYICISI** |
+| **A12** | ⭑ **Harici çözücü oturumları** ⭑ | **KRİTİK** | Faz 2 | ⛔ **KAPANDI · BAŞARISIZ** → K23 · § aşağı |
+| **B1–B6** | ⭑ **Kapı I yeniden tasarım kararları** ⭑ | **KRİTİK** | **Faz 3 başlamadan** | ⛔ **AÇIK** → `GATE_1_REDESIGN_PROPOSAL.md § 6` |
 
 ---
 
-### A12 · Oturumlar — A3 kapandı, ama test HÂLÂ yapılmadı
+### A12 · ⛔ KAPANDI — VE ÖLDÜRME KAPISI DÜŞTÜ
+
+**13 Ağustos 2026.** Beş harici Türkçe çözücü Kapı I'i denedi.
+
+| | |
+|---|---:|
+| Kapı I'i **bitiren** | **1 / 5** |
+| Geçme eşiği | ≥ 4 / 5 |
+| Sert durdurma eşiği | < 3 / 5 |
+| **Karar** | ⛔ **HARD-STOP** |
+
+**Baskın bırakma sebebi *"çözemedim"* değildi:** mekanik yürütme —
+kaydırma, yansıma ve anahtarlı alfabe — kâğıt kalemle **sıkıcı ve
+yorucuydu**. İkinci sebep: mantık sıçraması ★ için fazla dik.
+
+Kurucu kararı: **YENİDEN TASARLA**, terk etme.
+Öneri: [`06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md`](06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md)
+
+⚠ **Bulmaca başına kayıt sağlanmadı** (yalnızca oturum düzeyi). Kalan beş
+öldürme kapısı ölçütü **ölçülemedi** ve `kill-gate-report.json` bunları
+"geçti" değil **`measured: false`** olarak taşır.
+
+---
+
+### A12 · (kapanmadan önceki hâli) Oturumlar — A3 kapandı, ama test HÂLÂ yapılmadı
 
 > **A3 ile A12 iki ayrı sorudur ve karıştırılmaları sahteciliğin adıdır.**
 
@@ -353,6 +378,44 @@ kaba kuvvetle geçmek mümkündür. Karşı önlem A7'nin yan kazancıdır:
 doğrulama sayfası **reddedilen dizeleri kaydeder** ve kaba kuvvet kalıbı
 (aynı bulmacaya kısa sürede çok sayıda farklı sözlük üyesi) tespit
 edilebilirdir. Bkz. `RED_TEAM_CHECKLIST § 4` bulgu **F2-14**.
+
+### K23 · ⭑ ÖLDÜRME KAPISI DÜŞTÜ — ve düşüren şey ÖLÇÜLMEYEN boyuttu ⭑
+**13 Ağustos 2026 · Faz 2 · A12.** 1/5 çözücü Kapı I'i bitirdi.
+
+Sekiz kalite kapısı yeşildi. Cevap uzayı 20/20 tekildi. Üç bağımsız iç
+çözücü yirmisini de ipucusuz çözdü. **Ve dört çözücü SIKILDIĞI için
+bıraktı.**
+
+Kusur çözülebilirlikte değil, **çözme İŞİNİN MİKTARINDAYDI** — ve o
+boyutu hiçbir kapı ölçmüyordu. `qa_effort.py` yazıldı: elle yapılacak
+işlem sayısını **cevap uzayı spesifikasyonundan** hesaplar ve bulmacanın
+**kendi süre iddiasına** karşı denetler.
+
+Model, hangi bulmacaların şikâyet edildiğini bilmeden koştu ve **aynı üç
+bulmacayı aynı sırayla** işaretledi (4,7× · 3,0× · 1,6×).
+
+> **Ölçülmeyen bir boyut, korunmayan bir boyuttur.** Projenin kurucu
+> ilkesi, bu kez projenin kendisine uygulandı.
+
+### K24 · `expectedCompletionMinutes` KAVRAYIŞI ölçüyordu, YÜRÜTMEYİ değil
+**13 Ağustos 2026 · Faz 2.** Yazar *"bu fikir ne kadar sürede anlaşılır"*
+diye tahmin etti; okur *"bu işi ne kadar sürede yaparım"* diye yaşadı.
+Bir bulmacada fark **dokuz kattı** (6 dk iddia · 56 dk en kötü hâl).
+
+Alan artık bir tahmin değil bir **bütçedir**: `qa_effort` onu
+`dakika × 3 elle işlem` olarak okur ve aşımı kırmızı yakar.
+
+### K25 · İspat sayar, okur GEZMEZ
+**13 Ağustos 2026 · Faz 2.** `minDomainSize: 6` kuralı "sayım alanı
+yeterince büyük olmalı" der — **ispat için**. Birkaç bulmaca, okur alanı
+**elle taransın** diye kuruldu; kural bunu hiç istememişti.
+
+| İSPATIN saydığı | OKURUN gezdiği |
+|---|---|
+| 28 kaydırma — makine sayar ✅ | 28 kaydırma — okur kalemle dener ⛔ |
+
+Bundan sonra: alan **basılı sözlüktür**, mekanizma **kabul yordamıdır** ve
+anahtar **verilir**. Tekillik korunur, çaba düşer.
 
 ### K12 · Kapı V dizgiye bağlıdır ve en son kilitlenir
 Kapı V öz-göndergeseldir: kitabın **fiziksel yapısını** kullanır

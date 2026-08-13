@@ -5,6 +5,57 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.2.1] — 2026-08-13 · A12 · ⛔ ÖLDÜRME KAPISI DÜŞTÜ
+
+**5 harici Türkçe çözücüden 1'i Kapı I'i bitirdi.** Eşik ≥4, sert
+durdurma <3. Karar: **HARD-STOP**. Kurucu kararı: **yeniden tasarla**.
+
+Baskın bırakma sebebi *"çözemedim"* değildi: **"sıkıldım"**. Kaydırma,
+yansıma ve anahtarlı alfabe bulmacaları kâğıt kalemle yorucuydu.
+
+### Eklendi
+
+- **`04_BUILD/qa_effort.py`** — ⭑ öldürme kapısını kaybettiren ÖLÇÜLMEMİŞ
+  boyut ⭑. Okurun kaç elle işlem yapacağını **cevap uzayı
+  spesifikasyonundan** hesaplar ve bulmacanın **kendi süre iddiasına**
+  karşı denetler. Hangi bulmacaların şikâyet edildiğini bilmeden koştu ve
+  **aynı üç bulmacayı aynı sırayla** işaretledi (4,7× · 3,0× · 1,6×)
+- **`06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md`** — yeni mekanizma karışımı,
+  çaba bütçeleri, zorluk rampası, B1–B6 kararları. **Yeni bulmaca
+  YAZILMADI**
+- `01_SOURCE/playtests/` — ham oturum kayıtları · dizin, içine tek satır
+  yazılmadan **ÖNCE** korumalı listeye alındı (mahremiyet)
+
+### Değişti
+
+- `kill_gate.py` — **oturum düzeyi** toplu kaydı okur. Bulmaca başına
+  kayıt yoksa kalan beş ölçütü `measured: false` işaretler: *"ihlal
+  edilmedi"* ile *"ölçülmedi"* aynı şey değildir
+- Pilot kohortun **20/20 kaydı** `testStatus: "failed"` — kohort olarak
+  test edildi, kohort olarak düştü
+- `PROTECTED_DIRS` 4 → **5**
+- `05_TESTS/selftest.py` — **154 → 162** denetim
+
+### Ölçüldü
+
+| | |
+|---|---:|
+| Kapı I'i bitiren | **1 / 5** |
+| Toplam elle işlem | **486 EU** |
+| Çabanın ima ettiği süre | **162 dk** (bildirilen 153) |
+| Bütçesini aşan bulmaca | **6 / 20** |
+| En kötü bulmaca | **9,3×** (6 dk iddia · 56 dk en kötü hâl) |
+
+### Öğrenilen
+
+- **K23** — ölçülmeyen bir boyut, korunmayan bir boyuttur
+- **K24** — `expectedCompletionMinutes` **kavrayışı** ölçüyordu,
+  **yürütmeyi** değil; fark dokuz kat
+- **K25** — **ispat sayar, okur gezmez**: `minDomainSize` ispatın sayım
+  alanıdır, okurun elle tarayacağı alan değil
+
+---
+
 ## [0.2.0-pilot] — 2026-08-13 · Faz 2 · Pilot bulmacalar, cevap uzayı, öldürme kapısı
 
 **Yirmi Türkçe pilot bulmaca yazıldı ve bütün teknik kapılardan geçti.

@@ -4,7 +4,7 @@
   "puzzlesWritten": 20,
   "puzzlesRequired": 20,
   "solversIdentified": 5,
-  "sessionsRecorded": 0,
+  "sessionsRecorded": 5,
   "externalTestRecords": 0,
   "distinctExternalSolvers": 0,
   "thresholds": {
@@ -48,22 +48,79 @@
       "yoruma yer yoktur' cümlesi ancak bu tanımla doğru olur."
     ]
   },
-  "criteria": {},
-  "verdict": "BLOCKED",
-  "reason": "Harici çözücü oturumları YAPILMADI. 0/5 çözücü kaydı var. Öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.",
+  "criteria": {
+    "puzzlesUnsolvedByAll": {
+      "value": null,
+      "threshold": null,
+      "pass": null,
+      "measured": false
+    },
+    "puzzlesBelowSolverFloor": {
+      "value": null,
+      "threshold": null,
+      "pass": null,
+      "measured": false
+    },
+    "puzzlesOverLevel3Limit": {
+      "value": null,
+      "threshold": null,
+      "pass": null,
+      "measured": false
+    },
+    "medianMinutes": {
+      "value": null,
+      "threshold": null,
+      "pass": null,
+      "measured": false
+    },
+    "confirmedAlternatives": {
+      "value": null,
+      "threshold": null,
+      "pass": null,
+      "measured": false
+    },
+    "solversCompletingGate": {
+      "value": 1,
+      "threshold": 4,
+      "pass": false,
+      "measured": true
+    }
+  },
+  "verdict": "HARD-STOP",
+  "reason": "1/5 çözücü Kapı I'i bitirdi — sert durdurma eşiği 3'ün ALTINDA. Sistem bu hâliyle çalışmıyor.",
   "internalSolverCountsAsEvidence": false,
-  "blockingDecision": "A12",
-  "whatIsReady": [
-    "20 pilot bulmaca yazıldı ve bütün teknik kapılardan geçti",
-    "cevap uzayı bağımsız açıldı: 20/20 tam olarak bir kabul",
-    "harici çözücü paketi hazır: 00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md",
-    "kayıt şeması ve eşikler sayısal olarak tanımlı"
-  ],
-  "whatIsMissing": [
-    "5 harici çözücü oturumu (0 yapıldı)",
-    "bulmaca başına çözüm oranı",
-    "medyan tamamlama süresi",
-    "ipucu tüketimi",
-    "çözücülerin önerdiği alternatif cevaplar"
+  "sessionAggregate": {
+    "solversTotal": 5,
+    "solversCompletedGate": 1,
+    "perPuzzleRecords": null,
+    "abandonReasons": [
+      "sikildim",
+      "takildim"
+    ]
+  },
+  "perPuzzleCriteriaMeasured": false,
+  "abandonReasonDetail": [
+    {
+      "code": "sikildim",
+      "label": "Sıkıldım / yorgunluk",
+      "reportedNarrative": "Mekanik yürütme —özellikle kaydırma, yansıma ve anahtarlı alfabe bulmacaları— kâğıt kalemle aşırı sıkıcı ve yorucuydu.",
+      "implicatedFamilies": [
+        "substitution-cipher"
+      ],
+      "implicatedPuzzles": [
+        "g1-006",
+        "g1-010",
+        "g1-015"
+      ],
+      "solverCount": null
+    },
+    {
+      "code": "takildim",
+      "label": "Takıldım / mantık sıçraması",
+      "reportedNarrative": "Mantık sıçraması Kapı I (★) zorluğu için fazla dikti.",
+      "implicatedFamilies": null,
+      "implicatedPuzzles": null,
+      "solverCount": null
+    }
   ]
 }

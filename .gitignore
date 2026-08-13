@@ -53,6 +53,13 @@
 # DİZİNİN İÇİNE İNMEZ. `06_REPORTS/*` dizini dışladığı anda, içerideki
 # `!.../.gitkeep` olumsuzlaması hiç değerlendirilmez.
 
+# ①b2 ⭑ OYUN TESTİ KAYITLARI — MAHREMİYET ⭑
+# Harici çözücülerin ham oturum kayıtları. Adları, notları ve serbest
+# metinleri taşırlar; hiçbiri depoya giremez (SOLVER_TEST_PROTOCOL § 7).
+# Depoda yalnızca ANONİM özet durur (06_REPORTS/tracked/).
+01_SOURCE/playtests/*
+!01_SOURCE/playtests/.gitkeep
+
 # ①c ⭑ TASARIM KATMANI — mekanizmayı açık eder ⭑
 # Bir tasarım niyeti ("gravürün tarama yönü veri taşır") bir ÇÖZÜM DEĞİLDİR
 # ama okur onu önceden bilirse kitabın imza mekaniği HARCANMIŞ olur.
@@ -105,6 +112,9 @@
 06_REPORTS/tracked/*-validation.json
 06_REPORTS/tracked/structure.json
 06_REPORTS/tracked/qa-*.json
+# ⭑ İSTİSNA: çaba ölçümü bir KARAR taşır (öldürme kapısını bu boyut
+# düşürdü) ve yeniden tasarımın kabul ölçütüdür — depoda durur.
+!06_REPORTS/tracked/qa-effort.json
 06_REPORTS/tracked/research.json
 
 # ③ GÖRSEL VARLIKLAR ──────────────────────────────────────────────────────

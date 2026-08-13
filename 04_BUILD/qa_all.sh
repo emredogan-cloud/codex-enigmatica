@@ -117,6 +117,12 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 # ⭑ OKUR PAKETİ: diğer bütün kapılar korumalı katmanı denetler; bu kapı
 # okurun ELİNE ne geçtiğine bakar. CI'da manuscript yoktur ve kapı boş
 # koşar — ama BUNU SÖYLER. Yerelde koşması ZORUNLUDUR.
+# ⭑ ÇABA BÜTÇESİ — Faz 2 öldürme kapısını kaybettiren ÖLÇÜLMEMİŞ boyut.
+# Sekiz kapı yeşilken beş çözücüden dördü SIKILDIĞI için bıraktı; hiçbir
+# kapı okurun kaç elle işlem yapacağını sormuyordu.
+[ -f 04_BUILD/qa_effort.py ] && \
+  run "⭑ ÇABA BÜTÇESİ ⭑"        $PY 04_BUILD/qa_effort.py --gate "$GATE" \
+                                   --json 06_REPORTS/tracked/qa-effort.json
 [ -f 04_BUILD/qa_readerpack.py ] && \
   run "⭑ OKUR PAKETİ ⭑"          $PY 04_BUILD/qa_readerpack.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-readerpack.json

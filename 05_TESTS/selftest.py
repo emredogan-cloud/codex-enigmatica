@@ -1219,6 +1219,88 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     rep.check(code != 0,
               "medyan süre tavanı aşarsa GEÇMEZ (%d dk)" % 600, out)
 
+    # ── ⭑ ÇABA BÜTÇESİ ⭑ — öldürme kapısını kaybettiren ölçüm ───────────
+    #
+    # Faz 2'de sekiz kapı yeşilken beş çözücüden dördü SIKILDIĞI için
+    # bıraktı. Hiçbir kapı okurun kaç elle işlem yapacağını sormuyordu.
+    # Bu fikstürler o boşluğun kapandığını ve KALICI KIRMIZIYA
+    # dönüşmediğini birlikte kanıtlar.
+    SHIFT = {"generator": {"kind": "cyclic-shift", "input": shift("MELTEM", 9)},
+             "acceptance": {"kind": "in-printed-lexicon"},
+             "declaredAcceptedCount": 1}
+    CHEAP = {"generator": {"kind": "printed-lexicon"},
+             "acceptance": {"kind": "plate-attribute",
+                            "labels": ["ZURNA", "KAVUN", "VİRAJ", "TERLİK",
+                                       "OYMACI", "PATİKA"],
+                            "attributes": {"ZURNA": 1, "KAVUN": 1, "VİRAJ": 2,
+                                           "TERLİK": 1, "OYMACI": 1,
+                                           "PATİKA": 1},
+                            "rule": {"op": "==", "value": 2}},
+             "declaredAcceptedCount": 1}
+
+    d = space_root(CHEAP, answer="VİRAJ",
+                   index_over=lambda e: e.update(expectedCompletionMinutes=5))
+    code, out = run_env_gate("qa_effort.py", d)
+    rep.check(code == 0, "qa_effort ucuz mekanizmada GEÇER (6 EU / 15 bütçe)",
+              out)
+
+    d = space_root(SHIFT, index_over=lambda e: e.update(
+        expectedCompletionMinutes=6))
+    code, out = run_env_gate("qa_effort.py", d)
+    rep.check(code != 0,
+              "⭑ 28 KAYDIRMALIK ELLE TARAMA BÜTÇEYİ AŞARSA KIRMIZI ⭑ "
+              "(okur çözebilir ama YAPMAZ)", out)
+
+    d = space_root(SHIFT, index_over=lambda e: e.update(
+        expectedCompletionMinutes=6, testStatus="failed"))
+    code, out = run_env_gate("qa_effort.py", d)
+    rep.check(code == 0 and "MUAF" in out,
+              "⭑ MAHKÛM ('failed') KAYIT BÜTÇEDEN MUAF — ama ÖLÇÜLÜR ⭑ "
+              "(kalıcı kırmızı bir kapı, kapatılan bir kapıdır)", out)
+
+    # ── ⛔ ÖLDÜRME KAPISI · OTURUM DÜZEYİ TOPLU KAYIT ⛔ ─────────────────
+    def agg_root(total: int, finished: int, per_puzzle=None) -> str:
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "agg-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/playtests",
+                    "06_REPORTS/tracked"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": [
+                  {"puzzleId": "fixture-%03d" % i, "gate": "threshold",
+                   "type": "cipher", "mechanismFamily": "substitution-cipher",
+                   "status": "drafted", "testStatus": "failed",
+                   "leakClass": "protected", "pilotCohort": True}
+                  for i in range(1, 21)]}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/playtests/sessions.json"),
+              json.dumps({"solversTotal": total,
+                          "solversCompletedGate": finished,
+                          "solversAbandoned": total - finished,
+                          "perPuzzleRecords": per_puzzle,
+                          "abandonReasons": [{"code": "sikildim",
+                                              "label": "Sıkıldım"}]},
+                         ensure_ascii=False))
+        return d
+
+    d = agg_root(5, 1)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "HARD-STOP" in out,
+              "⭑ 1/5 ÇÖZÜCÜ BİTİRİRSE HARD-STOP ⭑", out)
+
+    d = agg_root(5, 3)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "REDESIGN" in out,
+              "tam 3/5 bitirirse REDESIGN (zorluk eğrisi bozuk)", out)
+
+    d = agg_root(5, 5)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "REWORK" in out,
+              "⭑ 5/5 BİTİRSE BİLE bulmaca başına kayıt YOKSA PASS DEĞİL ⭑ "
+              "('ihlal edilmedi' ile 'ölçülmedi' aynı şey değildir)", out)
+
     # ── TÜRKÇE KATLAMASI — pilot dilinin ölçüm makinesini kırdığı yer ──
     sys.path.insert(0, BUILD)
     import _protected_layer as _pl                             # noqa: E402

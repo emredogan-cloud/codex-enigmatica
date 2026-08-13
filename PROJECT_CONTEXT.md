@@ -2,17 +2,19 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **13 Ağustos 2026** · Faz: **2 · TEKNİK İŞ TAMAM**
-> Kapı: `phase1` · Öldürme kapısı: ⛔ **`BLOCKED`**
+> Son güncelleme: **13 Ağustos 2026** · Faz: **2 · ÖLDÜRME KAPISI DÜŞTÜ**
+> Kapı: `phase1` · Karar: ⛔ **`HARD-STOP`**
 >
-> **Faz 2'nin ajan tarafından yapılabilir bütün işi bitti.** Yirmi Türkçe
-> pilot bulmaca yazıldı, cevap uzayı mimarisi kuruldu (20/20 bağımsız
-> doğrulandı), dört yeni kapı eklendi, kanarya sırrı kuruldu.
+> Beş harici Türkçe çözücüden **1'i** Kapı I'i bitirdi (eşik ≥4, sert
+> durdurma <3). Baskın bırakma sebebi *"çözemedim"* değil, **"sıkıldım"**dı:
+> kaydırma, yansıma ve anahtarlı alfabe bulmacaları kâğıt kalemle yorucuydu.
 >
-> **Kalan tek iş kurucuya aittir ve ajan onu yapamaz:** beş harici
-> çözücüyle oturumlar (**A12** · 0/5 yapıldı).
-> → [`00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`](00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md)
-> → [`06_REPORTS/PHASE_2_REPORT.md`](06_REPORTS/PHASE_2_REPORT.md)
+> Sekiz kapı yeşildi ve **hiçbiri okurun ne kadar iş yapacağını
+> ölçmüyordu.** `qa_effort.py` o boşluğu kapattı.
+>
+> **Kurucu kararı: YENİDEN TASARLA.** Faz 3 başlatılmadı.
+> → [`06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md`](06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md)
+> → Bekleyen kararlar: **B1–B6**
 
 ---
 

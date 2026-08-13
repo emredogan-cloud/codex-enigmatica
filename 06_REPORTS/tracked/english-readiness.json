@@ -1,8 +1,8 @@
 {
   "pilotLanguage": "tr",
   "productionLanguage": "en",
-  "conversionAllowed": false,
-  "blockedBy": "A12",
+  "conversionAllowed": true,
+  "blockedBy": null,
   "requiresFullRetest": true,
   "forbidMachineTranslation": true,
   "retestGates": [

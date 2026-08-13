@@ -37,6 +37,7 @@ import _protected_layer as pl                                  # noqa: E402
 
 OUT = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "kill-gate-report.json")
 SOLVER_DIR = os.path.join(pl.ROOT, "06_REPORTS", "solver")
+PLAYTEST_DIR = os.path.join(pl.ROOT, "01_SOURCE", "playtests")
 
 
 def collect_sessions() -> list[dict]:
@@ -54,6 +55,31 @@ def collect_sessions() -> list[dict]:
             continue
         out.extend(data if isinstance(data, list) else [data])
     return out
+
+
+def load_aggregate() -> dict | None:
+    """OTURUM DÜZEYİ toplu kayıt — SOLVER_TEST_PROTOCOL § 3'ün 'oturum
+    başına' formu.
+
+    ⚠ NEDEN AYRI BİR YOL: protokol iki ayrı form tanımlar (bulmaca başına
+    ve oturum başına) ve gerçek bir testte ikincisi birincisi olmadan
+    gelebilir. Kapı, elindeki veriyle KARAR VEREBİLMELİ ama ölçemediğini
+    ÖLÇTÜM DEMEMELİDİR. Toplu kayıt bitirme sayısını verir; bulmaca başına
+    ölçütler ölçülemez ve öyle raporlanır."""
+    for d in (PLAYTEST_DIR, SOLVER_DIR):
+        if not os.path.isdir(d):
+            continue
+        for name in sorted(os.listdir(d)):
+            if not name.endswith(".json"):
+                continue
+            try:
+                with open(os.path.join(d, name), encoding="utf-8") as fh:
+                    data = json.load(fh)
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(data, dict) and "solversCompletedGate" in data:
+                return data
+    return None
 
 
 def main() -> int:
@@ -116,6 +142,74 @@ def main() -> int:
         "criteria": {}, "verdict": None, "reason": None,
         "internalSolverCountsAsEvidence": False,
     }
+
+    # ── OTURUM DÜZEYİ TOPLU KAYIT ───────────────────────────────────────
+    agg = load_aggregate()
+    if agg:
+        total = agg.get("solversTotal", 0)
+        finished_n = agg.get("solversCompletedGate", 0)
+        report["sessionAggregate"] = {
+            "solversTotal": total,
+            "solversCompletedGate": finished_n,
+            "perPuzzleRecords": agg.get("perPuzzleRecords"),
+            "abandonReasons": [r.get("code") for r in
+                               agg.get("abandonReasons") or []],
+        }
+        print("\n── oturum düzeyi toplu kayıt ──")
+        print("  çözücü            %d" % total)
+        print("  kapıyı BİTİREN    %d" % finished_n)
+        print("  bırakan           %d" % agg.get("solversAbandoned", total - finished_n))
+        for r in agg.get("abandonReasons") or []:
+            print("    · %-28s %s" % (r.get("label", r.get("code")),
+                                      (r.get("implicatedPuzzles") or "—")))
+
+        hs = kg.get("hardStopCriteria", {}).get("solversCompletingGateI", 3)
+        need_pass = pc.get("solversCompletingGateI", 4)
+
+        # ⚠ Bulmaca başına kayıt yoksa DİĞER ÖLÇÜTLER ÖLÇÜLEMEZ.
+        # "İhlal edilmedi" ile "ölçülmedi" aynı şey değildir.
+        measured = agg.get("perPuzzleRecords") is not None
+        for k in ("puzzlesUnsolvedByAll", "puzzlesBelowSolverFloor",
+                  "puzzlesOverLevel3Limit", "medianMinutes",
+                  "confirmedAlternatives"):
+            report["criteria"][k] = {"value": None, "threshold": None,
+                                     "pass": None, "measured": measured}
+        report["criteria"]["solversCompletingGate"] = {
+            "value": finished_n, "threshold": need_pass,
+            "pass": finished_n >= need_pass, "measured": True}
+
+        if finished_n < hs:
+            verdict = "HARD-STOP"
+            reason = ("%d/%d çözücü Kapı I'i bitirdi — sert durdurma eşiği "
+                      "%d'ün ALTINDA. Sistem bu hâliyle çalışmıyor."
+                      % (finished_n, total, hs))
+        elif finished_n == hs:
+            verdict, reason = "REDESIGN", "tam %d çözücü bitirdi — zorluk eğrisi bozuk" % hs
+        elif finished_n < need_pass:
+            verdict, reason = "REWORK", "%d/%d bitirdi — geçme eşiği %d" % (finished_n, total, need_pass)
+        else:
+            verdict = "REWORK"
+            reason = ("bitirme eşiği sağlandı ama bulmaca başına kayıt YOK — "
+                      "kalan ölçütler ÖLÇÜLEMEDİ")
+        report["verdict"], report["reason"] = verdict, reason
+        report["perPuzzleCriteriaMeasured"] = measured
+        report["abandonReasonDetail"] = agg.get("abandonReasons")
+
+        print("\n" + "=" * 74)
+        print("  ⛔ KARAR: %s" % verdict)
+        print("=" * 74)
+        print("  %s" % reason)
+        if not measured:
+            print("")
+            print("  ⚠ Bulmaca başına kayıt SAĞLANMADI. Kalan beş ölçüt")
+            print("    ÖLÇÜLEMEDİ ve 'geçti' SAYILMAZ — 'ihlal edilmedi' ile")
+            print("    'ölçülmedi' aynı şey değildir.")
+        print("=" * 74)
+        os.makedirs(os.path.dirname(args.json), exist_ok=True)
+        with open(args.json, "w", encoding="utf-8") as fh:
+            json.dump(report, fh, ensure_ascii=False, indent=2)
+            fh.write("\n")
+        return 0 if verdict == "PASS" else 1
 
     # ── ⭑ VERİ YOKSA KARAR VERİLEMEZ ⭑ ──────────────────────────────────
     if len(solvers) < need_solvers or declared < need_solvers:

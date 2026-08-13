@@ -12,7 +12,6 @@
     "     PROTECTED (çözümler). Çözümler ürünün kendisidir ve public",
     "     depoya asla giremez."
   ],
-
   "project": {
     "id": "codex-enigmatica",
     "workingTitle": "Codex Enigmatica",
@@ -26,12 +25,14 @@
     "repository": "emredogan-cloud/codex-enigmatica",
     "portfolioSlot": "Kitap C · üçüncü · premium / viral aday",
     "sourceOfTruth": "AMAZON-KDP-2026-MARKET-OPPORTUNITY-REPORT.html § 11 · Kitap C",
-    "isolatedFrom": ["CODEX_BESTIARIUM", "CODEX_MYTHOLOGICA",
-                     "THE-GREAT-BOOK-OF-WORLD-MYTHS",
-                     "THE-GREAT-BOOK-OF-WORLD-GAMES",
-                     "THE-MYTH-HUNTERS-FIELD-BOOK"]
+    "isolatedFrom": [
+      "CODEX_BESTIARIUM",
+      "CODEX_MYTHOLOGICA",
+      "THE-GREAT-BOOK-OF-WORLD-MYTHS",
+      "THE-GREAT-BOOK-OF-WORLD-GAMES",
+      "THE-MYTH-HUNTERS-FIELD-BOOK"
+    ]
   },
-
   "language": {
     "$comment": [
       "⭑ İKİ DİL, İKİ AMAÇ — VE KARIŞTIRILMALARI ÜRÜNÜ BOZAR. ⭑",
@@ -54,13 +55,22 @@
     "pilotLanguage": "tr",
     "productionLanguage": "en",
     "pilotIsProductionManuscript": false,
-    "pilotScope": ["gate:threshold"],
+    "pilotScope": [
+      "gate:threshold"
+    ],
     "englishConversion": {
       "requiresFullRetest": true,
       "forbidMachineTranslation": true,
-      "retestGates": ["validate_spec", "qa_answerspace", "qa_solvability",
-                      "qa_uniqueness", "qa_hints", "qa_dependency",
-                      "qa_handoff", "qa_solution_leak"],
+      "retestGates": [
+        "validate_spec",
+        "qa_answerspace",
+        "qa_solvability",
+        "qa_uniqueness",
+        "qa_hints",
+        "qa_dependency",
+        "qa_handoff",
+        "qa_solution_leak"
+      ],
       "redesignIfWordplayBreaks": true,
       "$comment": [
         "Bir kelime oyunu bulmacası İngilizcede farklı davranıyorsa",
@@ -76,7 +86,6 @@
     },
     "mixedLanguageInSinglePuzzle": false
   },
-
   "founder": {
     "author": "Emre Doğan",
     "publisher": "Vâliçe Press",
@@ -86,7 +95,9 @@
       "paperback": null,
       "hardcover": null
     },
-    "aiDisclosure": {"founderConfirmed": false},
+    "aiDisclosure": {
+      "founderConfirmed": false
+    },
     "authorBio": null,
     "authorBio$comment": "null iken Faz 6 KIRMIZI (World Myths'te KDP yer tutucuyu reddetti).",
     "externalSolvers": {
@@ -95,7 +106,7 @@
       "minSolvers": 5,
       "identifiedCount": 5,
       "solverLanguage": "tr",
-      "sessionsRecorded": 0,
+      "sessionsRecorded": 5,
       "$comment": [
         "FAZ 2'NİN ÖLDÜRME KAPISI BUNA BAĞLIDIR.",
         "Ajan bulmaca çözemez — çözümü zaten biliyor. Test HARİCİ",
@@ -113,22 +124,29 @@
         "",
         "Beş çözücünün beşi de TÜRKÇE konuşur — pilot dilinin Türkçe",
         "olmasının tek sebebi budur (language.pilotLanguage)."
-      ]
+      ],
+      "sessionsRecordedAt": "2026-08-13",
+      "gateCompletedBySolvers": 1,
+      "killGateOutcome": "HARD-STOP"
     },
     "validationSiteUrl": null,
     "validationSiteUrl$comment": "Journal 29 modeli: okur cevabı girer, doğru/yanlış görür. Faz 5'te canlı olmalı."
   },
-
   "audience": {
     "$comment": "ALICI = OKUR. Reklam matematiğini kolaylaştıran şey budur.",
     "readerAgeMin": 16,
     "readerAgeMax": 99,
     "primaryReader": "25–55 bulmaca meraklısı · escape room oynayan · Cain's Jawbone / Journal 29 okuru",
-    "buyer": ["self", "gift-buyer"],
+    "buyer": [
+      "self",
+      "gift-buyer"
+    ],
     "bisacPrimary": "GAM014000",
-    "bisacSecondary": ["GAM019000", "FIC022000"]
+    "bisacSecondary": [
+      "GAM019000",
+      "FIC022000"
+    ]
   },
-
   "scope": {
     "locked": false,
     "lockedAtPhase": "phase1",
@@ -171,17 +189,46 @@
     ],
     "pageTolerancePct": 6,
     "gateStructure": [
-      {"id": "threshold", "en": "The Threshold", "tr": "Eşik",      "difficulty": 1, "puzzles": 20,
-       "$comment": "BU KAPIYI GEÇEMEYEN OKUR KİTABI İADE EDER. En çok test edilen bölüm."},
-      {"id": "menagerie", "en": "The Menagerie", "tr": "Yaratıklar", "difficulty": 2, "puzzles": 20},
-      {"id": "calendar",  "en": "The Calendar",  "tr": "Takvim",     "difficulty": 2, "puzzles": 20},
-      {"id": "labyrinth", "en": "The Labyrinth", "tr": "Labirent",   "difficulty": 3, "puzzles": 20},
-      {"id": "mirror",    "en": "The Mirror",    "tr": "Ayna",       "difficulty": 3, "puzzles": 20}
+      {
+        "id": "threshold",
+        "en": "The Threshold",
+        "tr": "Eşik",
+        "difficulty": 1,
+        "puzzles": 20,
+        "$comment": "BU KAPIYI GEÇEMEYEN OKUR KİTABI İADE EDER. En çok test edilen bölüm."
+      },
+      {
+        "id": "menagerie",
+        "en": "The Menagerie",
+        "tr": "Yaratıklar",
+        "difficulty": 2,
+        "puzzles": 20
+      },
+      {
+        "id": "calendar",
+        "en": "The Calendar",
+        "tr": "Takvim",
+        "difficulty": 2,
+        "puzzles": 20
+      },
+      {
+        "id": "labyrinth",
+        "en": "The Labyrinth",
+        "tr": "Labirent",
+        "difficulty": 3,
+        "puzzles": 20
+      },
+      {
+        "id": "mirror",
+        "en": "The Mirror",
+        "tr": "Ayna",
+        "difficulty": 3,
+        "puzzles": 20
+      }
     ],
     "metaMysteryRequired": true,
     "metaMysteryNote": "100 bulmacanın çıktısı tek bir son soruya bağlanır. Cevap kitapta YOKTUR — doğrulama sayfasına girilir."
   },
-
   "solvability": {
     "$comment": [
       "BU PROJENİN TANIMLAYICI TEKNİK PROBLEMİ: ÇÖZÜLEBİLİRLİK.",
@@ -202,7 +249,6 @@
     "externalTestersForGateI": 5,
     "noExternalKnowledgeRequired": true,
     "noExternalKnowledgeNote": "Hiçbir bulmaca kitabın dışındaki bilgiyi gerektiremez. Sözleşme sayfasında okura bu söz verilir.",
-
     "bookTableIsSoleAuthority": true,
     "bookTableIsSoleAuthority$comment": [
       "⚠ FAZ 1 KIRMIZI TAKIM DÜZELTMESİ — SÖZLEŞMENİN DÖRDÜNCÜ SÖZÜ.",
@@ -221,7 +267,6 @@
       "değerle ÇAKIŞAN glifler kullanılır. Bilen okur ile bilmeyen okur",
       "aynı cevapta buluşmalıdır."
     ],
-
     "answerNormalization": {
       "$comment": [
         "Cevap biçimi TANIMSIZ bırakılırsa, kusursuz tasarlanmış bir",
@@ -238,7 +283,6 @@
       "charset": "A-Z 0-9",
       "printedOnContractPage": true
     },
-
     "perPuzzleVerification": true,
     "perPuzzleVerification$comment": [
       "⚠ FAZ 1 KIRMIZI TAKIM BULGUSU — EN YÜKSEK DEĞERLİ TEK DEĞİŞİKLİK.",
@@ -300,14 +344,23 @@
         "alanı tarayarak çözebilir ve bulmacanın mekaniği harcanmış olur.",
         "Altı, tasnif ailesinin kırmızı takım hesabındaki küme boyudur."
       ],
-      "forbiddenAcceptanceKinds": ["author-asserted", "prose"],
+      "forbiddenAcceptanceKinds": [
+        "author-asserted",
+        "prose"
+      ],
       "allowedGeneratorKinds": [
-        "cyclic-shift", "keyed-substitution", "reflection-map",
-        "transposition-order", "glyph-chart-reading", "printed-lexicon",
-        "constraint-assignment", "positional-extraction"
+        "cyclic-shift",
+        "keyed-substitution",
+        "reflection-map",
+        "transposition-order",
+        "glyph-chart-reading",
+        "printed-lexicon",
+        "constraint-assignment",
+        "positional-extraction"
       ],
       "allowedAcceptanceKinds": [
-        "in-printed-lexicon", "satisfies-printed-constraints",
+        "in-printed-lexicon",
+        "satisfies-printed-constraints",
         "in-printed-phrase-list"
       ],
       "hintsCheckedAgainstWholeDomain": true,
@@ -318,7 +371,6 @@
         "varır ve kitabı bozuk sanır. İpucu bütün alana karşı denetlenir."
       ]
     },
-
     "gateHandoff": {
       "$comment": [
         "⭑ FAZ 1 BULGUSU 6.4'ÜN GERİ DÖNMEMESİ İÇİN — talimat § 13. ⭑",
@@ -355,13 +407,15 @@
         "küçülterek değil."
       ]
     },
-
     "hintLadderLevels": 3,
-    "hintLadder": ["yönlendirme", "yöntem", "neredeyse-cevap"],
+    "hintLadder": [
+      "yönlendirme",
+      "yöntem",
+      "neredeyse-cevap"
+    ],
     "hintMustNotContainAnswer": true,
     "dependencyGraphMustBeAcyclic": true,
     "gatePuzzleDependsOnlyOnPriorPuzzles": true,
-
     "testStatusRequirements": {
       "$comment": [
         "⭑ 'tested' MEKANİK OLARAK KAZANILIR, ELLE VERİLMEZ. ⭑",
@@ -389,7 +443,6 @@
       "internalSolverCountsAsEvidence": false
     }
   },
-
   "killGate": {
     "$comment": [
       "FAZ 2 BİR ÖLDÜRME KAPISIDIR — bu, üç projede yalnızca burada vardır.",
@@ -406,7 +459,6 @@
       "puzzlesUnsolvedByAllSolvers": 0,
       "confirmedAlternativeSolutions": 0,
       "medianCompletionMinutesMax": 240,
-
       "minSolversPerPuzzle": 2,
       "minSolversPerPuzzle$comment": [
         "⚠ FAZ 1 KIRMIZI TAKIM DÜZELTMESİ.",
@@ -448,7 +500,6 @@
       "$comment": "5 çözücüden 3'ünden AZI Kapı I'i bitirirse PROJE DURUR veya YENİDEN TASARLANIR. Yazıma DEVAM EDİLMEZ."
     }
   },
-
   "contentProtection": {
     "$comment": [
       "İKİ KATMANLI İÇERİK — bu projeye özgü.",
@@ -470,18 +521,42 @@
       "02_MANUSCRIPT/ — bulmaca prozası",
       "06_REPORTS/solver/ — çözücü test kayıtları (ham)"
     ],
-    "solutionFieldNames": ["solution", "intendedSolution", "answer",
-                           "answerKey", "solutionPath", "hints", "finalAnswer"],
+    "solutionFieldNames": [
+      "solution",
+      "intendedSolution",
+      "answer",
+      "answerKey",
+      "solutionPath",
+      "hints",
+      "finalAnswer"
+    ],
     "$comment2": "validate_structure.py bu alan adlarını takip edilen dosyalarda ARAR. Bulursa CI KIRMIZI yanar. DAR TUTULUR: yanlış pozitif bir kapıyı gürültüye boğar ve gürültülü kapı kapatılır.",
-
-    "forbiddenPublicFields": ["solution", "intendedSolution", "answer",
-                              "answerKey", "solutionPath", "hints",
-                              "hint1", "hint2", "hint3", "finalAnswer",
-                              "explanation", "title", "objective",
-                              "readerAction", "input", "clues",
-                              "constraints", "clueStructure", "designIntent",
-                              "ambiguityPoints", "alternativeSolutionsConsidered",
-                              "solverTests", "redTeamNotes", "answerSpace"],
+    "forbiddenPublicFields": [
+      "solution",
+      "intendedSolution",
+      "answer",
+      "answerKey",
+      "solutionPath",
+      "hints",
+      "hint1",
+      "hint2",
+      "hint3",
+      "finalAnswer",
+      "explanation",
+      "title",
+      "objective",
+      "readerAction",
+      "input",
+      "clues",
+      "constraints",
+      "clueStructure",
+      "designIntent",
+      "ambiguityPoints",
+      "alternativeSolutionsConsidered",
+      "solverTests",
+      "redTeamNotes",
+      "answerSpace"
+    ],
     "$comment3": [
       "İKİNCİ VE DAHA GENİŞ LİSTE — yalnızca puzzle_index.json KAYITLARINA",
       "uygulanır. Orada alan adları YAPISALDIR, dolayısıyla 'title' gibi",
@@ -494,12 +569,22 @@
       "'title' burada çünkü bu kitapta başlık bir ipucudur:",
       "başlık, okuru nereye bakacağı konusunda yönlendirir."
     ],
-
-    "protectedDirs": ["01_SOURCE/solutions/", "01_SOURCE/design/",
-                      "09_ARCHIVE/solutions/", "06_REPORTS/solver/"],
-    "$comment4": "validate_structure.py § PROTECTED_DIRS ile SENKRON olmak zorundadır; validate_spec o senkronu denetler. 01_SOURCE/design/ Faz 1'de eklendi: tasarım niyeti bir çözüm değildir ama mekanizmayı açık eder (leakClass 'restricted')."
+    "protectedDirs": [
+      "01_SOURCE/solutions/",
+      "01_SOURCE/design/",
+      "01_SOURCE/playtests/",
+      "09_ARCHIVE/solutions/",
+      "06_REPORTS/solver/"
+    ],
+    "$comment4": "validate_structure.py § PROTECTED_DIRS ile SENKRON olmak zorundadır; validate_spec o senkronu denetler. 01_SOURCE/design/ Faz 1'de eklendi: tasarım niyeti bir çözüm değildir ama mekanizmayı açık eder (leakClass 'restricted').",
+    "$comment5": [
+      "⚠ 01_SOURCE/playtests/ FAZ 2 SONUNDA EKLENDİ (A12 sonucu).",
+      "Kurucu ham oturum kayıtları için bu yolu istedi. Dizin, içine tek bir",
+      "satır yazılmadan ÖNCE korumalı listeye alındı: çözücü kayıtları",
+      "mahremiyet taşır (SOLVER_TEST_PROTOCOL § 7) ve korunmayan bir dizine",
+      "yazılan ilk kayıt geri alınamaz."
+    ]
   },
-
   "security": {
     "$comment": [
       "⭑ A11 KAPANDI — 13 Ağustos 2026, kurucu yetkisiyle üretildi. ⭑",
@@ -522,9 +607,20 @@
       "ciSecretScope": "GitHub Actions repository secret · emredogan-cloud/codex-enigmatica",
       "localBackupPath": "~/.config/enigmatica/canary_salt",
       "localBackupMode": "0600 · dizin 0700 · DEPO DIŞINDA",
-      "plaintextLocations": ["GitHub Actions secret store", "yerel korumalı yedek"],
-      "plaintextNeverIn": ["git", "rapor", "README", "CHANGELOG",
-                           "PROJECT_CONTEXT", "kaynak kod", "CI log", "PR"],
+      "plaintextLocations": [
+        "GitHub Actions secret store",
+        "yerel korumalı yedek"
+      ],
+      "plaintextNeverIn": [
+        "git",
+        "rapor",
+        "README",
+        "CHANGELOG",
+        "PROJECT_CONTEXT",
+        "kaynak kod",
+        "CI log",
+        "PR"
+      ],
       "rotationProcedure": [
         "① yeni sır: umask 077; python3 -c \"import secrets;print(secrets.token_urlsafe(48))\" > ~/.config/enigmatica/canary_salt.new",
         "② gh secret set ENIGMATICA_CANARY_SALT < ~/.config/enigmatica/canary_salt.new",
@@ -542,10 +638,17 @@
       }
     }
   },
-
   "production": {
-    "trimPaperback": {"w": 6.0, "h": 9.0, "trimClass": "regular"},
-    "trimHardcover": {"w": 6.0, "h": 9.0, "trimClass": "regular"},
+    "trimPaperback": {
+      "w": 6.0,
+      "h": 9.0,
+      "trimClass": "regular"
+    },
+    "trimHardcover": {
+      "w": 6.0,
+      "h": 9.0,
+      "trimClass": "regular"
+    },
     "ink": "black",
     "paper": "cream",
     "$comment": [
@@ -555,21 +658,45 @@
     ],
     "kdpPrintCost": {
       "$comment": "KDP resmî formülleri · 12 Ağustos 2026 · Amazon.com",
-      "paperbackRegularTrimBW": {"fixed": 1.00, "perPage": 0.012, "minPages": 110, "maxPages": 828},
-      "hardcoverRegularTrimBW": {"fixed": 5.65, "perPage": 0.012, "minPages": 110, "maxPages": 550},
-      "royaltyRateAtOrAbove999": 0.60,
-      "royaltyRateBelow999": 0.50
+      "paperbackRegularTrimBW": {
+        "fixed": 1.0,
+        "perPage": 0.012,
+        "minPages": 110,
+        "maxPages": 828
+      },
+      "hardcoverRegularTrimBW": {
+        "fixed": 5.65,
+        "perPage": 0.012,
+        "minPages": 110,
+        "maxPages": 550
+      },
+      "royaltyRateAtOrAbove999": 0.6,
+      "royaltyRateBelow999": 0.5
     },
     "editionsHypothesis": [
-      {"id": "hardcover", "list": 29.99, "enabled": true,  "priority": 1},
-      {"id": "paperback", "list": 19.99, "enabled": true,  "priority": 2},
-      {"id": "kindle",    "list": null,  "enabled": false, "priority": 9,
-       "$comment": "ÖNERİLMEZ — görsel şifreler e-okuyucuda bozulur, iade ve kötü yorum üretir. İTİBAR KORUMASI."}
+      {
+        "id": "hardcover",
+        "list": 29.99,
+        "enabled": true,
+        "priority": 1
+      },
+      {
+        "id": "paperback",
+        "list": 19.99,
+        "enabled": true,
+        "priority": 2
+      },
+      {
+        "id": "kindle",
+        "list": null,
+        "enabled": false,
+        "priority": 9,
+        "$comment": "ÖNERİLMEZ — görsel şifreler e-okuyucuda bozulur, iade ve kötü yorum üretir. İTİBAR KORUMASI."
+      }
     ],
     "kdpSelect": false,
     "plateResolutionCritical": true,
     "plateResolutionNote": "Bir levhada kaybolan detay bulmacayı ÇÖZÜLEMEZ yapar. POD baskı testi Faz 5'te ZORUNLU.",
-
     "plateProof": {
       "$comment": [
         "⭑ A9 — FİZİKSEL PROVA KURUCU İŞİDİR. ⭑",
@@ -597,10 +724,9 @@
       "physicalProofValidated": false,
       "physicalProofValidatedAt": null,
       "proofPackageDir": "02_MANUSCRIPT/PROOF/",
-      "proofPackageDir$comment": "08_OUTPUT DEĞİL: orası YAYIN paketidir ve içinde çözüm bulunması Faz 6\u0027da kırmızıdır. Prova paketi bulmaca taşır, dolayısıyla korumalı katmana aittir.",
+      "proofPackageDir$comment": "08_OUTPUT DEĞİL: orası YAYIN paketidir ve içinde çözüm bulunması Faz 6'da kırmızıdır. Prova paketi bulmaca taşır, dolayısıyla korumalı katmana aittir.",
       "hardGateForPhase": "phase5"
     },
-
     "pageModel": {
       "$comment": [
         "SAYFA MODELİ ÇİFT İŞ GÖRÜR:",
@@ -652,7 +778,6 @@
       "tolerancePct": 6,
       "wordTarget": 34000
     },
-
     "plateBudget": {
       "$comment": "Kapı levhaları gate_index.json § plates'ten türetilir.",
       "frontMatterPlates": 3,
@@ -661,7 +786,6 @@
       "tolerancePct": 10
     }
   },
-
   "taxonomy": {
     "$comment": [
       "MEKANİZMA ÇEŞİTLİLİĞİ KAPISI.",
@@ -675,20 +799,54 @@
     "minDistinctFamiliesTotal": 10,
     "maxConsecutiveSameFamily": 6
   },
-
   "gates": {
-    "levels": ["phase0", "phase1", "phase2", "phase3", "phase4", "phase5", "release"],
+    "levels": [
+      "phase0",
+      "phase1",
+      "phase2",
+      "phase3",
+      "phase4",
+      "phase5",
+      "release"
+    ],
     "requirements": {
-      "phase0":  {"puzzlesCandidate": 0,   "puzzlesValidated": 0,   "puzzlesWritten": 0},
-      "phase1":  {"puzzlesCandidate": 130, "puzzlesValidated": 0,   "puzzlesWritten": 0},
-      "phase2":  {"puzzlesCandidate": 130, "puzzlesValidated": 20,  "puzzlesWritten": 20},
-      "phase3":  {"puzzlesCandidate": 130, "puzzlesValidated": 40,  "puzzlesWritten": 40},
-      "phase4":  {"puzzlesCandidate": 130, "puzzlesValidated": 100, "puzzlesWritten": 100},
-      "phase5":  {"puzzlesCandidate": 130, "puzzlesValidated": 100, "puzzlesWritten": 100},
-      "release": {"puzzlesCandidate": 130, "puzzlesValidated": 100, "puzzlesWritten": 100}
+      "phase0": {
+        "puzzlesCandidate": 0,
+        "puzzlesValidated": 0,
+        "puzzlesWritten": 0
+      },
+      "phase1": {
+        "puzzlesCandidate": 130,
+        "puzzlesValidated": 0,
+        "puzzlesWritten": 0
+      },
+      "phase2": {
+        "puzzlesCandidate": 130,
+        "puzzlesValidated": 20,
+        "puzzlesWritten": 20
+      },
+      "phase3": {
+        "puzzlesCandidate": 130,
+        "puzzlesValidated": 40,
+        "puzzlesWritten": 40
+      },
+      "phase4": {
+        "puzzlesCandidate": 130,
+        "puzzlesValidated": 100,
+        "puzzlesWritten": 100
+      },
+      "phase5": {
+        "puzzlesCandidate": 130,
+        "puzzlesValidated": 100,
+        "puzzlesWritten": 100
+      },
+      "release": {
+        "puzzlesCandidate": 130,
+        "puzzlesValidated": 100,
+        "puzzlesWritten": 100
+      }
     }
   },
-
   "style": {
     "$comment": "Ayrıntı: 00_CONTEXT/STYLE.md",
     "narrativeVoice": "kuru, kesin, hafif tekinsiz — bir kütüphanecinin sesi, bir sunucunun değil",

@@ -21,7 +21,7 @@ sebebidir:
 ama kabul yordamının dayandığı nitelik okurun elinde yoktu. Kusursuz bir
 tekillik ispatı, çözülemeyen bir bulmacanın üzerinde duruyordu.
 
-Yedi denetim — hepsi TERS YÖNDEN sorar: *okur bunu çözebilir mi?*
+Sekiz denetim — hepsi TERS YÖNDEN sorar: *okur bunu çözebilir mi?*
 
   ① her levha bulmacasının okur paketinde bir ŞEKLİ var
   ② ⭑ ŞEKİL AYIRT EDİCİ VERİYİ TAŞIYOR ⭑ — her etiketin künyesi görünür
@@ -31,6 +31,7 @@ Yedi denetim — hepsi TERS YÖNDEN sorar: *okur bunu çözebilir mi?*
   ⑥ ⭑ HİÇBİR CEVAP KENDİ SAYFASINDA BEDAVA DURMUYOR ⭑
      (aday kümesinin üyesi olarak durabilir — mantık çizelgesi böyle çalışır)
   ⑦ kapı bulmacasının levhası her girdi için bir satır taşıyor
+  ⑧ ⭑ HİÇBİR BULMACA VAR OLMAYAN BİR ÇİZELGEYE GÖNDERMİYOR ⭑
 
 ⚠ BU KAPI CEVAP İÇERİĞİ YAZDIRMAZ.
 
@@ -41,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -60,6 +62,16 @@ GLYPH_ACCEPTANCE = {"reachable-by-glyph-reading"}
 # (cevap + dört akran) ve dörtten az akran, aday kümesini "cevap ve birkaç
 # süs" hâline getirir.
 MIN_CANDIDATE_PEERS = 4
+
+# ⚠ FAZ 2 BULGUSU — VAR OLMAYAN BİR ÇİZELGEYE GÖNDERME.
+# Çizelgeler bir kez yeniden adlandırıldı; başlıklar güncellendi ama üç
+# bulmacanın gövdesi eski adlarda kaldı. Sonuç: okur sekiz ayrı cümlede
+# olmayan bir çizelgeye gönderiliyordu.
+#
+# Bu, sözleşmenin DÖRDÜNCÜ sözünün doğrudan ihlalidir ("kitap size bir
+# çizelge veriyorsa, o çizelge tek yetkedir") ve en zararlı hata
+# cinsindendir: okur bunu KENDİ hatası sanır.
+CHART_REF = re.compile(r"Çizelge\s+([A-Z])")
 
 
 def main() -> int:
@@ -101,7 +113,14 @@ def main() -> int:
 
     no_page, no_figure, blind_figure, no_table = [], [], [], []
     no_cipher, no_glyph, answer_on_page, gate_rows = [], [], [], []
+    dangling_chart = []
     checked = 0
+
+    # Basılı çizelgelerin GERÇEK harfleri — başlıklardan okunur, elle
+    # yazılmaz. İki kaynak, er geç iki farklı liste olur.
+    charts = (pl.load_json(TOOLS) or {}).get("charts", {})
+    chart_letters = {c.get("id") for c in charts.values() if c.get("id")}
+    print("  basılı çizelge harfleri: %s" % ", ".join(sorted(chart_letters)))
 
     print("\n── okurun eline ne geçiyor ──")
     for p in need:
@@ -183,6 +202,11 @@ def main() -> int:
             if peers < MIN_CANDIDATE_PEERS:
                 answer_on_page.append("%s (%d akran)" % (pid, peers))
 
+        # ⑧ ⭑ var olmayan bir çizelgeye gönderme ⭑
+        for letter in set(CHART_REF.findall(visible)):
+            if letter not in chart_letters:
+                dangling_chart.append("%s → Çizelge %s" % (pid, letter))
+
         # ⑦ kapı levhası
         if p.get("type") == "gate":
             deps = p.get("dependencies") or []
@@ -213,6 +237,10 @@ def main() -> int:
               "(≥%d akran gerekir)" % MIN_CANDIDATE_PEERS
               + ("" if not answer_on_page
                  else " — ⛔ BEDAVA CEVAP: %s" % answer_on_page[:5]))
+    rep.check(not dangling_chart,
+              "⭑ HİÇBİR BULMACA VAR OLMAYAN BİR ÇİZELGEYE GÖNDERMİYOR ⭑"
+              + ("" if not dangling_chart
+                 else " — ⛔ SARKAN GÖNDERME: %s" % dangling_chart[:5]))
     rep.check(not gate_rows, "kapı levhası her girdi için bir satır taşıyor"
               + ("" if not gate_rows else " — EKSİK: %s" % gate_rows[:5]))
 

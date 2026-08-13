@@ -21,8 +21,8 @@
 | Belirsizlik puanı ≤ 2 | **20 / 20** (18 puanı 1, 2 puanı 2) |
 | Üç kademeli ipucu | **60** |
 | Yeni kalite kapısı | **4** (`answerspace` · `handoff` · `readerpack` · `kill_gate`) |
-| Kapıların kendi testi | **123 → 151** denetim |
-| Kırmızı takım bulgusu | **23** — hepsi kapatıldı |
+| Kapıların kendi testi | **123 → 154** denetim |
+| Kırmızı takım bulgusu | **28** — hepsi kapatıldı |
 | İç çözücü | **3 bağımsız geçiş** — ⚠ **kanıt sayılmaz** |
 | **Harici çözücü oturumu** | ⛔ **0 / 5** |
 | **Öldürme kapısı** | ⛔ **BLOCKED** |
@@ -154,7 +154,12 @@ kalıbı tespit edilebilirdir.
 |---|---:|---:|---:|---:|
 | Solver B | 20 / 20 | 0 / 60 | ~41 dk | 12 |
 | Solver C | 20 / 20 | 0 / 60 | ~94 dk | 11 + **1 bloklayıcı** |
-| Solver D | — | — | — | *§ 5.2* |
+| Solver D | 20 / 20 | 0 / 60 | ~76 dk | 4 · **ikinci cevap: 0** |
+
+Eğri doğru yönde: metin–levha çelişkisi **11 → 3**, ikinci cevap
+**2 → 0**. Üçüncü geçiş hiçbir savunulabilir ikinci cevap üretemedi ve
+kaba kuvvetle denedi: 28 kaydırmanın tamamı, 29 yansıma ekseninin tamamı,
+sekiz levha okumasının tamamı, üç eleme bulmacasının 60 üyelik alanı.
 
 > ### ⛔ BU SATIRLAR ÖLDÜRME KAPISINDA SAYILMAZ.
 >
@@ -167,7 +172,7 @@ kalıbı tespit edilebilirdir.
 > hiçbir veri satırı üretmez. İç çözücünün değeri kusur bulmaktır,
 > çözülebilirliği kanıtlamak değil.
 
-Ve tam olarak bunu yaptılar: **23 kusurun 23'ünü** iç çözücüler ve kapılar
+Ve tam olarak bunu yaptılar: **28 kusurun 28'ini** iç çözücüler ve kapılar
 buldu, hiçbiri okura ulaşmadan.
 
 ### 5.1 · Süre — ve iç çözücünün neden süreyi ölçemediği
@@ -184,7 +189,7 @@ Bu, harici testin ölçmesi gereken ilk şeydir.
 
 ---
 
-## 6 · Kırmızı takım — 23 bulgu
+## 6 · Kırmızı takım — 28 bulgu
 
 Tam defter: [`RED_TEAM_CHECKLIST.md § 5`](../00_CONTEXT/RED_TEAM_CHECKLIST.md).
 Buradaki üç tanesi en ağırlardır.
@@ -253,7 +258,36 @@ ayrışmamaları bir fikstürle korunur.
 > Talimat § 17'nin uyardığı şeyin canlı örneği: **bir dil değişimi ölçüm
 > makinesinin kendisini de değiştirir.**
 
-### 6.5 · Kanarya iki kez kendi yazarını yakaladı
+### 6.5 · Var olmayan bir çizelgeye gönderme
+
+Üçüncü çözücü ikinci cevap **bulamadı** ama sekiz ayrı cümlede bir künye
+hatası buldu: çizelgeler bir kez yeniden adlandırılmış, üç bulmacanın
+gövdesi **eski adlarda kalmıştı**. Okur bir bulmacada **hiç var olmayan**
+bir çizelgeye gönderiliyordu.
+
+Sözleşmenin dördüncü sözünün doğrudan ihlali — ve en zararlı hata
+cinsinden: **okur bunu kendi hatası sanır.** Kök neden yine aynıydı: okur
+paketinin başlıkları elle yazılıyordu. Artık çizelge verisinden okunur ve
+`qa_readerpack § ⑧` sarkan göndermeyi kırmızı yakar.
+
+### 6.6 · ⭑ CI'ın kendisi bir körlük yarattı ⭑
+
+İlk yirmi bulmaca `drafted` olur olmaz **CI kırmızı yandı — ve haksızdı.**
+
+Korumalı katman klonda **hiç yoktur** (tasarım gereği). Kapı bunu
+*"korumalı kayıt KAYIP"* diye okuyordu: kendisine hiç gösterilmemiş bir
+dosyayı kayıp sanıyordu. Faz 1'de bu ayrım gerekmiyordu çünkü hiçbir
+bulmaca `drafted` değildi — kusur, kodun ilk kez **gerçek veriyle**
+karşılaştığı anda doğdu.
+
+| Durum | Davranış |
+|---|---|
+| Katman **tamamen** yok (CI) | **boş koşar ve "bu bir GEÇİŞ DEĞİLDİR" der** |
+| Katman **var ama eksik** | **KIRMIZI** — yazar çözümü yazmayı unuttu |
+
+İkisinin de fikstürü yazıldı.
+
+### 6.7 · Kanarya iki kez kendi yazarını yakaladı
 
 - Yeni selftest fikstürleri gerçek Sözlük'ten sözcük kullanıyordu →
   `05_TESTS/selftest.py` sızıntı olarak bildirildi.
@@ -457,7 +491,7 @@ cevap değişir**. Kapı ifadesinin on dokuz harfi **baştan atanır**.
 | `english_readiness` | ⭑ | dönüşüm iş listesi |
 | **`kill_gate`** | ⭑ | **karar — veri yoksa GEÇMEZ** |
 
-### Kapıların kendi testi: 123 → **151** denetim
+### Kapıların kendi testi: 123 → **154** denetim
 
 Her yeni fikstür Faz 2'de **gerçekten yaşanmış** bir kusuru yeniden kurar.
 En önemli ikisi:
@@ -531,7 +565,7 @@ değil, bir **boşluktur**.
 | Devir / hata davranışı | ✅ **ölçüldü** (Hamming 15) |
 | **Harici çözücü kayıtları gerçek** | ⛔ **KAYIT YOK — sahte üretilmedi** |
 | Sahte test kaydı yok | ✅ **mekanik olarak imkânsız** |
-| Belirsizlik bulguları çözüldü | ✅ 23/23 |
+| Belirsizlik bulguları çözüldü | ✅ 28/28 |
 | Sayfa modeli gerçek içerikle ölçüldü | ✅ |
 | Arka madde modeli doğrulandı | ✅ |
 | Levha prova hattı hazırlandı | ✅ |

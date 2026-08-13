@@ -750,11 +750,33 @@ def part7_protected_gates(rep: Report, tmp: str) -> None:
         rep.check(code != 0, label, out)
 
     # ── kayıp kayıt ─────────────────────────────────────────────────────
+    #
+    # ⚠ FAZ 2 AYRIMI — İKİ FARKLI "KAYIT YOK" DURUMU VAR:
+    #   ① katman TAMAMEN yok  → CI'ın normal durumu; kapı BOŞ KOŞAR ve söyler
+    #   ② katman VAR ama EKSİK → gerçek kusur; KIRMIZI
+    # Faz 1'de bu ayrım gerekmiyordu (hiçbir bulmaca 'drafted' değildi) ve
+    # ilk yirmi bulmaca yazıldığında CI yalancı kırmızı yandı: kapı,
+    # kendisine hiç gösterilmemiş bir dosyayı "kayıp" sanıyordu.
+
+    # ② EKSİK katman — iki kayıttan biri silinir
+    _RUN_SEQ[0] += 1
+    d = protected_root([rec(1), rec(2)])
+    os.remove(os.path.join(d, "01_SOURCE", "solutions", "fixture-001.json"))
+    code, out = run_env_gate("qa_solvability.py", d)
+    rep.check(code != 0,
+              "⭑ KATMAN VAR AMA BİR KAYIT EKSİKSE KIRMIZI ⭑ (gerçek kusur)",
+              out)
+
+    # ① TAMAMEN yok — CI durumu: boş koşar, çıkış 0, ama SÖYLER
     _RUN_SEQ[0] += 1
     d = protected_root([rec(1)])
     os.remove(os.path.join(d, "01_SOURCE", "solutions", "fixture-001.json"))
     code, out = run_env_gate("qa_solvability.py", d)
-    rep.check(code != 0, "⭑ yazılmış bulmacanın KORUMALI KAYDI YOKSA KIRMIZI ⭑",
+    rep.check(code == 0 and "BOŞ KOŞTU" in out,
+              "⭑ KATMAN HİÇ YOKSA BOŞ KOŞAR VE BUNU SÖYLER ⭑ (CI durumu)",
+              out)
+    rep.check("GEÇİŞ DEĞİLDİR" in out,
+              "boş koşan kapı 'bu bir geçiş değildir' diyor (sessiz yeşil yok)",
               out)
 
     # ── çözülebilirlik ──────────────────────────────────────────────────
@@ -994,6 +1016,13 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
                          "clues": [], "constraints": []})
     code, out = run_env_gate("qa_readerpack.py", d)
     rep.check(code != 0, "⭑ ETİKET KÜNYESİ TAŞIMAYAN KÖR ŞEKİL YAKALANIR ⭑", out)
+
+    # ⭑ Var olmayan bir çizelgeye gönderme — Faz 2'de üç bulmacada,
+    # sekiz ayrı cümlede yaşandı. Okur bunu KENDİ hatası sanır.
+    d = space_root(CLEAN, page=dict(PAGE, clues=["Çizelge Z'ye bakın."]))
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0,
+              "⭑ VAR OLMAYAN BİR ÇİZELGEYE GÖNDERME YAKALANIR ⭑", out)
 
     # Cevap sayfada BEDAVA duruyorsa (akransız).
     d = space_root(CLEAN, page=dict(PAGE, objective="Cevap MELTEM degil mi."))

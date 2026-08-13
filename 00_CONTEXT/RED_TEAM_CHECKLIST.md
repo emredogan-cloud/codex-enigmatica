@@ -154,8 +154,10 @@ CI sırrının kurulmasına bağlıdır (**A11**).
 | Ön denetim (bulmaca yazılmadan) | 2 |
 | Kapıların üretim verisinde yakaladığı | 9 |
 | Solver B — bağımsız iç çözücü | 12 |
-| Solver C — doğrulama geçişi | § 5.5 |
-| **Toplam kapatılan** | **23** |
+| Solver C — doğrulama geçişi | 12 |
+| Solver D — son doğrulama geçişi | 4 |
+| CI'ın kendisi | 1 |
+| **Toplam kapatılan** | **28** |
 
 ### 5.2 · ⭑ F2-01 · SAYI TABLOSU HATA TESPİT ETMİYORDU ⭑ — en ağır bulgu
 
@@ -364,3 +366,62 @@ andı**. Kanarya bu dosyayı sızıntı olarak bildirdi ve haklıydı.
 Kural: bulgu defteri ve faz raporları bir cevabı **adıyla anmaz**; kusuru
 ve düzeltmeyi anlatır, dizeyi anmaz. Bu, disipline değil kanaryaya
 bağlıdır — ve kanarya ısırdı.
+
+### 5.16 · F2-23 · Var olmayan bir çizelgeye gönderme
+
+Üçüncü bağımsız çözücü (Solver D) **ikinci cevap bulamadı** — mekanizma
+düzeltmeleri tuttu. Ama sekiz ayrı cümlede bir künye hatası buldu.
+
+Çizelgeler bir kez yeniden adlandırılmıştı. Başlıklar ve sözleşme sayfası
+güncellendi; **üç bulmacanın gövdesi eski adlarda kaldı**. Okur iki
+bulmacada var olan ama yanlış bir çizelgeye, bir bulmacada ise **hiç var
+olmayan** bir çizelgeye gönderiliyordu.
+
+> Bu, sözleşmenin **dördüncü sözünün** doğrudan ihlalidir — *"kitap size
+> bir çizelge veriyorsa, o çizelge tek yetkedir"* — ve en zararlı hata
+> cinsindendir: **okur bunu kendi hatası sanır.**
+
+**Kök neden aynıydı:** okur paketinin başlıkları elle yazılıyordu.
+Başlıklar artık çizelge verisinden **okunur**. Ve `qa_readerpack § ⑧`
+artık okur metnindeki her `Çizelge X` göndermesini basılı çizelge
+harfleriyle karşılaştırır — sarkan bir gönderme kırmızı yanar.
+
+### 5.17 · ⭑ F2-24 · CI'ın kendisi bir körlük yarattı ⭑
+
+İlk yirmi bulmaca `drafted` olur olmaz **CI kırmızı yandı** — ve haksızdı.
+
+Korumalı katman `.gitignore` ile dışlanır ve **klonda hiç yoktur**. Kapı
+bunu "yazılmış bulmacanın korumalı kaydı KAYIP" diye okuyordu: kendisine
+hiç gösterilmemiş bir dosyayı kayıp sanıyordu.
+
+Faz 1'de bu ayrım **gerekmiyordu** çünkü hiçbir bulmaca `drafted`
+değildi. Kusur, kodun ilk kez gerçek veriyle karşılaştığı anda doğdu.
+
+**İki durum artık ayrılıyor ve ikisinin de fikstürü var:**
+
+| Durum | Anlam | Davranış |
+|---|---|---|
+| Katman **tamamen** yok | CI'ın normal durumu | **boş koşar ve SÖYLER** |
+| Katman **var ama eksik** | yazar çözümü yazmayı unuttu | **KIRMIZI** |
+
+⚠ Ve boş koşan kapı *"bu bir GEÇİŞ DEĞİLDİR"* der. Sessizce yeşil yanan
+bir kapı, olmayan bir kapıdan tehlikelidir — bu kural burada da geçerlidir.
+
+### 5.18 · Üç çözücü geçişinin karşılaştırması
+
+| | Solver B | Solver C | Solver D |
+|---|---:|---:|---:|
+| Çözülen | 20/20 | 20/20 | **20/20** |
+| Kullanılan ipucu | 0/60 | 0/60 | **0/60** |
+| Süre | ~41 dk | ~94 dk | ~76 dk |
+| Metin–levha çelişkisi | 11 | 8 | **3** |
+| Tanımsız kural | 3 | 8 | **1** |
+| **İkinci cevap** | 0 | **2** | **0** ✅ |
+
+Eğri doğru yönde: **ikinci cevaplar kapandı** ve çelişki sayısı 11 → 3'e
+indi. Kalan üçü de bu fazda kapatıldı (§ 5.16).
+
+> ⚠ Ve hiçbiri kanıt değildir. Üç yapay çözücü de yirmi bulmacayı ipucusuz
+> çözdü; bir insan çözücünün bunu yapacağının **hiçbir göstergesi yoktur**.
+> Solver B'nin kendi tahmini insan için 3–5 kat süre. Öldürme kapısı bu
+> satırların hiçbirini saymaz.

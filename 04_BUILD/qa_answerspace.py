@@ -365,10 +365,14 @@ def main() -> int:
         return rep.finish("denetlenecek cevap uzayı yok", args.json)
     need, sols, designs = pre
 
+    # Buraya ulaşıldıysa korumalı katman VARDIR (preflight aksi hâlde None
+    # döndürür). Yani çizelgelerin okunamaması gerçek bir kusurdur: kabul
+    # yordamının dayanağı yoktur.
     plate = Plate(pl.load_json(TOOLS) or {})
     if not plate.ok:
-        rep.check(False, "⛔ basılı çizelgeler okunamadı (%s) — kabul yordamı "
-                         "DAYANAKSIZ" % os.path.relpath(TOOLS, pl.ROOT))
+        rep.check(False, "⛔ korumalı katman VAR ama basılı çizelgeler "
+                         "okunamadı (%s) — kabul yordamı DAYANAKSIZ"
+                  % os.path.relpath(TOOLS, pl.ROOT))
         return rep.finish("çizelge yok", args.json)
     print("  basılı çizelge: alfabe %d harf · sözlük %d üye · ifade %d · "
           "sayı %d" % (len(plate.alphabet), len(plate.lexicon),

@@ -8,7 +8,7 @@
   "facts": {
     "gate": "threshold",
     "puzzles": 20,
-    "bodyWords": 1474,
+    "bodyWords": 1476,
     "figureLines": 181,
     "hintWords": 1067,
     "solutionWords": 589,
@@ -24,7 +24,7 @@
     "perPuzzle": [
       {
         "puzzleId": "g1-001",
-        "words": 82,
+        "words": 79,
         "figureLines": 9,
         "hintWords": 52,
         "solutionWords": 28
@@ -101,7 +101,7 @@
       },
       {
         "puzzleId": "g1-012",
-        "words": 58,
+        "words": 63,
         "figureLines": 12,
         "hintWords": 57,
         "solutionWords": 31

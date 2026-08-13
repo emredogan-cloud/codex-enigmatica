@@ -150,7 +150,22 @@ def preflight(rep: Report, gate_level: str, kind: str) -> tuple[list, dict, dict
     """Ortak açılış: envanteri ve korumalı katmanı yükler, katmanın
     VARLIĞINI kapı seviyesine göre denetler.
 
-    Dönüş None ise çağıran hemen bitirmelidir."""
+    Dönüş None ise çağıran hemen bitirmelidir.
+
+    ⚠ FAZ 2 BULGUSU — İKİ FARKLI 'KAYIT YOK' DURUMU VARDIR VE KARIŞTIRMAK
+    YA CI'I YALANCI KIRMIZI YAKAR YA DA GERÇEK BİR KUSURU GİZLER:
+
+      ① KATMAN TAMAMEN YOK   → CI'ın NORMAL durumu. Korumalı katman
+         .gitignore ile dışlanır; klonda hiç yoktur. Kapı BOŞ KOŞAR ve
+         bunu SÖYLER. Körlüğü selftest kapatır (fikstürler gerçek
+         kayıtlarla koşar).
+      ② KATMAN VAR AMA EKSİK → GERÇEK KUSUR. Yazarın bir bulmacayı
+         yazıp çözümünü yazmayı unutmasıdır. KIRMIZI.
+
+    Faz 1'de bu ayrım GEREKMİYORDU çünkü hiçbir bulmaca 'drafted'
+    değildi; ① durumu ② ile aynı koda düşüyordu ve kimse fark etmedi.
+    İlk yirmi bulmaca yazıldığında CI kırmızı yandı — kapı, kendisine
+    hiç gösterilmemiş bir dosyayı 'kayıp' sanıyordu."""
     puzzles = load_index()
     sols, designs = load_protected()
     need = [p for p in puzzles if p.get("status") in NEEDS_PROTECTED]
@@ -172,6 +187,18 @@ def preflight(rep: Report, gate_level: str, kind: str) -> tuple[list, dict, dict
         print("     (bu bir GEÇİŞ DEĞİL, BOŞ KOŞUDUR; Faz 2'de kayıt gelir)")
         return None
 
+    if not sols and not designs:
+        # ① Katman TAMAMEN yok — CI. Boş koşar ve bunu YÜKSEK SESLE söyler.
+        rep.facts["protectedLayerPresent"] = False
+        print("  ⊘ korumalı katman bu ortamda HİÇ YOK (.gitignore § ①b) —")
+        print("     %s kapısı BOŞ KOŞTU. Bu bir GEÇİŞ DEĞİLDİR." % kind)
+        print("     Ölçüm YERELDE yapılır; körlüğü 05_TESTS/selftest.py kapatır.")
+        rep.warn("%s: korumalı katman yok, kapı boş koştu (CI'ın normal "
+                 "durumu — yerelde koşturun)" % kind)
+        return None
+
+    # ② Katman VAR ama eksik → gerçek kusur.
+    rep.facts["protectedLayerPresent"] = True
     missing = [p["puzzleId"] for p in need if p["puzzleId"] not in sols]
     rep.check(not missing,
               "yazılmış her bulmacanın korumalı kaydı var"

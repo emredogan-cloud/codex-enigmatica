@@ -29,7 +29,7 @@ DEĞİŞİR. Kapı ifadesinin on dokuz harfi yeniden atanır.
   lexical    → mekanizma alfabe yapısına bağlı; KISIT yeniden tasarlanır
   phonetic   → ifadeye/sese bağlı; BULMACA yeniden tasarlanır
 
-Çıkış kodları:  0 = rapor üretildi   2 = korumalı katman yok
+Çıkış kodları:  0 = rapor üretildi VEYA korumalı katman yok (boş koşu)
 """
 
 from __future__ import annotations
@@ -85,8 +85,13 @@ def main() -> int:
     puzzles = [p for p in pl.load_index() if p.get("pilotCohort")]
 
     if not designs:
-        print("\n  ⊘ korumalı katman bu ortamda yok — hazırlık ölçülemedi")
-        return 2
+        # ⚠ Korumalı katman CI'da YOKTUR ve bu NORMALDİR (.gitignore § ①b).
+        # Diğer bütün kapılarla aynı davranış: BOŞ KOŞAR ve bunu SÖYLER.
+        # Çıkış kodu 2 kullanılmaz — 2 "bağımlılık kurulu değil" demektir
+        # ve CI onu hata sayar; buradaki durum bir eksiklik değil, tasarım.
+        print("\n  ⊘ korumalı katman bu ortamda HİÇ YOK — hazırlık ölçülemedi")
+        print("     Bu bir GEÇİŞ DEĞİL, BOŞ KOŞUDUR. Ölçüm YERELDE yapılır.")
+        return 0
 
     buckets: dict[str, list[str]] = {"mechanical": [], "lexical": [],
                                      "phonetic": [], "unclassified": []}

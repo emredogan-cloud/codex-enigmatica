@@ -45,12 +45,13 @@
 !01_SOURCE/solutions/.gitkeep
 !01_SOURCE/solutions/README.md
 
-09_ARCHIVE/solutions/*
-!09_ARCHIVE/solutions/.gitkeep
+# (09_ARCHIVE/solutions kuralı § ⑤'in altında yeniden kurulur — aynı
+#  dizin-içine-inmeme sebebiyle.)
 
 # Çözücü test kayıtlarının HAM hâli. Depoda yalnızca ANONİM özet durur.
-06_REPORTS/solver/*
-!06_REPORTS/solver/.gitkeep
+# ⚠ Kuralı § ②b'nin ALTINDA yeniden kurmak zorundayız: git, dışlanmış bir
+# DİZİNİN İÇİNE İNMEZ. `06_REPORTS/*` dizini dışladığı anda, içerideki
+# `!.../.gitkeep` olumsuzlaması hiç değerlendirilmez.
 
 # ①c ⭑ TASARIM KATMANI — mekanizmayı açık eder ⭑
 # Bir tasarım niyeti ("gravürün tarama yönü veri taşır") bir ÇÖZÜM DEĞİLDİR
@@ -88,6 +89,15 @@
 # belgelerdir; yol haritasının söz verdiği yerde dururlar.
 !06_REPORTS/PHASE_*_REPORT.md
 
+# ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
+# Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:
+# `.gitkeep` dosyaları takip edilmiyordu, yani KLONDA O DİZİNLER YOKTU —
+# yerelde yeşil, CI'da kırmızı. validate_structure artık her zorunlu dizin
+# için TAKİP EDİLEN bir dosya arar; disk üzerinde var olmak yetmez.
+!06_REPORTS/solver/
+06_REPORTS/solver/*
+!06_REPORTS/solver/.gitkeep
+
 # ⚠ ÜRETİLEN raporlar tracked/ altında da olsa DEPODA DURMAZ: her koşuda
 # yeniden yazılırlar ve çalışma ağacını kirletirler. Depoda duracak olan,
 # KARAR taşıyan raporlardır — öldürme kapısı kararı, POD baskı ölçümü,
@@ -123,6 +133,9 @@
 
 09_ARCHIVE/*
 !09_ARCHIVE/.gitkeep
+!09_ARCHIVE/solutions/
+09_ARCHIVE/solutions/*
+!09_ARCHIVE/solutions/.gitkeep
 
 # ⑥ SIRLAR VE YEREL ORTAM ─────────────────────────────────────────────────
 .env

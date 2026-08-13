@@ -308,10 +308,24 @@ def read_text(rel: str) -> str:
         return ""
 
 
-def check_files(rep: Report) -> None:
+def check_files(rep: Report, files: list[str]) -> None:
+    """⚠ İKİ AYRI SORU — ve ikincisi bir CI kırmızısıyla öğrenildi.
+
+    ① dizin DİSKTE var mı
+    ② dizin KLONDA var mı — yani içinde TAKİP EDİLEN bir dosya var mı
+
+    git boş dizin saklamaz. `.gitkeep` dosyaları `.gitignore` tarafından
+    gölgelenirse dizin yerelde VARDIR ama klonda YOKTUR: yerelde yeşil,
+    CI'da kırmızı. Depo sınırı denetimi bağlar için bu ayrışmayı zaten
+    kapatıyordu; bu denetim onu DİZİNLER için kapatır."""
     print("\n── zorunlu dosya ve dizinler ──")
+    tracked_dirs = {os.path.dirname(f) for f in files}
     for rel in REQUIRED_DIRS:
         rep.check(os.path.isdir(os.path.join(ROOT, rel)), "dizin: %s" % rel)
+        if files:
+            rep.check(any(d == rel or d.startswith(rel + "/")
+                          for d in tracked_dirs),
+                      "dizin KLONDA da var (takip edilen dosya taşıyor): %s" % rel)
     for rel in REQUIRED_FILES:
         rep.check(os.path.isfile(os.path.join(ROOT, rel)), "dosya: %s" % rel)
 
@@ -554,7 +568,7 @@ def main() -> int:
     rep = Report(args.verbose)
     files = tracked_files(rep)
 
-    check_files(rep)
+    check_files(rep, files)
     check_gate_file(rep)
     check_embedded(rep, files)
     check_manuscript_leak(rep, files)

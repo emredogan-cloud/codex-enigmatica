@@ -561,6 +561,10 @@ def part5_repo_gate(rep: Report, tmp: str) -> None:
                          "PUBLISHER = %r\n" % _vs.SINGLE_SOURCE_VALUES[1]))
     case("zorunlu dosya EKSİKLİĞİ YAKALANIR",
          lambda d: os.remove(os.path.join(d, "00_CONTEXT", "HINT_LADDER.md")))
+    # ⭑ KLON GERÇEĞİ: dizin diskte durabilir ama takip edilen dosyası yoksa
+    # klonda YOKTUR. Bu tam olarak Faz 1'de CI'ı kırmızı yakan kusurdur.
+    case("⭑ TAKİP EDİLMEYEN zorunlu dizin YAKALANIR (klonda yok) ⭑",
+         lambda d: os.remove(os.path.join(d, "06_REPORTS", "solver", ".gitkeep")))
     case("çözüm alan listesi config ↔ betik AYRIŞMASI YAKALANIR",
          lambda d: _mutate_json(
              os.path.join(d, "project_config.json"),

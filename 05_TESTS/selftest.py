@@ -750,11 +750,33 @@ def part7_protected_gates(rep: Report, tmp: str) -> None:
         rep.check(code != 0, label, out)
 
     # ── kayıp kayıt ─────────────────────────────────────────────────────
+    #
+    # ⚠ FAZ 2 AYRIMI — İKİ FARKLI "KAYIT YOK" DURUMU VAR:
+    #   ① katman TAMAMEN yok  → CI'ın normal durumu; kapı BOŞ KOŞAR ve söyler
+    #   ② katman VAR ama EKSİK → gerçek kusur; KIRMIZI
+    # Faz 1'de bu ayrım gerekmiyordu (hiçbir bulmaca 'drafted' değildi) ve
+    # ilk yirmi bulmaca yazıldığında CI yalancı kırmızı yandı: kapı,
+    # kendisine hiç gösterilmemiş bir dosyayı "kayıp" sanıyordu.
+
+    # ② EKSİK katman — iki kayıttan biri silinir
+    _RUN_SEQ[0] += 1
+    d = protected_root([rec(1), rec(2)])
+    os.remove(os.path.join(d, "01_SOURCE", "solutions", "fixture-001.json"))
+    code, out = run_env_gate("qa_solvability.py", d)
+    rep.check(code != 0,
+              "⭑ KATMAN VAR AMA BİR KAYIT EKSİKSE KIRMIZI ⭑ (gerçek kusur)",
+              out)
+
+    # ① TAMAMEN yok — CI durumu: boş koşar, çıkış 0, ama SÖYLER
     _RUN_SEQ[0] += 1
     d = protected_root([rec(1)])
     os.remove(os.path.join(d, "01_SOURCE", "solutions", "fixture-001.json"))
     code, out = run_env_gate("qa_solvability.py", d)
-    rep.check(code != 0, "⭑ yazılmış bulmacanın KORUMALI KAYDI YOKSA KIRMIZI ⭑",
+    rep.check(code == 0 and "BOŞ KOŞTU" in out,
+              "⭑ KATMAN HİÇ YOKSA BOŞ KOŞAR VE BUNU SÖYLER ⭑ (CI durumu)",
+              out)
+    rep.check("GEÇİŞ DEĞİLDİR" in out,
+              "boş koşan kapı 'bu bir geçiş değildir' diyor (sessiz yeşil yok)",
               out)
 
     # ── çözülebilirlik ──────────────────────────────────────────────────
@@ -833,6 +855,384 @@ def part7_protected_gates(rep: Report, tmp: str) -> None:
              2, "Kelime okunur ve harfler cevrilir; kelime okunur."))
 
 
+def part8_answerspace(rep: Report, tmp: str) -> None:
+    """⑧ FAZ 2'NİN ÜÇ YENİ KAPISI + TÜRKÇE KATLAMASI.
+
+    Her fikstür Faz 2'de GERÇEKTEN YAŞANMIŞ bir kusuru yeniden kurar.
+    Bunlar hayalî senaryolar değil; kapılar bu kusurları üretim verisinde
+    yakaladı ve fikstürler o yakalayışın tekrarlanabilir kanıtıdır."""
+    print("\n⑧ ⭑ CEVAP UZAYI · DEVİR · OKUR PAKETİ · TÜRKÇE KATLAMASI ⭑")
+
+    cfg = clean_config()
+    ALPHA = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"
+    # ⚠ FİKSTÜR SÖZLÜĞÜ GERÇEK SÖZLÜKLE HİÇBİR ÜYE PAYLAŞMAZ.
+    # İlk yazımda paylaşıyordu ve KANARYA BU DOSYAYI SIZINTI OLARAK YAKALADI
+    # — haklı olarak: bir fikstür cevabı gerçek bir cevapla aynıysa, o cevap
+    # public depoda düz metin olarak durur. Kanaryanın kendi test dosyasını
+    # yakalaması, kapının çalıştığının en temiz kanıtıdır.
+    LEX = ["ZURNA", "MELTEM", "KAVUN", "SEMAVER", "YELPAZE", "KUNDURA",
+           "PALAMUT", "ŞEBEKE", "TERLİK", "VİRAJ", "OYMACI", "PATİKA",
+           "SÜRAHİ", "MERCAN"]
+
+    def glyph(c):
+        i = ALPHA.index(c)
+        return "',+/\\x"[i // 5] * (i % 5 + 1)
+
+    def enc(w):
+        return "·".join(glyph(c) for c in w)
+
+    def shift(w, k):
+        return "".join(ALPHA[(ALPHA.index(c) + k) % 29] for c in w)
+
+    tools = {"charts": {
+        "esik-alfabesi": {"alphabet": ALPHA,
+                          "table": [{"letter": c, "glyph": glyph(c)}
+                                    for c in ALPHA]},
+        "esik-sozlugu": {"entries": [{"no": i + 1, "word": w}
+                                     for i, w in enumerate(LEX)]},
+        "kapi-sozleri": {"entries": ["ZURNA SESİ", "MELTEM KAR",
+                                     "KAVUN KESTİ"]},
+        "esik-sayilari": {"entries": [{"sira": 1, "dortlu": "2413",
+                                       "sozlukNo": 3}]}}}
+
+    def space_root(space, answer="MELTEM", page=None, index_over=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "space-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/design", "02_MANUSCRIPT"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
+              json.dumps(tools, ensure_ascii=False))
+        e = {"puzzleId": "fixture-001", "gate": "threshold", "type": "cipher",
+             "mechanismFamily": "substitution-cipher", "status": "written",
+             "testStatus": "tested", "leakClass": "protected",
+             "ambiguityScore": 1, "alternativeSolutionAnalysisDone": True,
+             "confirmedAlternativeSolutions": 0}
+        if index_over:
+            index_over(e)
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": [e]}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": [{
+                  "puzzleId": "fixture-001", "finalAnswer": answer,
+                  "hints": ["birinci kademe metni", "ikinci kademe metni",
+                            "ucuncu kademe metni"],
+                  "answerSpace": space}]}, ensure_ascii=False))
+        if page is not None:
+            write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+                  json.dumps({"puzzles": [page]}, ensure_ascii=False))
+        return d
+
+    CLEAN = {"generator": {"kind": "cyclic-shift", "input": shift("MELTEM", 9)},
+             "acceptance": {"kind": "in-printed-lexicon"},
+             "declaredAcceptedCount": 1}
+
+    d = space_root(CLEAN)
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "qa_answerspace temiz kayıtta GEÇER", out)
+
+    # ⭑ Faz 2'de GERÇEKTEN olan kusur: üç koşul ÜÇ cevap bırakıyordu.
+    d = space_root({"generator": {"kind": "printed-lexicon"},
+                    "acceptance": {"kind": "satisfies-printed-constraints",
+                                   "constraints": [{"op": "length", "value": 5}]},
+                    "declaredAcceptedCount": 1}, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0, "⭑ İKİNCİ CEVABI OLAN BULMACA YAKALANIR ⭑", out)
+
+    # Alan hiçbir üye kabul etmiyorsa bulmaca ÇÖZÜLEMEZ.
+    d = space_root({"generator": {"kind": "cyclic-shift", "input": "ZZZZZZ"},
+                    "acceptance": {"kind": "in-printed-lexicon"},
+                    "declaredAcceptedCount": 1})
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0, "⭑ HİÇBİR ÜYE KABUL EDİLMİYORSA (ÇÖZÜLEMEZ) KIRMIZI ⭑",
+              out)
+
+    # ⭑ Faz 2'de GERÇEKTEN olan kusur: mekanizma alanı iki üyeliydi.
+    d = space_root({"generator": {"kind": "glyph-chart-reading",
+                                  "glyphs": enc("MELTEM"),
+                                  "directions": ["forward", "reverse"]},
+                    "acceptance": {"kind": "in-printed-lexicon"},
+                    "declaredAcceptedCount": 1}, answer="MELTEM")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0, "⭑ SAYIM ALANI ÇOK KÜÇÜKSE (ispat değil) KIRMIZI ⭑",
+              out)
+
+    # 'yazar öyle diyor' — totolojinin adı.
+    d = space_root({"generator": {"kind": "printed-lexicon"},
+                    "acceptance": {"kind": "author-asserted"},
+                    "declaredAcceptedCount": 1})
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0, "⭑ 'YAZAR ÖYLE DİYOR' KABUL YORDAMI YAKALANIR ⭑", out)
+
+    # Bildirilen sayaç ölçümle ayrışıyorsa.
+    d = space_root(dict(CLEAN, declaredAcceptedCount=0))
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0, "bildirilen kabul sayısı AYRIŞIRSA yakalanır", out)
+
+    # Kabul edilen üye yazarın cevabı değilse.
+    d = space_root(CLEAN, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0, "⭑ KABUL EDİLEN ÜYE CEVAPTAN FARKLIYSA KIRMIZI ⭑", out)
+
+    # ── OKUR PAKETİ — Faz 2'nin en pahalı bulgusu ───────────────────────
+    PAGE = {"puzzleId": "fixture-001", "objective": "Dizeyi cozun.",
+            "input": "Sayfada basili dize: %s" % shift("MELTEM", 9),
+            "clues": [], "constraints": []}
+    d = space_root(CLEAN, page=PAGE)
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code == 0, "qa_readerpack temiz okur sayfasında GEÇER", out)
+
+    # ⭑ Şifreli dize okurun elinde YOKSA bulmaca çözülemez.
+    d = space_root(CLEAN, page=dict(PAGE, input="Sayfada bir dize var."))
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0,
+              "⭑ ŞİFRELİ DİZE OKUR SAYFASINDA YOKSA KIRMIZI ⭑", out)
+
+    # ⭑ GERÇEK FAZ 2 KUSURU: levha verisi yalnızca cevap anahtarındaydı.
+    PLATE_SPACE = {"generator": {"kind": "printed-lexicon"},
+                   "acceptance": {"kind": "plate-attribute",
+                                  "labels": ["ZURNA", "KAVUN", "VİRAJ",
+                                             "TERLİK", "OYMACI", "PATİKA"],
+                                  "attributes": {"ZURNA": 1, "KAVUN": 1,
+                                                 "VİRAJ": 2, "TERLİK": 1,
+                                                 "OYMACI": 1, "PATİKA": 1},
+                                  "rule": {"op": "==", "value": 2}},
+                   "declaredAcceptedCount": 1}
+    d = space_root(PLATE_SPACE, answer="VİRAJ",
+                   page={"puzzleId": "fixture-001", "objective": "Levhaya bak.",
+                         "input": "Levha: alti kemer.", "clues": [],
+                         "constraints": []})
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0,
+              "⭑ LEVHA VERİSİ YALNIZCA CEVAP ANAHTARINDAYSA KIRMIZI ⭑ "
+              "(bulmaca okur paketinde ÇÖZÜLEMEZ)", out)
+
+    # Şekil var ama etiket künyeleri yok → kör şekil.
+    d = space_root(PLATE_SPACE, answer="VİRAJ",
+                   page={"puzzleId": "fixture-001", "objective": "Levhaya bak.",
+                         "input": "Levha.", "figure": "◆ ◆◆ ◆ ◆ ◆ ◆",
+                         "clues": [], "constraints": []})
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0, "⭑ ETİKET KÜNYESİ TAŞIMAYAN KÖR ŞEKİL YAKALANIR ⭑", out)
+
+    # ⭑ Var olmayan bir çizelgeye gönderme — Faz 2'de üç bulmacada,
+    # sekiz ayrı cümlede yaşandı. Okur bunu KENDİ hatası sanır.
+    d = space_root(CLEAN, page=dict(PAGE, clues=["Çizelge Z'ye bakın."]))
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0,
+              "⭑ VAR OLMAYAN BİR ÇİZELGEYE GÖNDERME YAKALANIR ⭑", out)
+
+    # Cevap sayfada BEDAVA duruyorsa (akransız).
+    d = space_root(CLEAN, page=dict(PAGE, objective="Cevap MELTEM degil mi."))
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0, "⭑ CEVABI KENDİ SAYFASINDA BEDAVA DURAN BULMACA ⭑", out)
+
+    # ── SAYI TABLOSU — Faz 2'nin EN AĞIR bulgusunun fikstürü ────────────
+    #
+    # Levha içi şifrede okur dört kenarı okur; başlangıç köşesi ve yön
+    # yanlışsa SEKİZ farklı dörtlü çıkar. Tasarım "yanlış okuma tabloda
+    # yoktur, yani hata tespit edilir" diyordu.
+    #
+    # ÖLÇÜLDÜĞÜNDE sekiz okumanın BEŞİ tablodaydı: her levha bulmacasının
+    # beş ulaşılabilir cevabı vardı. Kapı bunu GÖRMEMİŞTİ çünkü kabul
+    # yordamı yalnızca YAZARIN SEÇTİĞİ okumaya bakıyordu — K21'in öldürmeye
+    # çalıştığı totolojinin ta kendisi, bu kez kapının kendi içinde.
+    NUM_TABLE = [{"sira": 1, "dortlu": "2413", "sozlukNo": 1},
+                 {"sira": 2, "dortlu": "4132", "sozlukNo": 5},
+                 {"sira": 3, "dortlu": "1245", "sozlukNo": 9}]
+    ALL8 = ["2413", "4132", "1324", "3241", "2314", "3142", "1423", "4231"]
+
+    d = space_root({"generator": {"kind": "printed-lexicon"},
+                    "acceptance": {"kind": "reachable-via-number-table",
+                                   "readings": ["2413"],
+                                   "table": NUM_TABLE},
+                    "declaredAcceptedCount": 1}, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "sayı tablosu · TEK okuma bildirildiğinde geçer "
+                         "(eski, totolojik kurgu)", out)
+
+    d = space_root({"generator": {"kind": "printed-lexicon"},
+                    "acceptance": {"kind": "reachable-via-number-table",
+                                   "readings": ALL8, "table": NUM_TABLE},
+                    "declaredAcceptedCount": 1}, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0,
+              "⭑ SEKİZ OKUMANIN İKİSİ TABLODAYSA KIRMIZI ⭑ "
+              "(yanlış köşeden başlayan okur GEÇERLİ bir cevaba varıyor)",
+              out)
+
+    # ── DEVİR — hata tespiti olmayan kapı bulmacası ─────────────────────
+    def gate_root(acc, handoff, phrases=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "handoff-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/design"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        t = json.loads(json.dumps(tools))
+        if phrases is not None:
+            t["charts"]["kapi-sozleri"]["entries"] = phrases
+        write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
+              json.dumps(t, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/gate_index.json"),
+              json.dumps(clean_gate_index(), ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": [
+                  {"puzzleId": "fixture-g20", "gate": "threshold",
+                   "type": "gate", "mechanismFamily": "gate-synthesis",
+                   "status": "written", "testStatus": "tested",
+                   "leakClass": "protected", "ambiguityScore": 1,
+                   "dependencies": []}]}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": [{
+                  "puzzleId": "fixture-g20", "finalAnswer": "ZURNA SESİ",
+                  "hints": ["a", "b", "c"],
+                  "answerSpace": {"generator": {"kind": "printed-phrase-list"},
+                                  "acceptance": acc,
+                                  "declaredAcceptedCount": 1}}]},
+                         ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/gate-1.json"),
+              json.dumps({"puzzles": [{"puzzleId": "fixture-g20",
+                                       "handoff": handoff}]},
+                         ensure_ascii=False))
+        return d
+
+    # Kaynak/konum çifti HEDEFTEN TÜRETİLİR: elle yazılmış bir çift,
+    # fikstürü sessizce geçersiz kılabilir.
+    _target = [c for c in "ZURNA SESİ" if c in ALPHA]
+    _src, _pos = [], []
+    for _ch in _target:
+        _w = next(w for w in LEX if _ch in w)
+        _src.append(_w)
+        _pos.append(_w.index(_ch) + 1)
+    GOOD_ACC = {"kind": "matches-positional-extraction",
+                "sources": _src, "positions": _pos}
+    GOOD_HO = {"recoveryPath": "Grup isaretiyle karsilastirin.",
+               "nonDestructiveProgression": True,
+               "diagnosticMarks": [
+                   {"slot": i + 1,
+                    "group": ALPHA.index(s[p - 1]) // 5 + 1}
+                   for i, (s, p) in enumerate(zip(GOOD_ACC["sources"],
+                                                  GOOD_ACC["positions"]))]}
+    d = gate_root(GOOD_ACC, GOOD_HO)
+    code, out = run_env_gate("qa_handoff.py", d)
+    rep.check(code == 0, "qa_handoff temiz kapı bulmacasında GEÇER", out)
+
+    d = gate_root({"kind": "in-printed-lexicon"}, GOOD_HO)
+    code, out = run_env_gate("qa_handoff.py", d)
+    rep.check(code != 0,
+              "⭑ HATA TESPİTİ OLMAYAN KAPI BULMACASI YAKALANIR (sessiz yanlış) ⭑",
+              out)
+
+    bad = dict(GOOD_HO, diagnosticMarks=[dict(m, group=1)
+                                          for m in GOOD_HO["diagnosticMarks"]])
+    d = gate_root(GOOD_ACC, bad)
+    code, out = run_env_gate("qa_handoff.py", d)
+    rep.check(code != 0,
+              "⭑ TEŞHİS İŞARETİ BAĞIMSIZ HESAPLA AYRIŞIRSA KIRMIZI ⭑", out)
+
+    d = gate_root(GOOD_ACC, dict(GOOD_HO, recoveryPath=""))
+    code, out = run_env_gate("qa_handoff.py", d)
+    rep.check(code != 0, "kurtarma yolu YOKSA yakalanır", out)
+
+    # ⭑ Basılı liste hata TESPİT ETMİYORSA — iki ifade bir harf uzaklıkta.
+    d = gate_root(GOOD_ACC, GOOD_HO,
+                  phrases=["ZURNA SESİ", "ZURNA SESE", "MELTEM KAR"])
+    code, out = run_env_gate("qa_handoff.py", d)
+    rep.check(code != 0,
+              "⭑ HATA TESPİT LİSTESİ BİR HARF UZAKLIKTA İFADE TAŞIRSA ⭑ "
+              "(tek hata GİZLENİR, tespit edilmez)", out)
+
+    # ── ⛔ ÖLDÜRME KAPISI ⛔ ─────────────────────────────────────────────
+    #
+    # İKİ YÖNLÜ FİKSTÜR ve ikincisi birincisinden daha önemlidir:
+    #   ① veri yokken GEÇMEMELİ  — "boş veriyle yeşil yanan kapı" yalanı
+    #   ② veri varken GEÇMELİ    — hiç geçmemiş bir kapı, geçemiyor da
+    #                              olabilir ve bunu ancak denemek gösterir
+    def killgate_root(sessions_per_solver: int, alt: str = "",
+                      minutes: int = 8) -> str:
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "kill-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "06_REPORTS/solver",
+                    "06_REPORTS/tracked"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        c = json.loads(json.dumps(cfg))
+        c["founder"]["externalSolvers"]["sessionsRecorded"] = sessions_per_solver
+        c["founder"]["externalSolvers"]["identifiedCount"] = 5
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(c, ensure_ascii=False))
+        pz, recs = [], []
+        for i in range(1, 21):
+            pid = "fixture-%03d" % i
+            pz.append({"puzzleId": pid, "gate": "threshold", "type": "cipher",
+                       "mechanismFamily": "substitution-cipher",
+                       "status": "drafted", "testStatus": "external-pending",
+                       "leakClass": "protected", "ambiguityScore": 1,
+                       "pilotCohort": True})
+            tests = []
+            for s in range(1, sessions_per_solver + 1):
+                tests.append({"date": "2026-08-13", "solver": "solver-%02d" % s,
+                              "solverClass": "external", "usedHints": 0,
+                              "minutesToSolve": minutes, "result": "solved",
+                              "hintsUsedByLevel": [0, 0, 0],
+                              "alternativeOffered": alt if (i == 1 and s == 1)
+                              else ""})
+            recs.append({"puzzleId": pid, "finalAnswer": "MELTEM",
+                         "solverTests": tests})
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": pz}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": recs}, ensure_ascii=False))
+        for s in range(1, sessions_per_solver + 1):
+            write(os.path.join(d, "06_REPORTS/solver/solver-%02d.json" % s),
+                  json.dumps({"solver": "solver-%02d" % s,
+                              "gateCompleted": True}, ensure_ascii=False))
+        return d
+
+    d = killgate_root(0)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "BLOCKED" in out,
+              "⭑ ÖLDÜRME KAPISI VERİ YOKKEN 'GEÇTİ' DEMEZ (BLOCKED) ⭑", out)
+
+    d = killgate_root(5)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code == 0 and "PASS" in out,
+              "⭑ ÖLDÜRME KAPISI TAM VERİYLE GEÇEBİLİYOR ⭑ "
+              "(hiç geçmemiş bir kapı, geçemiyor da olabilir)", out)
+
+    d = killgate_root(2)
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "BLOCKED" in out,
+              "eksik çözücü sayısı (2/5) BLOCKED verir", out)
+
+    d = killgate_root(5, alt="baska bir cevap")
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0 and "REWORK" in out,
+              "⭑ BİR ÇÖZÜCÜ İKİNCİ CEVAP ÖNERİRSE REWORK ⭑", out)
+
+    d = killgate_root(5, minutes=30)          # 20 × 30 dk = 600 > 240 tavan
+    code, out = run_env_gate("kill_gate.py", d)
+    rep.check(code != 0,
+              "medyan süre tavanı aşarsa GEÇMEZ (%d dk)" % 600, out)
+
+    # ── TÜRKÇE KATLAMASI — pilot dilinin ölçüm makinesini kırdığı yer ──
+    sys.path.insert(0, BUILD)
+    import _protected_layer as _pl                             # noqa: E402
+    import qa_solution_leak as _leak                           # noqa: E402
+    rep.check(_pl.squeeze("IŞIK") == _pl.squeeze("ışık") == "isik",
+              "⭑ TÜRKÇE KATLAMASI: 'IŞIK' ile 'ışık' AYNI dizeye iniyor ⭑",
+              "%r vs %r" % (_pl.squeeze("IŞIK"), _pl.squeeze("ışık")))
+    rep.check(_leak.squeeze("IŞIK") == _pl.squeeze("ışık"),
+              "kanarya ile korumalı katman AYNI katlamayı kullanıyor",
+              "%r vs %r" % (_leak.squeeze("IŞIK"), _pl.squeeze("ışık")))
+    rep.check(_pl.squeeze("GÖLGE") == "golge" and _pl.squeeze("ÇAKIL") == "cakil",
+              "Türkçe aksanlar normalize ediliyor (ö→o · ç→c · ş→s · ğ→g)")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -853,6 +1253,7 @@ def main() -> int:
         part5_repo_gate(rep, tmp)
         part6_canary(rep, tmp)
         part7_protected_gates(rep, tmp)
+        part8_answerspace(rep, tmp)
 
     print("\n" + "=" * 74)
     if rep.failed:

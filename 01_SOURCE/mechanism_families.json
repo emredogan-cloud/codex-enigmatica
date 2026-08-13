@@ -69,9 +69,30 @@
       "requiresSourcing": false,
       "ambiguityRiskProfile": "YÜKSEK — okuma YÖNÜ ve BAŞLANGIÇ NOKTASI belirtilmezse iki geçerli okuma doğar. İkisi de metinde sabitlenmelidir.",
       "defaultLeakClass": "restricted",
-      "answerFormat": "sequence",
+      "answerFormat": "word",
       "textBound": false,
-      "difficultyNote": "⚠ FAZ 1: alt sınır 2'den 1'e indirildi. Kapı II'nin amacı bu mekaniği ÖĞRETMEKTİ ama kitapta onun zorluk-1 örneği HİÇ YOKTU: okur ★ kapısını 'gravürde saklı olanı bul' ile geçip ★★ kapısında 'gravürün kendisi veri taşır' fikriyle ilk kez karşılaşıyordu. Kapı I'e iki basit örnek konuldu; imza mekaniği artık kolay tarafta doğuyor."
+      "difficultyNote": "⚠ FAZ 1: alt sınır 2'den 1'e indirildi. Kapı II'nin amacı bu mekaniği ÖĞRETMEKTİ ama kitapta onun zorluk-1 örneği HİÇ YOKTU: okur ★ kapısını 'gravürde saklı olanı bul' ile geçip ★★ kapısında 'gravürün kendisi veri taşır' fikriyle ilk kez karşılaşıyordu. Kapı I'e iki basit örnek konuldu; imza mekaniği artık kolay tarafta doğuyor.",
+      "answerFormat$comment": [
+        "⚠ FAZ 2 ÖLÇÜMÜ — 'sequence' BİR VARSAYIMDI VE PİLOT ONU ÇÜRÜTTÜ.",
+        "",
+        "Faz 1 bu ailenin cevabını 'sequence' diye kaydetti çünkü levhanın",
+        "ÜRETTİĞİ şey bir dizidir (dört kenar, dört sayı). Ama okurun",
+        "YAZDIĞI şey aynı şey değildir: pilot tasarımında dizi, basılı",
+        "Çizelge E üzerinden bir Sözlük numarasına ve oradan bir SÖZCÜĞE",
+        "düşer.",
+        "",
+        "Bu ikame üç şey kazandırdı ve hiçbir şey kaybettirmedi:",
+        "  ① HATA TESPİTİ — dizi Çizelge E'de yoksa okuma yönü yanlıştır",
+        "     ve okur bunu KENDİ anlar (mekanizmanın en kırılgan yeri",
+        "     tam olarak okuma yönüydü: ambiguityRiskProfile 'YÜKSEK')",
+        "  ② TEK CEVAP BİÇİMİ — Kapı I'in yirmi cevabının yirmisi de",
+        "     Sözlük üyesidir; sözleşme sayfası tek bir kural basar",
+        "  ③ NORMALİZASYON — '2413' ile '2-4-1-3' arasındaki fark bir",
+        "     bulmaca değil bir dizgi kazasıdır; sözcük o kazayı siler",
+        "",
+        "Kaydedilen ders: bir ailenin cevap biçimi, mekanizmasından",
+        "TÜRETİLEMEZ. Okurun ne yazdığı ayrı bir tasarım kararıdır."
+      ]
     },
     {
       "id": "substitution-cipher",

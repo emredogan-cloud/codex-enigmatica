@@ -127,7 +127,7 @@ jobs:
         run: |
           LEVEL="$(tr -d '[:space:]' < .gate)"
           RAN=0
-          for g in qa_solvability qa_uniqueness qa_hints qa_dependency qa_meta qa_length qa_voice qa_echo qa_drift; do
+          for g in qa_answerspace qa_handoff qa_readerpack english_readiness qa_solvability qa_uniqueness qa_hints qa_dependency qa_meta qa_length qa_voice qa_echo qa_drift; do
             if [ -f "04_BUILD/$g.py" ]; then
               echo "▸ $g"
               python3 "04_BUILD/$g.py" --gate "$LEVEL" --verbose || exit 1
@@ -154,6 +154,33 @@ jobs:
           LEVEL="$(tr -d '[:space:]' < .gate)"
           python3 04_BUILD/qa_solution_leak.py --gate "$LEVEL" --verbose
 
+  kill-gate:
+    name: ⛔ ÖLDÜRME KAPISI ⛔
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      # Karar ÜRETİR, kalite ölçmez. phase2 ve sonrasında BLOKLAYICIDIR;
+      # öncesinde kararı yazdırır ama iş akışını kırmaz — çünkü o kapı
+      # seviyesi henüz bu kararı gerektirmiyor.
+      #
+      # ⚠ CI'da korumalı katman YOKTUR, dolayısıyla çözücü kaydı da yoktur:
+      # burada karar HER ZAMAN "BLOCKED" çıkar ve bu DOĞRUDUR. Gerçek karar
+      # kurucunun yerel deposunda, gerçek oturum kayıtlarıyla üretilir.
+      - name: öldürme kapısı kararı
+        run: |
+          LEVEL="${{ needs.gate.outputs.level }}"
+          set +e
+          python3 04_BUILD/kill_gate.py --json 06_REPORTS/tracked/kill-gate-report.json
+          CODE=$?
+          set -e
+          case "$LEVEL" in
+            phase2|phase3|phase4|phase5|release) exit $CODE ;;
+            *) echo "::notice::kapı $LEVEL — öldürme kapısı kararı bilgilendirmedir"; exit 0 ;;
+          esac
+
   production-model:
     name: sayfa bütçesi ve telif modeli
     runs-on: ubuntu-latest
@@ -175,7 +202,7 @@ jobs:
 
   summary:
     name: özet
-    needs: [data, structure, gates-selftest, text, canary, production-model]
+    needs: [data, structure, gates-selftest, text, canary, kill-gate, production-model]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -190,6 +217,7 @@ jobs:
             echo "| **kapıların kendi testi** | ${{ needs.gates-selftest.result }} |"
             echo "| metin kapıları | ${{ needs.text.result }} |"
             echo "| **çözüm kanaryası** | ${{ needs.canary.result }} |"
+            echo "| **⛔ öldürme kapısı** | ${{ needs.kill-gate.result }} |"
             echo "| sayfa bütçesi ve telif | ${{ needs.production-model.result }} |"
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then

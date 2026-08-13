@@ -2,7 +2,17 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **13 Ağustos 2026** · Faz: **1 · TAMAM** · Kapı: `phase1`
+> Son güncelleme: **13 Ağustos 2026** · Faz: **2 · TEKNİK İŞ TAMAM**
+> Kapı: `phase1` · Öldürme kapısı: ⛔ **`BLOCKED`**
+>
+> **Faz 2'nin ajan tarafından yapılabilir bütün işi bitti.** Yirmi Türkçe
+> pilot bulmaca yazıldı, cevap uzayı mimarisi kuruldu (20/20 bağımsız
+> doğrulandı), dört yeni kapı eklendi, kanarya sırrı kuruldu.
+>
+> **Kalan tek iş kurucuya aittir ve ajan onu yapamaz:** beş harici
+> çözücüyle oturumlar (**A12** · 0/5 yapıldı).
+> → [`00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`](00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md)
+> → [`06_REPORTS/PHASE_2_REPORT.md`](06_REPORTS/PHASE_2_REPORT.md)
 
 ---
 

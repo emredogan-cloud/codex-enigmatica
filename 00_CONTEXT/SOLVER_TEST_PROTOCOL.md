@@ -8,12 +8,17 @@
 
 ## 0 · ⛔ DURUM: HARİCİ DOĞRULAMA BEKLİYOR
 
-> ### Bu protokol HAZIRDIR. Test YAPILMAMIŞTIR.
+> ### Bu protokol HAZIRDIR. Çözücüler BULUNDU. Test YAPILMAMIŞTIR.
 >
-> `project_config.json § founder.externalSolvers.founderConfirmed` = **false**
+> | | |
+> |---|---|
+> | `founder.externalSolvers.founderConfirmed` | ✅ **true** — beş çözücü belirlendi (A3, 13 Ağustos 2026) |
+> | `founder.externalSolvers.sessionsRecorded` | ⛔ **0** — hiçbir oturum yapılmadı (**A12**) |
 >
-> Beş harici çözücü **belirlenmemiştir** (`DECISIONS § A3`).
-> Bu, Faz 2'nin **sert bloklayıcısıdır**.
+> **İki alan, iki ayrı soru.** Birincisi *"çözücüler kim"*, ikincisi
+> *"oturumlar yapıldı mı"*. Karıştırılmaları sahteciliğin adıdır.
+>
+> Devir paketi hazır: [`EXTERNAL_SOLVER_PACKAGE.md`](EXTERNAL_SOLVER_PACKAGE.md)
 
 **Sahte test kaydı üretilmez.** Ne isim, ne süre, ne sonuç.
 `validate_spec § check_test_status` bunu mekanik olarak imkânsız kılar:
@@ -195,8 +200,8 @@ Kayıtlar yalnızca anonim kimlik, süre, ipucu tüketimi ve sonuç taşır.
 
 ## 8 · Faz 2'ye devir listesi
 
-- [ ] **A3 kapandı** — beş çözücü belirlendi (kurucu)
-- [ ] `founder.externalSolvers.founderConfirmed` → `true`
+- [x] **A3 kapandı** — beş çözücü belirlendi (kurucu · 13 Ağustos 2026)
+- [x] `founder.externalSolvers.founderConfirmed` → `true`
 - [ ] En az ikisi bu türü ilk kez alan kişi
 - [ ] Levha koşulu için A veya B seçildi (kurucu)
 - [ ] Zaman damgası aracı çözücülere verildi

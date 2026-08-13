@@ -32,6 +32,51 @@
                      "THE-MYTH-HUNTERS-FIELD-BOOK"]
   },
 
+  "language": {
+    "$comment": [
+      "⭑ İKİ DİL, İKİ AMAÇ — VE KARIŞTIRILMALARI ÜRÜNÜ BOZAR. ⭑",
+      "13 Ağustos 2026 · Faz 2 · kurucu kararı A3'ün doğrudan sonucu.",
+      "",
+      "pilotLanguage      = tr  → ÖLÇÜM ARACI. Beş harici çözücünün beşi de",
+      "                          Türkçe konuşur; bulmaca mekaniği ancak",
+      "                          çözücünün ana dilinde ölçülebilir.",
+      "productionLanguage = en  → ÜRÜN. Kitap İngilizce ticari bir kitaptır.",
+      "",
+      "⚠ TÜRKÇE PİLOT NİHAİ MANUSCRIPT DEĞİLDİR ve olmayacaktır.",
+      "⚠ TÜRKÇE BAŞARI, İNGİLİZCE ÇÖZÜLEBİLİRLİĞİN KANITI DEĞİLDİR.",
+      "",
+      "Bir dil değişimi şunların HEPSİNİ değiştirir: kelime sayısı,",
+      "belirsizlik, ipucu semantiği, cevap uzayı, eşanlamlı uzayı, gizli",
+      "akrostişler, kelime oyunu. Bu yüzden İngilizce sürüm bir ÇEVİRİ",
+      "DEĞİL, bir YENİDEN TASARIMDIR ve bütün teknik kapılardan BAŞTAN",
+      "geçer (englishConversion.requiresFullRetest)."
+    ],
+    "pilotLanguage": "tr",
+    "productionLanguage": "en",
+    "pilotIsProductionManuscript": false,
+    "pilotScope": ["gate:threshold"],
+    "englishConversion": {
+      "requiresFullRetest": true,
+      "forbidMachineTranslation": true,
+      "retestGates": ["validate_spec", "qa_answerspace", "qa_solvability",
+                      "qa_uniqueness", "qa_hints", "qa_dependency",
+                      "qa_handoff", "qa_solution_leak"],
+      "redesignIfWordplayBreaks": true,
+      "$comment": [
+        "Bir kelime oyunu bulmacası İngilizcede farklı davranıyorsa",
+        "YENİDEN TASARLANIR. Türkçede çalıştı diye bozuk bir bulmaca",
+        "korunmaz.",
+        "",
+        "Türkçe pilotun TAŞINABİLİRLİĞİ bulmaca başına ölçülür ve",
+        "01_SOURCE/design içinde languagePortability alanında durur:",
+        "  mechanical → mekanizma dilden bağımsız (şifre, kısıt, gözlem)",
+        "  lexical    → cevap sözlüğe bağlı; İngilizce sözlük yeniden kurulur",
+        "  phonetic   → sese bağlı; İNGİLİZCEDE YENİDEN TASARLANIR"
+      ]
+    },
+    "mixedLanguageInSinglePuzzle": false
+  },
+
   "founder": {
     "author": "Emre Doğan",
     "publisher": "Vâliçe Press",
@@ -45,13 +90,29 @@
     "authorBio": null,
     "authorBio$comment": "null iken Faz 6 KIRMIZI (World Myths'te KDP yer tutucuyu reddetti).",
     "externalSolvers": {
-      "founderConfirmed": false,
+      "founderConfirmed": true,
+      "founderConfirmedAt": "2026-08-13",
       "minSolvers": 5,
+      "identifiedCount": 5,
+      "solverLanguage": "tr",
+      "sessionsRecorded": 0,
       "$comment": [
         "FAZ 2'NİN ÖLDÜRME KAPISI BUNA BAĞLIDIR.",
         "Ajan bulmaca çözemez — çözümü zaten biliyor. Test HARİCİ",
         "insanlarla yapılır. Çözücü bulunmazsa Faz 2 BLOKLANIR;",
-        "sahte test kaydı ÜRETİLMEZ."
+        "sahte test kaydı ÜRETİLMEZ.",
+        "",
+        "⚠ İKİ AYRI ŞEY — VE KARIŞTIRILMALARI SAHTECİLİĞİN ADIDIR:",
+        "  founderConfirmed → çözücüler BELİRLENDİ mi (A3, 13 Ağustos 2026 · EVET)",
+        "  sessionsRecorded → oturumlar YAPILDI mı (0 — HİÇBİRİ YAPILMADI)",
+        "",
+        "Birincisi 'tested' durumunun BEŞ şartından yalnızca BİRİDİR.",
+        "Kalan dördü (çözücü sayısı ≥5, çözen ≥4, alternatif analizi,",
+        "belirsizlik ≤2) gerçek oturum kaydı olmadan sağlanamaz. Yani A3'ün",
+        "kapanması hiçbir bulmacayı 'tested' yapmaz ve YAPMAMALIDIR.",
+        "",
+        "Beş çözücünün beşi de TÜRKÇE konuşur — pilot dilinin Türkçe",
+        "olmasının tek sebebi budur (language.pilotLanguage)."
       ]
     },
     "validationSiteUrl": null,
@@ -95,6 +156,18 @@
       "Ticari etki ölçüldü ve kabul edilebilir: ciltli telif 9,85 $ → 9,58 $",
       "(-%2,7), başabaş ACOS %32,8 → %31,9. Sayfa başı 0,012 $ olduğu için",
       "22 sayfa 0,27 $ eder. ⚠ KURUCU ONAYI GEREKİR (DECISIONS § A8)."
+    ],
+    "pageTargetFounderApproved": true,
+    "pageTargetApprovedAt": "2026-08-13",
+    "pageTargetApproval$comment": [
+      "⭑ A8 KAPANDI — 13 Ağustos 2026, kurucu kararı. ⭑",
+      "Kurucu 230 sayfayı ve buna bağlı ciltli telif düşüşünü (9,85 $ →",
+      "9,58 $, birim başına -0,27 $) AÇIKÇA KABUL ETTİ.",
+      "",
+      "⚠ A8 YENİDEN AÇILMAZ. Ve bir dizgi sorununu yok etmek için sayfa",
+      "hedefi DEĞİŞTİRİLMEZ: içerik/dizgi sorunu çözülür ve YENİDEN ÖLÇÜLÜR.",
+      "Sebep K12'dir — Kapı V sayfa numaralarına bağlıdır; hedefi içeriğe",
+      "uydurmak yerine içeriği hedefe uydurmak, bulmacayı kıran taraftır."
     ],
     "pageTolerancePct": 6,
     "gateStructure": [
@@ -192,6 +265,97 @@
       "",
       "⚠ KURUCU KARARI GEREKİR (DECISIONS § A7)."
     ],
+    "answerSpace": {
+      "$comment": [
+        "⭑ FAZ 2'NİN BİRİNCİ TESLİMATI — Faz 1 kırmızı takımının kapanışı. ⭑",
+        "",
+        "BULGU: on yedi mekanizma ailesinin DOKUZUNDA tekillik 'ispatı' bir",
+        "totolojiydi. Tekrar eden kusur aynıydı:",
+        "    SAYIM ALANINI, CEVABI ZATEN BİLEN YAZAR TANIMLIYORDU.",
+        "Yazarın seçtiği bir alan üzerinde yapılan ispat hiçbir şeyi ispatlamaz.",
+        "",
+        "DÜZELTME: cevap uzayı artık PROZA DEĞİL, MAKİNE OKUNUR BİR ÜRETEÇTİR.",
+        "qa_answerspace.py üreteci BAĞIMSIZ AÇAR — yazarın listesini okumaz,",
+        "bulmacanın GİRDİSİNDEN yeniden türetir — ve şunu sorar:",
+        "",
+        "    'Kitabın okura öğrettiği yordamlarla ulaşılabilen bütün dizeler",
+        "     içinde, basılı kabul yordamından geçen KAÇ TANE var?'",
+        "",
+        "Cevap 1 değilse bulmaca KIRMIZIDIR. 0 ise çözülemez, ≥2 ise ikinci",
+        "cevabı vardır.",
+        "",
+        "⚠ ÜÇ SAHTE MEKANİZMA AÇIKÇA YASAKLIDIR:",
+        "  · yazar tarafından sayılmış alan (declaredDomain)  → totoloji",
+        "  · tek üyeli alan (minDomainSize)                   → sayım yok",
+        "  · 'yazar öyle diyor' kabul yordamı (author-asserted)→ ispat yok"
+      ],
+      "required": true,
+      "requiredFromGate": "phase2",
+      "machineReadable": true,
+      "mustBeIndependentlyExpandable": true,
+      "exactlyOneMemberAccepted": true,
+      "minDomainSize": 6,
+      "minDomainSize$comment": [
+        "Altı üyeden küçük bir alanda 'tek cevap' ispatı zayıftır: okur",
+        "alanı tarayarak çözebilir ve bulmacanın mekaniği harcanmış olur.",
+        "Altı, tasnif ailesinin kırmızı takım hesabındaki küme boyudur."
+      ],
+      "forbiddenAcceptanceKinds": ["author-asserted", "prose"],
+      "allowedGeneratorKinds": [
+        "cyclic-shift", "keyed-substitution", "reflection-map",
+        "transposition-order", "glyph-chart-reading", "printed-lexicon",
+        "constraint-assignment", "positional-extraction"
+      ],
+      "allowedAcceptanceKinds": [
+        "in-printed-lexicon", "satisfies-printed-constraints",
+        "in-printed-phrase-list"
+      ],
+      "hintsCheckedAgainstWholeDomain": true,
+      "hintsCheckedAgainstWholeDomain$comment": [
+        "qa_hints eskiden ipucunu YALNIZCA doğru cevaba karşı denetliyordu.",
+        "Ama bir ipucu, alanın YANLIŞ bir üyesini vererek de bulmacayı",
+        "bozar: okur ipucunu izler, kabul yordamından geçmeyen bir dizeye",
+        "varır ve kitabı bozuk sanır. İpucu bütün alana karşı denetlenir."
+      ]
+    },
+
+    "gateHandoff": {
+      "$comment": [
+        "⭑ FAZ 1 BULGUSU 6.4'ÜN GERİ DÖNMEMESİ İÇİN — talimat § 13. ⭑",
+        "",
+        "Tek bir yanlış cevap okuru ürünün %80'inden dışarıda bırakıyordu.",
+        "crossGateEntryHandoff FALSE olarak KALIR (gate_index § dependencyRules).",
+        "",
+        "Ama kapı İÇİNDE de aynı kusurun küçük bir kopyası vardır: kapı",
+        "bulmacası on dokuz girdiye bağlıdır ve bir girdi yanlışsa çıktı",
+        "sessizce yanlış olur. Bu blok o kusuru mekanikleştirerek kapatır:",
+        "qa_handoff.py dört şartı birden arar."
+      ],
+      "crossGateEntryHandoff": false,
+      "requireErrorDetection": true,
+      "requireErrorDetection$comment": [
+        "Kapı bulmacasının çıkarım fonksiyonu, TEK BİR girdi yanlışken",
+        "'makul görünen başka bir dize' üretemez. Üretirse okur hatayı",
+        "fark etmez ve kitabı bozuk sanır. Çıktı basılı ifade listesinde",
+        "OLMALIDIR; olmaması hatanın KENDİSİNİ bildirir."
+      ],
+      "requireRecoveryPath": true,
+      "requireDiagnosticFeedback": true,
+      "requireNonDestructiveProgression": true,
+      "maxSinglePuzzleBlastRadius": 1,
+      "maxSinglePuzzleBlastRadius$comment": [
+        "Bir bulmacayı yanlış çözmek EN FAZLA bir bulmacayı daha bloklar.",
+        "qa_handoff bunu bağımlılık grafiğinden ÖLÇER: her düğümün geçişli",
+        "ardıl sayısı (kapı bulmacası hariç) 1'i aşamaz."
+      ],
+      "gatePuzzleExempt": true,
+      "gatePuzzleExempt$comment": [
+        "Kapı bulmacası tanımı gereği on dokuz girdiyi birleştirir; onun",
+        "yarıçapı 'hata tespiti + kurtarma yolu' ile korunur, yarıçapı",
+        "küçülterek değil."
+      ]
+    },
+
     "hintLadderLevels": 3,
     "hintLadder": ["yönlendirme", "yöntem", "neredeyse-cevap"],
     "hintMustNotContainAnswer": true,
@@ -317,7 +481,7 @@
                               "readerAction", "input", "clues",
                               "constraints", "clueStructure", "designIntent",
                               "ambiguityPoints", "alternativeSolutionsConsidered",
-                              "solverTests", "redTeamNotes"],
+                              "solverTests", "redTeamNotes", "answerSpace"],
     "$comment3": [
       "İKİNCİ VE DAHA GENİŞ LİSTE — yalnızca puzzle_index.json KAYITLARINA",
       "uygulanır. Orada alan adları YAPISALDIR, dolayısıyla 'title' gibi",
@@ -334,6 +498,49 @@
     "protectedDirs": ["01_SOURCE/solutions/", "01_SOURCE/design/",
                       "09_ARCHIVE/solutions/", "06_REPORTS/solver/"],
     "$comment4": "validate_structure.py § PROTECTED_DIRS ile SENKRON olmak zorundadır; validate_spec o senkronu denetler. 01_SOURCE/design/ Faz 1'de eklendi: tasarım niyeti bir çözüm değildir ama mekanizmayı açık eder (leakClass 'restricted')."
+  },
+
+  "security": {
+    "$comment": [
+      "⭑ A11 KAPANDI — 13 Ağustos 2026, kurucu yetkisiyle üretildi. ⭑",
+      "",
+      "BU BLOK SIRRIN KENDİSİNİ TAŞIMAZ VE ASLA TAŞIMAYACAKTIR.",
+      "Taşıdığı şey: sırrın ADI, nerede durduğu, nasıl döndürüleceği.",
+      "",
+      "saltFingerprint sha256(sır)[:16]'dır ve 384 bitlik bir sırdan geri",
+      "çevrilemez. Kanarya künyesi (canary-manifest.json) zaten aynı",
+      "parmak izini taşır — CI'daki tuz ile künyeyi üreten tuzun aynı",
+      "olduğunu doğrulamak için. Yani bu değer zaten publictir ve burada",
+      "durması yeni bir maruziyet AÇMAZ."
+    ],
+    "canary": {
+      "secretName": "ENIGMATICA_CANARY_SALT",
+      "configured": true,
+      "configuredAt": "2026-08-13",
+      "generator": "python3 secrets.token_urlsafe(48) — 384 bit",
+      "saltFingerprint": "5879fbaf09da12f7",
+      "ciSecretScope": "GitHub Actions repository secret · emredogan-cloud/codex-enigmatica",
+      "localBackupPath": "~/.config/enigmatica/canary_salt",
+      "localBackupMode": "0600 · dizin 0700 · DEPO DIŞINDA",
+      "plaintextLocations": ["GitHub Actions secret store", "yerel korumalı yedek"],
+      "plaintextNeverIn": ["git", "rapor", "README", "CHANGELOG",
+                           "PROJECT_CONTEXT", "kaynak kod", "CI log", "PR"],
+      "rotationProcedure": [
+        "① yeni sır: umask 077; python3 -c \"import secrets;print(secrets.token_urlsafe(48))\" > ~/.config/enigmatica/canary_salt.new",
+        "② gh secret set ENIGMATICA_CANARY_SALT < ~/.config/enigmatica/canary_salt.new",
+        "③ mv ~/.config/enigmatica/canary_salt.new ~/.config/enigmatica/canary_salt",
+        "④ künyeyi YENİDEN üret: ENIGMATICA_CANARY_SALT=\"$(cat ~/.config/enigmatica/canary_salt)\" python3 04_BUILD/qa_solution_leak.py --emit-manifest",
+        "⑤ security.canary.saltFingerprint alanını yeni parmak izine güncelle",
+        "⑥ künyeyi commit et ve CI'ın YEŞİL yandığını doğrula",
+        "⚠ ② ile ④ arasında CI KIRMIZI yanar — bu doğru davranıştır:",
+        "künye ile tuzun ayrışması sessizce geçilemez."
+      ],
+      "failureModes": {
+        "correctSecret": "KİP B — künye tuzuyla taranır, kapı yeşil",
+        "missingSecret": "KİP C — kapı phase2+ seviyesinde KIRMIZI",
+        "wrongSecret": "parmak izi uyuşmaz → kapı KIRMIZI (sessiz geçiş yok)"
+      }
+    }
   },
 
   "production": {
@@ -362,6 +569,37 @@
     "kdpSelect": false,
     "plateResolutionCritical": true,
     "plateResolutionNote": "Bir levhada kaybolan detay bulmacayı ÇÖZÜLEMEZ yapar. POD baskı testi Faz 5'te ZORUNLU.",
+
+    "plateProof": {
+      "$comment": [
+        "⭑ A9 — FİZİKSEL PROVA KURUCU İŞİDİR. ⭑",
+        "13 Ağustos 2026 · kurucu kararı: prova planlaması kurucuya aittir.",
+        "",
+        "AJAN ŞUNLARI YAPAMAZ VE YAPMAYACAKTIR:",
+        "  · fiziksel provayı sipariş etmek",
+        "  · provanın yapıldığını iddia etmek",
+        "  · prova kaydı veya baskı ölçümü UYDURMAK",
+        "",
+        "AJAN ŞUNLARI YAPAR (ve Faz 2'de YAPTI):",
+        "  · baskıya hazır prova dosyalarını üretmek",
+        "  · prova kontrol listesini yazmak",
+        "  · kurucu devir talimatını yazmak",
+        "",
+        "İki durum ASLA karıştırılmaz ve her rapor ikisini AYIRIR:",
+        "  SCREEN-TESTED           → ekranda çözüldü. Levha mekaniği için",
+        "                            bu bir ÖN ELEMEDİR, kanıt değildir.",
+        "  PHYSICAL-PROOF-VALIDATED→ POD prova kopyada ölçüldü. YAPILMADI."
+      ],
+      "ownership": "founder",
+      "blocksTechnicalPhase2": false,
+      "status": "FOUNDER_ACTION_REQUIRED",
+      "screenTested": true,
+      "physicalProofValidated": false,
+      "physicalProofValidatedAt": null,
+      "proofPackageDir": "02_MANUSCRIPT/PROOF/",
+      "proofPackageDir$comment": "08_OUTPUT DEĞİL: orası YAYIN paketidir ve içinde çözüm bulunması Faz 6\u0027da kırmızıdır. Prova paketi bulmaca taşır, dolayısıyla korumalı katmana aittir.",
+      "hardGateForPhase": "phase5"
+    },
 
     "pageModel": {
       "$comment": [

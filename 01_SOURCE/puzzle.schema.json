@@ -201,6 +201,39 @@
             "kusuru taşır. Yedek, farklı bir mekanizmadan gelmelidir."
           ]
         },
+        "answerSpaceSize": {
+          "type": "integer", "minimum": 0,
+          "description": [
+            "Cevap uzayının ÖLÇÜLEN üye sayısı — bir SAYIDIR, üye değil.",
+            "qa_answerspace alanı bağımsız açar ve bu sayıyı üretir; kayıt",
+            "onu yalnızca TAŞIR. Public olması güvenlidir: '28 aday vardı'",
+            "cümlesi hiçbir adayın hangisi olduğunu söylemez.",
+            "",
+            "Neden public: öldürme kapısı raporu tekilliğin GÜCÜNÜ",
+            "raporlamak zorundadır. Alanı iki üyeli bir bulmaca ile alanı",
+            "altmış üyeli bir bulmaca aynı 'tekil' etiketini taşır ama aynı",
+            "şey değildir."
+          ]
+        },
+        "answerSpaceVerified": {
+          "type": "boolean",
+          "description": [
+            "qa_answerspace bu kayıtta TAM OLARAK BİR kabul ölçtü mü.",
+            "⚠ Bu alan elle 'true' yazılabilir — ama yazılması işe yaramaz:",
+            "kapı ölçümü her koşuda yeniden yapar ve ayrışmayı yakalar."
+          ]
+        },
+        "pilotLanguage": {
+          "type": "string", "enum": ["tr", "en"],
+          "description": [
+            "Bu kaydın metninin YAZILDIĞI dil (K20).",
+            "tr → Türkçe pilot: ÖLÇÜM ARACI, nihai manuscript DEĞİL",
+            "en → üretim dili",
+            "Bir kayıt 'written' olamaz eğer pilotLanguage productionLanguage",
+            "ile ayrışıyorsa — Türkçe başarı İngilizce çözülebilirliğin",
+            "kanıtı değildir."
+          ]
+        },
         "boundToTextHash": {
           "type": "string",
           "description": [
@@ -268,7 +301,88 @@
         "redTeamNotes": {
           "type": "array", "items": {"type": "string"},
           "description": "'Zeki bir okur bunu nasıl kırar' bulguları"
-        }
+        },
+        "languagePortability": {
+          "type": "string",
+          "enum": ["mechanical", "lexical", "phonetic"],
+          "description": [
+            "⭑ TÜRKÇE PİLOTUN İNGİLİZCEYE TAŞINABİLİRLİĞİ (K20). ⭑",
+            "mechanical → mekanizma dilden bağımsız (şifre, kısıt, gözlem);",
+            "             İngilizce sürümde aynı ispat aynen kurulur",
+            "lexical    → cevap basılı sözlüğe bağlı; İngilizce sözlük",
+            "             YENİDEN KURULUR ve tekillik YENİDEN ölçülür",
+            "phonetic   → sese veya kelime oyununa bağlı; İngilizcede",
+            "             YENİDEN TASARLANIR — çeviri bu bulmacayı KIRAR",
+            "",
+            "Bu alan bir tahmin değil bir İŞ LİSTESİDİR: İngilizce dönüşüm",
+            "kapısı 'phonetic' işaretli her bulmacayı yeniden tasarım",
+            "kuyruğuna koyar."
+          ]
+        },
+        "answerSpace": {"$ref": "#/$defs/answerSpace"}
+      }
+    },
+
+    "answerSpace": {
+      "title": "⭑ CEVAP UZAYI — Faz 2'nin birinci teslimatı ⭑",
+      "description": [
+        "Faz 1 kırmızı takımı: on yedi ailenin DOKUZUNDA tekillik ispatı bir",
+        "totolojiydi çünkü SAYIM ALANINI, CEVABI ZATEN BİLEN YAZAR",
+        "TANIMLIYORDU.",
+        "",
+        "Bu tanım o döngüyü kırar. Alan bir LİSTE DEĞİL bir ÜRETEÇTİR:",
+        "qa_answerspace üreteci bağımsız açar — yazarın listesini okumaz,",
+        "bulmacanın girdisinden ve basılı çizelgelerden yeniden üretir — ve",
+        "basılı kabul yordamından KAÇ üyenin geçtiğini sayar.",
+        "",
+        "  0 → çözülemez · 1 → tekil ✅ · ≥2 → ikinci cevap ⛔",
+        "",
+        "⚠ Kabul yordamı BASILI bir çizelgeye dayanmak zorundadır. 'Yazar",
+        "bunu anlamlı buluyor' bir kabul yordamı değildir; totolojiyi bir",
+        "adım öteye taşımaktır."
+      ],
+      "type": "object",
+      "required": ["generator", "acceptance"],
+      "properties": {
+        "generator": {
+          "type": "object",
+          "required": ["kind"],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["printed-lexicon", "printed-phrase-list",
+                       "cyclic-shift", "reflection-map", "keyed-substitution",
+                       "transposition-order", "glyph-chart-reading",
+                       "positional-extraction"],
+              "description": "İZİN LİSTESİ — yazar yeni bir tür icat edemez"
+            }
+          }
+        },
+        "acceptance": {
+          "type": "object",
+          "required": ["kind"],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["in-printed-lexicon", "in-printed-phrase-list",
+                       "satisfies-printed-constraints", "plate-attribute",
+                       "table-row", "reachable-via-number-table",
+                       "matches-positional-extraction"],
+              "description": [
+                "İZİN LİSTESİ. 'author-asserted' ve 'prose' AÇIKÇA YASAKTIR",
+                "ve qa_answerspace onları ayrı bir denetimle kırmızı yakar."
+              ]
+            }
+          }
+        },
+        "declaredAcceptedCount": {
+          "type": "integer", "minimum": 0, "maximum": 1,
+          "description": [
+            "Yazarın iddiası. qa_answerspace ÖLÇER ve ayrışmayı kırmızı",
+            "yakar — yani bu alan bir kanıt değil, bir SINAV KÂĞIDIDIR."
+          ]
+        },
+        "language": {"type": "string", "enum": ["tr", "en"]}
       }
     },
 
@@ -314,6 +428,7 @@
           ]
         },
         "clueStructure":    {"type": "string"},
+        "answerSpace":      {"$ref": "#/$defs/answerSpace"},
         "hints": {
           "type": "array",
           "minItems": 3, "maxItems": 3,

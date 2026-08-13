@@ -67,6 +67,19 @@ def pages(block: dict) -> int:
                if isinstance(v, int) and not k.endswith("$comment"))
 
 
+def _kill_verdict() -> str:
+    """Öldürme kapısı kararı — ÜRETİLEN rapordan okunur, elle yazılmaz.
+
+    Rapor yoksa 'ÜRETİLMEDİ' der. Sessizce 'PASS' yazmak, bu projede
+    yapılabilecek en pahalı yalandır."""
+    path = os.path.join(ROOT, "06_REPORTS", "tracked", "kill-gate-report.json")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh).get("verdict") or "ÜRETİLMEDİ"
+    except (OSError, json.JSONDecodeError):
+        return "ÜRETİLMEDİ"
+
+
 def measure() -> dict:
     cfg = load(CONFIG)
     gates = load(GATE_INDEX)["gates"]
@@ -93,6 +106,14 @@ def measure() -> dict:
         "cfg": cfg, "gates": gates, "puzzles": puzzles,
         "candidates": len(puzzles),
         "status": st,
+        "drafted": st.get("drafted", 0),
+        "answerSpaceOk": sum(1 for p in puzzles if p.get("answerSpaceVerified")),
+        "answerSpaceTotal": sum(p.get("answerSpaceSize", 0) for p in puzzles),
+        "killVerdict": _kill_verdict(),
+        "sessions": (cfg.get("founder", {}).get("externalSolvers", {})
+                     .get("sessionsRecorded", 0)),
+        "solversIdentified": (cfg.get("founder", {}).get("externalSolvers", {})
+                              .get("identifiedCount", 0)),
         "byGate": by_gate,
         "families": len({p.get("mechanismFamily") for p in puzzles}),
         "familiesDefined": len(fams),
@@ -165,8 +186,9 @@ def render_book_stats(m: dict) -> str:
 | | Ölçülen | Hedef |
 |---|---:|---:|
 | Aday bulmaca | **%(candidates)d** | ≥130 |
+| **Yazılmış taslak** (metin + çözüm + ipucu) | **%(drafted)d** | — |
 | Doğrulanmış bulmaca | **%(validated)d** | 100 |
-| Yazılmış bulmaca | **%(written)d** | 100 |
+| Yazılmış bulmaca (nihai) | **%(written)d** | 100 |
 | Kapı | **%(gatecount)d** | 5 |
 | Mekanizma ailesi | **%(families)d** / %(familiesDefined)d tanımlı | ≥10 |
 | Veri taşıyan levha adayı | **%(plateCarriers)d** | — |
@@ -174,19 +196,26 @@ def render_book_stats(m: dict) -> str:
 | `tested` durumundaki bulmaca | **%(tested)d** | — |
 | **Onaylanmış alternatif çözüm** | **%(confirmedAlts)d** | **0** |
 | Belirsizlik puanı > 2 | **%(ambiguityOver)d** | **0** |
-| İpucu (3 kademe × 100) | **0** | 300 |
-| Metin | **0** | ~34.000 kelime |
+| **Cevap uzayı bağımsız doğrulanmış** | **%(answerSpaceOk)d / %(drafted)d** | tamamı |
+| **Elenen aday dize** (cevap uzayı toplamı) | **%(answerSpaceTotal)d** | — |
+| İpucu (3 kademe) | **%(hints)d** | 300 |
 
 ## 2. Öldürme kapısı (Faz 2)
 
 | Ölçüt | Ölçülen | Eşik |
 |---|---:|---:|
-| Kapı I'i bitiren çözücü | **HARİCİ DOĞRULAMA BEKLİYOR** | ≥ 4 / 5 |
-| Hiç çözülemeyen bulmaca | — | 0 |
-| Bulmaca başına bitiren çözücü | — | ≥ 2 |
+| Çözücü **belirlendi** (A3) | **%(solversIdentified)d** | 5 |
+| Oturum **yapıldı** (A12) | **%(sessions)d** | 5 |
+| Kapı I'i bitiren çözücü | **ÖLÇÜLMEDİ** | ≥ 4 / 5 |
+| Hiç çözülemeyen bulmaca | ÖLÇÜLMEDİ | 0 |
+| Bulmaca başına bitiren çözücü | ÖLÇÜLMEDİ | ≥ 2 |
 | Onaylanmış alternatif çözüm | %(confirmedAlts)d | 0 |
-| Medyan tamamlama (dakika) | — | ≤ %(killGateCap)d |
-| **KARAR** | — | — |
+| Medyan tamamlama (dakika) | ÖLÇÜLMEDİ | ≤ %(killGateCap)d |
+| **KARAR** | **%(killVerdict)s** | PASS |
+
+> ⛔ **%(killVerdict)s.** İç çözücü kayıtları öldürme kapısında **sayılmaz**
+> (`internalSolverCountsAsEvidence: false`). Sıfır oturumla bütün ölçütler
+> "ihlal edilmemiş" görünür — bu bir geçiş değil, bir **boşluktur**.
 
 Pilot kohort **%(pilot)d** bulmaca · modellenen oturum **%(pilotMinutes)d dk**
 (tavanın %%%(pilotPct).0f'i).
@@ -219,6 +248,11 @@ Pilot kohort **%(pilot)d** bulmaca · modellenen oturum **%(pilotMinutes)d dk**
         "gate": m["gate"], "candidates": m["candidates"],
         "validated": m["status"].get("validated", 0) + m["status"].get("written", 0),
         "written": m["status"].get("written", 0),
+        "drafted": m["drafted"], "hints": m["drafted"] * 3,
+        "answerSpaceOk": m["answerSpaceOk"],
+        "answerSpaceTotal": m["answerSpaceTotal"],
+        "killVerdict": m["killVerdict"], "sessions": m["sessions"],
+        "solversIdentified": m["solversIdentified"],
         "gatecount": len([g for g in m["gates"] if not g.get("metaGate")]),
         "families": m["families"], "familiesDefined": m["familiesDefined"],
         "plateCarriers": m["plateCarriers"], "sources": m["sources"],
@@ -275,10 +309,11 @@ def render_progress(m: dict) -> str:
 | Aday bulmaca | **%(candidates)d** | ≥130 |
 | Mekanizma ailesi | **%(families)d** | ≥10 |
 | Pilot kohort (Kapı I) | **%(pilot)d** | 20 |
+| **Yazılmış taslak** | **%(drafted)d** | — |
 | Doğrulanmış bulmaca | **%(validated)d** | 100 |
-| Yazılmış bulmaca | **%(written)d** | 100 |
+| Yazılmış bulmaca (nihai) | **%(written)d** | 100 |
 | Onaylanmış alternatif çözüm | **%(confirmedAlts)d** | **0** |
-| İpucu (3×100) | **0** | 300 |
+| İpucu (3 kademe) | **%(hints)d** | 300 |
 | Levha | **0** üretildi / %(plates)d planlandı | ~110 |
 | Kelime | **0** | ~34.000 |
 | Künye | **%(sources)d** (%(sourcesChecked)d doğrulanmış) | — |
@@ -287,15 +322,23 @@ def render_progress(m: dict) -> str:
 
 ## Sonraki izinli eylem
 
-> **KURUCU ONAYI BEKLENİYOR.**
+> ### ⛔ FAZ 2 · ÖLDÜRME KAPISI: **%(killVerdict)s**
 >
-> Faz 1 tamamdır ve `.gate` = `%(gate)s`. Faz 2 **başlatılmadı**.
+> Faz 2'nin ajan tarafından yapılabilir bütün işi **tamamlandı**:
+> yirmi Türkçe pilot bulmaca yazıldı, cevap uzayı mimarisi kuruldu ve
+> yirmisi de bağımsız olarak doğrulandı, üç yeni kapı eklendi, kanarya
+> sırrı kuruldu ve dört senaryoyla kanıtlandı.
 >
-> Faz 2'ye girmeden önce kapanması gerekenler:
-> 1. **A3** — beş harici çözücü belirlenir (**sert bloklayıcı**)
-> 2. **A8** — sayfa hedefi 230 onaylanır
-> 3. **A9** — pilot levhaların POD provası kararı
-> 4. **A2** — beş kapı teması onayı
+> **Ama öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.**
+> Harici çözücü oturumu: **%(sessions)d / 5**.
+>
+> Kalan tek iş **kurucuya aittir** ve ajan onu yapamaz:
+> 1. **A12** — beş harici çözücüyle oturumları yürüt
+>    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
+> 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
+> 3. `./04_BUILD/qa_all.sh phase2` koştur ve kararı **oku**
+>
+> Ayrıca açık: **A9** (levha provası — paket hazır) · **A2** · **A5** · **A7**
 >
 > Ayrıntı: `DECISIONS.md § AÇIK KARARLAR`
 """ % {
@@ -306,6 +349,8 @@ def render_progress(m: dict) -> str:
         "written": m["status"].get("written", 0),
         "confirmedAlts": m["confirmedAlts"], "plates": m["plates"],
         "sources": m["sources"], "sourcesChecked": m["sourcesChecked"],
+        "killVerdict": m["killVerdict"], "sessions": m["sessions"],
+        "drafted": m["drafted"], "hints": m["drafted"] * 3,
     }
 
 

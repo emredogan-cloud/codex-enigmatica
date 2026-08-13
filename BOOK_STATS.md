@@ -11,8 +11,9 @@
 | | Ölçülen | Hedef |
 |---|---:|---:|
 | Aday bulmaca | **151** | ≥130 |
+| **Yazılmış taslak** (metin + çözüm + ipucu) | **20** | — |
 | Doğrulanmış bulmaca | **0** | 100 |
-| Yazılmış bulmaca | **0** | 100 |
+| Yazılmış bulmaca (nihai) | **0** | 100 |
 | Kapı | **5** | 5 |
 | Mekanizma ailesi | **17** / 17 tanımlı | ≥10 |
 | Veri taşıyan levha adayı | **62** | — |
@@ -20,19 +21,26 @@
 | `tested` durumundaki bulmaca | **0** | — |
 | **Onaylanmış alternatif çözüm** | **0** | **0** |
 | Belirsizlik puanı > 2 | **0** | **0** |
-| İpucu (3 kademe × 100) | **0** | 300 |
-| Metin | **0** | ~34.000 kelime |
+| **Cevap uzayı bağımsız doğrulanmış** | **20 / 20** | tamamı |
+| **Elenen aday dize** (cevap uzayı toplamı) | **1072** | — |
+| İpucu (3 kademe) | **60** | 300 |
 
 ## 2. Öldürme kapısı (Faz 2)
 
 | Ölçüt | Ölçülen | Eşik |
 |---|---:|---:|
-| Kapı I'i bitiren çözücü | **HARİCİ DOĞRULAMA BEKLİYOR** | ≥ 4 / 5 |
-| Hiç çözülemeyen bulmaca | — | 0 |
-| Bulmaca başına bitiren çözücü | — | ≥ 2 |
+| Çözücü **belirlendi** (A3) | **5** | 5 |
+| Oturum **yapıldı** (A12) | **0** | 5 |
+| Kapı I'i bitiren çözücü | **ÖLÇÜLMEDİ** | ≥ 4 / 5 |
+| Hiç çözülemeyen bulmaca | ÖLÇÜLMEDİ | 0 |
+| Bulmaca başına bitiren çözücü | ÖLÇÜLMEDİ | ≥ 2 |
 | Onaylanmış alternatif çözüm | 0 | 0 |
-| Medyan tamamlama (dakika) | — | ≤ 240 |
-| **KARAR** | — | — |
+| Medyan tamamlama (dakika) | ÖLÇÜLMEDİ | ≤ 240 |
+| **KARAR** | **BLOCKED** | PASS |
+
+> ⛔ **BLOCKED.** İç çözücü kayıtları öldürme kapısında **sayılmaz**
+> (`internalSolverCountsAsEvidence: false`). Sıfır oturumla bütün ölçütler
+> "ihlal edilmemiş" görünür — bu bir geçiş değil, bir **boşluktur**.
 
 Pilot kohort **20** bulmaca · modellenen oturum **198 dk**
 (tavanın %82'i).

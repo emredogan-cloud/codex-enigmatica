@@ -27,10 +27,11 @@
 | Aday bulmaca | **151** | ≥130 |
 | Mekanizma ailesi | **17** | ≥10 |
 | Pilot kohort (Kapı I) | **20** | 20 |
+| **Yazılmış taslak** | **20** | — |
 | Doğrulanmış bulmaca | **0** | 100 |
-| Yazılmış bulmaca | **0** | 100 |
+| Yazılmış bulmaca (nihai) | **0** | 100 |
 | Onaylanmış alternatif çözüm | **0** | **0** |
-| İpucu (3×100) | **0** | 300 |
+| İpucu (3 kademe) | **60** | 300 |
 | Levha | **0** üretildi / 112 planlandı | ~110 |
 | Kelime | **0** | ~34.000 |
 | Künye | **16** (0 doğrulanmış) | — |
@@ -39,14 +40,22 @@
 
 ## Sonraki izinli eylem
 
-> **KURUCU ONAYI BEKLENİYOR.**
+> ### ⛔ FAZ 2 · ÖLDÜRME KAPISI: **BLOCKED**
 >
-> Faz 1 tamamdır ve `.gate` = `phase1`. Faz 2 **başlatılmadı**.
+> Faz 2'nin ajan tarafından yapılabilir bütün işi **tamamlandı**:
+> yirmi Türkçe pilot bulmaca yazıldı, cevap uzayı mimarisi kuruldu ve
+> yirmisi de bağımsız olarak doğrulandı, üç yeni kapı eklendi, kanarya
+> sırrı kuruldu ve dört senaryoyla kanıtlandı.
 >
-> Faz 2'ye girmeden önce kapanması gerekenler:
-> 1. **A3** — beş harici çözücü belirlenir (**sert bloklayıcı**)
-> 2. **A8** — sayfa hedefi 230 onaylanır
-> 3. **A9** — pilot levhaların POD provası kararı
-> 4. **A2** — beş kapı teması onayı
+> **Ama öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.**
+> Harici çözücü oturumu: **0 / 5**.
+>
+> Kalan tek iş **kurucuya aittir** ve ajan onu yapamaz:
+> 1. **A12** — beş harici çözücüyle oturumları yürüt
+>    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
+> 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
+> 3. `./04_BUILD/qa_all.sh phase2` koştur ve kararı **oku**
+>
+> Ayrıca açık: **A9** (levha provası — paket hazır) · **A2** · **A5** · **A7**
 >
 > Ayrıntı: `DECISIONS.md § AÇIK KARARLAR`

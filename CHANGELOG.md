@@ -5,6 +5,95 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.2.0-pilot] — 2026-08-13 · Faz 2 · Pilot bulmacalar, cevap uzayı, öldürme kapısı
+
+**Yirmi Türkçe pilot bulmaca yazıldı ve bütün teknik kapılardan geçti.
+Öldürme kapısı kararı: `BLOCKED` — beş harici çözücü oturumu YAPILMADI.**
+
+Bu bir başarısızlık değil, kapının çalışmasıdır: ölçemediği bir şeyi
+geçmiş sayan bir öldürme kapısı, olmayan bir kapıdan tehlikelidir.
+
+### Eklendi
+
+- **`04_BUILD/qa_answerspace.py`** — ⭑ Faz 2'nin birinci teslimatı ⭑
+  Cevap uzayını **bağımsız açar**: yazarın listesini okumaz, bulmacanın
+  girdisinden ve basılı çizelgelerden yeniden üretir. 1.072 aday dize
+  üretildi ve elendi; **20/20 tam olarak bir üye kabul etti**
+- **`04_BUILD/qa_handoff.py`** — devir ve hata davranışı: hata tespiti,
+  teşhis işaretleri, kurtarma yolu, tek bir hatanın yayılma yarıçapı ≤1.
+  Hata tespitinin **gücü ölçüldü**: asgari Hamming mesafesi **15**
+- **`04_BUILD/qa_readerpack.py`** — bütün kapıların paylaştığı körlüğü
+  kapatır: hepsi korumalı katmanı denetliyordu, hiçbiri **okurun eline
+  ne geçtiğine** bakmıyordu
+- **`04_BUILD/kill_gate.py`** — beş değerli karar; **veri yoksa GEÇMEZ**
+- **`04_BUILD/pilot_pages.py`** — model ilk kez **gerçek metne** vuruldu
+- **`04_BUILD/english_readiness.py`** — dönüşüm iş listesi (dönüşüm
+  BAŞLATILMADI · § 23)
+- **`04_BUILD/plate_proof.py`** — baskıya hazır prova paketi (A9 kurucu işi)
+- **`00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`** — A12 devir belgesi
+- 20 Türkçe pilot bulmaca · 60 ipucu · 80 alternatif aday · 81 çözüm adımı
+  (**korumalı katmanda, depoda değil**)
+
+### Değişti
+
+- `_protected_layer` ve `qa_solution_leak` — **Türkçe katlaması** `ı/İ/I → i`.
+  NFKD noktasız `ı`yı çözmez; `"IŞIK"` ile `"ışık"` iki farklı normal
+  biçime sahipti ve kanarya küçük harfli bir sızıntıyı **kaçırırdı**
+- `qa_hints` — **düz merdiven de kusurdur**: eski kural yalnızca azalmayı
+  yakalıyordu, `[4,4,4]` geçiyordu. Merdiven artık çözüm yolundan **türetilir**
+- `mechanism_families` — levha içi şifrenin cevap biçimi **ölçümle**
+  düzeltildi; `sequence` bir varsayımdı
+- `puzzle.schema.json` — `answerSpace` · `languagePortability` ·
+  `answerSpaceSize` · `pilotLanguage`
+- `project_config.json` — `language` · `security` · `answerSpace` ·
+  `gateHandoff` · `plateProof` blokları; A3/A8/A9/A11 kararları
+- `05_TESTS/selftest.py` — **123 → 151** denetim
+
+### Düzeltildi (kırmızı takım · 23 bulgu)
+
+- ⭑ **Sayı tablosu hata TESPİT ETMİYORDU.** Sekiz olası okumanın **beşi**
+  tablodaydı; her levha bulmacasının beş ulaşılabilir cevabı vardı. Kapı
+  bunu görmüyordu çünkü kabul yordamı **doğru okumayı sabit yazıyordu** —
+  K21'in öldürmeye çalıştığı totoloji, doğrulayıcının kendi içinde
+- ⭑ **On bulmaca okur paketinde ÇÖZÜLEMİYORDU.** Levha metni vardı, levha
+  verisi yoktu
+- ⭑ **Gerçek bir ikinci cevap** — kaynağı tek bir yanlış edattı. Aynı
+  bulmacada ikinci bir ikinci cevap daha bulundu (taban işareti çentik
+  sayılabiliyordu) ve **iki okuma da tekillik vaadini yerel olarak
+  sağlıyordu**
+- Kök neden: şekil üretiliyordu, onu tarif eden cümle **elle yazılıyordu**.
+  Levha üreteci artık *(şekil, künye)* çifti döndürür
+- Sözlük sırası Türkçe harf sırasına göre **üretiliyor**; sözlük numaraları
+  sözcükten **türetiliyor**
+- Yansıma işlemi hiçbir yerde tanımlı değildi → araçlar levhasına kural ve
+  örnek eklendi
+- İki bulmacada okunacak levha basılı değildi → levhalar eklendi
+- Çizelge harflerinde C boşluğu vardı
+
+### Ölçüldü
+
+| | |
+|---|---:|
+| Cevap uzayı · bağımsız üretilen aday | **1.072** |
+| Tam olarak bir kabul | **20 / 20** |
+| Kapı I gövdesi | 8,5 / 34 sayfa |
+| İpucu bölümü (kitap ölçeğinde) | 15,2 / 22 sayfa |
+| Çözüm bölümü (kitap ölçeğinde) | 8,4 / 18 sayfa |
+| Kapı sözü asgari Hamming mesafesi | **15** |
+| **Harici çözücü oturumu** | **0 / 5** |
+
+### Güvenlik
+
+- **`ENIGMATICA_CANARY_SALT`** üretildi (384 bit), GitHub Actions sırrı
+  olarak kuruldu, depo dışında `0600` yedeğe yazıldı. **Plaintext hiçbir
+  çıktıda, commit'te, raporda veya kaynak dosyada görünmedi.**
+- Dört senaryo gerçek bir klonda kanıtlandı: doğru tuz yeşil · **eksik tuz
+  kırmızı** · **yanlış tuz kırmızı** · **enjekte edilmiş sızıntı yakalandı**
+- Kanarya bu fazda **kendi yazarını iki kez ısırdı**: selftest fikstürünü
+  ve bulgu defterini sızıntı olarak bildirdi. İkisinde de haklıydı.
+
+---
+
 ## [0.1.0] — 2026-08-13 · Faz 1 · Bulmaca mimarisi, çözülebilirlik, gizlilik
 
 **Tek bir bulmaca yazılmadı.** Yazılan şey, yüz bulmacanın çözülebilir

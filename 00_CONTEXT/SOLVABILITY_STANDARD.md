@@ -15,8 +15,31 @@ cümle pazarlama değil, **üretim kısıtıdır**:
 > 1. **Her bulmacanın tek bir cevabı vardır.**
 > 2. **Hiçbiri kitabın dışındaki bilgiyi gerektirmez.**
 > 3. **İpucu almak kaybetmek değildir.**
+> 4. **Kitap size bir çizelge veriyorsa, o çizelge tek yetkedir.**
 
-Aşağıdaki her kural bu üç cümleden birini korur.
+Aşağıdaki her kural bu dört cümleden birini korur.
+
+### ⚠ Dördüncü söz Faz 1'de eklendi
+
+İkinci söz, dış bilginin **farklı bir cevap üretmesini** engellemez.
+Hedef okur bir bulmaca meraklısıdır ve Ogham'ı, runik yazıyı, Roma
+sayılarını **biliyor olabilir**. Kitabın çizelgesi ile bildiği çizelge
+ayrışırsa, o okur savunulabilir bir **ikinci cevap** üretir, doğrulama
+sayfası reddeder ve okur kitabı bozuk sanır.
+
+Ve bir üretim kuralı doğurur: yalnızca kitaptaki değeri **yaygın değerle
+çakışan** glifler kullanılır. Bilen okur ile bilmeyen okur aynı cevapta
+buluşmalıdır.
+
+### Ve bir beşinci şey okura SÖYLENİR: cevabın biçimi
+
+`answerFormat` (kelime · ifade · sayı · dizi · harf) ve normalizasyon
+kuralı (büyük/küçük harf, boşluk, noktalama önemsizdir) sözleşme
+sayfasında **basılıdır** ve doğrulama sayfası karşılaştırmadan **önce**
+aynı normalizasyonu uygular.
+
+Gerekçe: biçim tanımsızken kusursuz tasarlanmış bir bulmaca bile "bozuk"
+yorumu üretir.
 
 ---
 
@@ -30,7 +53,10 @@ Bir bulmaca ancak şu beş şart sağlandığında `validated` olur:
 | 2 | Her adım **yalnızca kitap içi** bilgiyle yürüyor | `qa_solvability` |
 | 3 | **Alternatif çözüm analizi yapılmış**, onaylanmış alternatif **yok** | `qa_uniqueness` |
 | 4 | **Belirsizlik puanı ≤ 2** | `qa_solvability` |
-| 5 | **≥2 harici çözücü** denedi (Kapı I için **5**) | `qa_solvability` |
+| 5 | **≥2 harici çözücü** denedi (Kapı I için **5**) | `validate_spec` |
+
+Ve bu beş şart artık **mekanik olarak kazanılır**: `testStatus` alanı
+`tested` değerini elle alamaz.
 
 > **Bir bulmaca "zekice göründüğü" için kabul EDİLEMEZ.**
 > Deterministik olarak çözülemeyen bir bulmaca bir **üretim hatasıdır**.
@@ -51,6 +77,33 @@ farklı bir yol tarif ettiyse puan en az 3'tür.
 
 ---
 
+## 3b · ⭑ `tested` KAZANILIR, ELLE VERİLMEZ ⭑
+
+> **Faz 1'e kadar öldürme kapısı mekanik olarak bir METİN ALANIYDI.**
+> 140 kaydın `status` alanını elle `written` yapmak, projeyi `phase1`'den
+> `release`'e kadar yürütüyordu — `testStatus` "untested", çözücü sayısı
+> 0, alternatif analizi yapılmamışken. Bir POC bunu gösterdi.
+
+`validate_spec § check_test_status` şunları **birden** arar:
+
+| Şart | Not |
+|---|---|
+| Kurucu harici çözücüleri **onaylamış** | En ucuz gerçek kilit |
+| Harici çözücü sayısı ≥ kapının şartı | Kapı I: **5** · diğerleri: 2 |
+| Çözen sayısı ≥ eşik | Kapı I: **4** |
+| Alternatif çözüm analizi yapılmış | — |
+| Onaylanmış alternatif çözüm yok | — |
+| Belirsizlik puanı **var ve** ≤ 2 | Alanı silmek kapıyı kapatmaz |
+
+Ve iki bağ: `status` ∈ {`validated`, `written`} ⇒ `testStatus` = `tested`;
+`testStatus` = `internal-only` ⇒ harici çözücü sayısı **0**.
+
+⚠ **İç çözücü kayıtları sayılmaz.** Ajan çözümü zaten bilir; bildiği bir
+şeyi "bulmak" bulmak değildir
+([`INTERNAL_SOLVER_PROTOCOL.md`](INTERNAL_SOLVER_PROTOCOL.md)).
+
+---
+
 ## 4 · Alternatif çözüm — bu kitabın en sinsi kusuru
 
 Bir bulmacanın **ikinci bir geçerli cevabı** olması, çözülemez olmasından
@@ -60,12 +113,27 @@ daha kötüdür: okur cevabını doğru sanır, doğrulama sayfası reddeder ve
 Zorunlu prosedür:
 
 1. Yazar en az **üç** alternatif aday üretir
-2. Her biri için **neden geçersiz olduğu** yazılır
-3. Gerekçe "zorlama" ise **bulmaca yeniden yazılır**
+2. Her biri için **neden geçersiz olduğu** yazılır ve gerekçenin gücü
+   işaretlenir: `mechanical` ✅ · `textual` ✅ · `forced` ⛔
+3. Gerekçe `forced` ise **bulmaca yeniden yazılır** — `qa_uniqueness` bu
+   kararı yazarın insafına bırakmaz
 4. Çözücü testinde bir alternatif ortaya çıkarsa kayıt açılır ve
    bulmaca **yeniden yazılır** — test tekrarlanır
 
 `confirmedAlternativeSolutions > 0` olan hiçbir bulmaca `validated` olamaz.
+
+### ⚠ Ve ispatın kendisi ispat olmak zorundadır
+
+Faz 1'de bağımsız bir saldırı, on yedi mekanizma ailesinin **dokuzunun**
+"doğrulama yöntemi" alanının bir ispat değil, hedefin yeniden ifadesi
+olduğunu gösterdi. Tekrar eden kusur aynıydı: **sayım alanını, cevabı
+zaten bilen yazar tanımlıyordu.**
+
+Faz 2'den itibaren her bulmaca makine okunur bir **`answerSpace`** dosyası
+taşır: okurun, kitabın ona öğrettikleriyle ulaşabileceği bütün dizeler.
+`qa_uniqueness` sayım alanının **proza değil dosya** olmasını ister ve tam
+olarak bir üyenin kabul edilmesini arar.
+Ayrıntı: [`PUZZLE_TAXONOMY.md § 2`](PUZZLE_TAXONOMY.md).
 
 ---
 
@@ -126,6 +194,8 @@ kanıt değildir.
 | Kimlik **anonimdir** (`solver-01`) | Mahremiyet |
 | Kapı I için **5 çözücü** | Öldürme kapısının istatistiksel tabanı |
 | Diğer kapılar için **≥2** | Maliyet/fayda dengesi |
+| **≥2 çözücü bu türü ilk kez alıyor** | Beş escape-room emektarı, perakende okurun iade ettiği yerde devam eder |
+| Süre **zaman damgasıyla** ölçülür | Üç akşama yayılmış bir "sanırım dört saat" ölçüm değildir |
 | Bir çözücü takılırsa suç **bulmacadadır** | Tasarım kusuru, çözücü kusuru değil |
 
 ---
@@ -134,6 +204,14 @@ kanıt değildir.
 
 Eşikler `project_config.json § killGate` içinde **sayısal** durur ve
 `validate_spec.py` onların düşürülmesini yakalar.
+
+Faz 1'de eklenen üç ölçüt:
+
+| Ölçüt | Eşik | Neden |
+|---|---|---|
+| Bulmaca başına bitiren çözücü | **≥ 2** | 5'te 1 çözülen bulmaca eskiden GEÇİYORDU |
+| 3. kademe ipucuna inen çözücü / bulmaca | **≤ 2** | İpucu merdiveni emniyet ağıdır, ana yol değil |
+| Medyan tanımı | **DNF tavan sayılır** | Bir DNF medyanı iyileştiremez |
 
 | Sonuç | Karar |
 |---|---|

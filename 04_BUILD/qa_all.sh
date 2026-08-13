@@ -79,9 +79,9 @@ fi
 
 # ── YAPILANDIRMA VE VERİ ────────────────────────────────────────────────────
 run "veri bütünlüğü ve kapsam"  $PY 04_BUILD/validate_spec.py --gate "$GATE" \
-                                   --json 06_REPORTS/spec-validation.json
+                                   --json 06_REPORTS/tracked/spec-validation.json
 run "depo ve belge bütünlüğü"   $PY 04_BUILD/validate_structure.py \
-                                   --json 06_REPORTS/structure.json
+                                   --json 06_REPORTS/tracked/structure.json
 
 # ── KAPILARIN KENDİ TESTİ — en önemlisi ────────────────────────────────────
 run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
@@ -90,21 +90,29 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 # Bu betikler henüz yok. Var olduklarında bu satırlar canlanır.
 # Bir kapının VARLIĞI yetmez, KOŞMASI gerekir (World Myths K18).
 [ -f 04_BUILD/validate_research.py ] && \
-  run "araştırma kayıtları"     $PY 04_BUILD/validate_research.py \
+  run "araştırma kayıtları"     $PY 04_BUILD/validate_research.py --gate "$GATE" \
                                    --json 06_REPORTS/research.json
 [ -f 04_BUILD/qa_dependency.py ] && \
-  run "BAĞIMLILIK GRAFİĞİ (DAG)" $PY 04_BUILD/qa_dependency.py \
+  run "BAĞIMLILIK GRAFİĞİ (DAG)" $PY 04_BUILD/qa_dependency.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-dependency.json
+[ -f 04_BUILD/qa_taxonomy.py ] && \
+  run "MEKANİZMA ÇEŞİTLİLİĞİ"    $PY 04_BUILD/qa_taxonomy.py \
+                                   --json 06_REPORTS/qa-taxonomy.json
+# ⭑ Kanarya: alan adı değil CEVABIN KENDİSİ aranır. Faz 2'den itibaren
+# koşmaması KIRMIZIDIR (sessizce yeşil yanan bir kanarya kanarya değildir).
+[ -f 04_BUILD/qa_solution_leak.py ] && \
+  run "⭑ ÇÖZÜM KANARYASI ⭑"      $PY 04_BUILD/qa_solution_leak.py --gate "$GATE" \
+                                   --json 06_REPORTS/qa-solution-leak.json
 
 # ── FAZ 2'DE DOĞACAK KAPILAR ───────────────────────────────────────────────
 [ -f 04_BUILD/qa_solvability.py ] && \
-  run "ÇÖZÜLEBİLİRLİK"          $PY 04_BUILD/qa_solvability.py \
+  run "ÇÖZÜLEBİLİRLİK"          $PY 04_BUILD/qa_solvability.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-solvability.json
 [ -f 04_BUILD/qa_uniqueness.py ] && \
-  run "ALTERNATİF ÇÖZÜM"        $PY 04_BUILD/qa_uniqueness.py \
+  run "ALTERNATİF ÇÖZÜM"        $PY 04_BUILD/qa_uniqueness.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-uniqueness.json
 [ -f 04_BUILD/qa_hints.py ] && \
-  run "ipucu bütünlüğü"         $PY 04_BUILD/qa_hints.py \
+  run "ipucu bütünlüğü"         $PY 04_BUILD/qa_hints.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-hints.json
 [ -f 04_BUILD/qa_length.py ] && \
   run "kelime bandı"            $PY 04_BUILD/qa_length.py \

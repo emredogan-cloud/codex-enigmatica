@@ -55,19 +55,26 @@ jobs:
         run: |
           python3 04_BUILD/validate_spec.py \
             --gate "${{ needs.gate.outputs.level }}" \
-            --verbose --json 06_REPORTS/spec-validation.json
-      - name: araştırma kayıtları (Faz 1'de doğar)
+            --verbose --json 06_REPORTS/tracked/spec-validation.json
+      - name: araştırma ve künye kayıtları
         run: |
-          if [ -f 04_BUILD/validate_research.py ]; then
-            python3 04_BUILD/validate_research.py --verbose --json 06_REPORTS/research.json
-          else
-            echo "::notice::validate_research.py henüz yok — Faz 1 teslimatı"
+          LEVEL="$(tr -d '[:space:]' < .gate)"
+          python3 04_BUILD/validate_research.py --gate "$LEVEL" --verbose
+      - name: mekanizma çeşitliliği
+        run: |
+          if [ -f 04_BUILD/qa_taxonomy.py ]; then
+            python3 04_BUILD/qa_taxonomy.py --verbose --json 06_REPORTS/qa-taxonomy.json
           fi
+      # ⚠ ARTEFAKT YÜKLEME YALNIZCA 06_REPORTS/tracked/ İÇİNDİR.
+      # Doğrulayıcı raporları yapıları gereği çözüm içeriğine yaklaşır
+      # (qa_uniqueness "hangi adaylar reddedildi" sorusunu yanıtlar ve o
+      # adaylar CEVAP ADAYLARIDIR). Bir artefakt public depoya bakmayan
+      # birinin bile indirebileceği bir dosyadır.
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: data-reports
-          path: 06_REPORTS/*.json
+          path: 06_REPORTS/tracked/*.json
           if-no-files-found: ignore
 
   structure:
@@ -82,12 +89,12 @@ jobs:
       # public depoya giren bir çözüm ürünü yayımlanmadan değersizleştirir
       # ve hata geri alınamaz (git geçmişi).
       - name: yapı, belge ve ÇÖZÜM sızıntısı denetimi
-        run: python3 04_BUILD/validate_structure.py --verbose --json 06_REPORTS/structure.json
+        run: python3 04_BUILD/validate_structure.py --verbose --json 06_REPORTS/tracked/structure.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: structure-report
-          path: 06_REPORTS/structure.json
+          path: 06_REPORTS/tracked/structure.json
           if-no-files-found: ignore
 
   gates-selftest:
@@ -116,23 +123,36 @@ jobs:
           else
             echo "::notice::manuscript depoda yok (.gitignore § ①) — metin kapıları boş koşar; körlüğü selftest kapatır"
           fi
-      - name: metin kapıları (Faz 2'de doğar)
+      - name: metin kapıları
         run: |
+          LEVEL="$(tr -d '[:space:]' < .gate)"
           RAN=0
           for g in qa_solvability qa_uniqueness qa_hints qa_dependency qa_meta qa_length qa_voice qa_echo qa_drift; do
             if [ -f "04_BUILD/$g.py" ]; then
               echo "▸ $g"
-              python3 "04_BUILD/$g.py" --verbose --json "06_REPORTS/${g//_/-}.json" || exit 1
+              python3 "04_BUILD/$g.py" --gate "$LEVEL" --verbose || exit 1
               RAN=$((RAN+1))
             fi
           done
           echo "::notice::$RAN metin kapısı koştu"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: text-qa-reports
-          path: 06_REPORTS/qa-*.json
-          if-no-files-found: ignore
+
+  canary:
+    name: ⭑ ÇÖZÜM KANARYASI ⭑
+    runs-on: ubuntu-latest
+    steps:
+      # Kanarya ALAN ADI değil CEVABIN KENDİSİNİ arar: dosya içeriği,
+      # dosya adları ve COMMIT MESAJLARI. Commit mesajı taraması için tam
+      # geçmiş gerekir — sığ klonda mesajlar yoktur.
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: cevap sızıntısı
+        env:
+          ENIGMATICA_CANARY_SALT: ${{ secrets.ENIGMATICA_CANARY_SALT }}
+        run: |
+          LEVEL="$(tr -d '[:space:]' < .gate)"
+          python3 04_BUILD/qa_solution_leak.py --gate "$LEVEL" --verbose
 
   production-model:
     name: sayfa bütçesi ve telif modeli
@@ -147,7 +167,7 @@ jobs:
         run: |
           for s in editions page_budget; do
             if [ -f "04_BUILD/$s.py" ]; then
-              python3 "04_BUILD/$s.py" --verbose --json "06_REPORTS/${s//_/-}.json" || exit 1
+              python3 "04_BUILD/$s.py" --verbose || exit 1
             else
               echo "::notice::$s.py henüz yok — Faz 1/2 teslimatı"
             fi
@@ -155,7 +175,7 @@ jobs:
 
   summary:
     name: özet
-    needs: [data, structure, gates-selftest, text, production-model]
+    needs: [data, structure, gates-selftest, text, canary, production-model]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -169,6 +189,7 @@ jobs:
             echo "| depo, belge, **ÇÖZÜM koruması** | ${{ needs.structure.result }} |"
             echo "| **kapıların kendi testi** | ${{ needs.gates-selftest.result }} |"
             echo "| metin kapıları | ${{ needs.text.result }} |"
+            echo "| **çözüm kanaryası** | ${{ needs.canary.result }} |"
             echo "| sayfa bütçesi ve telif | ${{ needs.production-model.result }} |"
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then

@@ -48,13 +48,40 @@ okura bırakır.
 | Kural | Denetleyen |
 |---|---|
 | Her bulmacada **üç kademe de** bulunur | `qa_hints` |
-| Hiçbir ipucu **cevap dizesini içermez** | `qa_hints` |
-| İpucu metni bulmacanın kendisinden **daha uzun olamaz** | `qa_hints` |
+| Hiçbir ipucu **cevap dizesini içermez** — dört gizleme biçimine karşı | `qa_hints` |
+| **Tek bir** ipucu bulmacadan uzun olamaz | `qa_hints` |
+| Merdiven gerçekten **yükselir** — kapsam monoton artar | `qa_hints` |
+| 3. kademe **son adımı vermez** | `qa_hints` |
 | İpuçları **arka maddede** durur, sayfada değil | dizgi |
 | İpuçlar **ters basılır** veya ayrı bölümdedir | dizgi |
 
 > Ters basım kasıtlıdır: okurun **kaza eseri** ipucu görmesini engeller.
 > Bir bulmaca kitabında yanlışlıkla görülen ipucu, bozulmuş bir deneyimdir.
+
+### ⚠ Ama ters basım bir denetim boşluğu açar
+
+Ters basılacak bir ipucu, kaynak metinde **tersten** yazılmış bir cevap
+içerebilir: düz bir alt dize araması onu göremez, **kâğıtta ise cevap
+düzgün okunur.** `qa_hints` bu yüzden dört biçimi birden dener:
+
+| Gizleme | Nasıl yakalanır |
+|---|---|
+| Noktalama ve büyük harf | Normalizasyon |
+| Boşlukların kaldırılması | Sıkıştırılmış biçim |
+| **Tersten yazım (ayna baskı)** | Ters biçim |
+| Kelimelerin dağıtılması | Kelime kümesi kapsaması |
+
+Kanarya künyesi de **ters karmaları** taşır — aynı sebeple.
+
+### ⚠ Uzunluk kuralı Faz 1'de düzeltildi
+
+Eski kural üç ipucunun **toplamını** bulmaca metniyle karşılaştırıyordu ve
+`STYLE § 4` ile çelişiyordu: ipucu başına 40 kelime tavanı üç kademede
+120 kelime eder, ama bulmaca metninin alt sınırı 90 kelimedir. İkisi
+birlikte, 90 kelimelik bir bulmaca için kademe başına 30 kelime bırakıyordu
+— ve katmanlı bir zincir için 30 kelimede "neredeyse-cevap" **yazılamaz**.
+
+Yeni kural: **tek bir** ipucu bulmacadan uzun olamaz.
 
 ---
 
@@ -65,6 +92,9 @@ katmandadır**, çünkü üçüncü kademe cevabı dolaylı olarak verir.
 
 `hints` alanı `contentProtection.solutionFieldNames` listesindedir ve
 public depoda bulunması CI'ı kırmızı yakar.
+
+Ayrıca **3. kademe ipucu kanaryanın cevap kümesine dâhildir**:
+"neredeyse-cevap" public bir dosyada durursa, cevap durmuş sayılır.
 
 ---
 

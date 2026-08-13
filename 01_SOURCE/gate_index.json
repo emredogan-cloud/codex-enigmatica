@@ -1,0 +1,233 @@
+{
+  "$comment": [
+    "KAPI DİZİNİ — beş kapı + son soru",
+    "",
+    "Bu dosya kapıların KİMLİĞİNİ, zorluk bandını, izin verilen mekanizma",
+    "ailelerini ve BAĞIMLILIK KURALINI taşır. Çözüm taşımaz.",
+    "",
+    "⚠ BAĞIMLILIK KURALI BU DOSYADA DURUR ÇÜNKÜ KAPI BAZLIDIR:",
+    "bir bulmaca yalnızca KENDİ KAPISINDA ve KENDİNDEN ÖNCEKİ bir slota",
+    "bağlanabilir. Faz 1 sonunda geriye TEK bir kapılar arası istisna kaldı:",
+    "  · meta — son soru BEŞ kapının kapı bulmacasına bağlanır",
+    "",
+    "İkinci istisna (kapı devri: bir kapının 1. slotu bir önceki kapının kapı",
+    "bulmacasına bağlanır) Faz 1'de KAPATILDI. Gerekçe dependencyRules §",
+    "crossGateEntryHandoff$comment içindedir ve özetle şudur: tek bir yanlış",
+    "kapı cevabı okuru ürünün %80'inden dışarıda bırakıyordu.",
+    "",
+    "gateStructure ile senkron olmak zorundadır: project_config.json §",
+    "scope.gateStructure içindeki her kimlik burada BULUNMALIDIR.",
+    "Buradaki fazla kayıtlar metaGate:true taşımak ZORUNDADIR."
+  ],
+  "version": "1.1.0",
+  "gates": [
+    {
+      "id": "threshold",
+      "roman": "I",
+      "en": "The Threshold",
+      "tr": "Eşik",
+      "difficulty": 1,
+      "puzzles": 20,
+      "candidateMin": 26,
+      "gatePuzzleSlot": 20,
+      "entryDependsOnGate": null,
+      "allowedFamilies": [
+        "plate-observation",
+        "plate-embedded-cipher",
+        "substitution-cipher",
+        "transposition-cipher",
+        "script-decoding",
+        "constraint-logic",
+        "gate-synthesis"
+      ],
+      "plates": {
+        "opening": 1,
+        "puzzle": 20
+      },
+      "pageBudget": 34,
+      "purpose": "Okuru içeri almak.",
+      "note": "BU KAPIYI GEÇEMEYEN OKUR KİTABI İADE EDER. Faz 2'nin öldürme kapısı bu kapıyı ölçer; portföyün en çok test edilen bölümüdür.",
+      "allowedFamilies$comment": "plate-embedded-cipher Faz 1'de EKLENDİ: kitabın imza mekaniğinin zorluk-1 örneği hiçbir yerde yoktu ve okur onunla ilk kez ★★ kapısında karşılaşıyordu."
+    },
+    {
+      "id": "menagerie",
+      "roman": "II",
+      "en": "The Menagerie",
+      "tr": "Yaratıklar",
+      "difficulty": 2,
+      "puzzles": 20,
+      "candidateMin": 26,
+      "gatePuzzleSlot": 20,
+      "entryDependsOnGate": "threshold",
+      "allowedFamilies": [
+        "classification",
+        "plate-embedded-cipher",
+        "plate-observation",
+        "script-decoding",
+        "substitution-cipher",
+        "constraint-logic",
+        "gate-synthesis"
+      ],
+      "plates": {
+        "opening": 1,
+        "puzzle": 20
+      },
+      "pageBudget": 34,
+      "purpose": "Levha içi şifreyi öğretmek — kitabın imza mekaniği burada doğar.",
+      "note": "Motif fikri Codex Bestiarium'un tabanından gelir; DOSYA GELMEZ. İzolasyon kuralı geçerlidir."
+    },
+    {
+      "id": "calendar",
+      "roman": "III",
+      "en": "The Calendar",
+      "tr": "Takvim",
+      "difficulty": 2,
+      "puzzles": 20,
+      "candidateMin": 26,
+      "gatePuzzleSlot": 20,
+      "entryDependsOnGate": "menagerie",
+      "allowedFamilies": [
+        "numeral-system",
+        "cyclic-calendar",
+        "plate-embedded-cipher",
+        "script-decoding",
+        "classification",
+        "polyalphabetic-cipher",
+        "gate-synthesis"
+      ],
+      "plates": {
+        "opening": 1,
+        "puzzle": 20
+      },
+      "pageBudget": 34,
+      "purpose": "Sayı, zaman, gök. Okur kültürlerin zamanı bölme biçimlerini görür.",
+      "note": "Bu kapının bulmacaları en çok künye isteyen kapıdır: her sayı ve takvim sistemi kaynaklıdır."
+    },
+    {
+      "id": "labyrinth",
+      "roman": "IV",
+      "en": "The Labyrinth",
+      "tr": "Labirent",
+      "difficulty": 3,
+      "puzzles": 20,
+      "candidateMin": 26,
+      "gatePuzzleSlot": 20,
+      "entryDependsOnGate": "calendar",
+      "allowedFamilies": [
+        "path-graph",
+        "layered-chain",
+        "back-reference",
+        "plate-embedded-cipher",
+        "polyalphabetic-cipher",
+        "transposition-cipher",
+        "gate-synthesis"
+      ],
+      "plates": {
+        "opening": 1,
+        "puzzle": 20
+      },
+      "pageBudget": 34,
+      "purpose": "Uzamsal ve çok adımlı. Okurun kalem, kâğıt ve sabra ihtiyacı vardır.",
+      "note": "Kitap burada kendini referans etmeye başlar. back-reference ailesi her yeni bölümde YENİDEN denetlenir."
+    },
+    {
+      "id": "mirror",
+      "roman": "V",
+      "en": "The Mirror",
+      "tr": "Ayna",
+      "difficulty": 3,
+      "puzzles": 20,
+      "candidateMin": 26,
+      "gatePuzzleSlot": 20,
+      "entryDependsOnGate": "labyrinth",
+      "allowedFamilies": [
+        "book-structure",
+        "narrative-embedded",
+        "back-reference",
+        "layered-chain",
+        "cyclic-calendar",
+        "polyalphabetic-cipher",
+        "gate-synthesis"
+      ],
+      "plates": {
+        "opening": 1,
+        "puzzle": 20
+      },
+      "pageBudget": 34,
+      "purpose": "Öz-göndergesel: kitabın kendisi bulmacanın parçasıdır.",
+      "note": "⚠ DİZGİYE BAĞLIDIR (K12). Bu kapı ancak Faz 5'te dizgi DONDURULDUKTAN sonra kilitlenir; sayfa numarası değişirse kırılır."
+    },
+    {
+      "id": "last-question",
+      "roman": "—",
+      "en": "The Last Question",
+      "tr": "Son Soru",
+      "metaGate": true,
+      "difficulty": 3,
+      "puzzles": 1,
+      "candidateMin": 3,
+      "gatePuzzleSlot": null,
+      "entryDependsOnGate": null,
+      "dependsOnAllGatePuzzles": true,
+      "allowedFamilies": [
+        "meta-synthesis"
+      ],
+      "plates": {
+        "opening": 0,
+        "puzzle": 2
+      },
+      "pageBudget": 6,
+      "purpose": "Beş kapının çıktısı tek bir soruya bağlanır.",
+      "note": "⚠ CEVABI KİTAPTA YOKTUR — doğrulama sayfasına girilir. qa_meta bunu denetler; cevap kitapta bulunursa doğrulama sayfasının anlamı kalmaz."
+    }
+  ],
+  "dependencyRules": {
+    "sameGateOnly": true,
+    "backwardSlotOnly": true,
+    "crossGateEntryHandoff": false,
+    "crossGateEntryHandoff$comment": [
+      "⚠ FAZ 1'DE KAPATILDI — kırmızı takım bulgusu.",
+      "",
+      "Pazar raporu 'her kapının çözümü bir sonrakinin anahtarını verir'",
+      "diyordu ve bu kural o cümleyi MEKANİK bir bağa çeviriyordu.",
+      "Sonucu şudur: Kapı III'ün kapı bulmacasını yanlış çözen okur",
+      "Kapı IV'e, Kapı V'e ve son soruya KAPANIR — yani satın aldığı",
+      "ürünün %80'ine, TEK BİR HATADAN, hiçbir teşhis olmadan.",
+      "Ve o okur bunun tek bir hata olduğunu bilmez; kitabı bozuk sanır.",
+      "",
+      "Kapı devri artık ANLATISALDIR: kapı bulmacasının çıktısı bir",
+      "sonraki kapının kapısını 'açar' ama onun MEKANİK GİRDİSİ değildir.",
+      "Her kapı bağımsız girilebilir.",
+      "",
+      "Geriye tek bir birleşim kalır: meta-mister. Orası zaten toplam",
+      "tamamlanma isteyen TEK yerdir ve dramını orada hak eder.",
+      "",
+      "Bu kuralın şu an HİÇBİR ÖRNEĞİ YOKTU (Kapı II–V slotlanmamıştı) —",
+      "yani şimdi kapatmak bedavadır, Faz 4'te kapatmak altmış bulmacayı",
+      "yeniden sıralamak olurdu."
+    ],
+    "metaDependsOnAllGatePuzzles": true,
+    "$comment": [
+      "qa_dependency.py bu dört kuralı uygular. Kuralların gevşetilmesi",
+      "selftest tarafından yakalanır: kural bayrağı false yapılırsa",
+      "ilgili kusurlu kurgu ARTIK YAKALANMAZ ve selftest KIRMIZI yanar."
+    ]
+  },
+  "reserveRules": {
+    "$comment": [
+      "⚠ FAZ 1 KIRMIZI TAKIM BULGUSU — yedek havuz aldatıcıydı.",
+      "",
+      "Her kapıda TEK bir kapı bulmacası adayı vardı: yani kitabın en",
+      "yüksek bağımlılıklı bulmacasının — düşerse 19 bulmacayı da",
+      "götüren bulmacanın — yedeği SIFIRDI.",
+      "",
+      "Dahası yedekler AYNI AİLEDENDİ. Yedek havuz, kötü bir TEK",
+      "bulmacaya karşı korur; bir AİLE çöktüğünde hiçbir şey yapmaz.",
+      "Ve aile çöküşü tam olarak beklenen kusurdur (tasnif, levha gözlemi,",
+      "yol/çizge aileleri kırmızı takımda en yüksek riskli üç aile)."
+    ],
+    "minGateSynthesisCandidatesPerGate": 2,
+    "requireCrossFamilyReserve": true,
+    "minReserveFamiliesPerGate": 3
+  }
+}

@@ -2,7 +2,7 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **12 Ağustos 2026** · Faz: **0 · Bootstrap** · Kapı: `phase0`
+> Son güncelleme: **13 Ağustos 2026** · Faz: **1 · TAMAM** · Kapı: `phase1`
 
 ---
 
@@ -58,13 +58,22 @@ soruya bağlayan bir meta-mister. Gravür levhaların **içine gömülmüş**
 
 | | |
 |---|---|
-| Faz | **0 · Bootstrap** — altyapı kuruldu, Faz 1 **başlamadı** |
-| Kapı (`.gate`) | `phase0` |
-| Aday bulmaca | 0 / ≥130 |
-| Doğrulanmış / yazılmış | 0 / 100 |
-| **Sonraki adım** | **KURUCU ONAYI** → sonra Faz 1 |
+| Faz | **1 · TAMAM** — mimari, çözülebilirlik çerçevesi, gizlilik katmanı |
+| Kapı (`.gate`) | `phase1` |
+| Aday bulmaca | **151** / ≥130 ✅ |
+| Mekanizma ailesi | **17** tanımlı ve hepsi kullanımda |
+| Pilot kohort (Kapı I) | **20** slotlanmış, Faz 2'ye hazır |
+| Doğrulanmış / yazılmış | 0 / 100 — **bu fazda bulmaca YAZILMADI** |
+| Kalite kapısı | **11 betik · selftest 123 denetim · CI yeşil** |
+| **Sonraki adım** | **KURUCU ONAYI** → sonra Faz 2 |
 
-⚠ **Faz 1 BAŞLAMADI ve kurucu onayı olmadan başlamaz.**
+⚠ **FAZ 2 BAŞLAMADI ve kurucu onayı olmadan başlamaz.**
+
+Faz 1 iki bağımsız kırmızı takım saldırısından geçti (**36 bulgu**) ve
+30'u kapatıldı. Kalan 6'sı kurucu kararına bağlıdır:
+`DECISIONS.md § A7–A11`. Tam defter:
+[`00_CONTEXT/RED_TEAM_CHECKLIST.md`](00_CONTEXT/RED_TEAM_CHECKLIST.md) ·
+Faz raporu: [`06_REPORTS/PHASE_1_REPORT.md`](06_REPORTS/PHASE_1_REPORT.md)
 
 ---
 
@@ -84,7 +93,8 @@ bir üründür; burada **%98 kalite bile 1 yıldızlarla cezalandırılır**.
 > **Bir bulmaca kitabının çözümleri ürünün kendisidir.**
 
 Public depoda duran bir çözüm kitabı **yayımlanmadan** değersizleştirir —
-ve hata **geri alınamaz**. Bu yüzden burada **dört hatlı** koruma vardır.
+ve hata **geri alınamaz**. Bu yüzden burada **beş hatlı** koruma vardır;
+beşincisi (kanarya) alan adı değil **cevabın kendisini** arar.
 
 Ama **kod sır değildir**: `04_BUILD/` ve `05_TESTS/` public kalır.
 
@@ -157,6 +167,13 @@ Tam yol haritası:
 | [`00_CONTEXT/SOLVABILITY_STANDARD.md`](00_CONTEXT/SOLVABILITY_STANDARD.md) | **Çözülebilirlik sözleşmesi** | kurucu onayıyla |
 | [`00_CONTEXT/CONTENT_PROTECTION.md`](00_CONTEXT/CONTENT_PROTECTION.md) | **İki katmanlı gizlilik** | kurucu onayıyla |
 | [`00_CONTEXT/HINT_LADDER.md`](00_CONTEXT/HINT_LADDER.md) | Üç kademeli ipucu | kurucu onayıyla |
+| [`00_CONTEXT/PUZZLE_TAXONOMY.md`](00_CONTEXT/PUZZLE_TAXONOMY.md) | **17 mekanizma ailesi** ve tekillik ispatı | kurucu onayıyla |
+| [`00_CONTEXT/SOLVER_TEST_PROTOCOL.md`](00_CONTEXT/SOLVER_TEST_PROTOCOL.md) | **Harici çözücü protokolü** | kurucu onayıyla |
+| [`00_CONTEXT/INTERNAL_SOLVER_PROTOCOL.md`](00_CONTEXT/INTERNAL_SOLVER_PROTOCOL.md) | Solver A/B — **kanıt değil ön eleme** | sabit |
+| [`00_CONTEXT/RED_TEAM_CHECKLIST.md`](00_CONTEXT/RED_TEAM_CHECKLIST.md) | Kontrol listesi + **bulgu defteri** | her faz |
+| [`00_CONTEXT/SOURCING_STANDARD.md`](00_CONTEXT/SOURCING_STANDARD.md) | Künye ve olgu disiplini | kurucu onayıyla |
+| [`00_CONTEXT/VISUAL_ARCHITECTURE.md`](00_CONTEXT/VISUAL_ARCHITECTURE.md) | Dört levha sınıfı | kurucu onayıyla |
+| [`00_CONTEXT/VALIDATION_REFERENCE.md`](00_CONTEXT/VALIDATION_REFERENCE.md) | Hangi kapı neyi ısırır | her faz |
 | [`00_CONTEXT/STYLE.md`](00_CONTEXT/STYLE.md) | Ses, kalıplar, yasaklar | Faz 2'de kalibre |
 | [`00_CONTEXT/LESSONS_FROM_CODEX.md`](00_CONTEXT/LESSONS_FROM_CODEX.md) | Taşınan disiplin | sabit |
 | [`DECISIONS.md`](DECISIONS.md) | Kararlar + **AÇIK KARARLAR** | her faz |
@@ -172,11 +189,15 @@ Tam yol haritası:
 cd CODEX-ENIGMATICA
 
 cat .gate                            # aktif faz kapısı
-cat ROADMAP_PROGRESS.md              # ilerleme
-grep -n "AÇIK KARAR" DECISIONS.md    # kurucudan yanıt bekleyenler
+cat ROADMAP_PROGRESS.md              # ÜRETİLEN ilerleme tablosu
+grep -n "AÇIK" DECISIONS.md          # kurucudan yanıt bekleyenler
 
 ./04_BUILD/qa_all.sh                 # yeşilse CI de yeşil olur
+python3 05_TESTS/selftest.py         # kapılar gerçekten ısırıyor mu
 ```
+
+Hangi kapının neyi denetlediği:
+[`00_CONTEXT/VALIDATION_REFERENCE.md`](00_CONTEXT/VALIDATION_REFERENCE.md)
 
 ⚠ **Çözüm dosyalarını asla commit etme.** Bir kez sızarsa git geçmişinden
 temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
@@ -187,12 +208,17 @@ temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
 
 | # | Ne | Kimden | Ne zaman |
 |---|---|---|---|
-| A1 | Manuscript ve çözüm katmanı politikası | kurucu | **Faz 1 başlamadan** |
-| A2 | 5 kapı teması onayı | kurucu | Faz 1 sonu |
-| A3 | **5 harici çözücü kim** | kurucu | **Faz 2 bloklayıcısı** |
+| A1 | Manuscript ve çözüm katmanı politikası | — | ✅ **KAPANDI** (K10 + K14) |
+| A2 | 5 kapı teması onayı | kurucu | **Faz 2 başlamadan** |
+| A3 | **5 harici çözücü kim** | kurucu | **Faz 2 SERT BLOKLAYICISI** |
 | A4 | Doğrulama sayfası barındırma | kurucu | Faz 5 |
 | A5 | Kalibre edilmiş `STYLE.md` onayı | kurucu | Faz 2 |
 | A6 | Yazar biyografisi metni | kurucu | Faz 5 |
+| **A7** | **Bulmaca başına doğrulama** | kurucu | **Faz 2 başlamadan** |
+| **A8** | **Sayfa hedefi 230 onayı** | kurucu | **Faz 2 başlamadan** |
+| **A9** | **Pilot levhalarının POD provası** | kurucu | **Faz 2 başlamadan** |
+| A10 | Faz 3'e ikinci öldürme kapısı | kurucu | Faz 3 başlamadan |
+| A11 | `ENIGMATICA_CANARY_SALT` CI sırrı | kurucu | **Faz 2 başlamadan** |
 | — | **Öldürme kapısı kararı** (FAIL hâlinde) | kurucu | Faz 2 |
 | — | 110 levhanın üretilmesi | kurucu | Faz 5 |
 | — | **POD prova kopya siparişi** | kurucu | Faz 5 |
@@ -204,7 +230,13 @@ temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
 
 > **KURUCU ONAYI BEKLENİYOR.**
 >
-> Bootstrap tamamlandı. Faz 1 **başlatılmadı**.
-> İzin verildiğinde ilk iş: `faz/1-mimari` dalını açmak ve
-> **gizlilik katmanını ilk gün kurmak** — bir çözümü yanlışlıkla public
-> katmana yazmak, git geçmişinden silinmesi gereken bir olaydır.
+> Faz 1 tamamlandı ve `.gate` = `phase1`. Faz 2 **başlatılmadı**.
+>
+> Faz 2 bir **ÖLDÜRME KAPISIDIR** ve **A3 olmadan başlayamaz**: beş harici
+> çözücü belirlenmeden yazılan yirmi bulmaca, test edilemeyecek yirmi
+> bulmacadır. **Sahte test kaydı üretilmez** — ve artık üretilemez de:
+> `validate_spec` kurucu onayı yokken hiçbir kaydın `tested` olmasına
+> izin vermez.
+>
+> Ayrıca A7, A8, A9 ve A11 Faz 2'nin **tasarımını** değiştirir; sonradan
+> uygulanmaları pahalıdır.

@@ -1,0 +1,438 @@
+{
+  "$comment": [
+    "MEKANİZMA AİLELERİ — Codex Enigmatica bulmaca taksonomisi",
+    "",
+    "Bir aile bir bulmacanın NASIL çözüldüğünü söyler; NEYİN çözüm olduğunu",
+    "söylemez. Bu yüzden bu dosya PUBLIC katmandadır.",
+    "",
+    "Her ailenin DÖRT şeyi olmak zorundadır (yoksa aile değildir):",
+    "  ① tanım            — çözme eylemi tek cümlede",
+    "  ② hedef zorluk     — hangi bantta çalışır",
+    "  ③ doğrulama yöntemi— TEKİLLİK nasıl MEKANİK olarak ispatlanır",
+    "  ④ örnek            — kitaptan DEĞİL, kurgu bir örnek",
+    "",
+    "③ bu listenin varlık sebebidir. 'Bu bulmacanın tek cevabı var' bir",
+    "kanaattir; 'anahtar uzayı 26 permütasyondur ve yalnızca biri kitapta",
+    "tanımlı alfabeye oturur' bir ispattır. Bir aile ispat yöntemi",
+    "tanımlayamıyorsa o aile bu kitaba GİREMEZ.",
+    "",
+    "Aileler proje gereksiniminden türedi: pazar raporu § 12'nin beş kapılık",
+    "mimarisi (gözlem · şifre · mantık · tasnif · sayı · takvim · yol ·",
+    "katmanlı · öz-göndergesel · meta) mekanizma eksenine çevrildi.",
+    "Ayrıntı: 00_CONTEXT/PUZZLE_TAXONOMY.md"
+  ],
+  "version": "1.1.0",
+  "families": [
+    {
+      "id": "plate-observation",
+      "en": "Plate observation",
+      "tr": "Levha gözlemi",
+      "type": "observation",
+      "definition": "Gravürde açıkça çizilmiş ama fark edilmesi gereken bir ayrıntıyı bulmak.",
+      "intendedDifficulty": [
+        1,
+        2
+      ],
+      "validationMethod": "Levhadaki AYIRT EDİLEBİLİR bütün aday öğeler sayılır; bildirilen yüklem yalnızca bir tanesini seçmelidir. İkinci bir öğe yüklemi sağlıyorsa aile ihlali.",
+      "exampleSketch": "Kurgu: on iki kuş çizilidir; yalnızca biri sola bakar. Yönlendirme metni 'ters duran' der ve levhada ters duran tek öğe odur.",
+      "gateAffinity": [
+        "threshold",
+        "menagerie"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "ORTA — 'saklı', 'farklı', 'tuhaf' gibi sıfatlar iki okuma üretir. Yüklem SAYILABİLİR olmalıdır.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "word",
+      "textBound": false
+    },
+    {
+      "id": "plate-embedded-cipher",
+      "en": "Plate-embedded cipher",
+      "tr": "Levha içi şifre",
+      "type": "cipher",
+      "definition": "Verinin gravürün kendisinde taşınması: tarama yönü, sembol sırası, kenar süsünün ritmi.",
+      "intendedDifficulty": [
+        1,
+        3
+      ],
+      "validationMethod": "İki aşamalı. ① Veri bütçesi: taşıyıcı kaç bit taşıyor, çözüm kaç bit istiyor — arz talebi karşılamalı. ② POD baskı ön ölçümü: en küçük ayırt edilmesi gereken detay baskıda okunuyor mu (qa_plate_readability, Faz 3 ön · Faz 5 kesin).",
+      "exampleSketch": "Kurgu: bir çerçevede uzun ve kısa çentikler dönüşümlü değil, bir dizi hâlinde yerleştirilir; dizi ikili sayı olarak okunur.",
+      "gateAffinity": [
+        "menagerie",
+        "calendar",
+        "labyrinth"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": true,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "YÜKSEK — okuma YÖNÜ ve BAŞLANGIÇ NOKTASI belirtilmezse iki geçerli okuma doğar. İkisi de metinde sabitlenmelidir.",
+      "defaultLeakClass": "restricted",
+      "answerFormat": "sequence",
+      "textBound": false,
+      "difficultyNote": "⚠ FAZ 1: alt sınır 2'den 1'e indirildi. Kapı II'nin amacı bu mekaniği ÖĞRETMEKTİ ama kitapta onun zorluk-1 örneği HİÇ YOKTU: okur ★ kapısını 'gravürde saklı olanı bul' ile geçip ★★ kapısında 'gravürün kendisi veri taşır' fikriyle ilk kez karşılaşıyordu. Kapı I'e iki basit örnek konuldu; imza mekaniği artık kolay tarafta doğuyor."
+    },
+    {
+      "id": "substitution-cipher",
+      "en": "Substitution cipher",
+      "tr": "Yer değiştirme şifresi",
+      "type": "cipher",
+      "definition": "Harflerin, araçlar levhasında verilmiş bir eşlemeyle değiştirilmesi.",
+      "intendedDifficulty": [
+        1,
+        2
+      ],
+      "validationMethod": "Bildirilen anahtar uzayı TÜKETİCİ olarak çözülür (kaydırmalı alfabede 25 aday). Yalnızca bir aday kitapta tanımlı sözlüğe oturmalıdır. İkinci anlamlı çözüm çıkarsa bulmaca yeniden yazılır.",
+      "exampleSketch": "Kurgu: üç harflik bir dize, araçlar levhasındaki sabit kaydırmayla çözülür ve bir sayıya karşılık gelir.",
+      "gateAffinity": [
+        "threshold",
+        "menagerie"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "DÜŞÜK — anahtar uzayı sonlu ve tüketici arama mümkün.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "word",
+      "textBound": false
+    },
+    {
+      "id": "transposition-cipher",
+      "en": "Transposition cipher",
+      "tr": "Yer değiştirmeli sıralama",
+      "type": "cipher",
+      "definition": "Harfler korunur, sıraları değişir: sütun, yol veya ray düzeni.",
+      "intendedDifficulty": [
+        1,
+        3
+      ],
+      "validationMethod": "Bildirilen düzen ailesindeki bütün varyantlar üretilir (sütun sayısı, okuma yönü). Tek bir varyant anlamlı çıktı vermelidir.",
+      "exampleSketch": "Kurgu: bir dize dört sütuna yazılır ve sütunlar levhada verilen sırayla okunur.",
+      "gateAffinity": [
+        "threshold",
+        "labyrinth"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "ORTA — sütun sayısı metinde SABİTLENMEZSE birden çok düzen anlamlı çıkabilir.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "word",
+      "textBound": false
+    },
+    {
+      "id": "polyalphabetic-cipher",
+      "en": "Polyalphabetic / grid cipher",
+      "tr": "Çok alfabeli ve ızgara şifre",
+      "type": "cipher",
+      "definition": "Vigenère ve Polybius ailesi: anahtar kitap içinden türetilir, tablo araçlar levhasındadır.",
+      "intendedDifficulty": [
+        2,
+        3
+      ],
+      "validationMethod": "ANAHTAR TÜRETİMİNİN TEK DEĞERLİ olduğu ispatlanır — bu ailenin asıl riski şifre değil anahtardır. Sonra çözüm tek adımda doğrulanır.",
+      "exampleSketch": "Kurgu: anahtar, önceki bulmacanın çıktısı olan tek kelimedir; tablo ön maddede verilmiştir.",
+      "gateAffinity": [
+        "calendar",
+        "labyrinth",
+        "mirror"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "ORTA — anahtarın nereden geldiği belirsizse bulmaca çözülemez hâle gelir.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "phrase",
+      "textBound": false
+    },
+    {
+      "id": "script-decoding",
+      "en": "Script decoding",
+      "tr": "Yazı sistemi çözümleme",
+      "type": "cipher",
+      "definition": "Gerçek bir yazı veya işaret sisteminin okunması: Ogham, runik, semaphore.",
+      "intendedDifficulty": [
+        1,
+        2
+      ],
+      "validationMethod": "Araçlar levhasındaki glif→harf eşlemesi TAM ve BİRE BİR olmalıdır. Kullanılan her glif levhada bulunmalıdır; eksik bir glif dış bilgi talebidir ve sözleşmeyi ihlal eder. Sistem künyelidir.",
+      "exampleSketch": "Kurgu: bir kenar boyunca dizilmiş çentikler, ön maddede verilmiş çizelgeyle harflere çevrilir.",
+      "gateAffinity": [
+        "threshold",
+        "menagerie",
+        "calendar"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": true,
+      "requiresSourcing": true,
+      "ambiguityRiskProfile": "DÜŞÜK — eşleme levhada verilmişse tek okumalıdır. Ama eksik glif ÖLÜMCÜLDÜR.",
+      "defaultLeakClass": "restricted",
+      "answerFormat": "word",
+      "textBound": false
+    },
+    {
+      "id": "constraint-logic",
+      "en": "Constraint logic",
+      "tr": "Kısıtlı mantık",
+      "type": "logic",
+      "definition": "Bir ifade kümesinden çıkarım: hangisi yalan, hangi sıralama mümkün.",
+      "intendedDifficulty": [
+        1,
+        3
+      ],
+      "validationMethod": "MODEL SAYIMI. Bütün atamalar üzerinde tüketici arama yapılır; kısıtları sağlayan model sayısı TAM OLARAK BİR olmalıdır. İki model varsa bulmaca çift cevaplıdır.",
+      "exampleSketch": "Kurgu: dört ifadeden tam olarak biri yanlıştır; hangisi olduğu diğer üçünün tutarlılığından çıkar.",
+      "gateAffinity": [
+        "threshold",
+        "menagerie",
+        "labyrinth"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "DÜŞÜK — mekanik olarak ispatlanabilir. Risk ifadelerin DİLİNDEDİR, mantığında değil.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "word",
+      "textBound": false
+    },
+    {
+      "id": "classification",
+      "en": "Functional classification",
+      "tr": "İşlevsel tasnif",
+      "type": "logic",
+      "definition": "Bir kümedeki öğelerin ortak işlevini bulmak ve dışarıda kalanı ayırmak.",
+      "intendedDifficulty": [
+        2,
+        2
+      ],
+      "validationMethod": "AYIRT EDİCİ ÖZELLİK TEKİL olmalıdır: kümeyi aynı biçimde bölen İKİNCİ bir özellik varsa bulmaca çift cevaplıdır. Bütün özellik eksenleri listelenir ve tek ayrımın kaldığı gösterilir. Motifler künyelidir.",
+      "exampleSketch": "Kurgu: altı figürden beşi eşik bekçisidir; altıncı taşıyıcıdır. Ayrım işlevdedir, biçimde değil.",
+      "gateAffinity": [
+        "menagerie",
+        "calendar"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": false,
+      "requiresSourcing": true,
+      "ambiguityRiskProfile": "YÜKSEK — bu ailenin doğal kusuru budur. Kültürel bir kümede ikinci bir ortak özellik bulmak KOLAYDIR.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "word",
+      "textBound": false
+    },
+    {
+      "id": "numeral-system",
+      "en": "Numeral system",
+      "tr": "Sayı sistemi",
+      "type": "logic",
+      "definition": "Maya, Babil veya Roma sayı sistemleriyle okuma ve aritmetik.",
+      "intendedDifficulty": [
+        2,
+        2
+      ],
+      "validationMethod": "Aritmetik ispat: dönüşüm ve işlem tek yönlüdür ve tek sonuç verir. Sistem künyelidir; taban ve basamak kuralı araçlar levhasında verilir.",
+      "exampleSketch": "Kurgu: üç işaret bir sayıya çevrilir, ikisi toplanır ve sonuç bir slot numarası verir.",
+      "gateAffinity": [
+        "calendar"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": true,
+      "requiresSourcing": true,
+      "ambiguityRiskProfile": "DÜŞÜK — aritmetik belirsizlik kaldırmaz. Risk NOTASYONDADIR.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "number",
+      "textBound": false
+    },
+    {
+      "id": "cyclic-calendar",
+      "en": "Cyclic calendar",
+      "tr": "Çevrimsel takvim",
+      "type": "logic",
+      "definition": "Takvim çevrimleri, ay evreleri ve mevsim halkalarında konum bulma.",
+      "intendedDifficulty": [
+        2,
+        3
+      ],
+      "validationMethod": "Modüler aritmetik ispatı: çevrim uzunluğu ve başlangıç noktası metinde SABİTLENİR, sonuç tek kalır. Çevrim sistemi künyelidir.",
+      "exampleSketch": "Kurgu: on üç halkalı bir çevrimde yedi adım ilerlenir; başlangıç levhada işaretlidir.",
+      "gateAffinity": [
+        "calendar",
+        "mirror"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": true,
+      "requiresSourcing": true,
+      "ambiguityRiskProfile": "ORTA — başlangıç noktası ve yön belirtilmezse iki sonuç doğar.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "number",
+      "textBound": false
+    },
+    {
+      "id": "path-graph",
+      "en": "Path and graph",
+      "tr": "Yol ve çizge",
+      "type": "spatial",
+      "definition": "Gravür harita veya labirent üzerinde kısıtları sağlayan yolu bulmak.",
+      "intendedDifficulty": [
+        3,
+        3
+      ],
+      "validationMethod": "ÇİZGE ARAMASI: bütün yollar üretilir ve kısıtları sağlayan yol sayısı TAM OLARAK BİR olmalıdır. Bu aile için tüketici arama zorunludur; göz kararı kabul edilmez.",
+      "exampleSketch": "Kurgu: her düğümden bir kez geçilir ve toplam ağırlık verilen sayıya eşit olur; bu iki kısıt yolu tekleştirir.",
+      "gateAffinity": [
+        "labyrinth"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": true,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "YÜKSEK — simetrik bir haritada ayna yol da geçerlidir. Simetri KIRILMALIDIR.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "sequence",
+      "textBound": false
+    },
+    {
+      "id": "layered-chain",
+      "en": "Layered chain",
+      "tr": "Katmanlı zincir",
+      "type": "cipher",
+      "definition": "Bir bulmacanın çıktısı bir sonrakinin girdisidir; çözüm çok adımlıdır.",
+      "intendedDifficulty": [
+        3,
+        3
+      ],
+      "validationMethod": "ZİNCİR BÜTÜNLÜĞÜ: her halkanın girdisi bir öncekinin çıktısına BİÇİMSEL olarak uymalıdır (uzunluk, alfabe, biçim). qa_dependency zincirin döngüsüz ve ileri referanssız olduğunu ayrıca denetler.",
+      "exampleSketch": "Kurgu: birinci adımın çıktısı beş harftir ve ikinci adımın anahtarı tam olarak beş harf ister.",
+      "gateAffinity": [
+        "labyrinth",
+        "mirror"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "ORTA — asıl risk belirsizlik değil KIRILGANLIKTIR: bir halka kırılırsa zincirin tamamı çözülemez olur.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "phrase",
+      "textBound": false
+    },
+    {
+      "id": "back-reference",
+      "en": "Back reference",
+      "tr": "Geriye gönderme",
+      "type": "self-referential",
+      "definition": "Kitabın daha önceki bir bölümüne dönmeyi gerektiren bulmaca.",
+      "intendedDifficulty": [
+        3,
+        3
+      ],
+      "validationMethod": "Hedef pasaj TEKİL olmalıdır: gönderme ölçütü kitapta yalnızca tek bir yere uymalıdır. Tam metin taraması ile ispatlanır.",
+      "exampleSketch": "Kurgu: 'numarası olmayan yaprak' ölçütü kitapta yalnızca bir sayfaya uyar.",
+      "gateAffinity": [
+        "labyrinth",
+        "mirror"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "YÜKSEK — kitap büyüdükçe ölçüte uyan ikinci bir yer doğar. Her yeni bölümde YENİDEN denetlenmelidir.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "word",
+      "textBound": true
+    },
+    {
+      "id": "book-structure",
+      "en": "Book structure",
+      "tr": "Kitabın yapısı",
+      "type": "self-referential",
+      "definition": "Kitabın fiziksel yapısını kullanan bulmaca: sayfa numarası, dizin, kolofon, katlama.",
+      "intendedDifficulty": [
+        3,
+        3
+      ],
+      "validationMethod": "DİZGİYE BAĞLIDIR. Yalnızca dizgi DONDURULDUKTAN sonra doğrulanabilir (Faz 5). Faz 5'ten önce 'doğrulandı' işareti verilemez; sayfa numarası değişirse bulmaca kırılır (K12).",
+      "exampleSketch": "Kurgu: iki sayfa üst üste tutulduğunda kenar işaretleri hizalanır ve bir dizi okunur.",
+      "gateAffinity": [
+        "mirror"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": true,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "DÜŞÜK belirsizlik, YÜKSEK kırılganlık. Tehlike yorumda değil, dizgide.",
+      "defaultLeakClass": "restricted",
+      "answerFormat": "number",
+      "textBound": true
+    },
+    {
+      "id": "narrative-embedded",
+      "en": "Narrative embedded",
+      "tr": "Anlatıya gömülü",
+      "type": "self-referential",
+      "definition": "İpucunun çerçeve anlatının metnine gömülmesi; okur anlatıyı yeniden okur.",
+      "intendedDifficulty": [
+        3,
+        3
+      ],
+      "validationMethod": "Gömülü örüntü anlatı metninde TEK KEZ geçmelidir. Tam metin taraması ikinci bir eşleşme bulursa bulmaca çift cevaplıdır. Anlatı her düzeltmede YENİDEN taranır.",
+      "exampleSketch": "Kurgu: bir paragrafın cümle başlangıçları sırayla bir kelime verir.",
+      "gateAffinity": [
+        "mirror"
+      ],
+      "requiresPlate": false,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "ORTA — anlatı düzenlenirse örüntü sessizce bozulur. Line Editor'ın en tehlikeli olduğu yer burasıdır.",
+      "defaultLeakClass": "restricted",
+      "answerFormat": "word",
+      "textBound": true
+    },
+    {
+      "id": "gate-synthesis",
+      "en": "Gate synthesis",
+      "tr": "Kapı bulmacası",
+      "type": "gate",
+      "definition": "Kapının önceki bulmacalarının çıktılarını tek bir çıktıya bağlayan kapanış bulmacası.",
+      "intendedDifficulty": [
+        1,
+        3
+      ],
+      "validationMethod": "GİRDİ BÜTÜNLÜĞÜ: kapı bulmacasının kullandığı her girdi, o kapıda ÇÖZÜLEBİLİR bir bulmacadan gelmelidir. Eksik veya çözülemez bir girdi kapıyı çökertir. qa_dependency girdi kümesini denetler.",
+      "exampleSketch": "Kurgu: on dokuz cevabın belirli harfleri sırayla bir dize oluşturur.",
+      "gateAffinity": [
+        "threshold",
+        "menagerie",
+        "calendar",
+        "labyrinth",
+        "mirror"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "DÜŞÜK belirsizlik, YÜKSEK bağımlılık riski. Bir girdi bulmacası düşerse kapı bulmacası da düşer.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "phrase",
+      "textBound": false
+    },
+    {
+      "id": "meta-synthesis",
+      "en": "Meta synthesis",
+      "tr": "Meta-mister",
+      "type": "meta",
+      "definition": "Beş kapının çıktısını tek bir son soruya bağlayan kapanış.",
+      "intendedDifficulty": [
+        3,
+        3
+      ],
+      "validationMethod": "ÜÇ ŞART: ① girdisi BEŞ kapının çıktısından türer, ② her kapının katkısı gerçekten üretilebilir, ③ cevabın kendisi kitapta BULUNMAZ — doğrulama sayfasına girilir. qa_meta üçünü de denetler.",
+      "exampleSketch": "Kurgu: beş kapı çıktısı bir sırayla birleşir ve tek bir dize verir; o dize kitapta hiçbir yerde basılı değildir.",
+      "gateAffinity": [
+        "last-question"
+      ],
+      "requiresPlate": true,
+      "plateCarriesData": false,
+      "requiresSourcing": false,
+      "ambiguityRiskProfile": "KRİTİK — bu bulmaca kitabın varlık sebebidir ve tek bir belirsizlik bütün deneyimi çürütür.",
+      "defaultLeakClass": "protected",
+      "answerFormat": "phrase",
+      "textBound": false
+    }
+  ]
+}

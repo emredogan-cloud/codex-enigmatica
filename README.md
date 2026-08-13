@@ -32,13 +32,15 @@ Depoda **durmayan** şey: **çözümler.**
 
 | | |
 |---|---|
-| Faz | **0 · Bootstrap** |
-| Kapı (`.gate`) | `phase0` |
-| Aday bulmaca | 0 / ≥130 |
+| Faz | **1 · TAMAM** — mimari, çözülebilirlik, gizlilik |
+| Kapı (`.gate`) | `phase1` |
+| Aday bulmaca | **151** / ≥130 |
+| Mekanizma ailesi | **17** |
 | Doğrulanmış bulmaca | 0 / 100 |
-| Yazılmış bulmaca | 0 / 100 |
-| Levha | 0 / ~110 |
-| **Sonraki adım** | **Faz 1 — kurucu onayı bekliyor** |
+| Yazılmış bulmaca | **0** / 100 — *Faz 1'de bulmaca yazılmaz* |
+| Levha | 0 / ~112 planlandı |
+| Kalite kapısı | 11 betik · selftest **123 denetim** |
+| **Sonraki adım** | **Faz 2 — kurucu onayı bekliyor (A3 sert bloklayıcı)** |
 
 Ölçülmüş güncel durum: [`BOOK_STATS.md`](BOOK_STATS.md) ·
 [`ROADMAP_PROGRESS.md`](ROADMAP_PROGRESS.md)
@@ -61,9 +63,11 @@ okur aptal hissetmez — **aldatılmış** hisseder.
 > **Bir bulmaca kitabının çözümleri ürünün kendisidir.**
 
 Public depoda duran bir çözüm kitabı **yayımlanmadan** değersizleştirir —
-ve hata **geri alınamaz**. Bu yüzden burada **dört hatlı** koruma vardır:
-`.gitignore` (yol) · korumalı dizin denetimi (varlık) · içerik taraması
-(alan adı) · şema denetimi (public indeks).
+ve hata **geri alınamaz**. Bu yüzden burada **beş hatlı** koruma vardır:
+`.gitignore` (izin listesi) · korumalı dizin denetimi (varlık) · içerik
+taraması (alan adı ve etiket, iki dilde) · şema denetimi (public indeks
+bir **izin listesidir**) · ve **kanarya**: alan adı değil **cevabın
+kendisi** aranır — dosya içeriği, dosya adları ve commit mesajları dâhil.
 
 **Ama kod sır değildir.** `04_BUILD/` ve `05_TESTS/` public kalır: bir
 doğrulayıcının nasıl çalıştığını herkes görebilir, **neyi doğruladığını**
@@ -103,7 +107,15 @@ python3 -m venv 04_BUILD/.venv
 04_BUILD/.venv/bin/pip install -r 04_BUILD/requirements.txt
 ```
 
+```bash
+# Kapılar gerçekten ısırıyor mu — 123 kusurlu fikstür
+python3 05_TESTS/selftest.py
+```
+
 Yeşilse CI de yeşil olur. Kırmızıysa ilerleme yoktur.
+
+Hangi kapının neyi denetlediği:
+[`00_CONTEXT/VALIDATION_REFERENCE.md`](00_CONTEXT/VALIDATION_REFERENCE.md)
 
 ---
 
@@ -111,14 +123,16 @@ Yeşilse CI de yeşil olur. Kırmızıysa ilerleme yoktur.
 
 ```
 00_CONTEXT/     proje bağlamı, üslup, ÇÖZÜLEBİLİRLİK ve İÇERİK KORUMA standardı
-01_SOURCE/       bulmaca metadatası (public), kapı indeksi, iki katmanlı şema
+01_SOURCE/       bulmaca metadatası (public), kapı indeksi, taksonomi, şema
+  └ design/      ⛔ KORUMALI — tasarım niyeti (mekanizmayı açık eder)
   └ solutions/   ⛔ KORUMALI — takip edilen dosya bulunması İHLALDİR
 02_MANUSCRIPT/  bulmaca prozası — DEPO DIŞINDA
 03_COVER/       kapak çalışması
 03_APLUS/       A+ içerik modülleri
 04_BUILD/       doğrulayıcılar, kalite kapıları, üretim hattı  ← PUBLIC
 05_TESTS/       kapıların kendi testi ve kurgu üreteci          ← PUBLIC
-06_REPORTS/     ölçüm raporları (çözüm içermeyen)
+06_REPORTS/     ölçüm raporları — VARSAYILAN OLARAK DEPO DIŞI
+  └ tracked/     depoda duran, gözden geçirilmiş özetler
   └ solver/      ⛔ KORUMALI — çözücü ham kayıtları
 07_ASSETS/      levhalar: raw (salt okunur) → processed → print
 08_OUTPUT/      üretilmiş yayın dosyaları — depoda durmaz

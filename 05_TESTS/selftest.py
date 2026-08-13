@@ -16,15 +16,28 @@ Bu projede kritiklik iki katına çıkar, çünkü iki kapı VAROLUŞSALDIR:
 
 Bir kapının "var olması" yetmez. Kusuru YAKALADIĞI kanıtlanmalıdır.
 
-Dört bölüm:
-  ①  temiz kurgu BÜTÜN kapılardan geçer          (yanlış pozitif yok)
-  ②  her kusurlu kurgu İLGİLİ kapıda yakalanır   (körlük yok)
-  ③  kapı seviyeleri gerçekten kilitliyor        (kapsam kapıları)
-  ④  her muafiyet en az bir kez DEVREYE GİRİYOR  (ölü kural yok)
+────────────────────────────────────────────────────────────────────────
+⚠ FAZ 1'DE BULUNAN KÖRLÜK — bu dosyanın kendi kusuruydu.
 
-④ doğrudan Bestiarium'un üç ölü kuralına ve World Myths'in K14 kararına
-cevaptır: takip edilmeyen bir dosya için yazılmış muafiyet ÖLÜ MUAFİYETTİR
-ve sessizce yanlış güven verir.
+Bu test, `validate_structure.py`'nin BEŞ denetiminden HİÇBİRİNİ
+koşturmuyordu. Betiğin yolu bir sabite bağlanmış ve hiç çağrılmamıştı;
+bütün fikstürler yalnızca `validate_spec.py`'yi hedefliyordu. Yani deponun
+en çok süslenen kapısı — ÇÖZÜM SIZINTISI — ısırdığını hiç kanıtlamamıştı.
+
+İkinci körlük daha kötüydü: § ④ bir muafiyetin "gerekli" olduğunu, muaf
+dosyada bir çözüm işareti ARAYARAK doğruluyordu. Yani yeni bir muafiyeti
+meşrulaştırmanın yolu, o dosyaya bir çözüm işareti koymaktı. Test,
+saldırganın kontrol listesiydi.
+
+Artık yedi bölüm var ve üçü Faz 1'de doğdu:
+
+  ①  temiz kurgu BÜTÜN kapılardan geçer            (yanlış pozitif yok)
+  ②  her kusurlu kurgu İLGİLİ kapıda yakalanır     (şema ve kapsam)
+  ③  kapı seviyeleri gerçekten kilitliyor
+  ④  muafiyet listeleri DONDURULMUŞ ve canlı
+  ⑤  ⭑ DEPO KAPISI — gerçek bir git deposunda sızıntı fikstürleri ⭑
+  ⑥  ⭑ KANARYA — cevabın kendisi dosyaya, ada, commit mesajına konur ⭑
+  ⑦  ⭑ KORUMALI KATMAN — bozuk çözüm, ipucu ve tekillik kayıtları ⭑
 
 Çıkış kodları:  0 = geçti   1 = KÖRLÜK BULUNDU
 """
@@ -35,6 +48,7 @@ import argparse
 import copy
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -46,6 +60,18 @@ BUILD = os.path.join(ROOT, "04_BUILD")
 VALIDATE_SPEC = os.path.join(BUILD, "validate_spec.py")
 VALIDATE_STRUCTURE = os.path.join(BUILD, "validate_structure.py")
 CONFIG = os.path.join(ROOT, "project_config.json")
+SCHEMA = os.path.join(ROOT, "01_SOURCE", "puzzle.schema.json")
+GATE_INDEX = os.path.join(ROOT, "01_SOURCE", "gate_index.json")
+
+# ⚠ Kurgu cevaplar ÜRETİLİR, yazılmaz. Bu dosya public'tir ve içine elle
+# yazılmış "gerçekçi" bir cevap dizesi, depoyu okuyan biri için bir
+# cevaptan ayırt edilemez.
+FIXTURE_WORDS = ["ALPHA", "BRAVO", "CHARLIE", "DELTA", "ECHO", "FOXTROT"]
+
+
+def fixture_answer(i: int) -> str:
+    return "FIXTURE %s %s" % (FIXTURE_WORDS[i % len(FIXTURE_WORDS)],
+                              FIXTURE_WORDS[(i + 2) % len(FIXTURE_WORDS)])
 
 
 # ---------------------------------------------------------------------------
@@ -56,80 +82,150 @@ def clean_config() -> dict:
         return json.load(fh)
 
 
+def clean_gate_index() -> dict:
+    with open(GATE_INDEX, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def clean_games(cfg: dict, n: int = 140, status: str = "candidate") -> dict:
     """Şemaya uyan, kusursuz kurgu envanter — PUBLIC KATMAN.
 
     ⚠ Kurgu kayıtlar ÇÖZÜM ALANI TAŞIMAZ. Taşısalardı temiz kurgu bile
-    çözüm sızıntısı kapısında takılırdı — ki § ②(f) tam olarak bunu
-    test eder."""
+    çözüm sızıntısı kapısında takılırdı."""
     gates_ = [g["id"] for g in cfg["scope"]["gateStructure"]]
-    types = ["observation", "cipher", "logic", "spatial", "self-referential"]
+    fams = ["plate-observation", "substitution-cipher", "constraint-logic",
+            "script-decoding", "transposition-cipher"]
+    types = ["observation", "cipher", "logic", "cipher", "cipher"]
+    fmts = ["word", "word", "word", "word", "word"]
     puzzles = []
     for i in range(n):
-        puzzles.append({
+        rec = {
             "puzzleId": "fixture-%03d" % i,
             "gate": gates_[i % len(gates_)],
-            "type": types[i % len(types)],
+            "type": types[i % len(fams)],
+            "mechanismFamily": fams[i % len(fams)],
             "status": status,
-            "difficulty": 1 + (i % 3),
+            "testStatus": "untested",
+            "leakClass": "protected",
+            "difficulty": 1,
             "ambiguityScore": 1,
+            "answerFormat": fmts[i % len(fams)],
             "dependencies": [],
-        })
+        }
+        if status in ("validated", "written"):
+            # Kazanılmış bir 'tested' kaydı: temiz kurgu geçmeli.
+            rec["testStatus"] = "tested"
+            rec["solverTestCount"] = 5
+            rec["solverSolvedCount"] = 4
+            rec["alternativeSolutionAnalysisDone"] = True
+            rec["confirmedAlternativeSolutions"] = 0
+        puzzles.append(rec)
     return {"puzzles": puzzles}
 
 
-def run(script: str, *extra: str, gate: str | None = None,
-        index: str | None = None) -> tuple[int, str]:
-    cmd = [sys.executable, script, *extra]
-    if gate:
-        cmd += ["--gate", gate]
-    env = dict(os.environ)
-    if index:
-        env["WORLDGAMES_GAME_INDEX"] = index
-    out = subprocess.run(cmd, capture_output=True, text=True, env=env,
-                         timeout=120, cwd=ROOT)
-    return out.returncode, out.stdout + out.stderr
+def confirmed_solver_config(cfg: dict) -> dict:
+    """'tested' iddiası için kurucu onayı gerekir; kapsam fikstürlerinde
+    o kilidi açık tutarız, § ② onu ayrıca test eder."""
+    c = copy.deepcopy(cfg)
+    c["founder"]["externalSolvers"]["founderConfirmed"] = True
+    return c
 
 
 _RUN_SEQ = [0]
 
 
-def run_spec_with(cfg: dict, games: dict | None, gate: str,
-                  tmp: str) -> tuple[int, str]:
-    """validate_spec'i kurgu dosyalarla koşturur.
+def fake_root(tmp: str) -> str:
+    """HER KOŞU KENDİ KÖKÜNÜ ALIR.
 
-    Betik yolları sabit okuduğu için kurgu bir PROJE KÖKÜ kurulur:
-    gerçek depo asla değiştirilmez.
-
-    ⚠ HER KOŞU KENDİ KÖKÜNÜ ALIR. Tek bir kök paylaşılırsa önceki testin
-    yazdığı game_index.json sonraki testte HÂLÂ ORADA olur ve
-    "envantersiz phase1 kırmızı yanmalı" testi sessizce anlamsızlaşır —
-    yani testin kendisi kör olur. Bu kusur selftest'in ilk koşusunda
-    yakalandı ve bu satır onun düzeltmesidir."""
+    Tek bir kök paylaşılırsa önceki testin yazdığı envanter sonraki testte
+    HÂLÂ ORADA olur ve "envantersiz phase1 kırmızı yanmalı" testi sessizce
+    anlamsızlaşır — yani testin kendisi kör olur."""
     _RUN_SEQ[0] += 1
-    fake_root = os.path.join(tmp, "root-%03d" % _RUN_SEQ[0])
-    os.makedirs(os.path.join(fake_root, "01_SOURCE"), exist_ok=True)
-    os.makedirs(os.path.join(fake_root, "04_BUILD"), exist_ok=True)
+    p = os.path.join(tmp, "root-%03d" % _RUN_SEQ[0])
+    os.makedirs(os.path.join(p, "01_SOURCE"), exist_ok=True)
+    os.makedirs(os.path.join(p, "04_BUILD"), exist_ok=True)
+    return p
 
-    with open(os.path.join(fake_root, "project_config.json"), "w",
+
+def run_spec_with(cfg: dict, games: dict | None, gate: str, tmp: str,
+                  gate_index: dict | None = None) -> tuple[int, str]:
+    fr = fake_root(tmp)
+    with open(os.path.join(fr, "project_config.json"), "w",
               encoding="utf-8") as fh:
         json.dump(cfg, fh, ensure_ascii=False)
     if games is not None:
-        with open(os.path.join(fake_root, "01_SOURCE", "puzzle_index.json"), "w",
+        with open(os.path.join(fr, "01_SOURCE", "puzzle_index.json"), "w",
                   encoding="utf-8") as fh:
             json.dump(games, fh, ensure_ascii=False)
-    with open(os.path.join(fake_root, ".gate"), "w", encoding="utf-8") as fh:
+    with open(os.path.join(fr, "01_SOURCE", "gate_index.json"), "w",
+              encoding="utf-8") as fh:
+        json.dump(gate_index or clean_gate_index(), fh, ensure_ascii=False)
+    shutil.copy2(SCHEMA, os.path.join(fr, "01_SOURCE", "puzzle.schema.json"))
+    with open(os.path.join(fr, ".gate"), "w", encoding="utf-8") as fh:
         fh.write(gate)
-
-    # Betiği kurgu köke kopyala: ROOT'u kendi konumundan türetiyor.
-    import shutil
-    shutil.copy2(VALIDATE_SPEC, os.path.join(fake_root, "04_BUILD",
+    shutil.copy2(VALIDATE_SPEC, os.path.join(fr, "04_BUILD",
                                              "validate_spec.py"))
     out = subprocess.run(
-        [sys.executable, os.path.join(fake_root, "04_BUILD", "validate_spec.py"),
+        [sys.executable, os.path.join(fr, "04_BUILD", "validate_spec.py"),
          "--gate", gate],
         capture_output=True, text=True, timeout=120)
     return out.returncode, out.stdout + out.stderr
+
+
+# ── depo fikstürü: GERÇEK bir git deposu ───────────────────────────────
+def repo_fixture(tmp: str, mutate=None, commit_message: str = "fikstür",
+                 add_all: bool = True, force: tuple = ()) -> str:
+    """Deponun tam bir kopyasını kurar ve git ile takip ettirir.
+
+    Sızıntı denetimleri `git ls-files` okur — yani gerçek bir depo olmadan
+    TEST EDİLEMEZLER. Faz 1'e kadar hiç test edilmemiş olmalarının sebebi
+    tam olarak buydu."""
+    _RUN_SEQ[0] += 1
+    dst = os.path.join(tmp, "repo-%03d" % _RUN_SEQ[0])
+    shutil.copytree(ROOT, dst,
+                    ignore=shutil.ignore_patterns(".git", "__pycache__",
+                                                  "*.pyc", ".venv"))
+    if mutate:
+        mutate(dst)
+    env = dict(os.environ,
+               GIT_AUTHOR_NAME="selftest", GIT_AUTHOR_EMAIL="s@e.local",
+               GIT_COMMITTER_NAME="selftest", GIT_COMMITTER_EMAIL="s@e.local")
+    subprocess.run(["git", "init", "-q"], cwd=dst, env=env, timeout=60)
+    if add_all:
+        subprocess.run(["git", "add", "-A"], cwd=dst, env=env, timeout=60)
+        # ⚠ `git add -f`: .gitignore bir dosyayı DIŞLAR ama YASAKLAMAZ.
+        # Aceleci bir `-f`, korunduğu sanılan bir dizini takip listesine
+        # sokabilir — kapının var olma sebebi tam olarak budur.
+        for p in force:
+            subprocess.run(["git", "add", "-f", p], cwd=dst, env=env, timeout=60)
+        subprocess.run(["git", "commit", "-q", "-m", commit_message],
+                       cwd=dst, env=env, timeout=60)
+    return dst
+
+
+def run_structure(repo: str) -> tuple[int, str]:
+    out = subprocess.run(
+        [sys.executable, os.path.join(repo, "04_BUILD",
+                                      "validate_structure.py")],
+        capture_output=True, text=True, timeout=120, cwd=repo)
+    return out.returncode, out.stdout + out.stderr
+
+
+def run_env_gate(script: str, root: str, gate: str = "phase2",
+                 extra: list | None = None) -> tuple[int, str]:
+    """ENIGMATICA_ROOT kancasıyla koşan kapılar (korumalı katman + kanarya)."""
+    env = dict(os.environ, ENIGMATICA_ROOT=root)
+    out = subprocess.run(
+        [sys.executable, os.path.join(BUILD, script), "--gate", gate]
+        + (extra or []),
+        capture_output=True, text=True, timeout=120, env=env)
+    return out.returncode, out.stdout + out.stderr
+
+
+def write(path: str, body: str) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(body)
 
 
 class Report:
@@ -154,9 +250,11 @@ class Report:
 def part1_clean_passes(rep: Report, tmp: str) -> None:
     print("\n① temiz kurgu bütün kapılardan geçer (yanlış pozitif yok)")
     cfg = clean_config()
-    games = clean_games(cfg)
-    code, out = run_spec_with(cfg, games, "phase1", tmp)
+    code, out = run_spec_with(cfg, clean_games(cfg), "phase1", tmp)
     rep.check(code == 0, "temiz kurgu + phase1 → geçer", out)
+    code, out = run_spec_with(confirmed_solver_config(cfg),
+                              clean_games(cfg, 140, "written"), "phase2", tmp)
+    rep.check(code == 0, "KAZANILMIŞ 'tested' kurgusu phase2'den geçer", out)
 
 
 def part2_flaws_caught(rep: Report, tmp: str) -> None:
@@ -164,181 +262,206 @@ def part2_flaws_caught(rep: Report, tmp: str) -> None:
 
     base = clean_config()
 
-    # (a) yinelenen bulmaca kimliği
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg)
-    g["puzzles"][7]["puzzleId"] = g["puzzles"][3]["puzzleId"]
-    code, out = run_spec_with(cfg, g, "phase1", tmp)
-    rep.check(code != 0, "yinelenen puzzleId YAKALANIR", out)
+    def spec_case(label, cfg_mut=None, games_mut=None, gate="phase1",
+                  n=140, status="candidate", gi_mut=None):
+        cfg = copy.deepcopy(base)
+        if cfg_mut:
+            cfg_mut(cfg)
+        g = clean_games(cfg, n, status)
+        if games_mut:
+            games_mut(g)
+        gi = clean_gate_index()
+        if gi_mut:
+            gi_mut(gi)
+        code, out = run_spec_with(cfg, g, gate, tmp, gate_index=gi)
+        rep.check(code != 0, label, out)
 
-    # (b) tanımsız kapı
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg)
-    g["puzzles"][11]["gate"] = "uydurma-kapi"
-    code, out = run_spec_with(cfg, g, "phase1", tmp)
-    rep.check(code != 0, "tanımsız kapı YAKALANIR", out)
+    # ── kimlik ve şema ──────────────────────────────────────────────────
+    spec_case("yinelenen puzzleId YAKALANIR",
+              games_mut=lambda g: g["puzzles"][7].__setitem__(
+                  "puzzleId", g["puzzles"][3]["puzzleId"]))
+    spec_case("tanımsız kapı YAKALANIR",
+              games_mut=lambda g: g["puzzles"][11].__setitem__(
+                  "gate", "uydurma-kapi"))
+    spec_case("geçersiz status YAKALANIR",
+              games_mut=lambda g: g["puzzles"][5].__setitem__("status", "belki"))
+    spec_case("geçersiz bulmaca tipi YAKALANIR",
+              games_mut=lambda g: g["puzzles"][8].__setitem__(
+                  "type", "uydurma-tip"))
+    spec_case("kimlik kalıbına uymayan puzzleId YAKALANIR",
+              games_mut=lambda g: g["puzzles"][2].__setitem__(
+                  "puzzleId", "BÜYÜK HARFLİ KİMLİK"))
+    spec_case("zorunlu alan eksikliği YAKALANIR (leakClass silindi)",
+              games_mut=lambda g: g["puzzles"][4].pop("leakClass"))
+    # ⭑ ŞEMA İZİN LİSTESİ: akla gelmemiş bir alan adı da reddedilmeli.
+    spec_case("⭑ ŞEMADA TANIMSIZ ALAN YAKALANIR (izin listesi) ⭑",
+              games_mut=lambda g: g["puzzles"][6].__setitem__(
+                  "uydurma_alan", "x"))
 
-    # (c) geçersiz durum alanı
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg)
-    g["puzzles"][5]["status"] = "belki"
-    code, out = run_spec_with(cfg, g, "phase1", tmp)
-    rep.check(code != 0, "geçersiz status YAKALANIR", out)
+    # ── ⭑ VAROLUŞSAL: public katmanda çözüm ⭑ ───────────────────────────
+    for i, field in enumerate(("solution", "answerKey", "finalAnswer",
+                               "hints", "title", "clues", "explanation",
+                               "designIntent")):
+        spec_case("⭑ PUBLIC KATMANDA '%s' YAKALANIR ⭑" % field,
+                  games_mut=lambda g, f=field, i=i: g["puzzles"][i].__setitem__(
+                      f, fixture_answer(i)))
+    spec_case("⭑ İÇ İÇE GİZLENMİŞ ÇÖZÜM YAKALANIR ⭑",
+              games_mut=lambda g: g["puzzles"][9].__setitem__(
+                  "dependencies", [{"solution": fixture_answer(1)}]))
 
-    # (d) geçersiz bulmaca tipi
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg)
-    g["puzzles"][8]["type"] = "uydurma-tip"
-    code, out = run_spec_with(cfg, g, "phase1", tmp)
-    rep.check(code != 0, "geçersiz bulmaca tipi YAKALANIR", out)
+    # ── ⭑ TEST DURUMU: 'tested' KAZANILIR ⭑ ─────────────────────────────
+    def tested(g, i=0, **over):
+        p = g["puzzles"][i]
+        p.update({"status": "written", "testStatus": "tested",
+                  "solverTestCount": 5, "solverSolvedCount": 4,
+                  "alternativeSolutionAnalysisDone": True,
+                  "confirmedAlternativeSolutions": 0, "ambiguityScore": 1})
+        p.update(over)
 
-    # (e) kapı bulmaca toplamı hedefe eşit değil
-    cfg = copy.deepcopy(base)
-    cfg["scope"]["gateStructure"][0]["puzzles"] = 5
-    code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-    rep.check(code != 0, "kapı toplamı ↔ hedef çelişkisi YAKALANIR", out)
+    confirm = lambda c: c["founder"]["externalSolvers"].__setitem__(
+        "founderConfirmed", True)
 
-    # (f) ⭑ VAROLUŞSAL: PUBLIC KATMANDA ÇÖZÜM ⭑
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg)
-    g["puzzles"][3]["solution"] = "THE RAVEN AT DAWN"
-    code, out = run_spec_with(cfg, g, "phase1", tmp)
-    rep.check(code != 0, "⭑ PUBLIC KATMANDA ÇÖZÜM YAKALANIR ⭑", out)
+    spec_case("⭑ KURUCU ONAYI OLMADAN 'tested' YAKALANIR ⭑",
+              games_mut=lambda g: tested(g), gate="phase2", status="candidate")
+    spec_case("⭑ 'written' AMA 'untested' YAKALANIR ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: g["puzzles"][0].update(
+                  {"status": "written", "testStatus": "untested"}))
+    spec_case("⭑ Kapı I'de 5'ten AZ çözücüyle 'tested' YAKALANIR ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: tested(g, 0, solverTestCount=2,
+                                         solverSolvedCount=2))
+    spec_case("⭑ ÇÖZEN SAYISI EŞİĞİN ALTINDA 'tested' YAKALANIR ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: tested(g, 0, solverSolvedCount=1))
+    spec_case("⭑ ALTERNATİF ANALİZİ YAPILMADAN 'tested' YAKALANIR ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: tested(
+                  g, 0, alternativeSolutionAnalysisDone=False))
+    spec_case("⭑ ONAYLANMIŞ ALTERNATİFLE 'tested' YAKALANIR ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: tested(g, 0, confirmedAlternativeSolutions=1))
+    spec_case("⭑ BELİRSİZLİK 3 İLE 'tested' YAKALANIR ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: tested(g, 0, ambiguityScore=3))
+    spec_case("⭑ BELİRSİZLİK ALANI SİLİNEREK KAPI KAPATILAMAZ ⭑",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: (tested(g, 0),
+                                   g["puzzles"][0].pop("ambiguityScore")))
+    spec_case("'internal-only' iddiası harici sayaçla ÇELİŞİRSE YAKALANIR",
+              games_mut=lambda g: g["puzzles"][0].update(
+                  {"testStatus": "internal-only", "solverTestCount": 3}))
+    spec_case("UYDURMA çözücü sayacı YAKALANIR (havuzdan büyük)",
+              cfg_mut=confirm, gate="phase2",
+              games_mut=lambda g: tested(g, 0, solverTestCount=40,
+                                         solverSolvedCount=40))
+    spec_case("çözen > deneyen ÇELİŞKİSİ YAKALANIR",
+              games_mut=lambda g: g["puzzles"][0].update(
+                  {"solverTestCount": 1, "solverSolvedCount": 5}))
 
-    # (f2) çözüm başka bir alan adıyla gizlenmiş
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg)
-    g["puzzles"][9]["answerKey"] = "XYZ"
-    code, out = run_spec_with(cfg, g, "phase1", tmp)
-    rep.check(code != 0, "⭑ answerKey ile gizlenmiş çözüm YAKALANIR ⭑", out)
-
-    # (g) belirsizlik eşiğini aşan DOĞRULANMIŞ bulmaca
-    cfg = copy.deepcopy(base)
-    g = clean_games(cfg, status="written")
-    g["puzzles"][2]["ambiguityScore"] = 3
-    code, out = run_spec_with(cfg, g, "phase2", tmp)
-    rep.check(code != 0, "BELİRSİZLİK EŞİĞİ AŞIMI YAKALANIR", out)
-
-    # (h) zorluk eğrisi geriye düşüyor
-    cfg = copy.deepcopy(base)
-    cfg["scope"]["gateStructure"][4]["difficulty"] = 1
-    code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-    rep.check(code != 0, "ZORLUK EĞRİSİ DÜŞÜŞÜ YAKALANIR", out)
-
-    # (i) ⭑ ÇÖZÜLEBİLİRLİK SÖZLEŞMESİNİN GEVŞETİLMESİ ⭑
+    # ── config sözleşmesi ───────────────────────────────────────────────
+    spec_case("kapı toplamı ↔ hedef çelişkisi YAKALANIR",
+              cfg_mut=lambda c: c["scope"]["gateStructure"][0].__setitem__(
+                  "puzzles", 5))
+    spec_case("ZORLUK EĞRİSİ DÜŞÜŞÜ YAKALANIR",
+              cfg_mut=lambda c: c["scope"]["gateStructure"][4].__setitem__(
+                  "difficulty", 1))
     for field in ("uniqueSolutionRequired", "alternativeSolutionAnalysisRequired",
                   "hintMustNotContainAnswer", "dependencyGraphMustBeAcyclic"):
-        cfg = copy.deepcopy(base)
-        cfg["solvability"][field] = False
-        code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-        rep.check(code != 0,
-                  "⭑ SÖZLEŞME GEVŞETMESİ YAKALANIR: %s ⭑" % field, out)
-
-    # (j) ⭑ ÖLDÜRME KAPISI EŞİĞİNİN DÜŞÜRÜLMESİ ⭑
-    cfg = copy.deepcopy(base)
-    cfg["killGate"]["passCriteria"]["solversCompletingGateI"] = 1
-    code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-    rep.check(code != 0, "⭑ ÖLDÜRME KAPISI EŞİĞİ DÜŞÜRÜLMESİ YAKALANIR ⭑", out)
-
-    # (k) çözüm alan listesi config ile betik arasında ayrışmış
-    cfg = copy.deepcopy(base)
-    cfg["contentProtection"]["solutionFieldNames"] = ["solution"]
-    code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-    rep.check(code != 0, "ÇÖZÜM ALAN LİSTESİ AYRIŞMASI YAKALANIR", out)
-
-    # (l) ekonomik olarak imkânsız fiyat → negatif telif
-    cfg = copy.deepcopy(base)
-    for ed in cfg["production"]["editionsHypothesis"]:
-        if ed["id"] == "paperback":
-            ed["list"] = 2.99          # 208 sayfa normal trim: baskı 3,50 $
-    code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-    rep.check(code != 0, "NEGATİF TELİF yakalanır (fiyat < baskı maliyeti)", out)
-
-    # (m) Kindle açılmış (görsel şifre koruması delinmiş)
-    cfg = copy.deepcopy(base)
-    for ed in cfg["production"]["editionsHypothesis"]:
-        if ed["id"] == "kindle":
-            ed["enabled"] = True
-            ed["list"] = 9.99
-    code, out = run_spec_with(cfg, clean_games(base), "phase1", tmp)
-    rep.check(code != 0, "KINDLE AÇILMASI YAKALANIR (görsel şifre koruması)", out)
+        spec_case("⭑ SÖZLEŞME GEVŞETMESİ YAKALANIR: %s ⭑" % field,
+                  cfg_mut=lambda c, f=field: c["solvability"].__setitem__(f, False))
+    spec_case("⭑ İÇ ÇÖZÜCÜNÜN KANIT SAYILMASI YAKALANIR ⭑",
+              cfg_mut=lambda c: c["solvability"]["testStatusRequirements"]
+              .__setitem__("internalSolverCountsAsEvidence", True))
+    spec_case("⭑ ÖLDÜRME KAPISI EŞİĞİ DÜŞÜRÜLMESİ YAKALANIR ⭑",
+              cfg_mut=lambda c: c["killGate"]["passCriteria"].__setitem__(
+                  "solversCompletingGateI", 1))
+    spec_case("BULMACA BAŞINA ÇÖZÜCÜ TABANININ KALDIRILMASI YAKALANIR",
+              cfg_mut=lambda c: c["killGate"]["passCriteria"].pop(
+                  "minSolversPerPuzzle"))
+    spec_case("MEDYAN TANIMININ BELİRSİZLEŞTİRİLMESİ YAKALANIR",
+              cfg_mut=lambda c: c["killGate"]["passCriteria"].__setitem__(
+                  "medianDefinition", "belirsiz"))
+    spec_case("ÇÖZÜM ALAN LİSTESİ AYRIŞMASI YAKALANIR",
+              cfg_mut=lambda c: c["contentProtection"].__setitem__(
+                  "solutionFieldNames", ["solution"]))
+    spec_case("YASAK PUBLIC ALAN LİSTESİNİN DARALTILMASI YAKALANIR",
+              cfg_mut=lambda c: c["contentProtection"].__setitem__(
+                  "forbiddenPublicFields", ["solution"]))
+    spec_case("NEGATİF TELİF yakalanır (fiyat < baskı maliyeti)",
+              cfg_mut=lambda c: [ed.__setitem__("list", 2.99)
+                                 for ed in c["production"]["editionsHypothesis"]
+                                 if ed["id"] == "paperback"])
+    spec_case("KINDLE AÇILMASI YAKALANIR (görsel şifre koruması)",
+              cfg_mut=lambda c: [ed.update({"enabled": True, "list": 9.99})
+                                 for ed in c["production"]["editionsHypothesis"]
+                                 if ed["id"] == "kindle"])
+    spec_case("gate_index'te EKSİK kapı YAKALANIR",
+              gi_mut=lambda gi: gi["gates"].pop(0))
+    spec_case("gate_index ↔ config zorluk AYRIŞMASI YAKALANIR",
+              gi_mut=lambda gi: gi["gates"][0].__setitem__("difficulty", 3))
+    spec_case("gate_index'te İŞARETSİZ fazla kapı YAKALANIR",
+              gi_mut=lambda gi: gi["gates"].append(
+                  {"id": "kacak-kapi", "difficulty": 1, "puzzles": 20}))
 
 
 def part3_gates_lock(rep: Report, tmp: str) -> None:
     print("\n③ kapı seviyeleri gerçekten kilitliyor")
 
     cfg = clean_config()
+    ok = confirmed_solver_config(cfg)
 
-    # phase0: envanter yokken geçmeli (Faz 1 henüz üretmedi)
     code, out = run_spec_with(cfg, None, "phase0", tmp)
     rep.check(code == 0, "phase0 envantersiz geçer", out)
 
-    # phase1: envanter yoksa KIRMIZI
     code, out = run_spec_with(cfg, None, "phase1", tmp)
     rep.check(code != 0, "phase1 envantersiz KIRMIZI", out)
 
-    # phase1: 130'un altında aday → KIRMIZI
     code, out = run_spec_with(cfg, clean_games(cfg, 100), "phase1", tmp)
     rep.check(code != 0, "phase1 yetersiz adayla KIRMIZI (100 < 130)", out)
 
-    # phase2: ÖLDÜRME KAPISI — 20 doğrulanmış bulmaca yoksa KIRMIZI
     code, out = run_spec_with(cfg, clean_games(cfg, 140, "candidate"),
                               "phase2", tmp)
     rep.check(code != 0,
               "⭑ phase2 (ÖLDÜRME KAPISI) doğrulanmış bulmaca olmadan KIRMIZI ⭑",
               out)
 
-    # phase2: 20 yazılmış varsa geçer
-    g = clean_games(cfg, 140, "candidate")
+    g = clean_games(ok, 140, "candidate")
     for i in range(20):
-        g["puzzles"][i]["status"] = "written"
-    code, out = run_spec_with(cfg, g, "phase2", tmp)
-    rep.check(code == 0, "phase2 20 yazılmış bulmacayla geçer", out)
+        g["puzzles"][i].update({
+            "status": "written", "testStatus": "tested",
+            "solverTestCount": 5, "solverSolvedCount": 4,
+            "alternativeSolutionAnalysisDone": True,
+            "confirmedAlternativeSolutions": 0, "ambiguityScore": 1})
+    code, out = run_spec_with(ok, g, "phase2", tmp)
+    rep.check(code == 0, "phase2 20 KAZANILMIŞ bulmacayla geçer", out)
 
-    # phase4: 100 yazılmış bulmaca yoksa KIRMIZI
-    code, out = run_spec_with(cfg, g, "phase4", tmp)
+    code, out = run_spec_with(ok, g, "phase4", tmp)
     rep.check(code != 0, "phase4 eksik manuscript ile KIRMIZI", out)
 
 
-def part4_no_dead_exemptions(rep: Report) -> None:
-    print("\n④ her muafiyet en az bir kez devreye giriyor (ölü kural yok)")
+def part4_exemptions(rep: Report) -> None:
+    print("\n④ muafiyet listeleri DONDURULMUŞ ve canlı")
 
-    import re                        # noqa: E402
     sys.path.insert(0, BUILD)
     import validate_structure as vs   # noqa: E402
 
-    # Sızıntı taraması muafiyetleri: muaf tutulan dosya GERÇEKTEN VAR OLMALI.
-    # Var olmayan bir dosya için yazılmış muafiyet ÖLÜ MUAFİYETTİR ve
-    # sessizce yanlış güven verir (World Myths K14 · Bestiarium D28).
-    for rel in sorted(vs.LEAK_SCAN_SKIP):
-        rep.check(os.path.isfile(os.path.join(ROOT, rel)),
-                  "sızıntı muafiyeti canlı: %s" % rel)
+    # ⭑ TAM KÜME EŞİTLİĞİ. Eski test "muafiyet gerekli mi" diye sorup
+    # dosyada bir çözüm işareti ARIYORDU — yani yeni bir muafiyeti
+    # meşrulaştırmanın yolu, o dosyaya bir çözüm işareti koymaktı.
+    rep.check(vs.SOLUTION_SCAN_SKIP == frozenset({
+        "01_SOURCE/puzzle.schema.json",
+        "00_CONTEXT/CONTENT_PROTECTION.md"}),
+        "⭑ çözüm taraması muafiyeti DONDURULMUŞ (tam küme eşitliği) ⭑")
 
-    for rel in sorted(vs.EMBED_SCAN_SKIP):
+    for rel in sorted(vs.SOLUTION_SCAN_SKIP | vs.LEAK_SCAN_SKIP
+                      | vs.EMBED_SCAN_SKIP):
+        if rel.startswith("06_REPORTS/"):
+            continue          # üretilen dosya; yokluğu ölü muafiyet değildir
         rep.check(os.path.isfile(os.path.join(ROOT, rel)),
-                  "gömülü-değer muafiyeti canlı: %s" % rel)
+                  "muafiyet canlı: %s" % rel)
 
-    # ⑤ ⭑ ÇÖZÜM TARAMASI MUAFİYETLERİ ⭑
-    # Bu liste kısadır ve KISA KALMALIDIR. Her muafiyet, çözüm sızıntısı
-    # kapısında açılmış bir deliktir; gereksiz bir tanesi bile fazladır.
-    for rel in sorted(vs.SOLUTION_SCAN_SKIP):
-        rep.check(os.path.isfile(os.path.join(ROOT, rel)),
-                  "çözüm-taraması muafiyeti canlı: %s" % rel)
-    rep.check(len(vs.SOLUTION_SCAN_SKIP) <= 4,
-              "çözüm taraması muafiyet listesi kısa (%d ≤ 4)"
-              % len(vs.SOLUTION_SCAN_SKIP))
-    for rel in sorted(vs.SOLUTION_SCAN_SKIP):
-        p = os.path.join(ROOT, rel)
-        if not os.path.isfile(p):
-            continue
-        with open(p, encoding="utf-8") as fh:
-            body = fh.read()
-        hits = sum(1 for pat in vs.SOLUTION_FIELD_MARKERS if re.search(pat, body))
-        rep.check(hits >= vs.SOLUTION_MIN_HITS,
-                  "çözüm muafiyeti GEREKLİ: %s [%d işaret]" % (rel, hits))
-
-    # Muafiyet listesi gerçekten GEREKLİ mi: muaf dosya, muaf olmasaydı
-    # yakalanacak mıydı? Değilse muafiyet gereksizdir ve kaldırılmalıdır.
+    import re                        # noqa: E402
     for rel in sorted(vs.LEAK_SCAN_SKIP):
         p = os.path.join(ROOT, rel)
         if not os.path.isfile(p):
@@ -350,10 +473,370 @@ def part4_no_dead_exemptions(rep: Report) -> None:
                   "muafiyet GEREKLİ (yoksa yakalanırdı): %s [%d işaret]"
                   % (rel, hits))
 
+    # ⭑ PROTECTED_DIRS — yanlış yazılmış bir yol, HİÇ koruma demektir.
+    for d in vs.PROTECTED_DIRS:
+        rep.check(os.path.isdir(os.path.join(ROOT, d)),
+                  "korumalı dizin diskte var: %s" % d)
+        probe = os.path.join(d, "leak-probe.json")
+        r = subprocess.run(["git", "check-ignore", "-q", probe],
+                           cwd=ROOT, capture_output=True, timeout=15)
+        rep.check(r.returncode == 0,
+                  ".gitignore korumalı dizini kapsıyor: %s" % d)
+
+    # Muafiyet TAM YOL olmalı: temel ad muafiyeti her alt dizine bir
+    # bedava dosya verirdi.
+    rep.check(all("/" in p for p in vs.PROTECTED_DIR_ALLOW),
+              "korumalı dizin muafiyetleri TAM YOL (temel ad değil)")
+    rep.check(all("/" in p for p in vs.MANUSCRIPT_ALLOW),
+              "manuscript muafiyetleri TAM YOL")
+
+
+def part5_repo_gate(rep: Report, tmp: str) -> None:
+    print("\n⑤ ⭑ DEPO KAPISI — gerçek git deposunda sızıntı fikstürleri ⭑")
+
+    base = repo_fixture(tmp)
+    code, out = run_structure(base)
+    rep.check(code == 0, "temiz depo kopyası GEÇER (yanlış pozitif yok)", out)
+
+    # ⭑ KAPALI BAŞARISIZLIK: .git var ama hiçbir şey takip edilmiyor.
+    # Eskiden bu durumda bütün sızıntı denetimleri boş koşup YEŞİL yanardı.
+    empty = repo_fixture(tmp, add_all=False)
+    code, out = run_structure(empty)
+    rep.check(code != 0,
+              "⭑ TAKİP LİSTESİ BOŞKEN KAPI KAPANIR (fail-closed) ⭑", out)
+
+    def case(label, mutate, force=()):
+        r = repo_fixture(tmp, mutate=mutate, force=force)
+        code, out = run_structure(r)
+        rep.check(code != 0, label, out)
+
+    ans = fixture_answer(0)
+
+    case("⭑ takip edilen .json içinde çözüm ALANI YAKALANIR ⭑",
+         lambda d: write(os.path.join(d, "01_SOURCE", "leak.json"),
+                         '{"solutionPath": ["x"]}'))
+    # Büyük harfli uzantı — eski süzgeç bunu görmüyordu.
+    case("⭑ BÜYÜK HARFLİ UZANTI (.JSON) YAKALANIR ⭑",
+         lambda d: write(os.path.join(d, "01_SOURCE", "LEAK.JSON"),
+                         '{"answerKey": "x"}'))
+    # Taranmayan uzantılar — eski süzgeç yalnızca beş uzantıya bakıyordu.
+    for ext in ("yml", "py", "svg", "tex"):
+        case("⭑ .%s içinde etiketli CEVAP YAKALANIR ⭑" % ext,
+             lambda d, e=ext: write(os.path.join(d, "01_SOURCE", "leak." + e),
+                                    "SOLUTION: %s\n" % ans))
+    # Uzantısız dosya.
+    case("⭑ UZANTISIZ dosyada etiketli cevap YAKALANIR ⭑",
+         lambda d: write(os.path.join(d, "01_SOURCE", "ANSWERKEY"),
+                         "SOLUTION: %s\n" % ans))
+    # Türkçe etiket — belgelerin dili Türkçe ve kalıplar İngilizceydi.
+    case("⭑ TÜRKÇE etiketli cevap YAKALANIR ⭑",
+         lambda d: write(os.path.join(d, "BOOK_STATS.md"),
+                         "# stats\n\nCEVAP: %s\n" % ans))
+    # Temel ad muafiyeti — her alt dizine bedava bir dosya veriyordu.
+    case("⭑ korumalı dizinde ALT DİZİN README'si YAKALANIR ⭑",
+         lambda d: write(os.path.join(d, "01_SOURCE", "solutions", "gate-1",
+                                      "README.md"),
+                         "ÇÖZÜM: %s\n" % ans),
+         force=("01_SOURCE/solutions/gate-1/README.md",))
+    case("⭑ manuscript ALT DİZİN README'si YAKALANIR ⭑",
+         lambda d: write(os.path.join(d, "02_MANUSCRIPT", "gate-1",
+                                      "README.md"),
+                         "What you seek is here. The plate conceals it.\n"),
+         force=("02_MANUSCRIPT/gate-1/README.md",))
+    case("manuscript prozası YAKALANIR (iki kural işareti)",
+         lambda d: write(os.path.join(d, "06_REPORTS", "tracked", "x.md"),
+                         "What you seek. The plate conceals what repeats.\n"))
+    case("bulmaca BAŞLIĞI tek başına YAKALANIR",
+         lambda d: write(os.path.join(d, "06_REPORTS", "tracked", "t.md"),
+                         "Enigma XIV: bir başlık\n"))
+    case("sır benzeri dize YAKALANIR",
+         lambda d: write(os.path.join(d, "06_REPORTS", "tracked", "s.md"),
+                         "token: ghp_%s\n" % ("a" * 36)))
+    # ⚠ Değer LİTERAL yazılmaz: bu dosya public'tir ve tek doğruluk kaynağı
+    # kuralı kendisi için de geçerlidir. Kaynağından okunur.
+    sys.path.insert(0, BUILD)
+    import validate_structure as _vs   # noqa: E402
+    case("gömülü kurucu değeri YAKALANIR",
+         lambda d: write(os.path.join(d, "04_BUILD", "kacak.py"),
+                         "PUBLISHER = %r\n" % _vs.SINGLE_SOURCE_VALUES[1]))
+    case("zorunlu dosya EKSİKLİĞİ YAKALANIR",
+         lambda d: os.remove(os.path.join(d, "00_CONTEXT", "HINT_LADDER.md")))
+    # ⭑ KLON GERÇEĞİ: dizin diskte durabilir ama takip edilen dosyası yoksa
+    # klonda YOKTUR. Bu tam olarak Faz 1'de CI'ı kırmızı yakan kusurdur.
+    case("⭑ TAKİP EDİLMEYEN zorunlu dizin YAKALANIR (klonda yok) ⭑",
+         lambda d: os.remove(os.path.join(d, "06_REPORTS", "solver", ".gitkeep")))
+    case("çözüm alan listesi config ↔ betik AYRIŞMASI YAKALANIR",
+         lambda d: _mutate_json(
+             os.path.join(d, "project_config.json"),
+             lambda c: c["contentProtection"].__setitem__(
+                 "solutionFieldNames", ["solution"])))
+    case("korumalı dizin listesi AYRIŞMASI YAKALANIR",
+         lambda d: _mutate_json(
+             os.path.join(d, "project_config.json"),
+             lambda c: c["contentProtection"].__setitem__(
+                 "protectedDirs", ["01_SOURCE/solutions/"])))
+
+
+def _mutate_json(path: str, fn) -> None:
+    with open(path, encoding="utf-8") as fh:
+        data = json.load(fh)
+    fn(data)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
+
+
+def part6_canary(rep: Report, tmp: str) -> None:
+    print("\n⑥ ⭑ KANARYA — cevabın kendisi aranıyor ⭑")
+
+    ans = fixture_answer(3)
+
+    def canary_root(leak_where=None, message="temiz fikstür"):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "canary-%03d" % _RUN_SEQ[0])
+        os.makedirs(os.path.join(d, "01_SOURCE", "solutions"))
+        os.makedirs(os.path.join(d, "06_REPORTS", "tracked"))
+        write(os.path.join(d, ".gate"), "phase2")
+        write(os.path.join(d, "01_SOURCE", "solutions", "gate-1.json"),
+              json.dumps({"puzzleId": "fixture-001", "finalAnswer": ans,
+                          "hints": ["a", "b", "c"]}, ensure_ascii=False))
+        write(os.path.join(d, "README.md"), "# kurgu depo\n")
+        name = "notes.md"
+        if leak_where == "file":
+            write(os.path.join(d, "notes.md"),
+                  "bir cümle icinde %s gecmektedir\n" % ans)
+        elif leak_where == "filename":
+            name = "%s.md" % ans.lower().replace(" ", "-")
+            write(os.path.join(d, name), "# bos\n")
+        else:
+            write(os.path.join(d, "notes.md"), "temiz\n")
+        env = dict(os.environ, GIT_AUTHOR_NAME="s", GIT_AUTHOR_EMAIL="s@e.l",
+                   GIT_COMMITTER_NAME="s", GIT_COMMITTER_EMAIL="s@e.l")
+        subprocess.run(["git", "init", "-q"], cwd=d, env=env, timeout=60)
+        subprocess.run(["git", "add", "-A", "-f"], cwd=d, env=env, timeout=60)
+        subprocess.run(["git", "commit", "-q", "-m", message], cwd=d, env=env,
+                       timeout=60)
+        return d
+
+    d = canary_root()
+    code, out = run_env_gate("qa_solution_leak.py", d)
+    rep.check(code == 0, "kanarya temiz fikstürde GEÇER (kip A)", out)
+
+    d = canary_root(leak_where="file")
+    code, out = run_env_gate("qa_solution_leak.py", d)
+    rep.check(code != 0,
+              "⭑ ETİKETSİZ PROZA İÇİNDEKİ CEVAP YAKALANIR ⭑", out)
+
+    d = canary_root(leak_where="filename")
+    code, out = run_env_gate("qa_solution_leak.py", d)
+    rep.check(code != 0, "⭑ DOSYA ADINDAKİ cevap YAKALANIR ⭑", out)
+
+    d = canary_root(message="g1-007 duzeltme: kapi kelimesi %s" % ans)
+    code, out = run_env_gate("qa_solution_leak.py", d)
+    rep.check(code != 0,
+              "⭑ COMMIT MESAJINDAKİ cevap YAKALANIR (geri alınamaz) ⭑", out)
+
+    # KİP C — korumalı katman da tuz da yok.
+    _RUN_SEQ[0] += 1
+    bare = os.path.join(tmp, "canary-bare-%03d" % _RUN_SEQ[0])
+    os.makedirs(bare)
+    write(os.path.join(bare, ".gate"), "phase2")
+    env = dict(os.environ)
+    env.pop("ENIGMATICA_CANARY_SALT", None)
+    out = subprocess.run(
+        [sys.executable, os.path.join(BUILD, "qa_solution_leak.py"),
+         "--gate", "phase2"],
+        capture_output=True, text=True, timeout=120,
+        env=dict(env, ENIGMATICA_ROOT=bare))
+    rep.check(out.returncode != 0,
+              "⭑ KANARYA KOŞMAZSA phase2 KIRMIZI (sessiz yeşil yok) ⭑",
+              out.stdout + out.stderr)
+    out = subprocess.run(
+        [sys.executable, os.path.join(BUILD, "qa_solution_leak.py"),
+         "--gate", "phase1"],
+        capture_output=True, text=True, timeout=120,
+        env=dict(env, ENIGMATICA_ROOT=bare))
+    rep.check(out.returncode == 0,
+              "kanarya phase1'de boş koşabilir (henüz korunacak cevap yok)",
+              out.stdout + out.stderr)
+
+
+def part7_protected_gates(rep: Report, tmp: str) -> None:
+    print("\n⑦ ⭑ KORUMALI KATMAN — çözüm, tekillik ve ipucu kapıları ⭑")
+
+    cfg = clean_config()
+
+    def rec(i=1, **over):
+        ans = fixture_answer(i)
+        r = {
+            "puzzleId": "fixture-%03d" % i,
+            "title": "kurgu",
+            "objective": "Dizeyi kısa bir talimatla bul.",
+            "readerAction": "Levhadaki dizi soldan saga okunur.",
+            "input": "levha",
+            "clues": ["ilk ipucu metni", "ikinci ipucu metni"],
+            "constraints": ["dizi tek yonde okunur", "baslangic isaretli"],
+            "intendedSolution": ans,
+            "finalAnswer": ans,
+            "explanation": "Dizi cevirisi sonucu.",
+            "solutionPath": [
+                {"step": "dizi sayilir", "usesOnlyBookKnowledge": True,
+                 "sourceInBook": "araclar levhasi"},
+                {"step": "harfler cevrilir", "usesOnlyBookKnowledge": True,
+                 "sourceInBook": "araclar levhasi"},
+                {"step": "kelime okunur", "usesOnlyBookKnowledge": True,
+                 "sourceInBook": "sayfa"},
+            ],
+            "hints": ["Kenar susu tekrar etmiyor.",
+                      "Tekrar etmeyen dizi bir alfabe olabilir; araclar "
+                      "levhasina donun.",
+                      "Harfleri soldan saga cevirin; dizi sayilir ve "
+                      "harfler cevrilir."],
+            "alternativeSolutionsConsidered": [
+                {"candidate": "aday bir", "rejected": True,
+                 "reason": "metin disliyor", "reasonStrength": "mechanical"},
+                {"candidate": "aday iki", "rejected": True,
+                 "reason": "uzunluk tutmuyor", "reasonStrength": "mechanical"},
+                {"candidate": "aday uc", "rejected": True,
+                 "reason": "yon sabit", "reasonStrength": "textual"},
+            ],
+            "ambiguityPoints": [
+                {"point": "okuma yonu", "resolution": "metin sabitliyor",
+                 "residualRisk": 1}],
+            "solverTests": [],
+        }
+        r.update(over)
+        return r
+
+    def protected_root(records, index_over=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "prot-%03d" % _RUN_SEQ[0])
+        os.makedirs(os.path.join(d, "01_SOURCE", "solutions"))
+        write(os.path.join(d, ".gate"), "phase2")
+        with open(os.path.join(d, "project_config.json"), "w",
+                  encoding="utf-8") as fh:
+            json.dump(cfg, fh, ensure_ascii=False)
+        entries = []
+        for r in records:
+            e = {"puzzleId": r["puzzleId"], "gate": "threshold",
+                 "type": "cipher", "mechanismFamily": "substitution-cipher",
+                 "status": "written", "testStatus": "tested",
+                 "leakClass": "protected", "ambiguityScore": 1,
+                 "alternativeSolutionAnalysisDone": True,
+                 "confirmedAlternativeSolutions": 0}
+            if index_over:
+                index_over(e)
+            entries.append(e)
+        with open(os.path.join(d, "01_SOURCE", "puzzle_index.json"), "w",
+                  encoding="utf-8") as fh:
+            json.dump({"puzzles": entries}, fh, ensure_ascii=False)
+        for r in records:
+            with open(os.path.join(d, "01_SOURCE", "solutions",
+                                   "%s.json" % r["puzzleId"]), "w",
+                      encoding="utf-8") as fh:
+                json.dump(r, fh, ensure_ascii=False)
+        return d
+
+    for script in ("qa_solvability.py", "qa_uniqueness.py", "qa_hints.py"):
+        d = protected_root([rec(1)])
+        code, out = run_env_gate(script, d)
+        rep.check(code == 0, "%s temiz kayıtta GEÇER" % script, out)
+
+    def case(script, label, mutate=None, index_over=None, records=None):
+        recs = records or [rec(1)]
+        if mutate:
+            mutate(recs[0])
+        d = protected_root(recs, index_over)
+        code, out = run_env_gate(script, d)
+        rep.check(code != 0, label, out)
+
+    # ── kayıp kayıt ─────────────────────────────────────────────────────
+    _RUN_SEQ[0] += 1
+    d = protected_root([rec(1)])
+    os.remove(os.path.join(d, "01_SOURCE", "solutions", "fixture-001.json"))
+    code, out = run_env_gate("qa_solvability.py", d)
+    rep.check(code != 0, "⭑ yazılmış bulmacanın KORUMALI KAYDI YOKSA KIRMIZI ⭑",
+              out)
+
+    # ── çözülebilirlik ──────────────────────────────────────────────────
+    case("qa_solvability.py", "⭑ DIŞ BİLGİ GEREKTİREN ADIM YAKALANIR ⭑",
+         lambda r: r["solutionPath"][1].__setitem__(
+             "usesOnlyBookKnowledge", False))
+    case("qa_solvability.py", "çözüm yolu YOKSA yakalanır",
+         lambda r: r.__setitem__("solutionPath", []))
+    case("qa_solvability.py", "⭑ KISITSIZ BULMACA YAKALANIR ⭑",
+         lambda r: r.__setitem__("constraints", []))
+    case("qa_solvability.py", "boş yapısal alan YAKALANIR",
+         lambda r: r.__setitem__("explanation", ""))
+    case("qa_solvability.py", "20 kelimeyi aşan TALİMAT YAKALANIR",
+         lambda r: r.__setitem__("readerAction", " ".join(["kelime"] * 25)))
+    case("qa_solvability.py", "⭑ BELİRSİZLİK PUANI GEREKÇESİYLE ÇELİŞİRSE ⭑",
+         lambda r: r.__setitem__("ambiguityPoints", [
+             {"point": "a", "resolution": "x", "residualRisk": 1},
+             {"point": "b", "resolution": "y", "residualRisk": 1}]))
+    case("qa_solvability.py", "ÇÖZÜMSÜZ belirsizlik noktası YAKALANIR",
+         lambda r: r.__setitem__("ambiguityPoints", [
+             {"point": "a", "resolution": "", "residualRisk": 1}]))
+    case("qa_solvability.py", "belirsizlik EŞİK AŞIMI yakalanır",
+         index_over=lambda e: e.__setitem__("ambiguityScore", 4))
+
+    # ── tekillik ────────────────────────────────────────────────────────
+    case("qa_uniqueness.py", "ÜÇTEN AZ alternatif aday YAKALANIR",
+         lambda r: r["alternativeSolutionsConsidered"].pop())
+    case("qa_uniqueness.py", "⭑ 'ZORLAMA' GEREKÇE YAKALANIR ⭑",
+         lambda r: r["alternativeSolutionsConsidered"][0].__setitem__(
+             "reasonStrength", "forced"))
+    case("qa_uniqueness.py", "⭑ ONAYLANMIŞ ALTERNATİF ÇÖZÜM YAKALANIR ⭑",
+         lambda r: r["alternativeSolutionsConsidered"][0].__setitem__(
+             "rejected", False))
+    case("qa_uniqueness.py", "gerekçesiz aday YAKALANIR",
+         lambda r: r["alternativeSolutionsConsidered"][1].__setitem__(
+             "reason", ""))
+    case("qa_uniqueness.py", "⭑ ÇÖZÜCÜNÜN ÖNERDİĞİ İKİNCİ CEVAP YAKALANIR ⭑",
+         lambda r: r.__setitem__("solverTests", [
+             {"date": "2026-08-13", "solver": "solver-02", "usedHints": 1,
+              "result": "solved", "alternativeOffered": "baska bir dize"}]))
+    case("qa_uniqueness.py", "public sayaç ↔ kayıt ÇELİŞKİSİ YAKALANIR",
+         index_over=lambda e: e.__setitem__("confirmedAlternativeSolutions", 2))
+    case("qa_uniqueness.py", "analiz İŞARETSİZ ise yakalanır",
+         index_over=lambda e: e.__setitem__(
+             "alternativeSolutionAnalysisDone", False))
+    case("qa_uniqueness.py", "⭑ İKİ BULMACA AYNI CEVABI VERİRSE YAKALANIR ⭑",
+         records=[rec(1), rec(2, puzzleId="fixture-002",
+                              finalAnswer=fixture_answer(1),
+                              intendedSolution=fixture_answer(1))])
+
+    # ── ipucu ───────────────────────────────────────────────────────────
+    ans = fixture_answer(1)
+    case("qa_hints.py", "İKİ KADEMELİ ipucu YAKALANIR",
+         lambda r: r.__setitem__("hints", r["hints"][:2]))
+    case("qa_hints.py", "BOŞ kademe YAKALANIR",
+         lambda r: r["hints"].__setitem__(1, ""))
+    case("qa_hints.py", "⭑ İPUCU CEVABI DÜZ İÇERİRSE YAKALANIR ⭑",
+         lambda r: r["hints"].__setitem__(1, "Cevap %s olabilir." % ans))
+    case("qa_hints.py", "⭑ BOŞLUKSUZ gizlenmiş cevap YAKALANIR ⭑",
+         lambda r: r["hints"].__setitem__(
+             1, "Bakiniz %s." % ans.replace(" ", "")))
+    case("qa_hints.py", "⭑ TERS BASILMIŞ cevap YAKALANIR (ayna baskı) ⭑",
+         lambda r: r["hints"].__setitem__(
+             1, "Bakiniz %s." % ans.replace(" ", "")[::-1]))
+    # Cevabın kelimeleri dağıtılmış: düz alt dize araması bunu göremez.
+    case("qa_hints.py", "⭑ DAĞITILMIŞ kelimelerle cevap YAKALANIR ⭑",
+         lambda r: r["hints"].__setitem__(
+             1, "Once %s dusunun, sonra %s ve nihayet %s."
+                % (ans.split()[2], ans.split()[0], ans.split()[1])))
+    case("qa_hints.py", "AYNI iki kademe YAKALANIR",
+         lambda r: r["hints"].__setitem__(0, r["hints"][1]))
+    case("qa_hints.py", "40 kelimeyi aşan ipucu YAKALANIR",
+         lambda r: r["hints"].__setitem__(2, " ".join(["kelime"] * 45)))
+    case("qa_hints.py", "⭑ 3. KADEME SON ADIMI VERİRSE YAKALANIR ⭑",
+         lambda r: r["hints"].__setitem__(
+             2, "Kelime okunur ve harfler cevrilir; kelime okunur."))
+
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args()
 
@@ -366,7 +849,10 @@ def main() -> int:
         part1_clean_passes(rep, tmp)
         part2_flaws_caught(rep, tmp)
         part3_gates_lock(rep, tmp)
-    part4_no_dead_exemptions(rep)
+        part4_exemptions(rep)
+        part5_repo_gate(rep, tmp)
+        part6_canary(rep, tmp)
+        part7_protected_gates(rep, tmp)
 
     print("\n" + "=" * 74)
     if rep.failed:

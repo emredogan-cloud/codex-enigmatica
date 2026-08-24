@@ -893,7 +893,15 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
         "kapi-sozleri": {"entries": ["ZURNA SESİ", "MELTEM KAR",
                                      "KAVUN KESTİ"]},
         "esik-sayilari": {"entries": [{"sira": 1, "okuma": "2413",
-                                       "sozlukNo": 3}]}}}
+                                       "sozlukNo": 3}]},
+        # ── KAPI II · basılı yetke ────────────────────────────────────
+        "yaratiklar-katalogu": {"entries": [{"no": i + 1, "word": w}
+                                            for i, w in enumerate(LEX)]},
+        "halka-tablosu": {
+            "rows": [list(ALPHA[r * 5:r * 5 + 5]) for r in range(5)]
+            + [list(ALPHA[25:]) + ["·"]],
+            "rowCount": 6, "colCount": 5},
+        "yaratik-sozleri": {"entries": ["ZURNA MELTEM KAVUN"]}}}
 
     def space_root(space, answer="MELTEM", page=None, index_over=None):
         _RUN_SEQ[0] += 1
@@ -1161,6 +1169,8 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
             os.makedirs(os.path.join(d, sub))
         write(os.path.join(d, ".gate"), "phase2")
         c = json.loads(json.dumps(cfg))
+        c.setdefault("killGate", {}).setdefault(
+            "externalValidation", {})["founderOverride"] = False
         c["founder"]["externalSolvers"]["sessionsRecorded"] = sessions_per_solver
         c["founder"]["externalSolvers"]["identifiedCount"] = 5
         write(os.path.join(d, "project_config.json"),
@@ -1419,6 +1429,127 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     rep.check("⑫" not in out,
               "anahtar sütununda İKİ aday varsa kesişim sızdırmaz", out)
 
+    # ── ⭑ KAPI II · ÜÇ YENİ MEKANİZMA ⭑ ────────────────────────────────
+    #
+    # Yeni bir kabul yordamı, denetlenmemiş bir kabul yordamıdır. Üçü de
+    # kendi kusurlu kurgusuyla burada ısırıyor.
+    def coords_of(w):
+        return [[ALPHA.index(c) // 5 + 1, ALPHA.index(c) % 5 + 1] for c in w]
+
+    def ring_readings(pairs):
+        outs = []
+        for base in (pairs, list(reversed(pairs))):
+            for r in range(len(base)):
+                outs.append(base[r:] + base[:r])
+        return outs
+
+    GC = {"generator": {"kind": "printed-bestiary"},
+          "acceptance": {"kind": "reachable-via-grid-coordinates",
+                         "coordinates": coords_of("MELTEM"),
+                         "readings": [coords_of("MELTEM")],
+                         "gridRef": "halka-tablosu"},
+          "declaredAcceptedCount": 1}
+    d = space_root(GC, answer="MELTEM")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "ızgara koordinatı temiz kurguda GEÇER", out)
+
+    # ⭑ Faz 2'nin sayı-tablosu dersinin Kapı II'deki hâli ⭑
+    # İspat yalnızca YAZARIN okumasına bakarsa, yanlış istasyondan başlayan
+    # okurun BAŞKA bir geçerli ada düşüp düşmediği hiç sorulmaz.
+    ZUR = coords_of("ZURNA")
+    both = {"generator": {"kind": "printed-bestiary"},
+            "acceptance": {"kind": "reachable-via-grid-coordinates",
+                           "coordinates": ZUR,
+                           "readings": ring_readings(ZUR)
+                           + [coords_of("KAVUN")],
+                           "gridRef": "halka-tablosu"},
+            "declaredAcceptedCount": 1}
+    d = space_root(both, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0,
+              "⭑ İKİNCİ BİR OKUMA DA GEÇERLİ BİR ADA DÜŞÜYORSA KIRMIZI ⭑ "
+              "(yanlış istasyondan başlayan okur savunulabilir bir cevaba "
+              "varıyor)", out)
+
+    def pen_space(rules, flip="ZURNA"):
+        items = ["ZURNA", "KAVUN", "VİRAJ", "TERLİK", "OYMACI", "PATİKA"]
+        attrs = {w: {"kanat": bool(i % 2), "pul": bool(i % 3 == 0)}
+                 for i, w in enumerate(items)}
+        pens = {w: ("A" if attrs[w]["kanat"] else "B") for w in items}
+        pens[flip] = "B" if pens[flip] == "A" else "A"
+        return {"generator": {"kind": "printed-bestiary"},
+                "acceptance": {"kind": "misclassified-in-printed-pens",
+                               "items": items, "attributes": attrs,
+                               "pens": pens, "candidateRules": rules},
+                "declaredAcceptedCount": 1}
+
+    d = space_root(pen_space(["kanat", "pul"]), answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "sınıflama tek kural açıklarken GEÇER", out)
+
+    # ⭑ İKİ kural da bölmeleri 'bir üye hariç' açıklıyorsa, okurun İKİ
+    # savunulabilir cevabı olur — ve bunu yalnızca kural sayısı söyler.
+    items = ["ZURNA", "KAVUN", "VİRAJ", "TERLİK", "OYMACI", "PATİKA"]
+    attrs = {w: {"kanat": (w != "ZURNA"), "pul": (w != "KAVUN")}
+             for w in items}
+    pens = {w: "A" for w in items}
+    amb = {"generator": {"kind": "printed-bestiary"},
+           "acceptance": {"kind": "misclassified-in-printed-pens",
+                          "items": items, "attributes": attrs, "pens": pens,
+                          "candidateRules": ["kanat", "pul"]},
+           "declaredAcceptedCount": 1}
+    d = space_root(amb, answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0,
+              "⭑ İKİ KURAL DA AÇIKLIYORSA KIRMIZI ⭑ "
+              "(okurun iki savunulabilir cevabı olur)", out)
+
+    KROW = "".join(dict.fromkeys("MELTEM" + ALPHA))
+    KCT = "".join(KROW[ALPHA.index(c)] for c in "KAVUN")
+    d = space_root({"generator": {"kind": "printed-bestiary"},
+                    "acceptance": {"kind": "reachable-by-keyed-alphabet",
+                                   "keyedRow": KROW, "input": KCT},
+                    "declaredAcceptedCount": 1}, answer="KAVUN")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "anahtarlı satır temiz kurguda GEÇER", out)
+
+    d = space_root({"generator": {"kind": "printed-bestiary"},
+                    "acceptance": {"kind": "reachable-by-keyed-alphabet",
+                                   "keyedRow": KROW[:-1], "input": KCT},
+                    "declaredAcceptedCount": 1}, answer="KAVUN")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0,
+              "eksik anahtar satırı hiçbir üye kabul etmez (çözülemez)", out)
+
+    # ── ⭑ LEVHA VERİSİ · BASKI ÖN ÖLÇÜMÜ ⭑ ─────────────────────────────
+    def plate_root(fig, space=None, answer="MELTEM"):
+        return space_root(space or GC, answer=answer,
+                          page={"puzzleId": "fixture-001", "figure": fig,
+                                "clues": [], "constraints": []})
+
+    good = "  ▶  " + "   ".join("%d·%d" % (r, c) for r, c in
+                                coords_of("MELTEM"))
+    code, out = run_env_gate("qa_plate_data.py", plate_root(good))
+    rep.check(code == 0, "levha verisi temiz şekilde GEÇER", out)
+
+    code, out = run_env_gate("qa_plate_data.py",
+                             plate_root(good + "\n  " + "+" * 6))
+    rep.check(code != 0,
+              "⭑ ALTI ARDIŞIK AYNI İŞARET KIRMIZI ⭑ "
+              "(baskıda kaybolan şey veri değil, AYIRT EDİLEBİLİRLİKTİR)",
+              out)
+
+    code, out = run_env_gate("qa_plate_data.py",
+                             plate_root(good + "\n  " + "─" * 80))
+    rep.check(code != 0,
+              "⭑ TRIM'E SIĞMAYAN ŞEKİL KIRMIZI ⭑ (6×9'da satır ~62 karakter)",
+              out)
+
+    code, out = run_env_gate("qa_plate_data.py", plate_root("  ▶  1·1   2·2"))
+    rep.check(code != 0,
+              "⭑ ŞEKİLDEKİ VERİ KAYITTAKİNDEN FARKLIYSA KIRMIZI ⭑ "
+              "(levha ile kayıt ayrışırsa okur çözemez)", out)
+
     # ── ⭑ KESİŞİM IZGARASI · ETİKET İDDİA DEĞİL, NİTELİKTİR ⭑ ──────────
     def gspace(grid):
         return {"generator": {"kind": "printed-lexicon"},
@@ -1558,6 +1689,13 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
               "(kolay başlangıç → uzun grind → tükeniş)", out)
 
     # ── ⛔ ÖLDÜRME KAPISI · OTURUM DÜZEYİ TOPLU KAYIT ⛔ ─────────────────
+    # ⭑ Karar mantığı fikstürleri geçersiz kılma KAPALIYKEN koşar ⭑
+    # Geçersiz kılma yalnızca ÇIKIŞ KODUNU değiştirir; KARARI değiştirmez.
+    # İkisini aynı fikstürde ölçmek, hangisinin bozulduğunu gizlerdi.
+    cfg_ko = json.loads(json.dumps(cfg))
+    cfg_ko.setdefault("killGate", {}).setdefault("externalValidation", {})[
+        "founderOverride"] = False
+
     def agg_root(total: int, finished: int, per_puzzle=None) -> str:
         _RUN_SEQ[0] += 1
         d = os.path.join(tmp, "agg-%03d" % _RUN_SEQ[0])
@@ -1566,7 +1704,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
             os.makedirs(os.path.join(d, sub))
         write(os.path.join(d, ".gate"), "phase2")
         write(os.path.join(d, "project_config.json"),
-              json.dumps(cfg, ensure_ascii=False))
+              json.dumps(cfg_ko, ensure_ascii=False))
         write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
               json.dumps({"puzzles": [
                   {"puzzleId": "fixture-%03d" % i, "gate": "threshold",
@@ -1583,6 +1721,55 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
                                               "label": "Sıkıldım"}]},
                          ensure_ascii=False))
         return d
+
+    # ── ⭑ KURUCU GEÇERSİZ KILMASI ⭑ — ÖLÇÜMÜ EZEBİLİR Mİ? ──────────────
+    #
+    # Kurucu 24 Ağustos'ta Faz 3'ün ölçüme RAĞMEN başlamasına izin verdi.
+    # Tek soru şudur ve bu blok onu ölçer: geçersiz kılma KARARI ezebiliyor
+    # mu? Ezebiliyorsa, kapı bir kapı değil bir düğmedir.
+    def ov_root(total=5, finished=1, **over):
+        d = agg_root(total, finished)
+        c = json.loads(open(os.path.join(d, "project_config.json"),
+                            encoding="utf-8").read())
+        ev = c.setdefault("killGate", {}).setdefault("externalValidation", {})
+        ev.update({"status": "founder_override_partial", "sessionsPerformed": 0,
+                   "humanValidationPassed": False, "founderOverride": True,
+                   "overrideAuthorisedAt": "2026-08-24",
+                   "overrideReason": "founder-authorized continuation"})
+        ev.update(over)
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(c, ensure_ascii=False))
+        return d
+
+    code, out = run_env_gate("kill_gate.py", ov_root())
+    rep.check(code == 0 and "HARD-STOP" in out and "GEÇERSİZ KILMA" in out,
+              "⭑ GEÇERSİZ KILMA YALNIZCA ÇIKIŞ KODUNU DEĞİŞTİRİR ⭑ "
+              "(ölçülen karar HARD-STOP olarak YAZDIRILMAYA devam eder)", out)
+
+    rp = os.path.join(ov_root(), "06_REPORTS/tracked/kill-gate-report.json")
+    run_env_gate("kill_gate.py", os.path.dirname(os.path.dirname(
+        os.path.dirname(rp))))
+    saved = json.loads(open(rp, encoding="utf-8").read())
+    rep.check(saved.get("verdict") == "HARD-STOP"
+              and saved.get("measuredVerdict") == "HARD-STOP"
+              and saved.get("overrideActive") is True
+              and saved.get("externalValidation", {}).get(
+                  "humanValidationPassed") is False,
+              "⭑ RAPORDA ÖLÇÜLEN KARAR EZİLMİYOR ⭑ "
+              "(verdict=HARD-STOP · overrideActive=true · doğrulama=false)",
+              json.dumps(saved, ensure_ascii=False)[:600])
+
+    for over, label in (
+            ({"humanValidationPassed": True},
+             "⭑ SIFIR OTURUMLA 'İNSAN DOĞRULAMASI GEÇTİ' DENEMEZ ⭑"),
+            ({"sessionsPerformed": 9},
+             "⭑ BİLDİRİLEN OTURUM SAYISI ÖLÇÜLENİ AŞAMAZ ⭑ (fark UYDURMA)"),
+            ({"overrideReason": ""},
+             "geçersiz kılma GEREKÇESİZ kaydedilemez"),
+            ({"status": "validated"},
+             "⭑ OTURUM YOKKEN DURUM 'validated' OLAMAZ ⭑")):
+        code, out = run_env_gate("kill_gate.py", ov_root(**over))
+        rep.check(code != 0 and "UYDURMA MUHAFIZI" in out, label, out)
 
     d = agg_root(5, 1)
     code, out = run_env_gate("kill_gate.py", d)

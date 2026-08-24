@@ -5,41 +5,61 @@
   "warnings": [],
   "facts": {
     "indexed": 151,
-    "needProtected": 20,
-    "solutionRecords": 20,
-    "designRecords": 20,
+    "needProtected": 40,
+    "solutionRecords": 40,
+    "designRecords": 40,
     "protectedLayerPresent": true,
     "ahaMedian": 4.0,
     "ahaLow": 0,
     "repetitionMedian": 2.0,
     "declaredMinutes": [
       4,
+      8,
       4,
+      9,
       4,
+      8,
       6,
+      10,
       4,
+      10,
       4,
+      11,
       5,
+      9,
       4,
+      11,
       5,
+      12,
       4,
+      10,
       7,
+      12,
       4,
+      11,
       5,
+      12,
       4,
+      11,
       5,
+      13,
       5,
+      12,
       5,
+      13,
       6,
+      12,
       5,
-      15
+      14,
+      15,
+      20
     ],
-    "medianMinutes": 5.0,
-    "distinctMinutes": 5,
-    "longestGrind": 1,
-    "smallWinShare": 0.8,
-    "warmUpSections": 7,
-    "familiesTaught": 7,
+    "medianMinutes": 8.0,
+    "distinctMinutes": 13,
+    "longestGrind": 3,
+    "smallWinShare": 0.53,
+    "warmUpSections": 8,
+    "familiesTaught": 8,
     "perPuzzle": [
       {
         "puzzleId": "g1-001",
@@ -220,6 +240,186 @@
         "repeatCount": 15,
         "repetitionBurden": 4,
         "mechanismSignature": "matches-positional-extraction/gate-synthesis"
+      },
+      {
+        "puzzleId": "g2-001",
+        "ahaScore": 5,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-01",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "misclassified-in-printed-pens/plain"
+      },
+      {
+        "puzzleId": "g2-002",
+        "ahaScore": 5,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g2-02",
+        "repeatCount": 7,
+        "repetitionBurden": 3,
+        "mechanismSignature": "reachable-via-grid-coordinates/serit"
+      },
+      {
+        "puzzleId": "g2-003",
+        "ahaScore": 4,
+        "revelationKind": "small-observation-unlocks",
+        "evidence": "pl-g2-03",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/count-parity"
+      },
+      {
+        "puzzleId": "g2-004",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-04",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "misclassified-in-printed-pens/plain"
+      },
+      {
+        "puzzleId": "g2-005",
+        "ahaScore": 3,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g2-05",
+        "repeatCount": 7,
+        "repetitionBurden": 3,
+        "mechanismSignature": "reachable-via-grid-coordinates/serit"
+      },
+      {
+        "puzzleId": "g2-006",
+        "ahaScore": 4,
+        "revelationKind": "pattern-collapses",
+        "evidence": "printedTable",
+        "repeatCount": 3,
+        "repetitionBurden": 1,
+        "mechanismSignature": "table-row/chain"
+      },
+      {
+        "puzzleId": "g2-007",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "esik-alfabesi",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-glyph-reading/plain"
+      },
+      {
+        "puzzleId": "g2-008",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-08",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "misclassified-in-printed-pens/plain"
+      },
+      {
+        "puzzleId": "g2-009",
+        "ahaScore": 4,
+        "revelationKind": "pattern-collapses",
+        "evidence": "pl-g2-09",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-via-grid-coordinates/halka"
+      },
+      {
+        "puzzleId": "g2-010",
+        "ahaScore": 4,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g2-10",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/odd-run"
+      },
+      {
+        "puzzleId": "g2-011",
+        "ahaScore": 4,
+        "revelationKind": "two-clues-agree",
+        "evidence": "printedTable",
+        "repeatCount": 3,
+        "repetitionBurden": 1,
+        "mechanismSignature": "grid-intersection/plain"
+      },
+      {
+        "puzzleId": "g2-012",
+        "ahaScore": 3,
+        "revelationKind": "pattern-collapses",
+        "evidence": "pl-g2-12",
+        "repeatCount": 7,
+        "repetitionBurden": 3,
+        "mechanismSignature": "reachable-via-grid-coordinates/halka"
+      },
+      {
+        "puzzleId": "g2-013",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-13",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "misclassified-in-printed-pens/plain"
+      },
+      {
+        "puzzleId": "g2-014",
+        "ahaScore": 4,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "esik-alfabesi",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-glyph-reading/plain"
+      },
+      {
+        "puzzleId": "g2-015",
+        "ahaScore": 5,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-15",
+        "repeatCount": 7,
+        "repetitionBurden": 3,
+        "mechanismSignature": "reachable-via-grid-coordinates/halka-inferred-anchor"
+      },
+      {
+        "puzzleId": "g2-016",
+        "ahaScore": 3,
+        "revelationKind": "two-clues-agree",
+        "evidence": "printedTable",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "table-row/chain"
+      },
+      {
+        "puzzleId": "g2-017",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-17",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "misclassified-in-printed-pens/plain"
+      },
+      {
+        "puzzleId": "g2-018",
+        "ahaScore": 5,
+        "revelationKind": "small-observation-unlocks",
+        "evidence": "pl-g2-18",
+        "repeatCount": 7,
+        "repetitionBurden": 3,
+        "mechanismSignature": "reachable-via-grid-coordinates/halka-inferred-anchor-inferred-dir"
+      },
+      {
+        "puzzleId": "g2-019",
+        "ahaScore": 4,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g2-19",
+        "repeatCount": 7,
+        "repetitionBurden": 3,
+        "mechanismSignature": "reachable-by-keyed-alphabet/plain"
+      },
+      {
+        "puzzleId": "g2-020",
+        "ahaScore": 4,
+        "revelationKind": "pattern-collapses",
+        "evidence": "pl-g2-20",
+        "repeatCount": 19,
+        "repetitionBurden": 5,
+        "mechanismSignature": "matches-positional-extraction/chain"
       }
     ]
   }

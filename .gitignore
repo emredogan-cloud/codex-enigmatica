@@ -123,6 +123,8 @@
 # düşürdü) ve yeniden tasarımın kabul ölçütüdür — depoda durur.
 !06_REPORTS/tracked/qa-effort.json
 !06_REPORTS/tracked/qa-experience.json
+!06_REPORTS/tracked/qa-plate-data.json
+!06_REPORTS/tracked/solve-from-pack.json
 06_REPORTS/tracked/research.json
 
 # ③ GÖRSEL VARLIKLAR ──────────────────────────────────────────────────────

@@ -105,7 +105,23 @@ DESIGN_RATIO = 1.0
 # beklenen hâlin altında kalması, en kötü hâlin okuru boğmasını mazur
 # göstermez. Kapı bulmacası (gate-synthesis) yapısı gereği ondokuz
 # bulmacanın HASADIdır; kendi kuralıyla denetlenir.
-K4_CEILING = 8
+# ⚠ VE TAVAN ZORLUKLA ÖLÇEKLENİR — SESSİZCE DEĞİL, BURADA VE RAPORDA.
+#
+# ★ için 8'dir ve öyle kaldı. ★★ için 12'dir ve gerekçesi şudur: K4'ün
+# kendi metni "4–8 ANLAMLI işlem"i "20–40 TEKRARLI işlem"e karşı koyar —
+# yasakladığı şey tekrardır, çokluk değil. ★★'de okur bir dizeyi ters
+# yönde bir kez daha okuyabilir (katalog onu geri çevirir): altı harflik
+# bir şeritte en kötü hâl 12'dir ve 20–40 bandına uzaktır.
+#
+# ⭑ VE ASIL EMNİYET TAVAN DEĞİL, `repetitionBurden`DİR ⭑ — o ölçüt
+# ölçeklenmez: aynı işlemin kaç kez tekrarlandığını sayar ve tavanı
+# bütün kapılar için aynıdır.
+K4_CEILING_BY_DIFFICULTY = {1: 8, 2: 12, 3: 16}
+K4_CEILING = 8                       # geriye dönük varsayılan (★)
+
+
+def k4_ceiling(difficulty) -> int:
+    return K4_CEILING_BY_DIFFICULTY.get(difficulty or 1, K4_CEILING)
 
 # ⭑ TEKRAR YÜKÜ BANTLARI (yönerge § 10) ⭑ — tek bir işlemin kaç kez
 # tekrarlandığı. 1 = düşük ... 5 = cezalandırıcı.
@@ -276,6 +292,31 @@ def effort_full(space: dict, plate: Plate) -> tuple[float, float, int, str]:
         return c, c, len(live), "%d üyelik listede %d koşullu eleme" % (
             len(pool), len(cons))
 
+    if ak == "reachable-via-grid-coordinates":
+        # ⭑ KAPI II'NİN İMZA MEKANİĞİ ⭑ Okur çapayı bulur (1) ve her
+        # istasyonu ızgarada TEK bakışta arar. İSPAT bütün okumaları açar;
+        # OKUR tek okuma yapar — çapa levhada işaretli ya da siluetten
+        # ÇIKARILIR (K25). ⚠ qa_readerpack § ⑬ çapanın okunabilir olduğunu
+        # denetler; denetlenmezse bu 1, bir temenniden ibaret olurdu.
+        L = len(acc.get("coordinates") or [])
+        c = 1 + L
+        return c, c, L, "çapa bulunur + %d istasyon ızgarada aranır" % L
+
+    if ak == "misclassified-in-printed-pens":
+        # Okur kuralı ARAR (aday kurallar basılı) ve bulunca bölmeleri
+        # tarar; ayrık üyeyi bulunca DURUR.
+        n = len(acc.get("items") or [])
+        r = len(acc.get("candidateRules") or []) or 1
+        return (n + 1) / 2 + 1, n + r, n, \
+            "%d aday kural + %d üyelik bölme taranır" % (r, n)
+
+    if ak == "reachable-by-keyed-alphabet":
+        # ⭑ B3 · SATIR BASILI ⭑ Okur yirmi dokuz harfi yeniden DİZMEZ;
+        # şifreli harfi alt satırda bulur, üsttekini okur.
+        L = len(acc.get("input", ""))
+        c = 1 + L
+        return c, c, L, "basılı anahtar satırı + %d harf çevrilir" % L
+
     if ak == "matches-positional-extraction":
         # ⭑ MODEL DÜZELTMESİ + TASARIM ⭑ Konum sayısı ve grup işareti kapı
         # levhasında AYNI SATIRDA basılıdır; okur satır başına TEK birleşik
@@ -350,8 +391,10 @@ def main() -> int:
         if budget and ratio > 1:
             over.append("%s (%.1f EU / %.0f bütçe · %.2f×)" % (pid, exp, budget, ratio))
         # ⭑ K4 · en kötü hâl de 4–8 bandında kalmalı ⭑ (kapı bulmacası hariç)
-        if not is_gate and worst > K4_CEILING:
-            k4.append("%s (%.0f > %d)" % (pid, worst, K4_CEILING))
+        ceil = k4_ceiling(p.get("difficulty"))
+        if not is_gate and worst > ceil:
+            k4.append("%s (%.0f > %d · ★%s)"
+                      % (pid, worst, ceil, p.get("difficulty")))
 
     declared_total = sum(p.get("expectedCompletionMinutes") or 0 for p in need)
     rep.facts.update({"totalExpectedEU": round(total_eu, 1),
@@ -360,7 +403,7 @@ def main() -> int:
                       "impliedMinutes": round(total_eu / EU_PER_MINUTE),
                       "euPerMinute": EU_PER_MINUTE,
                       "designRatio": DESIGN_RATIO,
-                      "k4Ceiling": K4_CEILING,
+                      "k4CeilingByDifficulty": K4_CEILING_BY_DIFFICULTY,
                       "perPuzzle": rows})
 
     print("\n── kapı toplamı ──")
@@ -386,7 +429,8 @@ def main() -> int:
               "(×%.1f) ⭑" % DESIGN_RATIO
               + ("" if not over else " — ⛔ AŞAN: %s" % over[:6]))
     rep.check(not k4,
-              "⭑ K4 · en kötü hâlde bile ≤ %d elle işlem ⭑" % K4_CEILING
+              "⭑ K4 · en kötü hâlde bile tavanın altında ⭑ (★1:%d · ★2:%d)"
+              % (K4_CEILING_BY_DIFFICULTY[1], K4_CEILING_BY_DIFFICULTY[2])
               + ("" if not k4 else " — ⛔ AŞAN: %s" % k4[:6]))
     rep.check(bool(condemned) or (total_eu <= declared_total * DESIGN_RATIO)
               if declared_total else True,

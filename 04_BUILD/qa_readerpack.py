@@ -78,6 +78,11 @@ from qa_answerspace import TOOLS, Plate                        # noqa: E402
 BOOK = os.path.join(pl.ROOT, "02_MANUSCRIPT", "book.json")
 
 PLATE_ACCEPTANCE = {"plate-attribute", "reachable-via-number-table"}
+COORD_ACCEPTANCE = {"reachable-via-grid-coordinates"}
+PEN_ACCEPTANCE = {"misclassified-in-printed-pens"}
+KEYED_ACCEPTANCE = {"reachable-by-keyed-alphabet"}
+# Çapa işaretleri — biri levhada BULUNMALI (çaba modeli buna dayanır).
+ANCHOR_MARKS = ("⌖", "▶", "◀", "◄", "▲")
 TABLE_ACCEPTANCE = {"table-row"}
 GRID_ACCEPTANCE = {"grid-intersection"}
 # Okuma yönünü basan işaretler — biri bulunmalı.
@@ -233,7 +238,11 @@ def main() -> int:
         ans = rec.get("finalAnswer", "")
         vis_sq = pl.squeeze(visible)
         if ans and pl.squeeze(ans) and pl.squeeze(ans) in vis_sq:
-            peers = sum(1 for w in plate.lexicon
+            # ⚠ Kapı II'nin cevapları Çizelge E'dedir. Akranı yalnızca
+            # Eşik Sözlüğü'nde aramak, katalog bulmacalarını akransız
+            # gösterir ve kapıyı YANLIŞ yerde kırmızı yakardı.
+            printed = list(plate.lexicon) + list(plate.bestiary)
+            peers = sum(1 for w in printed
                         if w != ans and pl.squeeze(w) in vis_sq)
             if peers < MIN_CANDIDATE_PEERS:
                 answer_on_page.append("%s (%d akran)" % (pid, peers))
@@ -279,7 +288,8 @@ def main() -> int:
             if src_acc.get("kind") == "plate-attribute":
                 plausible = set(src_acc.get("labels") or [])
             else:
-                plausible = {w for w in plate.lexicon if len(w) == len(src_ans)}
+                printed = list(plate.lexicon) + list(plate.bestiary)
+                plausible = {w for w in printed if len(w) == len(src_ans)}
             keys = set()
             for f in acc.get("filters") or []:
                 keys |= {str(r.get(f["col"]))
@@ -290,6 +300,27 @@ def main() -> int:
             if len(shared) < 2:
                 cross_leak.append("%s ← %s (%d ortak aday)"
                                   % (pid, src, len(shared)))
+
+        # ⭑ ⑬ · KAPI II · İMZA MEKANİĞİNİN BASILI DAYANAKLARI ⭑
+        if acc.get("kind") in COORD_ACCEPTANCE:
+            fig_sq = "".join(fig.split())
+            miss = [st for st in ("%d·%d" % (r, c)
+                                  for r, c in acc.get("coordinates") or [])
+                    if st not in fig_sq]
+            if not any(m in fig for m in ANCHOR_MARKS):
+                no_direction.append("%s (çapa işareti yok)" % pid)
+            if miss:
+                no_glyph.append("%s (%d istasyon şekilde yok)" % (pid, len(miss)))
+        if acc.get("kind") in PEN_ACCEPTANCE:
+            tbl = page.get("printedTable") or ""
+            need = list(acc.get("items") or []) + list(
+                acc.get("candidateRules") or [])
+            if not tbl.strip() or any(str(x) not in tbl for x in need):
+                no_table.append("%s (nitelik çizelgesi eksik)" % pid)
+        if acc.get("kind") in KEYED_ACCEPTANCE:
+            row = acc.get("keyedRow") or ""
+            if "".join(row.split()) not in "".join(fig.split()):
+                no_cipher.append("%s (anahtar satırı basılı değil)" % pid)
 
         # ⑧ ⭑ var olmayan bir çizelgeye gönderme ⭑
         for letter in set(CHART_REF.findall(visible)):

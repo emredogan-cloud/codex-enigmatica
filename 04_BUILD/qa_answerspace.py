@@ -58,16 +58,22 @@ TOOLS = os.path.join(pl.DESIGN_DIR, "tools-plate.json")
 
 # Üreteç ve kabul yordamı İZİN LİSTESİDİR. Yasak listesi yalnızca akla gelen
 # kaçamağı durdurur; izin listesi akla gelmemiş olanı da reddeder (K16).
-GENERATORS = {"printed-lexicon", "printed-phrase-list", "cyclic-shift",
+GENERATORS = {"printed-lexicon", "printed-bestiary", "printed-beast-phrases",
+              "printed-phrase-list", "cyclic-shift",
               "reflection-map", "keyed-substitution", "transposition-order",
               "glyph-chart-reading", "positional-extraction"}
-ACCEPTANCES = {"in-printed-lexicon", "in-printed-phrase-list",
+ACCEPTANCES = {"in-printed-lexicon", "in-printed-bestiary",
+               "in-printed-phrase-list",
                "satisfies-printed-constraints", "plate-attribute",
                "table-row", "reachable-via-number-table",
                "matches-positional-extraction",
                "reachable-by-glyph-reading", "reachable-by-transposition",
                "reachable-by-printed-shift", "reachable-by-printed-grid",
-               "grid-intersection"}
+               "grid-intersection",
+               # ── KAPI II · YARATIKLAR ──────────────────────────────────
+               "reachable-via-grid-coordinates",   # imza mekaniği (Polybius)
+               "misclassified-in-printed-pens",    # sınıflama
+               "reachable-by-keyed-alphabet"}      # B3 · anahtarlı alfabe
 
 # ⚠ FAZ 2 BULGUSU — MEKANİZMA ALANI İSPAT İÇİN YETERSİZ KALABİLİR.
 #
@@ -102,11 +108,16 @@ class Plate:
 
     def __init__(self, data: dict) -> None:
         ch = (data or {}).get("charts", {})
+        self.charts = ch
         self.alphabet = ch.get("esik-alfabesi", {}).get("alphabet", "")
         self.lexicon = [e["word"] for e in
                         ch.get("esik-sozlugu", {}).get("entries", [])]
         self.phrases = ch.get("kapi-sozleri", {}).get("entries", [])
         self.numbers = ch.get("esik-sayilari", {}).get("entries", [])
+        # ── KAPI II · basılı yetke ────────────────────────────────────
+        self.bestiary = [e["word"] for e in
+                         ch.get("yaratiklar-katalogu", {}).get("entries", [])]
+        self.beastPhrases = ch.get("yaratik-sozleri", {}).get("entries", [])
 
     @property
     def ok(self) -> bool:
@@ -176,6 +187,10 @@ def col_read(ct: str, width: int) -> str:
 def expand(gen: dict, plate: Plate) -> tuple[list[str], str | None]:
     """Yazarın listesini OKUMAZ; girdiden ve basılı çizelgelerden üretir."""
     kind = gen.get("kind")
+    if kind == "printed-bestiary":
+        return list(plate.bestiary), None
+    if kind == "printed-beast-phrases":
+        return list(plate.beastPhrases), None
     if kind == "printed-lexicon":
         return list(plate.lexicon), None
     if kind == "printed-phrase-list":
@@ -249,8 +264,12 @@ def grid_consistent(acc: dict, plate: Plate) -> tuple[bool, str]:
         if len(row) != len(cl):
             return False, "%d. satır sütun sayısıyla uyuşmuyor" % (i + 1)
         for j, w in enumerate(row):
-            if w not in plate.lexicon:
-                return False, "%s Eşik Sözlüğü'nde yok" % w
+            # ⚠ Hücre BASILI bir listenin üyesi olmalı — hangi listenin
+            # olduğunu ÜRETEÇ belirler (Kapı I sözlük, Kapı II katalog) ve
+            # onu § ③ bağımsız açılım zaten denetler. Buradaki soru daha
+            # dar: hücre uydurulmuş bir sözcük mü?
+            if w not in plate.lexicon and w not in plate.bestiary:
+                return False, "%s basılı bir listede yok" % w
             if not _constraint_ok(w, rl[i], plate):
                 return False, "%d. satırın etiketi hücresine uymuyor" % (i + 1)
             if not _constraint_ok(w, cl[j], plate):
@@ -261,10 +280,75 @@ def grid_consistent(acc: dict, plate: Plate) -> tuple[bool, str]:
     return True, "ızgara etiketleriyle tutarlı"
 
 
+# ═══ KAPI II · YARATIKLAR — üç yeni kabul yordamı ══════════════════════
+def _grid_cell(chart: dict, r: int, c: int) -> str:
+    """Basılı ızgaranın (satır, sütun) gözü — BİR TABANLI, okur gibi."""
+    rows = chart.get("rows") or []
+    if not (1 <= r <= len(rows)):
+        return ""
+    row = rows[r - 1]
+    if not (1 <= c <= len(row)):
+        return ""
+    return row[c - 1]
+
+
+def decode_grid(pairs, chart: dict) -> str:
+    out = []
+    for pr in pairs or []:
+        if not (isinstance(pr, (list, tuple)) and len(pr) == 2):
+            return ""
+        ch = _grid_cell(chart, pr[0], pr[1])
+        if not ch or ch == "·":
+            return ""
+        out.append(ch)
+    return "".join(out)
+
+
+def misclassified(acc: dict) -> tuple[str, int]:
+    """(yanlış ağıldaki üye, kaç kural açıklıyor).
+
+    ⭑ SINIFLAMA · § 14 ⭑ Okur kuralı BULUR, kural okura VERİLMEZ. Ama
+    kural yazarın kafasında da durmaz: basılı NİTELİK TABLOSUNDAN
+    hesaplanır. Bir kural, ağıl bölümlemesini TAM OLARAK BİR üye hariç
+    açıklıyorsa o üye yanlış ağıldadır.
+
+    ⚠ Tekillik için AÇIKLAYAN KURAL DA tek olmalıdır: iki kural aynı
+    bölümlemeyi iki AYRI üye hariç açıklıyorsa okurun iki savunulabilir
+    cevabı olur ve bulmaca çöker."""
+    items = acc.get("items") or []
+    attrs = acc.get("attributes") or {}
+    pens = acc.get("pens") or {}
+    hits = []
+    for rule in acc.get("candidateRules") or []:
+        wrong = [w for w in items
+                 if bool(attrs.get(w, {}).get(rule)) != (pens.get(w) == "A")]
+        if len(wrong) == 1:
+            hits.append(wrong[0])
+    return (hits[0] if len(set(hits)) == 1 and hits else ""), len(set(hits))
+
+
+def keyed_decode_row(ct: str, row: str, alphabet: str) -> str:
+    """Basılı anahtarlı satırla ÇÖZME — okur satırı KURMAZ, KULLANIR.
+
+    Levha iki satır basar: üstte düz alfabe, altta anahtarlı satır.
+    Okur şifreli harfi ALT satırda bulur, ÜSTTEKİNİ okur. Harf başına
+    tek bakış; yirmi dokuz harfi yeniden dizmek YOK (B3 + yönerge § 6)."""
+    if len(row) != len(alphabet):
+        return ""
+    out = []
+    for c in ct:
+        if c not in row:
+            return ""
+        out.append(alphabet[row.index(c)])
+    return "".join(out)
+
+
 def accepts(word: str, acc: dict, plate: Plate) -> bool:
     kind = acc.get("kind")
     if kind == "in-printed-lexicon":
         return word in plate.lexicon
+    if kind == "in-printed-bestiary":
+        return word in plate.bestiary
     if kind == "in-printed-phrase-list":
         return word in plate.phrases
     if kind == "satisfies-printed-constraints":
@@ -344,11 +428,37 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
             return False          # koşul satırı/sütunu tekil seçmiyor
         return word == acc["grid"][ri[0]][ci[0]]
 
+    if kind == "reachable-via-grid-coordinates":
+        # ⭑ İSPAT BÜTÜN OKUMALARI AÇAR ⭑ — yanlış çapadan başlayan veya
+        # ters dönen okurun GEÇERLİ bir cevaba düşemediğini göstermek
+        # için. OKUR tek okuma yapar: çapa levhada basılıdır (K25).
+        chart = plate.charts.get(acc.get("gridRef") or "") or {}
+        reads = acc.get("readings") or [acc.get("coordinates")]
+        return any(decode_grid(r, chart) == word for r in reads)
+
+    if kind == "misclassified-in-printed-pens":
+        who, n = misclassified(acc)
+        return bool(who) and n == 1 and word == who
+
+    if kind == "reachable-by-keyed-alphabet":
+        row = acc.get("keyedRow") or ""
+        return keyed_decode_row(acc.get("input", ""), row,
+                                plate.alphabet) == word
+
     if kind == "matches-positional-extraction":
         src, pos = acc.get("sources") or [], acc.get("positions") or []
         if not src or len(src) != len(pos):
             return False
-        built = "".join(s[p - 1] for s, p in zip(src, pos))
+        # ⭑ KAPI II · KONUM İKİ YÖNLÜ ⭑ Levha her satırın yanına sayımın
+        # hangi UÇTAN başladığını basar. Yön verilmemişse baştandır (Kapı I).
+        dirs = acc.get("directions") or ["head"] * len(src)
+        if len(dirs) != len(src):
+            return False
+        try:
+            built = "".join(w[p - 1] if d == "head" else w[len(w) - p]
+                            for w, p, d in zip(src, pos, dirs))
+        except IndexError:
+            return False
         return pl.squeeze(word) == pl.squeeze(built)
     return False
 
@@ -392,6 +502,18 @@ def near_miss(domain: list[str], acc: dict, plate: Plate,
                 out.append(d)
     elif kind == "grid-intersection":
         out = [w for row in acc.get("grid") or [] for w in row]
+    elif kind == "reachable-via-grid-coordinates":
+        chart = plate.charts.get(acc.get("gridRef") or "") or {}
+        out = [decode_grid(r, chart) for r in (acc.get("readings") or [])]
+    elif kind == "misclassified-in-printed-pens":
+        out = list(acc.get("items") or [])
+    elif kind == "reachable-by-keyed-alphabet":
+        row, ct = acc.get("keyedRow") or "", acc.get("input", "")
+        out = [keyed_decode_row(ct, row, plate.alphabet)]
+        # ters yön: okurun satırı yanlış yöne okuması
+        if len(row) == len(plate.alphabet):
+            out.append("".join(row[plate.alphabet.index(c)] for c in ct
+                               if c in plate.alphabet))
     elif kind == "reachable-by-transposition":
         ct = acc.get("input", "")
         out = [col_read(ct, w) for w in acc.get("widths", [])]

@@ -593,6 +593,36 @@
     "hardStopCriteria": {
       "solversCompletingGateI": 3,
       "$comment": "5 çözücüden 3'ünden AZI Kapı I'i bitirirse PROJE DURUR veya YENİDEN TASARLANIR. Yazıma DEVAM EDİLMEZ."
+    },
+    "externalValidation": {
+      "$comment": [
+        "⭑ KURUCU GEÇERSİZ KILMASI — 24 Ağustos 2026 ⭑",
+        "",
+        "Bu blok ÖLÇÜMÜ DEĞİŞTİRMEZ. Öldürme kapısının ölçtüğü karar hâlâ",
+        "HARD-STOP'tur ve öyle raporlanır. Bu blok yalnızca kurucunun",
+        "ÖLÇÜMÜ BİLEREK devam kararı aldığını kaydeder.",
+        "",
+        "⚠ ÜÇ ALAN ASLA BİRLİKTE DOĞRU OLAMAZ ve kill_gate.py bunu denetler:",
+        "  sessionsPerformed == 0  ve  humanValidationPassed == true",
+        "→ bu kombinasyon UYDURMADIR ve kapı KIRMIZI yanar."
+      ],
+      "status": "founder_override_partial",
+      "sessionsPerformed": 0,
+      "humanValidationPassed": false,
+      "founderOverride": true,
+      "overrideAuthorisedAt": "2026-08-24",
+      "overrideReason": "founder-authorized continuation",
+      "overrideScope": [
+        "Faz 3 yazımı başlatılabilir",
+        "Kapı I ölçüm kanıtı yeterli SAYILIR — ama DOĞRULANMIŞ sayılmaz"
+      ],
+      "overrideDoesNotCover": [
+        "harici insan doğrulaması (A12 · A12b) — hâlâ YAPILMADI",
+        "'tested' durumu — hiçbir bulmaca test edilmiş sayılmaz",
+        "İngilizce dönüşüm — pilot doğrulanmadan başlayamaz",
+        "fiziksel prova (A9)"
+      ],
+      "mustRemainVisibleInReports": "External human validation remains pending."
     }
   },
   "contentProtection": {
@@ -846,11 +876,22 @@
       },
       "backMatter": {
         "hintSection$comment": "Anahtar adı bilerek 'hints' DEĞİLDİR: çözüm sızıntısı tarayıcısı '\"hints\":' kalıbını arar ve bir SAYFA SAYISI alanı o kapıyı yanlış yere kırmızı yakardı. Gürültülü bir kapı kapatılan kapıdır.",
-        "hintSection": 22,
+        "hintSection": 26,
         "solutionSection": 18,
         "cipherReference": 2,
         "folkloreSources": 1,
-        "colophon": 1
+        "colophon": 1,
+        "hintSection$measured": [
+          "⚠ 22 → 26 · 24 Ağustos 2026 · ÖLÇÜLDÜ, tahmin edilmedi.",
+          "`pilot_pages.py` yazılmış Kapı I ipuçlarını saydı: 1787 kelime → 5,1",
+          "sayfa; kitap ölçeğinde (×5) 25,5 sayfa. Bütçe 22'ydi.",
+          "",
+          "Kısaltmak SEÇENEK DEĞİLDİ: ipucu merdiveni 'kapsam monoton ARTAR'",
+          "kuralına uyar (qa_hints § ⑥) ve üçüncü kademe önceki adımları",
+          "sözcükleriyle taşımak zorundadır. Kısaltmak kuralı kırardı.",
+          "",
+          "⚑ Sayfa hedefi A8'de kurucu onayı bekliyor; bu artış oraya girdi."
+        ]
       },
       "backMatterDerivation": {
         "$comment": [
@@ -940,6 +981,19 @@
         "puzzlesValidated": 100,
         "puzzlesWritten": 100
       }
+    },
+    "gateStatus": {
+      "$comment": [
+        "MAKİNE OKUNUR KAPI DURUMU. Üç şey AYRI AYRI durur ve",
+        "birbirinin yerine geçmez:",
+        "  ÖLÇÜLEN (previousKillGate) · GEÇERSİZ KILINAN (phase3_entry) ·",
+        "  HENÜZ DOĞRULANMAMIŞ (killGate.externalValidation)"
+      ],
+      "phase3_entry": "founder_override",
+      "previousKillGate": "hard-stop",
+      "overrideReason": "founder-authorized continuation",
+      "measuredEvidence": "Kapı I yeniden tasarımı · 101 elle işlem · 0/20 aşım",
+      "notMeasured": "hiçbir harici çözücü oturumu yapılmadı"
     }
   },
   "style": {

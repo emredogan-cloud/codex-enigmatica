@@ -129,6 +129,17 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 [ -f 04_BUILD/qa_experience.py ] && \
   run "⭑ DENEYİM ⭑"             $PY 04_BUILD/qa_experience.py --gate "$GATE" \
                                    --json 06_REPORTS/tracked/qa-experience.json
+# ⭑ PAKETTEN ÇÖZME — cevap anahtarına BAKMADAN yeniden kurulum.
+# qa_readerpack "veri sayfada var mı" diye sorar; bu betik "o veriden cevap
+# GERÇEKTEN çıkıyor mu" diye sorar. ⚠ İnsan testi DEĞİLDİR.
+[ -f 05_TESTS/solve_from_pack.py ] && \
+  run "PAKETTEN ÇÖZME"          $PY 05_TESTS/solve_from_pack.py
+# ⭑ LEVHA VERİSİ — imza mekaniğinin baskı ÖN ölçümü (yol haritası Faz 3 § 13).
+# Gerçek baskı testi A9'a aittir; bu kapı ondan ÖNCEKİ soruyu sorar:
+# veri şeklin kendisinden geri alınıyor mu ve en ince ayrım ne kadar ince?
+[ -f 04_BUILD/qa_plate_data.py ] && \
+  run "⭑ LEVHA VERİSİ ⭑"        $PY 04_BUILD/qa_plate_data.py --gate "$GATE" \
+                                   --json 06_REPORTS/tracked/qa-plate-data.json
 [ -f 04_BUILD/qa_readerpack.py ] && \
   run "⭑ OKUR PAKETİ ⭑"          $PY 04_BUILD/qa_readerpack.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-readerpack.json

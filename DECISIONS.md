@@ -533,6 +533,107 @@ kesişirse, okur kaynağı hiç çözmeden cevabını iki sayfaya bakarak okur.
 ayrı ayrı temizdir. Yeni denetim `§ ⑫` kesişimi ölçer ve en az **iki**
 ortak aday ister. Üretimde iki bulmacada gerçekten bulundu.
 
+### ⚑ A13 · KURUCU GEÇERSİZ KILMASI — FAZ 3 DEVAMI
+**24 Ağustos 2026 · kurucu kararı.**
+
+> *"The Founder accepts the current redesign evidence as sufficient to
+> continue development before second-round human validation is complete."*
+
+| | |
+|---|---|
+| Ölçülen öldürme kapısı | ⛔ **HARD-STOP** (1/5) — **değişmedi** |
+| Harici oturum | **0** |
+| İnsan doğrulaması geçti mi | **HAYIR** |
+| Faz 3 girişi | **kurucu geçersiz kılması** |
+| `.gate` | `phase3` |
+
+#### Açık sınırlar — silinmeyecek
+
+* İkinci tur insan doğrulaması **YAPILMADI**.
+* Hiçbir çözücü oturumu yok; `06_REPORTS/solver/` **boş**.
+* Öldürme kapısı **harici kanıtla geçilmedi**.
+* Bu **kurucu yetkili kısmi devamdır**.
+* ⚠ **Faz 3 "harici olarak doğrulanmış" diye anılamaz.**
+
+#### Ve bu bir düğme değil, bir KAYIT
+
+Geçersiz kılma **ölçümü ezmez**. `kill_gate.py` kararı hâlâ HARD-STOP
+olarak hesaplar, yazdırır ve rapora `verdict` alanıyla yazar; geçersiz
+kılma yalnızca **çıkış kodunu** değiştirir. Rapor her koşuda dört alanı
+birlikte taşır: `measuredVerdict` · `overrideActive` ·
+`externalValidation.humanValidationPassed` · `sessionsPerformed`.
+
+⭑ **Ve uydurma yapısal olarak imkânsızdır.** Dört muhafız (`kill_gate.py
+§ override_state`) kaydın kendisini denetler ve dördü de kendi kusurlu
+fikstürüyle ısırdığı kanıtlanmış olarak durur:
+
+| muhafız | ne yakalar |
+|---|---|
+| ① | `humanValidationPassed=true` iken `sessionsPerformed=0` |
+| ② | bildirilen oturum sayısı diskte ÖLÇÜLENİ aşıyor |
+| ③ | geçersiz kılma gerekçesiz/tarihsiz |
+| ④ | oturum yokken `status` ≠ `founder_override_partial` |
+
+En fazla şunu diyebilir: *"doğrulanmadı, kurucu devam etti."*
+*"Doğrulandı"* diyebilmesinin **hiçbir yolu yoktur**.
+
+#### Sınır: iş geçersiz kılınamaz
+
+`validate_spec § check_gate_scope` geçersiz kılmayı **yalnızca doğrulama
+eşiğine** uygular. `puzzlesDrafted` eşiği **her koşulda** aranır — Faz 3
+girişi denendiğinde kapı önce **kırmızı yandı** (20 < 40) ve ancak Kapı
+II gerçekten yazıldıktan sonra yeşile döndü. Kurucu kararı bir bulmacayı
+yazılmış yapmaz.
+
+### K32 · ⭑ Kapı II'nin zorluğu İŞTEN değil, ÇIKARIMDAN gelir ⭑
+**24 Ağustos 2026 · Faz 3.** ★'dan ★★'ye geçerken elle iş **artmadı**:
+yirmi bulmacanın hiçbiri en kötü hâlinde kendi tavanını aşmıyor ve elle
+işin bildirilen süredeki payı kitap genelinde **%23**'tür (tavan %33).
+
+Zorluk üç eksende arttı ve üçü de düşüncedir:
+
+1. **Kural verilmez, bulunur** — sınıflama ailesi bölmeleri gösterir,
+   kuralı göstermez.
+2. **Çapa basılı olmaktan çıkar** — levha içi şifre altı bulmacalık bir
+   rampadır: şerit(çapa basılı) → halka(çapa basılı) → halka(çapa
+   siluetten çıkarılır) → halka(çapa VE yön çıkarılır). Her adımda okur
+   bir şeyi daha kendi bulur; **hiçbir adımda daha fazla iş yapmaz.**
+3. **Mekanizmalar zincirlenir** — bir cevap sonraki bulmacanın basılı
+   anahtarı olur (yayılma yarıçapı ≤1).
+
+### K33 · K4 tavanı zorlukla ÖLÇEKLENİR — ve bu sessiz değildir
+**24 Ağustos 2026.** ★ için tavan 8'dir ve öyle kaldı. ★★ için **12**'dir.
+
+Gerekçe K4'ün kendi metnindedir: *"4–8 **anlamlı** işlem"i "20–40
+**tekrarlı** işlem"e karşı koyar* — yasakladığı şey **tekrardır**,
+çokluk değil. ★★'de okur bir dizeyi ters yönde bir kez daha okuyabilir
+(katalog onu geri çevirir); altı harflik bir şeritte en kötü hâl 12'dir
+ve 20–40 bandına uzaktır.
+
+⭑ Ve asıl emniyet tavan değil, **`repetitionBurden`**dir — o ölçüt
+**ölçeklenmez** ve bütün kapılarda aynı tavanı taşır. Kapı II'de ortanca
+**2,0** (düşük) ölçüldü.
+
+### K34 · ⭑ Kanarya cevabı TERS de arar — ve bir adı o yakaladı ⭑
+**24 Ağustos 2026.** Kapı II'nin adları seçilirken elli aday, takip
+edilen dosyalara ve iki yüz commit mesajına karşı tarandı. Bir deniz
+memelisinin adı **düz biçimde temizdi** ama **ters çevrildiğinde**
+Türkçenin en sık eklerinden birinin içine düşüyordu ve **beş ayrı
+dosyada** geçiyordu.
+
+> **Ders:** bir adı kanaryaya karşı denerken TERS biçimini de dene.
+> Kanarya bunu zaten yapıyordu; ben yapmıyordum.
+
+### K35 · Sızıntı, kapının BAKTIĞI YERİN DIŞINDA olabilir
+**24 Ağustos 2026.** `qa_readerpack § ⑫` zincirin kaynağını iki sayfanın
+kesişiminden okumayı engeller — ama yalnızca **bildirilen bağımlılık**
+için. Kapı II'de iki çizelge hücresi, **bağımlı olmadıkları** iki
+bulmacanın cevabını basıyordu; ⑫ oraya bakmıyordu.
+
+Artık üreteç, bir çizelge ya da ızgara hücresinin başka bir bulmacanın
+cevabını taşımasını **üretim anında** reddeder — zincir değeri olarak
+kasıtlı konanlar hariç.
+
 ### K12 · Kapı V dizgiye bağlıdır ve en son kilitlenir
 Kapı V öz-göndergeseldir: kitabın **fiziksel yapısını** kullanır
 (sayfa numaraları, dizin, kolofon). Dizgi değişirse **kırılır**.

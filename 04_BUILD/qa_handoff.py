@@ -185,9 +185,12 @@ def main() -> int:
             bad_marks.append("%s (işaret %d ≠ girdi %d)"
                              % (pid, len(marks), len(src)))
         else:
+            # ⭑ Kapı II'de konum sayımı İKİ YÖNLÜDÜR (levha ▸/◂ basar).
+            # Yönü yok sayan bir denetim, doğru levhayı yanlış sanardı.
+            dirs = acc.get("directions") or ["head"] * len(src)
             wrong = 0
-            for m, s, q in zip(marks, src, pos):
-                letter = s[q - 1]
+            for m, s, q, d in zip(marks, src, pos, dirs):
+                letter = s[q - 1] if d == "head" else s[len(s) - q]
                 if m.get("group") != plate.group(letter):
                     wrong += 1
             if wrong:

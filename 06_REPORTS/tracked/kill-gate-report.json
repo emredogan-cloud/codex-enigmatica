@@ -122,5 +122,14 @@
       "implicatedPuzzles": null,
       "solverCount": null
     }
-  ]
+  ],
+  "measuredVerdict": "HARD-STOP",
+  "externalValidation": {
+    "status": "founder_override_partial",
+    "sessionsPerformed": 0,
+    "humanValidationPassed": false,
+    "founderOverride": true
+  },
+  "overrideActive": true,
+  "overrideViolations": []
 }

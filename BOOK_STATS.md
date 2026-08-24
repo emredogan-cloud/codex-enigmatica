@@ -2,7 +2,7 @@
 
 <!-- ⚠ ÜRETİLEN BELGE — 04_BUILD/update_docs.py. ELLE DÜZENLEMEYİN. -->
 
-> Kapı: `phase1` · Bu dosyadaki her sayı **ölçülmüştür**.
+> Kapı: `phase3` · Bu dosyadaki her sayı **ölçülmüştür**.
 >
 > ⚠ Bu dosya **çözüm bilgisi taşımaz** — yalnızca sayılar.
 
@@ -11,7 +11,7 @@
 | | Ölçülen | Hedef |
 |---|---:|---:|
 | Aday bulmaca | **151** | ≥130 |
-| **Yazılmış taslak** (metin + çözüm + ipucu) | **20** | — |
+| **Yazılmış taslak** (metin + çözüm + ipucu) | **40** | — |
 | Doğrulanmış bulmaca | **0** | 100 |
 | Yazılmış bulmaca (nihai) | **0** | 100 |
 | Kapı | **5** | 5 |
@@ -21,9 +21,9 @@
 | `tested` durumundaki bulmaca | **0** | — |
 | **Onaylanmış alternatif çözüm** | **0** | **0** |
 | Belirsizlik puanı > 2 | **0** | **0** |
-| **Cevap uzayı bağımsız doğrulanmış** | **20 / 20** | tamamı |
-| **Elenen aday dize** (cevap uzayı toplamı) | **1152** | — |
-| İpucu (3 kademe) | **60** | 300 |
+| **Cevap uzayı bağımsız doğrulanmış** | **40 / 40** | tamamı |
+| **Elenen aday dize** (cevap uzayı toplamı) | **2114** | — |
+| İpucu (3 kademe) | **120** | 300 |
 
 ## 2. Öldürme kapısı (Faz 2)
 
@@ -63,8 +63,8 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 |---|---:|
 | Ön madde | 12 |
 | Gövde (5 kapı + son soru) | 176 |
-| Arka madde (300 ipucu + 100 çözüm) | 44 |
-| **Modelin sayfa sayısı** | **232** |
+| Arka madde (300 ipucu + 100 çözüm) | 48 |
+| **Modelin sayfa sayısı** | **236** |
 | Hedef | 230 |
 | Levha | 112 |
 
@@ -72,6 +72,6 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 
 | Sürüm | Durum | Fiyat | Telif | Not |
 |---|---|---:|---:|---|
-| Hardcover | hipotez | 29.99 $ | **9.56 $** | baskı 8.43 $ · başabaş ACOS %31.9 |
-| Paperback | hipotez | 19.99 $ | **8.21 $** | baskı 3.78 $ · başabaş ACOS %41.1 |
+| Hardcover | hipotez | 29.99 $ | **9.51 $** | baskı 8.48 $ · başabaş ACOS %31.7 |
+| Paperback | hipotez | 19.99 $ | **8.16 $** | baskı 3.83 $ · başabaş ACOS %40.8 |
 | Kindle | **üretilmez** | — | — | Görsel şifreler e-okuyucuda bozulur |

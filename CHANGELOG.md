@@ -5,6 +5,97 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.5.0] — 2026-08-24 · FAZ 3 · KAPI II YAZILDI (kurucu geçersiz kılması)
+
+# ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
+
+Kurucu, ikinci tur insan doğrulaması tamamlanmadan Faz 3'ün başlamasına
+açıkça izin verdi. **Ölçülen öldürme kapısı hâlâ `HARD-STOP`'tur** ve
+öyle raporlanmaya devam eder.
+
+### Eklendi — kurucu geçersiz kılması, bir DÜĞME değil bir KAYIT (A13)
+
+- `project_config § killGate.externalValidation` + `gates.gateStatus`
+  makine okunur hâlde: `status=founder_override_partial` ·
+  `sessionsPerformed=0` · `humanValidationPassed=false`
+- ⭑ `kill_gate.py` kararı hâlâ **HARD-STOP olarak hesaplar, yazdırır ve
+  rapora `verdict` alanıyla yazar**; geçersiz kılma yalnızca **çıkış
+  kodunu** değiştirir
+- ⭑ **Dört uydurma muhafızı** — sıfır oturumla "doğrulandı" denemez,
+  bildirilen oturum sayısı diskte ölçüleni aşamaz, gerekçesiz kayıt
+  olmaz, oturum yokken durum `validated` olamaz
+- ⭑ **İş geçersiz kılınamaz**: `check_gate_scope` yalnızca *doğrulama*
+  eşiğini karşılar. Faz 3 girişi ilk denendiğinde kapı **kırmızı yandı**
+  (20 < 40) ve ancak Kapı II yazıldıktan sonra yeşile döndü
+- `.gate` → `phase3`
+
+### Eklendi — Kapı II · Yaratıklar (20 bulmaca · ★★)
+
+- Karışım: levha içi şifre **6** · sınıflama **5** · kısıt mantığı 3 ·
+  levha gözlemi 2 · yazı çözme 2 · yer değiştirme 1 · kapı 1
+- Basılı yetke: **Çizelge E** (50 üyelik katalog) · **Çizelge F**
+  (6×5 halka tablosu · Polybius) · **Çizelge G** (12 söz)
+- ⭑ **B3 kapandı**: anahtarlı alfabe burada — ama satır **basılıdır**;
+  okurdan yirmi dokuz harfi dizmesi istenmez
+- Isınma **7 → 8 örnek** (sınıflama ailesi eklendi)
+- Üç yeni kabul yordamı: `reachable-via-grid-coordinates` ·
+  `misclassified-in-printed-pens` · `reachable-by-keyed-alphabet`
+
+### ⭑ ★'dan ★★'ye geçilirken elle iş ARTMADI (K32)
+
+| | Kapı I | Kapı II |
+|---|---:|---:|
+| Elle işlem | 100,8 | **133,5** |
+| Bildirilen süre | 105 dk | **228 dk** |
+| ⭑ Elle işin payı | %32 | **%20** |
+| Bütçesini aşan | 0/20 | **0/20** |
+
+Zorluk üç eksende arttı ve üçü de **düşüncedir**: kural verilmez bulunur ·
+çapa basılı olmaktan çıkar (altı bulmacalık rampa) · mekanizmalar
+zincirlenir (yayılma yarıçapı ≤1).
+
+### Değişti — K4 tavanı zorlukla ölçeklenir, SESSİZCE DEĞİL (K33)
+
+★ = 8 (değişmedi) · **★★ = 12**. Gerekçe K4'ün kendi metnidir: *"4–8
+**anlamlı**"* ifadesini *"20–40 **tekrarlı**"*ya karşı koyar.
+⭑ Asıl emniyet `repetitionBurden`dir ve **o ölçeklenmez**.
+
+### Eklendi — iki yeni ölçüm betiği
+
+- **`qa_plate_data.py`** (5 denetim) — yol haritası Faz 3 § 13'ün istediği
+  baskı **ön** ölçümü. En ince ayrım **5** (tavan 5) · bit fazlalığı
+  2,9× · trim'i aşan şekil 0. ⚠ **Baskı yapmaz**; gerçek ölçüm A9'dur
+- **`solve_from_pack.py`** — cevap anahtarına **bakmadan**, yalnızca
+  okurun eline geçenden çözer: **16/40 türetildi, 16 uyuştu, 0 uyuşmadı**.
+  ⚠ İnsan testi **değildir**
+
+### Düzeltildi — beş bulgu, hiçbiri okuyarak bulunmadı
+
+1. Zincirler birbirine eklenmişti → yayılma yarıçapı 2
+2. ⭑ Bir ad **ters çevrildiğinde** sık bir Türkçe ekin içine düşüyor ve
+   beş dosyada geçiyordu (K34) — kanarya ters de arar
+3. ⭑ İki çizelge hücresi **bağımlı olmadıkları** bulmacaların cevabını
+   basıyordu; § ⑫ oraya bakmıyordu (K35) — artık üretim anında reddedilir
+4. Akran havuzu tükendi; son levha iki etiketle kaldı
+5. Bir Kapı I levhası trim'e sığmıyordu (66 > 62) — `qa_plate_data` buldu
+
+### Ölçüldü — ve kurucuya girdi
+
+- **Sayfa modeli 232 → 236**: ipucu bölümü 22 → **26** (ölçüldü;
+  kısaltmak ipucu merdiveni kuralını kırardı)
+- **Kelime yol haritası tahmininin yarısı**: iki kapı da öyle — üslup
+  tahmin edilenden yoğun (A8 girdisi)
+
+### Değişmedi
+
+- ⛔ **Öldürme kapısı hâlâ `HARD-STOP`** · harici oturum **0**
+- ⛔ **Hiçbir bulmaca `tested` değil** — kırkı da `drafted`
+- ⛔ **Faz 4 başlatılmadı**
+- ⛔ `EU_PER_MINUTE = 3` hâlâ kalibre edilmemiş (B5)
+- `selftest` **185 → 195** denetim
+
+---
+
 ## [0.4.0] — 2026-08-24 · DÜŞÜK SÜRTÜNME / YÜKSEK ÖDÜL (ikinci yönerge)
 
 **Tasarım hedefi sıkıldı ve deneyim ölçüye girdi.** Elle iş

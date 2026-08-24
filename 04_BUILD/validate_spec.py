@@ -480,6 +480,20 @@ def check_test_status(cfg: dict, entries: list, gate_ids: set, rep: Report) -> N
 
 
 def check_gate_scope(cfg: dict, gate: str, rep: Report) -> None:
+    """⭑ KAPI SEVİYESİ KAPSAM — ve KURUCU GEÇERSİZ KILMASININ SINIRI ⭑
+
+    Geçersiz kılma YALNIZCA HARİCİ DOĞRULAMA eksiğini karşılar.
+    YAZILMAMIŞ İŞİ KARŞILAMAZ ve bu ayrım burada mekaniktir:
+
+      · `puzzlesDrafted` eşiği HER KOŞULDA aranır — geçersiz kılma bunu
+        gevşetmez. Yirmi bulmaca yazılmadıysa hiçbir kurucu kararı onları
+        yazılmış yapmaz.
+      · `puzzlesValidated` / `puzzlesWritten` eşikleri harici insan
+        kanıtına dayanır ve kanıt YOKTUR. Geçersiz kılma yalnızca BU
+        ikisini "kurucu kararıyla karşılandı" sayar — ve raporda ölçülen
+        sayı ile eşiği YAN YANA yazar.
+
+    ⚠ Hiçbir bulmaca 'tested' olmaz. Durum alanları dokunulmaz kalır."""
     print("\n── kapı seviyesi kapsam denetimi (%s) ──" % gate)
 
     req = cfg.get("gates", {}).get("requirements", {}).get(gate)
@@ -487,20 +501,49 @@ def check_gate_scope(cfg: dict, gate: str, rep: Report) -> None:
         rep.fail("kapı seviyesi config'de tanımsız: %s" % gate)
         return
 
+    ov = (cfg.get("killGate") or {}).get("externalValidation") or {}
+    override = bool(ov.get("founderOverride")) and not ov.get(
+        "humanValidationPassed")
+
     total = rep.facts.get("games_total", 0)
     # 'written' bir bulmaca zaten 'tested' olmak zorundadır (check_test_status),
     # yani doğrulanmışlığı kapsar. Sayımın toplam olması bu yüzden geçerlidir.
     validated = (rep.facts.get("games_validated", 0)
                  + rep.facts.get("games_written", 0))
     written = rep.facts.get("games_written", 0)
+    drafted = (rep.facts.get("games_drafted", 0) + validated)
 
     rep.check(total >= req["puzzlesCandidate"],
               "aday bulmaca ≥ %d (ölçülen %d)" % (req["puzzlesCandidate"], total))
-    rep.check(validated >= req["puzzlesValidated"],
-              "doğrulanmış bulmaca ≥ %d (ölçülen %d)"
-              % (req["puzzlesValidated"], validated))
-    rep.check(written >= req["puzzlesWritten"],
-              "yazılmış bulmaca ≥ %d (ölçülen %d)" % (req["puzzlesWritten"], written))
+
+    if override:
+        # ⭑ İŞ eşiği geçersiz kılınamaz ⭑
+        rep.check(drafted >= req["puzzlesWritten"],
+                  "⭑ YAZILMIŞ (drafted) BULMACA ≥ %d — GEÇERSİZ KILINAMAZ ⭑ "
+                  "(ölçülen %d)" % (req["puzzlesWritten"], drafted))
+        gap_v = max(0, req["puzzlesValidated"] - validated)
+        gap_w = max(0, req["puzzlesWritten"] - written)
+        if gap_v or gap_w:
+            print("  ⚑ KURUCU GEÇERSİZ KILMASI — doğrulama eşiği karşılanmadı")
+            print("     doğrulanmış  %d / %d   (eksik %d)"
+                  % (validated, req["puzzlesValidated"], gap_v))
+            print("     yazılmış     %d / %d   (eksik %d)"
+                  % (written, req["puzzlesWritten"], gap_w))
+            print("     ⚠ External human validation remains pending.")
+            rep.warn("kapı %s doğrulama eşiği KURUCU KARARIYLA geçildi — "
+                     "ölçülen doğrulama %d/%d, yazılmış %d/%d"
+                     % (gate, validated, req["puzzlesValidated"],
+                        written, req["puzzlesWritten"]))
+        rep.facts["gateScopeOverride"] = True
+        rep.facts["validatedGap"] = gap_v
+        rep.facts["writtenGap"] = gap_w
+    else:
+        rep.check(validated >= req["puzzlesValidated"],
+                  "doğrulanmış bulmaca ≥ %d (ölçülen %d)"
+                  % (req["puzzlesValidated"], validated))
+        rep.check(written >= req["puzzlesWritten"],
+                  "yazılmış bulmaca ≥ %d (ölçülen %d)"
+                  % (req["puzzlesWritten"], written))
 
     if cfg["scope"].get("locked") and gate in ("phase4", "phase5", "release"):
         rep.check(total >= cfg["scope"]["puzzles"], "kilitli kapsam sağlanıyor")

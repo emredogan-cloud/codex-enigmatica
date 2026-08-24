@@ -2,19 +2,33 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **13 Ağustos 2026** · Faz: **2 · ÖLDÜRME KAPISI DÜŞTÜ**
-> Kapı: `phase1` · Karar: ⛔ **`HARD-STOP`**
+> Son güncelleme: **24 Ağustos 2026** · Faz: **3 · KAPI II YAZILDI**
+> Kapı: `phase3` · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
 >
-> Beş harici Türkçe çözücüden **1'i** Kapı I'i bitirdi (eşik ≥4, sert
-> durdurma <3). Baskın bırakma sebebi *"çözemedim"* değil, **"sıkıldım"**dı:
-> kaydırma, yansıma ve anahtarlı alfabe bulmacaları kâğıt kalemle yorucuydu.
+> ## ⚠ HARİCİ İNSAN DOĞRULAMASI HÂLÂ BEKLİYOR
 >
-> Sekiz kapı yeşildi ve **hiçbiri okurun ne kadar iş yapacağını
-> ölçmüyordu.** `qa_effort.py` o boşluğu kapattı.
+> **External human validation remains pending.**
 >
-> **Kurucu kararı: YENİDEN TASARLA.** Faz 3 başlatılmadı.
-> → [`06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md`](06_REPORTS/GATE_1_REDESIGN_PROPOSAL.md)
-> → Bekleyen kararlar: **B1–B6**
+> | | |
+> |---|---|
+> | Ölçülen öldürme kapısı | ⛔ **HARD-STOP** (1/5) — **değişmedi** |
+> | Yapılan harici oturum | **0** |
+> | İnsan doğrulaması geçti mi | **HAYIR** |
+> | Faz 3 girişi | ⚑ **kurucu geçersiz kılması** (A13 · 24 Ağustos 2026) |
+> | Yazılmış bulmaca | **40** (Kapı I + Kapı II) · durum `drafted` |
+> | Doğrulanmış bulmaca | **0** — hiçbiri `tested` DEĞİL |
+>
+> ⭑ **ÜÇ ŞEY BİRBİRİNİN YERİNE GEÇMEZ:**
+> **ÖLÇÜLEN** (HARD-STOP) · **GEÇERSİZ KILINAN** (Faz 3 girişi) ·
+> **HENÜZ DOĞRULANMAMIŞ** (harici insan testi).
+>
+> Faz 3 **"harici olarak doğrulanmış" diye anılamaz.** Geçersiz kılma
+> ölçümü ezmez; `kill_gate.py` kararı her koşuda HARD-STOP olarak
+> yazdırmaya devam eder ve yalnızca çıkış kodu değişir.
+>
+> → Karar kaydı: `DECISIONS.md § A13` · Rapor:
+> [`06_REPORTS/PHASE_3_REPORT.md`](06_REPORTS/PHASE_3_REPORT.md)
+> → Bloklayıcı: **A12/A12b** — harici çözücü oturumları
 
 ---
 
@@ -70,22 +84,30 @@ soruya bağlayan bir meta-mister. Gravür levhaların **içine gömülmüş**
 
 | | |
 |---|---|
-| Faz | **1 · TAMAM** — mimari, çözülebilirlik çerçevesi, gizlilik katmanı |
-| Kapı (`.gate`) | `phase1` |
+| Faz | **3 · Kapı II yazıldı** (kurucu geçersiz kılmasıyla girildi) |
+| Kapı (`.gate`) | `phase3` |
 | Aday bulmaca | **151** / ≥130 ✅ |
-| Mekanizma ailesi | **17** tanımlı ve hepsi kullanımda |
-| Pilot kohort (Kapı I) | **20** slotlanmış, Faz 2'ye hazır |
-| Doğrulanmış / yazılmış | 0 / 100 — **bu fazda bulmaca YAZILMADI** |
-| Kalite kapısı | **11 betik · selftest 123 denetim · CI yeşil** |
-| **Sonraki adım** | **KURUCU ONAYI** → sonra Faz 2 |
+| Yazılmış (`drafted`) | **40** / 100 — Kapı I (★) + Kapı II (★★) |
+| **Doğrulanmış (`validated`)** | **0** / 100 — ⚠ harici kanıt YOK |
+| Elle iş (kitap) | **234 işlem** · bildirilen sürenin **%23**'ü (tavan %33) |
+| aha ortancası | **4,0** · ödülsüz bulmaca **0** |
+| Kalite kapısı | **17 betik · selftest 195 denetim · CI yeşil** |
+| Sayfa modeli | **236** (ölçülen ipucu bütçesiyle güncellendi) |
+| **Sonraki adım** | **A12/A12b** — harici çözücü oturumları (kurucu) |
 
-⚠ **FAZ 2 BAŞLAMADI ve kurucu onayı olmadan başlamaz.**
+⚠ **FAZ 4 BAŞLAMADI ve başlamayacak.** Faz 3'ün Definition of Done'ında
+*"Kapı II için ≥2 harici çözücü testi geçti"* maddesi vardır ve o madde
+**AJAN TARAFINDAN YAPILAMAZ**.
 
-Faz 1 iki bağımsız kırmızı takım saldırısından geçti (**36 bulgu**) ve
-30'u kapatıldı. Kalan 6'sı kurucu kararına bağlıdır:
-`DECISIONS.md § A7–A11`. Tam defter:
-[`00_CONTEXT/RED_TEAM_CHECKLIST.md`](00_CONTEXT/RED_TEAM_CHECKLIST.md) ·
-Faz raporu: [`06_REPORTS/PHASE_1_REPORT.md`](06_REPORTS/PHASE_1_REPORT.md)
+### Ne ölçüldü, ne ölçülmedi
+
+| | |
+|---|---|
+| ✅ ÖLÇÜLDÜ | 40/40 tekil cevap · çaba · aha · tekrar yükü · levha verisi |
+| ✅ ÖLÇÜLDÜ | DAG döngüsüz · yayılma yarıçapı ≤1 · sızıntı yok |
+| ⛔ **ÖLÇÜLMEDİ** | **hiçbir insanın bu bulmacaları çözüp çözemediği** |
+
+`06_REPORTS/solver/` **boştur** ve gerçek oturumlar gelene kadar boş kalır.
 
 ---
 

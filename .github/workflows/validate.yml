@@ -127,7 +127,7 @@ jobs:
         run: |
           LEVEL="$(tr -d '[:space:]' < .gate)"
           RAN=0
-          for g in qa_answerspace qa_effort qa_experience qa_handoff qa_readerpack english_readiness qa_solvability qa_uniqueness qa_hints qa_dependency qa_meta qa_length qa_voice qa_echo qa_drift; do
+          for g in qa_answerspace qa_effort qa_experience qa_plate_data qa_handoff qa_readerpack english_readiness qa_solvability qa_uniqueness qa_hints qa_dependency qa_meta qa_length qa_voice qa_echo qa_drift; do
             if [ -f "04_BUILD/$g.py" ]; then
               echo "▸ $g"
               python3 "04_BUILD/$g.py" --gate "$LEVEL" --verbose || exit 1

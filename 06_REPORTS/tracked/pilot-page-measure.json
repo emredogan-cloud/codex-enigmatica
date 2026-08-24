@@ -2,24 +2,22 @@
   "status": "pass",
   "checks": 3,
   "errors": [],
-  "warnings": [
-    "Kapı I gövdesi bütçenin yarısından az (9.4 / 34) — levha boyutları veya bulmaca başına sayfa yerleşimi Faz 5'te yeniden ölçülmeli"
-  ],
+  "warnings": [],
   "facts": {
     "gate": "threshold",
-    "puzzles": 20,
-    "bodyWords": 1292,
-    "figureLines": 239,
-    "hintWords": 860,
-    "solutionWords": 540,
+    "puzzles": 40,
+    "bodyWords": 2686,
+    "figureLines": 504,
+    "hintWords": 1787,
+    "solutionWords": 1120,
     "wordsPerPage": 350,
-    "measuredBodyPages": 9.4,
+    "measuredBodyPages": 19.7,
     "declaredBodyPages": 34,
-    "toolsPlatePages": 0.9,
-    "projectedBodyPages": 46.9,
-    "projectedHintPages": 12.3,
-    "declaredHintPages": 22,
-    "projectedSolutionPages": 7.7,
+    "toolsPlatePages": 1.39,
+    "projectedBodyPages": 98.4,
+    "projectedHintPages": 25.5,
+    "declaredHintPages": 26,
+    "projectedSolutionPages": 16.0,
     "declaredSolutionPages": 18,
     "perPuzzle": [
       {
@@ -160,6 +158,146 @@
         "words": 76,
         "figureLines": 23,
         "hintWords": 46,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g2-001",
+        "words": 78,
+        "figureLines": 21,
+        "hintWords": 46,
+        "solutionWords": 31
+      },
+      {
+        "puzzleId": "g2-002",
+        "words": 80,
+        "figureLines": 7,
+        "hintWords": 49,
+        "solutionWords": 31
+      },
+      {
+        "puzzleId": "g2-003",
+        "words": 46,
+        "figureLines": 10,
+        "hintWords": 52,
+        "solutionWords": 28
+      },
+      {
+        "puzzleId": "g2-004",
+        "words": 77,
+        "figureLines": 21,
+        "hintWords": 44,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g2-005",
+        "words": 79,
+        "figureLines": 7,
+        "hintWords": 45,
+        "solutionWords": 31
+      },
+      {
+        "puzzleId": "g2-006",
+        "words": 52,
+        "figureLines": 13,
+        "hintWords": 41,
+        "solutionWords": 25
+      },
+      {
+        "puzzleId": "g2-007",
+        "words": 50,
+        "figureLines": 7,
+        "hintWords": 42,
+        "solutionWords": 24
+      },
+      {
+        "puzzleId": "g2-008",
+        "words": 77,
+        "figureLines": 21,
+        "hintWords": 46,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g2-009",
+        "words": 82,
+        "figureLines": 11,
+        "hintWords": 49,
+        "solutionWords": 32
+      },
+      {
+        "puzzleId": "g2-010",
+        "words": 55,
+        "figureLines": 10,
+        "hintWords": 42,
+        "solutionWords": 25
+      },
+      {
+        "puzzleId": "g2-011",
+        "words": 73,
+        "figureLines": 8,
+        "hintWords": 51,
+        "solutionWords": 29
+      },
+      {
+        "puzzleId": "g2-012",
+        "words": 83,
+        "figureLines": 11,
+        "hintWords": 44,
+        "solutionWords": 33
+      },
+      {
+        "puzzleId": "g2-013",
+        "words": 77,
+        "figureLines": 21,
+        "hintWords": 43,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g2-014",
+        "words": 49,
+        "figureLines": 7,
+        "hintWords": 43,
+        "solutionWords": 24
+      },
+      {
+        "puzzleId": "g2-015",
+        "words": 86,
+        "figureLines": 11,
+        "hintWords": 54,
+        "solutionWords": 32
+      },
+      {
+        "puzzleId": "g2-016",
+        "words": 40,
+        "figureLines": 12,
+        "hintWords": 44,
+        "solutionWords": 24
+      },
+      {
+        "puzzleId": "g2-017",
+        "words": 77,
+        "figureLines": 21,
+        "hintWords": 44,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g2-018",
+        "words": 100,
+        "figureLines": 11,
+        "hintWords": 44,
+        "solutionWords": 31
+      },
+      {
+        "puzzleId": "g2-019",
+        "words": 63,
+        "figureLines": 8,
+        "hintWords": 53,
+        "solutionWords": 30
+      },
+      {
+        "puzzleId": "g2-020",
+        "words": 70,
+        "figureLines": 27,
+        "hintWords": 51,
         "solutionWords": 30
       }
     ]

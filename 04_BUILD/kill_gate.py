@@ -21,7 +21,34 @@ Bu yüzden karar dört değil BEŞ değerlidir:
   REDESIGN   → tam 3 bitirdi                     → Kapı I yeniden tasarlanır
   HARD-STOP  → ≤2 bitirdi                        → PROJE DURUR (kurucu kararı)
 
-Çıkış kodları:  0 = PASS   1 = PASS DEĞİL (BLOCKED dâhil)   2 = kullanım hatası
+────────────────────────────────────────────────────────────────────────
+⭑ KURUCU GEÇERSİZ KILMASI (24 Ağustos 2026) ⭑
+
+Kurucu, ÖLÇÜMÜ BİLEREK Faz 3'ün başlamasına izin verdi. Bu betiğin
+davranışı şudur ve kaymaz:
+
+  ⭑ ÖLÇÜLEN KARAR DEĞİŞMEZ. ⭑ HARD-STOP hâlâ HARD-STOP'tur, hâlâ
+    yazdırılır, hâlâ rapora `verdict` olarak girer. Geçersiz kılma onu
+    EZMEZ; YANINA yazılır.
+
+  Değişen tek şey ÇIKIŞ KODUdur: kurucu devam kararı aldığı için kapı
+  CI'ı kırmızı yakmaz. "Geçti" demez — "kurucu bilerek devam etti" der.
+
+⚠ VE UYDURMA YAPISAL OLARAK İMKÂNSIZDIR. Üç muhafız:
+
+  ① sessionsPerformed == 0 iken humanValidationPassed == true
+       → bu bir YALANDIR, kapı KIRMIZI yanar
+  ② sessionsPerformed > 0 ama diskte kayıt YOK
+       → sayı uydurulmuş, kapı KIRMIZI yanar
+  ③ founderOverride == true ama gerekçe/tarih yok
+       → kayıt eksik, kapı KIRMIZI yanar
+
+Yani bu blok en fazla şunu söyleyebilir: "doğrulanmadı, kurucu devam
+etti." "Doğrulandı" diyebilmesinin hiçbir yolu yoktur.
+────────────────────────────────────────────────────────────────────────
+
+Çıkış kodları:  0 = PASS · veya KURUCU GEÇERSİZ KILMASI
+                1 = PASS DEĞİL (BLOCKED dâhil)   2 = kullanım hatası
 """
 
 from __future__ import annotations
@@ -82,6 +109,102 @@ def load_aggregate() -> dict | None:
     return None
 
 
+def override_state(cfg: dict) -> tuple[dict, list[str]]:
+    """Kurucu geçersiz kılması + UYDURMA MUHAFIZLARI.
+
+    Dönüş: (blok, ihlaller). İhlal varsa çağıran KIRMIZI yakar — geçersiz
+    kılma bir kaçış yolu değil, KAYITLI bir karardır ve kaydın kendisi
+    denetlenir."""
+    ov = (cfg.get("killGate") or {}).get("externalValidation") or {}
+    if not ov.get("founderOverride"):
+        return ov, []
+    bad = []
+    n = ov.get("sessionsPerformed", 0)
+
+    # ⚠ "diskte bir şey var mı" YETMEZ: birinci turun toplu kaydı zaten
+    # diskte duruyor. Soru şudur: BİLDİRİLEN sayı ÖLÇÜLEN sayıyı aşıyor mu.
+    # Aşıyorsa fark UYDURULMUŞTUR.
+    agg = load_aggregate() or {}
+    measured = max(len(collect_sessions()),
+                   agg.get("solversTotal") or 0)
+    if ov.get("humanValidationPassed") and not n:
+        bad.append("humanValidationPassed=true ama sessionsPerformed=0 "
+                   "— OTURUM YOKKEN DOĞRULAMA OLAMAZ")
+    if n > measured:
+        bad.append("sessionsPerformed=%d bildirildi ama diskte ÖLÇÜLEN %d "
+                   "— aradaki %d oturum UYDURMA" % (n, measured, n - measured))
+
+    # ⭑ Ve doğrulama iddiası KARARA da uymak zorunda: ölçülen karar PASS
+    # değilken "insan doğrulaması geçti" denemez.
+    if ov.get("humanValidationPassed") and agg:
+        if (agg.get("solversCompletedGate") or 0) < 3:
+            bad.append("humanValidationPassed=true ama ölçülen kayıt "
+                       "%d/%d bitirme gösteriyor"
+                       % (agg.get("solversCompletedGate") or 0,
+                          agg.get("solversTotal") or 0))
+    if not ov.get("overrideReason") or not ov.get("overrideAuthorisedAt"):
+        bad.append("geçersiz kılma gerekçesi veya tarihi kayıtlı değil")
+    if not n and ov.get("status") != "founder_override_partial":
+        bad.append("oturum yokken status '%s' olamaz — yalnızca "
+                   "founder_override_partial" % ov.get("status"))
+    return ov, bad
+
+
+def print_override(ov: dict) -> None:
+    print("\n" + "=" * 74)
+    print("  ⚑ KURUCU GEÇERSİZ KILMASI — ÖLÇÜM DEĞİL, KARAR")
+    print("=" * 74)
+    print("  Yukarıdaki karar ÖLÇÜLENDİR ve DEĞİŞMEDİ.")
+    print("  Kurucu onu bilerek devam kararı aldı (%s)."
+          % ov.get("overrideAuthorisedAt", "?"))
+    print("")
+    print("  durum                    %s" % ov.get("status"))
+    print("  yapılan oturum           %d" % ov.get("sessionsPerformed", 0))
+    print("  insan doğrulaması geçti  %s"
+          % ("EVET" if ov.get("humanValidationPassed") else "HAYIR"))
+    print("")
+    print("  ⚠ %s" % ov.get("mustRemainVisibleInReports",
+                            "External human validation remains pending."))
+    for line in ov.get("overrideDoesNotCover") or []:
+        print("     · kapsamaz: %s" % line)
+    print("=" * 74)
+
+
+def finish(report: dict, path: str, verdict: str,
+           ov: dict, ov_bad: list[str]) -> int:
+    """⭑ ÖLÇÜLEN KARAR HİÇBİR KOŞULDA EZİLMEZ. ⭑
+
+    `report["verdict"]` her zaman ÖLÇÜLENDİR. Geçersiz kılma ayrı
+    alanlara yazılır ve yalnızca ÇIKIŞ KODUNU değiştirir."""
+    active = bool(ov.get("founderOverride")) and not ov_bad
+    report["measuredVerdict"] = verdict
+    report["externalValidation"] = {
+        "status": ov.get("status"),
+        "sessionsPerformed": ov.get("sessionsPerformed", 0),
+        "humanValidationPassed": bool(ov.get("humanValidationPassed")),
+        "founderOverride": bool(ov.get("founderOverride")),
+    }
+    report["overrideActive"] = active
+    report["overrideViolations"] = ov_bad
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(report, fh, ensure_ascii=False, indent=2)
+        fh.write("\n")
+
+    if ov_bad:
+        print("\n" + "=" * 74)
+        print("  ⛔ GEÇERSİZ KILMA KAYDI GEÇERSİZ — UYDURMA MUHAFIZI YAKTI")
+        print("=" * 74)
+        for b in ov_bad:
+            print("     · %s" % b)
+        print("=" * 74)
+        return 1
+    if active:
+        print_override(ov)
+        return 0
+    return 0 if verdict == "PASS" else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -98,6 +221,7 @@ def main() -> int:
     print("=" * 74)
 
     cfg = pl.load_config()
+    ov, ov_bad = override_state(cfg)
     kg = cfg.get("killGate", {})
     pc = kg.get("passCriteria", {})
     hs = kg.get("hardStopCriteria", {})
@@ -209,7 +333,7 @@ def main() -> int:
         with open(args.json, "w", encoding="utf-8") as fh:
             json.dump(report, fh, ensure_ascii=False, indent=2)
             fh.write("\n")
-        return 0 if verdict == "PASS" else 1
+        return finish(report, args.json, verdict, ov, ov_bad)
 
     # ── ⭑ VERİ YOKSA KARAR VERİLEMEZ ⭑ ──────────────────────────────────
     if len(solvers) < need_solvers or declared < need_solvers:
@@ -242,11 +366,7 @@ def main() -> int:
         print("  Bloklayan karar : A12 — harici çözücü oturumları")
         print("  Devir paketi    : 00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md")
         print("=" * 74)
-        os.makedirs(os.path.dirname(args.json), exist_ok=True)
-        with open(args.json, "w", encoding="utf-8") as fh:
-            json.dump(report, fh, ensure_ascii=False, indent=2)
-            fh.write("\n")
-        return 1
+        return finish(report, args.json, "BLOCKED", ov, ov_bad)
 
     # ── ölçütler (gerçek veri geldiğinde koşar) ─────────────────────────
     by_solver: dict[str, list[dict]] = {}

@@ -1,0 +1,219 @@
+{
+  "status": "pass",
+  "checks": 5,
+  "errors": [],
+  "warnings": [
+    "bu kapı BASKI YAPMAZ — gerçek ölçüm A9'a (fiziksel prova) aittir ve YAPILMADI"
+  ],
+  "facts": {
+    "indexed": 151,
+    "needProtected": 40,
+    "solutionRecords": 40,
+    "designRecords": 40,
+    "protectedLayerPresent": true,
+    "plates": 22,
+    "finestDistinctionMax": 5,
+    "maxIdenticalRunAllowed": 5,
+    "maxFigureWidth": 62,
+    "perPlate": [
+      {
+        "puzzleId": "g1-001",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 1,
+        "figureWidth": 60
+      },
+      {
+        "puzzleId": "g1-002",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 0,
+        "figureWidth": 48
+      },
+      {
+        "puzzleId": "g1-003",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 0,
+        "figureWidth": 19
+      },
+      {
+        "puzzleId": "g1-005",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 19.4,
+        "bitsRequired": 5.6,
+        "redundancy": 3.4,
+        "finestDistinction": 1,
+        "figureWidth": 34
+      },
+      {
+        "puzzleId": "g1-006",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 0,
+        "figureWidth": 60
+      },
+      {
+        "puzzleId": "g1-008",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 19.4,
+        "bitsRequired": 5.6,
+        "redundancy": 3.4,
+        "finestDistinction": 1,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g1-009",
+        "acceptance": "reachable-via-number-table",
+        "bitsCarried": 7.0,
+        "bitsRequired": 5.6,
+        "redundancy": 1.2,
+        "finestDistinction": 4,
+        "figureWidth": 34
+      },
+      {
+        "puzzleId": "g1-010",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 1,
+        "figureWidth": 37
+      },
+      {
+        "puzzleId": "g1-012",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 19.4,
+        "bitsRequired": 5.6,
+        "redundancy": 3.4,
+        "finestDistinction": 1,
+        "figureWidth": 14
+      },
+      {
+        "puzzleId": "g1-014",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 1,
+        "figureWidth": 27
+      },
+      {
+        "puzzleId": "g1-015",
+        "acceptance": "reachable-via-number-table",
+        "bitsCarried": 7.0,
+        "bitsRequired": 5.6,
+        "redundancy": 1.2,
+        "finestDistinction": 5,
+        "figureWidth": 34
+      },
+      {
+        "puzzleId": "g1-019",
+        "acceptance": "reachable-via-number-table",
+        "bitsCarried": 7.0,
+        "bitsRequired": 5.6,
+        "redundancy": 1.2,
+        "finestDistinction": 4,
+        "figureWidth": 38
+      },
+      {
+        "puzzleId": "g2-002",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 0,
+        "figureWidth": 49
+      },
+      {
+        "puzzleId": "g2-003",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 1,
+        "figureWidth": 14
+      },
+      {
+        "puzzleId": "g2-005",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 0,
+        "figureWidth": 49
+      },
+      {
+        "puzzleId": "g2-007",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 29.1,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 1,
+        "figureWidth": 44
+      },
+      {
+        "puzzleId": "g2-009",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 29.4,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g2-010",
+        "acceptance": "plate-attribute",
+        "bitsCarried": 2.6,
+        "bitsRequired": 5.6,
+        "redundancy": 0.5,
+        "finestDistinction": 1,
+        "figureWidth": 14
+      },
+      {
+        "puzzleId": "g2-012",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 2,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g2-014",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 29.1,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 1,
+        "figureWidth": 47
+      },
+      {
+        "puzzleId": "g2-015",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g2-018",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 1,
+        "figureWidth": 46
+      }
+    ]
+  }
+}

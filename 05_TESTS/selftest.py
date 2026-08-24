@@ -2427,6 +2427,58 @@ def _outlier_root(tmp: str, cfg: dict) -> str:
     return d
 
 
+def _hollow_root(tmp: str, cfg: dict) -> str:
+    """⑦ için kök: değişim + yer değiştirme katmanları BİRBİRİNİN YERİNE
+    GEÇER, yani 'ters sıra ad vermez' iddiası boştur."""
+    _RUN_SEQ[0] += 1
+    d = os.path.join(tmp, "hollow-%03d" % _RUN_SEQ[0])
+    for sub in ("01_SOURCE/solutions", "02_MANUSCRIPT"):
+        os.makedirs(os.path.join(d, sub), exist_ok=True)
+    write(os.path.join(d, ".gate"), "phase5")
+    write(os.path.join(d, "project_config.json"),
+          json.dumps(cfg, ensure_ascii=False))
+    write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+          json.dumps({"puzzles": [{
+              "puzzleId": "fixture-001", "gate": "labyrinth",
+              "type": "cipher", "mechanismFamily": "layered-chain",
+              "status": "written", "testStatus": "tested",
+              "leakClass": "protected", "ambiguityScore": 1,
+              "alternativeSolutionAnalysisDone": True,
+              "confirmedAlternativeSolutions": 0}]}, ensure_ascii=False))
+    ALPHA = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"
+
+    def sh(t, k):
+        return "".join(ALPHA[(ALPHA.index(c) + k) % 29] for c in t)
+
+    def colw(word, w):
+        rows = [word[i:i + w] for i in range(0, len(word), w)]
+        return "".join(x[c] for c in range(w) for x in rows if c < len(x))
+
+    ans = "MELTEM"
+    ct = sh(colw(ans, 2), 5)
+    space = {"generator": {"kind": "layered"},
+             "acceptance": {"kind": "reachable-by-layered-chain",
+                            "input": ct,
+                            "stages": [{"kind": "shift", "by": 5},
+                                       {"kind": "grid", "width": 2}]},
+             "declaredAcceptedCount": 1}
+    write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+          json.dumps({"puzzles": [{"puzzleId": "fixture-001",
+                                   "finalAnswer": ans, "answerSpace": space,
+                                   "hints": ["a", "b", "c"]}]},
+                     ensure_ascii=False))
+    write(os.path.join(d, "02_MANUSCRIPT/book.json"), json.dumps({
+        "puzzles": [{
+            "puzzleId": "fixture-001", "gate": "labyrinth",
+            "title": "Kurgu", "flavour": "Bir dize iki kez değişmiş.",
+            "objective": "Dize iki katmandan geçmiştir.",
+            "readerAction": "Katmanları levhadaki SIRAYLA geri alın.",
+            "clues": ["Sıra levhadaki sıradır."],
+            "constraints": ["Katmanlar ters sırada uygulanırsa ad çıkmaz."]}],
+        "warmUp": []}, ensure_ascii=False))
+    return d
+
+
 def part12_editorial(rep: Report, tmp: str) -> None:
     """⑫ ⭑ EDİTORYAL BÜTÜNLÜK — LINE EDITOR'IN BULDUKLARI KALICI OLDU ⭑
 
@@ -2550,6 +2602,16 @@ def part12_editorial(rep: Report, tmp: str) -> None:
               "⭑ ⑥ CEVABIN SATIR NUMARASI UÇTAYSA KIRMIZI ⭑ "
               "(okur levhaya hiç bakmadan, yalnızca sayı sütununu "
               "tarayarak çözebilir — mekanizma devre dışı kalır)", out)
+
+    # ⭑ ⑦ BOŞ VAAT — ölçülen: yedi sayfa "ters sıra ad vermez" diyordu ve
+    # yedisinde de ters sıra AYNI cevabı veriyordu. Kitap OLMAYAN bir
+    # hata sinyali vaat ediyordu.
+    code, out = run_env_gate("qa_editorial.py", _hollow_root(tmp, cfg),
+                             gate="phase5")
+    rep.check(code != 0,
+              "⭑ ⑦ ATEŞLEMEYEN BİR HATA SİNYALİ VAAT EDİLİRSE KIRMIZI ⭑ "
+              "(iki yolu da deneyen okur aynı cevabı iki kez alır ve "
+              "sözleşmenin birinci sözü gereği KİTABI bozuk sanar)", out)
 
     def _contradict(pages):
         pages[0]["figure"] = "  sözcük: 7"

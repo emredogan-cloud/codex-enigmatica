@@ -10,7 +10,7 @@ Yol haritası Faz 5 § 13'ün uyarısı burada da geçerlidir: *"Line Editor
 bir alt-ajandır ve körü körüne kabul edilmez."* Aşağıdaki her kural, ana
 ajan tarafından ÜRETİM VERİSİNDE doğrulanmış bir kusurdan doğdu.
 
-Altı ölçüm:
+Yedi ölçüm:
 
   ① YAPIM KİMLİĞİ  — okur sayfasında `g4-001` gibi bir kimlik var mı
   ② ÇİFT BASIM     — aynı çizelge sayfada İKİ KEZ mi basılıyor
@@ -18,6 +18,7 @@ Altı ölçüm:
   ④ TEKRARLANAN BAŞLIK — iki sayfa aynı adı mı taşıyor
   ⑤ ANLATI KAYDI   — anlatı satırı MEKANİK içerik taşıyor mu
   ⑥ SAYI SÜTUNU    — cevabın satır numarası akranların arasında mı
+  ⑦ BOŞ VAAT       — "şunu yaparsan çıkmaz" denen şey GERÇEKTEN bozuyor mu
 
 ────────────────────────────────────────────────────────────────────────
 ⭑ ⑤ HAKKINDA: KURAL DARALTILDI, ÇÜNKÜ ÖLÇÜLDÜ ⭑
@@ -71,6 +72,45 @@ ORDINAL = re.compile(
     r"|dokuzuncu|onuncu|son)\b", re.IGNORECASE)
 
 READER_FIELDS = ("title", "objective", "readerAction")
+
+ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"
+
+
+def _shift(text: str, k: int) -> str:
+    return "".join(ALPHABET[(ALPHABET.index(c) + k) % len(ALPHABET)]
+                   if c in ALPHABET else c for c in text)
+
+
+def _reflect(text: str, axis: int) -> str:
+    return "".join(ALPHABET[(axis - ALPHABET.index(c)) % len(ALPHABET)]
+                   if c in ALPHABET else c for c in text)
+
+
+def _ungrid(text: str, width: int) -> str:
+    n = len(text)
+    rows = (n + width - 1) // width if width else n
+    out = [""] * n
+    i = 0
+    for c in range(width):
+        for r in range(rows):
+            pos = r * width + c
+            if pos < n and i < n:
+                out[pos] = text[i]
+                i += 1
+    return "".join(out)
+
+
+def _undo(text: str, stages: list) -> str:
+    """Katmanları verilen sırayla GERİ ALIR — ⑦'nin ölçüsü."""
+    for st in reversed(stages):
+        kind = st.get("kind")
+        if kind == "shift":
+            text = _shift(text, -int(st.get("by", 0)))
+        elif kind == "reflect":
+            text = _reflect(text, int(st.get("axis", 0)))
+        elif kind == "grid":
+            text = _ungrid(text, int(st.get("width", 1)))
+    return text
 
 
 def main() -> int:
@@ -202,6 +242,40 @@ def main() -> int:
             outlier.append("%s (#%d ∉ [%d..%d])"
                            % (p["puzzleId"], mine, min(rest), max(rest)))
 
+    # ── ⑦ VAAT EDİLEN HATA SİNYALİ GERÇEKTEN ATEŞLİYOR MU ──────────────
+    # ⭑⭑ ÖLÇÜLDÜ: YEDİ SAYFANIN YEDİSİNDE ATEŞLEMİYORDU ⭑⭑
+    #
+    # Katmanlı zincir sayfaları şunu basıyordu: *"Katmanlar ters sırada
+    # uygulanırsa ad çıkmaz."* Ama katmanların biri harf DEĞİŞTİRİR,
+    # öteki harf YERİ değiştirir; bu iki işlem birbirinin yerine geçer
+    # ve ters sıra AYNI cevabı verir.
+    #
+    # Bu, kolay bir bulmacadan kötüdür: kitap OLMAYAN bir hata sinyali
+    # vaat ediyordu. İki sırayı da deneyen okur aynı cevabı iki kez alır
+    # ve sözleşmenin birinci sözü gereği KİTABI bozuk sanır.
+    #
+    # Kural geneldir: bir sayfa "şunu yaparsan cevap ÇIKMAZ" diyorsa, o
+    # şey gerçekten cevabı bozmak ZORUNDADIR.
+    ORDER_CLAIM = re.compile(
+        r"ters\s+sıra|sıra\s+levhadaki|ters\s+uygulan", re.IGNORECASE)
+    hollow = []
+    for p in pages:
+        rec = sols.get(p["puzzleId"]) or {}
+        acc = ((rec.get("answerSpace") or {}).get("acceptance") or {})
+        if acc.get("kind") != "reachable-by-layered-chain":
+            continue
+        txt = " ".join([str(p.get(f) or "") for f in READER_FIELDS]
+                       + [str(x) for x in (p.get("clues") or [])]
+                       + [str(x) for x in (p.get("constraints") or [])])
+        if not ORDER_CLAIM.search(txt):
+            continue
+        stages = acc.get("stages") or []
+        if len(stages) < 2:
+            continue
+        if _undo(acc.get("input", ""), list(reversed(stages))) == \
+                rec.get("finalAnswer"):
+            hollow.append(p["puzzleId"])
+
     print("\n── ölçülen ──")
     print("  okur sayfası       %d" % len(pages))
     print("  ısınma örneği      %d" % len(warm))
@@ -213,7 +287,8 @@ def main() -> int:
                       "twinPlates": ["+".join(t) for t in twins],
                       "duplicateTitles": dup_title,
                       "voiceBreaches": voice, "contradictions": contradict,
-                      "numberOutliers": outlier})
+                      "numberOutliers": outlier,
+                      "hollowPromises": hollow})
 
     rep.check(not build_id,
               "⭑ ① HİÇBİR OKUR SAYFASI YAPIM KİMLİĞİ BASMIYOR ⭑ "
@@ -244,6 +319,11 @@ def main() -> int:
               "(uçta duran bir numara, okurun levhaya HİÇ BAKMADAN "
               "çözmesini sağlar — mekanizma devre dışı kalır)"
               + ("" if not outlier else " — ⛔ %s" % outlier[:6]))
+    rep.check(not hollow,
+              "⭑ ⑦ VAAT EDİLEN HATA SİNYALİ GERÇEKTEN ATEŞLİYOR ⭑ "
+              "(kitap OLMAYAN bir hatayı vaat edemez: iki yolu da deneyen "
+              "okur aynı cevabı iki kez alır ve KİTABI bozuk sanar)"
+              + ("" if not hollow else " — ⛔ BOŞ VAAT: %s" % hollow[:6]))
     rep.check(not contradict,
               "⭑ ⑤b ANLATI, SAYFANIN BASTIĞI SAYIYLA ÇELİŞMİYOR ⭑"
               + ("" if not contradict else " — ⛔ %s" % contradict[:5]))

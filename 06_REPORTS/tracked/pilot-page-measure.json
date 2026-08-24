@@ -3,7 +3,7 @@
   "checks": 4,
   "errors": [],
   "warnings": [
-    "metin payı bütçenin yarısından az: threshold 14.3/34, menagerie 12.2/34, calendar 11.4/34, labyrinth 12.1/34, mirror 9.8/34, last-question 1.3/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
+    "metin payı bütçenin yarısından az: threshold 14.5/34, menagerie 12.3/34, calendar 11.4/34, labyrinth 12.2/34, mirror 9.8/34, last-question 1.3/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
   ],
   "facts": {
     "puzzles": 101,
@@ -12,8 +12,8 @@
       "threshold": 1710,
       "menagerie": 1780,
       "calendar": 1622,
-      "labyrinth": 1572,
-      "mirror": 1444,
+      "labyrinth": 1597,
+      "mirror": 1454,
       "last-question": 103
     },
     "figureLinesByGate": {
@@ -41,17 +41,17 @@
       "last-question": 13
     },
     "frameWordsByGate": {
-      "threshold": 140,
-      "menagerie": 83,
+      "threshold": 196,
+      "menagerie": 131,
       "calendar": 70,
-      "labyrinth": 56,
+      "labyrinth": 68,
       "mirror": 56
     },
     "measuredBodyPagesByGate": {
-      "threshold": 14.3,
-      "menagerie": 12.2,
+      "threshold": 14.5,
+      "menagerie": 12.3,
       "calendar": 11.4,
-      "labyrinth": 12.1,
+      "labyrinth": 12.2,
       "mirror": 9.8,
       "last-question": 1.3
     },
@@ -63,7 +63,7 @@
       "mirror": 34,
       "last-question": 6
     },
-    "measuredBodyPagesTotal": 61.1,
+    "measuredBodyPagesTotal": 61.5,
     "declaredBodyPagesTotal": 176,
     "hintWords": 4446,
     "measuredHintPages": 12.7,
@@ -73,7 +73,7 @@
     "declaredSolutionPages": 18,
     "toolsPlateRows": 408,
     "toolsPlatePages": 3.24,
-    "totalWords": 17400,
+    "totalWords": 17551,
     "perPuzzle": [
       {
         "puzzleId": "g1-001",
@@ -566,7 +566,7 @@
       {
         "puzzleId": "g4-002",
         "gate": "labyrinth",
-        "words": 76,
+        "words": 81,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23
@@ -590,7 +590,7 @@
       {
         "puzzleId": "g4-005",
         "gate": "labyrinth",
-        "words": 69,
+        "words": 74,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23
@@ -614,7 +614,7 @@
       {
         "puzzleId": "g4-008",
         "gate": "labyrinth",
-        "words": 75,
+        "words": 80,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23
@@ -646,7 +646,7 @@
       {
         "puzzleId": "g4-012",
         "gate": "labyrinth",
-        "words": 67,
+        "words": 72,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23
@@ -670,7 +670,7 @@
       {
         "puzzleId": "g4-015",
         "gate": "labyrinth",
-        "words": 67,
+        "words": 72,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23
@@ -758,7 +758,7 @@
       {
         "puzzleId": "g5-006",
         "gate": "mirror",
-        "words": 65,
+        "words": 70,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23
@@ -822,7 +822,7 @@
       {
         "puzzleId": "g5-014",
         "gate": "mirror",
-        "words": 66,
+        "words": 71,
         "figureLines": 10,
         "hintWords": 44,
         "solutionWords": 23

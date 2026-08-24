@@ -1,7 +1,7 @@
 {
   "pages": 101,
-  "derived": 16,
-  "matched": 16,
+  "derived": 15,
+  "matched": 15,
   "mismatched": 0,
   "outOfScope": [
     "g1-001",
@@ -27,6 +27,7 @@
     "g2-010",
     "g2-011",
     "g2-016",
+    "g2-019",
     "g2-020",
     "g3-001",
     "g3-002",

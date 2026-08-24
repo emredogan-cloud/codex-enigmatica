@@ -3,7 +3,7 @@
   "checks": 4,
   "errors": [],
   "warnings": [
-    "metin payı bütçenin yarısından az: threshold 14.1/34, menagerie 12.1/34, calendar 11.1/34, labyrinth 12.9/34, mirror 10.4/34, last-question 1.4/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
+    "metin payı bütçenin yarısından az: threshold 14.1/34, menagerie 12.1/34, calendar 11.1/34, labyrinth 12.9/34, mirror 10.5/34, last-question 1.4/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
   ],
   "facts": {
     "puzzles": 101,
@@ -18,10 +18,10 @@
     },
     "figureLinesByGate": {
       "threshold": 239,
-      "menagerie": 265,
-      "calendar": 210,
-      "labyrinth": 279,
-      "mirror": 225,
+      "menagerie": 266,
+      "calendar": 211,
+      "labyrinth": 280,
+      "mirror": 226,
       "last-question": 15
     },
     "warmUpWordsByGate": {
@@ -52,7 +52,7 @@
       "menagerie": 12.1,
       "calendar": 11.1,
       "labyrinth": 12.9,
-      "mirror": 10.4,
+      "mirror": 10.5,
       "last-question": 1.4
     },
     "declaredBodyPagesByGate": {
@@ -63,7 +63,7 @@
       "mirror": 34,
       "last-question": 6
     },
-    "measuredBodyPagesTotal": 62.0,
+    "measuredBodyPagesTotal": 62.1,
     "declaredBodyPagesTotal": 176,
     "hintWords": 4446,
     "measuredHintPages": 12.7,
@@ -383,7 +383,7 @@
         "puzzleId": "g2-019",
         "gate": "menagerie",
         "words": 84,
-        "figureLines": 8,
+        "figureLines": 9,
         "hintWords": 53,
         "solutionWords": 30
       },
@@ -543,7 +543,7 @@
         "puzzleId": "g3-019",
         "gate": "calendar",
         "words": 73,
-        "figureLines": 8,
+        "figureLines": 9,
         "hintWords": 50,
         "solutionWords": 29
       },
@@ -663,7 +663,7 @@
         "puzzleId": "g4-014",
         "gate": "labyrinth",
         "words": 72,
-        "figureLines": 8,
+        "figureLines": 9,
         "hintWords": 50,
         "solutionWords": 29
       },
@@ -863,7 +863,7 @@
         "puzzleId": "g5-019",
         "gate": "mirror",
         "words": 73,
-        "figureLines": 8,
+        "figureLines": 9,
         "hintWords": 50,
         "solutionWords": 29
       },

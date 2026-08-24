@@ -2178,6 +2178,106 @@ def part9_meta_and_aha(rep: Report, tmp: str) -> None:
 
 
 
+# ---------------------------------------------------------------------------
+def part10_plate_readability(rep: Report, tmp: str) -> None:
+    """⑩ ⭑ FAZ 5 · LEVHA OKUNABİLİRLİĞİ — KİTABIN EN KRİTİK TEKNİK KAPISI ⭑
+
+    Yol haritası Faz 5 § 8: *"Bir levhada kaybolan detay bulmacayı
+    ÇÖZÜLEMEZ yapar — ve bunu okur öğrenir, siz değil."*
+
+    Buradaki her fikstür üretim verisinde GERÇEKTEN bulunmuş bir kusuru
+    yeniden kurar:
+
+      · beş şekil basılabilir genişliği aşıyordu (67 ve 79 sütun);
+      · on beş glif dingbat/emoji bloklarındandı ve POD baskıda boş kutu
+        olarak çıkabilirdi;
+      · altı ayrı ok karakteri aynı işi yapıyordu;
+      · bir levhada dolgu '·' ile SAYILAN işaret '◦' idi — yanlış
+        sayılan bir dolgu noktası cevabı değiştirir.
+    """
+    print("\n⑩ ⭑ LEVHA OKUNABİLİRLİĞİ ⭑")
+
+    cfg = clean_config()
+
+    def plate_root(fig, legend="künye metni", extra=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "plate-%03d" % _RUN_SEQ[0])
+        os.makedirs(os.path.join(d, "02_MANUSCRIPT"))
+        write(os.path.join(d, ".gate"), "phase5")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        pages = [{"puzzleId": "fixture-001", "gate": "threshold",
+                  "figure": fig, "clues": [legend]}]
+        if extra is not None:
+            pages.append({"puzzleId": "fixture-002", "gate": "threshold",
+                          "figure": extra, "clues": [legend]})
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps({"puzzles": pages, "warmUp": []}, ensure_ascii=False))
+        return d
+
+    def gate(fig, legend="künye metni", extra=None):
+        return run_env_gate("qa_plate_readability.py",
+                            plate_root(fig, legend, extra), gate="phase5")
+
+    CLEAN = "\n".join(["  ┌────────────┐",
+                        "  │ ●  ○  ●  ○ │ ◀ giriş",
+                        "  └────────────┘"])
+    code, out = gate(CLEAN)
+    rep.check(code == 0, "levha okunabilirliği temiz şekilde GEÇER", out)
+
+    code, out = gate("  " + "─" * 70)
+    rep.check(code != 0,
+              "⭑ ② BASILABİLİR GENİŞLİĞİ AŞAN ŞEKİL KIRMIZI ⭑ "
+              "(6×9 iç blokta taşan satır KIRPILIR — ve kırpılan şey "
+              "bulmacanın verisidir)", out)
+
+    code, out = gate("\n".join(["  x"] * 40))
+    rep.check(code != 0,
+              "③ tek sayfaya sığmayan şekil KIRMIZI "
+              "(sayfa sonu bir levhayı ikiye bölemez)", out)
+
+    code, out = gate("  ●●●●●●  ← altı ardışık")
+    rep.check(code != 0,
+              "⭑ ④ OKURDAN BEŞTEN FAZLA ARDIŞIK İŞARET SAYMASI İSTENİRSE "
+              "KIRMIZI ⭑ (baskıda en kolay kaybolan fark budur)", out)
+
+    code, out = gate("  ❋ süsleme  ⚓ çapa  ✕ çarpı")
+    rep.check(code != 0,
+              "⭑ ⑦ DAĞARCIK DIŞI GLİF KIRMIZI ⭑ "
+              "(dingbat/emoji bloğu POD baskıda BOŞ KUTU olur)", out)
+
+    code, out = gate("  ◦◦◦  dolgu: ·······  ← ikisi de nokta")
+    rep.check(code != 0,
+              "⭑ ⑥ KARIŞABİLİR İKİ VERİ İŞARETİ AYNI ŞEKİLDE KIRMIZI ⭑ "
+              "(sayılan işaretle dolgu karışırsa CEVAP değişir)", out)
+
+    code, out = gate("  ▶ sağa", extra="  ► sağa")
+    rep.check(code != 0,
+              "⭑ ⑩ AYNI ROL İKİ AYRI GLİFLE BASILIRSA KIRMIZI ⭑ "
+              "(altı ayrı ok karakteri, altı ayrı yazı tipi riskidir)", out)
+
+    code, out = gate(CLEAN, legend="")
+    rep.check(code != 0,
+              "⑨ künyesiz şekil KIRMIZI (şekil ne anlama geldiğini "
+              "söylemeden basılamaz)", out)
+
+    # ⭑ İKİ KAPI AYNI FİZİKSEL SAYIYI TAŞIMAK ZORUNDA ⭑
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location(
+        "_pr", os.path.join(BUILD, "qa_plate_readability.py"))
+    _mod = _ilu.module_from_spec(_spec)
+    sys.modules["_pr"] = _mod
+    _spec.loader.exec_module(_mod)
+    _spec2 = _ilu.spec_from_file_location(
+        "_pd", os.path.join(BUILD, "qa_plate_data.py"))
+    _mod2 = _ilu.module_from_spec(_spec2)
+    _spec2.loader.exec_module(_mod2)
+    rep.check(_mod.MAX_WIDTH == _mod2.MAX_FIGURE_WIDTH,
+              "⭑ BASILABİLİR GENİŞLİK İKİ KAPIDA DA AYNI SAYI ⭑ "
+              "(%d ↔ %d)" % (_mod.MAX_WIDTH, _mod2.MAX_FIGURE_WIDTH))
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -2200,6 +2300,7 @@ def main() -> int:
         part7_protected_gates(rep, tmp)
         part8_answerspace(rep, tmp)
         part9_meta_and_aha(rep, tmp)
+        part10_plate_readability(rep, tmp)
 
     print("\n" + "=" * 74)
     if rep.failed:

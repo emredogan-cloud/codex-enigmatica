@@ -82,11 +82,14 @@ COORD_ACCEPTANCE = {"reachable-via-grid-coordinates"}
 PEN_ACCEPTANCE = {"misclassified-in-printed-pens"}
 KEYED_ACCEPTANCE = {"reachable-by-keyed-alphabet"}
 # Çapa işaretleri — biri levhada BULUNMALI (çaba modeli buna dayanır).
-ANCHOR_MARKS = ("⌖", "▶", "◀", "◄", "▲")
+# ⚠ LİSTE BURADA DEĞİL, `qa_plate_readability` içindedir: glif dağarcığı
+# oranın sorumluluğudur ve iki kopya tutmak Faz 5'te bir kapıyı yanlış
+# yere kırmızı yaktı.
+from qa_plate_readability import ANCHOR_MARKS                   # noqa: E402
 TABLE_ACCEPTANCE = {"table-row"}
 GRID_ACCEPTANCE = {"grid-intersection"}
 # Okuma yönünü basan işaretler — biri bulunmalı.
-DIRECTION_MARKS = ("▶", "▲", "◀", "▼")
+from qa_plate_readability import DIRECTION_MARKS                # noqa: E402
 CIPHER_GENERATORS = {"cyclic-shift", "reflection-map", "keyed-substitution"}
 CIPHER_ACCEPTANCE = {"reachable-by-transposition"}
 GLYPH_ACCEPTANCE = {"reachable-by-glyph-reading"}

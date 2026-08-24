@@ -154,6 +154,13 @@ EMBED_SCAN_SKIP = {
     "project_config.json",
     "04_BUILD/validate_structure.py",   # tarayıcının kendisi dizeleri taşır
     "06_REPORTS/tracked/PHASE_1_REPORT.md",
+    # ⚠ KDP YÜKLEME PAKETİ · Faz 5. Muafiyet YALNIZCA gömülü kurucu
+    # değeri taramasınadır (yazar adı ve yayıncı KDP paneline girilir ve
+    # bu dosyanın varlık sebebi odur). Dosya ÜRETİLİR
+    # (`04_BUILD/metadata.py`) ve değerleri `project_config.json`dan
+    # OKUR; tek doğruluk kaynağı hâlâ tektir. Çözüm alanı taraması ve
+    # kanarya bu dosyayı MUAF TUTMAZ.
+    "06_REPORTS/tracked/metadata.json",
 }
 
 # ③ Manuscript sızıntısı -------------------------------------------------------

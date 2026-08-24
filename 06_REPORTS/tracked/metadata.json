@@ -1,0 +1,82 @@
+{
+  "$comment": [
+    "ÜRETİLEN DOSYA — 04_BUILD/metadata.py. ELLE DÜZENLEMEYİN.",
+    "Sayfa sayısı, bulmaca sayısı ve ipucu sayısı ÖLÇÜMDEN gelir."
+  ],
+  "title": "Codex Enigmatica",
+  "subtitle": "One Hundred Engraved Enigmas and a Single Unbroken Mystery",
+  "series": {
+    "name": "Codex",
+    "volume": 3
+  },
+  "author": "Emre Doğan",
+  "publisher": "Vâliçe Press",
+  "language": "en",
+  "description": "One hundred engraved enigmas and a single unbroken mystery.\n\nFive gates. Twenty puzzles each. Every answer is a member of a catalogue printed inside this book — nothing here asks you to leave it.\n\nThe ciphers are not printed beside the plates; they are printed INSIDE them. A keystone that is missing, a ring whose anchor is not marked, a chart whose own length is the number you need.\n\nEvery puzzle has exactly one answer and a three-tier hint ladder that never gives it away. Taking a hint is not losing.\n\nAnd when the five gates are open, they give you five phrases that say nothing on their own. The answer to the last question is not printed anywhere in this book.\n\n101 puzzles · 5 gates · 303 hints · 103 engraved plates · 238 pages",
+  "bisac": [
+    {
+      "code": "GAM011000",
+      "label": "GAMES & ACTIVITIES / Puzzles"
+    },
+    {
+      "code": "GAM001000",
+      "label": "GAMES & ACTIVITIES / Reference"
+    },
+    {
+      "code": "GAM002000",
+      "label": "GAMES & ACTIVITIES / Logic & Brain Teasers"
+    }
+  ],
+  "keywords": [
+    "puzzle book for adults",
+    "cipher puzzle book",
+    "codebreaking puzzles",
+    "escape room book",
+    "meta puzzle mystery",
+    "grimoire puzzle book",
+    "hidden message puzzles"
+  ],
+  "audience": {
+    "minAge": 16,
+    "adultContent": false
+  },
+  "editions": [
+    {
+      "id": "hardcover",
+      "list": 29.99,
+      "enabled": true,
+      "trim": "6x9",
+      "interiorInk": "black",
+      "paper": "cream"
+    },
+    {
+      "id": "paperback",
+      "list": 19.99,
+      "enabled": true,
+      "trim": "6x9",
+      "interiorInk": "black",
+      "paper": "cream"
+    },
+    {
+      "id": "kindle",
+      "list": null,
+      "enabled": false,
+      "trim": "6x9",
+      "interiorInk": "black",
+      "paper": "cream"
+    }
+  ],
+  "pageCount": 238,
+  "measured": {
+    "puzzles": 101,
+    "gates": 5,
+    "hintCount": 303,
+    "plates": 103
+  },
+  "founderPending": {
+    "isbn": null,
+    "isbnStrategy": "kdp-free",
+    "authorBio": null,
+    "aiDisclosureConfirmed": false
+  }
+}

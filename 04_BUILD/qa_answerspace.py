@@ -447,11 +447,28 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
         v, want = attrs.get(word), rule.get("value")
         return v == want if rule.get("op") == "==" else v != want
     if kind == "table-row":
+        # ⭑⭑ BİR TEKİLLİK İSPATI, İSPATLADIĞI ŞEYİ VARSAYAMAZ ⭑⭑
+        #
+        # ⚠ FAZ 5 · LINE EDITOR BULGUSU. `g2-016`'nın süzgeçleri İKİ
+        # taneydi: biri okurun sayfadan aldığı sütun, ÖTEKİ `take`
+        # sütununa yazılmış ve değeri BULMACANIN KENDİ CEVABIYDI.
+        # (Değerler burada YAZILMAZ; bu dosya takip edilir ve kanarya
+        # ilk yazımda tam da bu yorumu yakaladı — haklıydı.)
+        # İkincisi bir süzgeç değil, cevabın kopyasıdır. Onunla ispat
+        # daima tek üye bulur ve kapı YEŞİL YANAR — ama okurun elinde o
+        # süzgeç YOKTUR ve sayfa ona İKİ satır bırakır. Bulmacanın iki
+        # cevabı vardı ve tekillik ispatı bunu göremiyordu, çünkü
+        # ispatın kendisi daireseldi.
+        #
+        # `take` sütununa yapılan bir süzgeç ATILIR. İspat artık okurun
+        # gerçekten sahip olduğu süzgeçlerle koşar.
         take, rows = acc.get("take", "ad"), acc.get("table", [])
+        reader_filters = [f for f in acc.get("filters", [])
+                          if f.get("col") != take]
         hits = []
         for row in rows:
             if all((row.get(f["col"]) == f["value"]) == (f["op"] == "==")
-                   for f in acc.get("filters", [])):
+                   for f in reader_filters):
                 hits.append(row.get(take))
         return word in hits
     if kind == "reachable-via-number-table":

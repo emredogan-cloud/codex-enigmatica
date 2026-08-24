@@ -2376,6 +2376,126 @@ def part11_crossref(rep: Report, tmp: str) -> None:
 
 
 
+# ---------------------------------------------------------------------------
+def part12_editorial(rep: Report, tmp: str) -> None:
+    """⑫ ⭑ EDİTORYAL BÜTÜNLÜK — LINE EDITOR'IN BULDUKLARI KALICI OLDU ⭑
+
+    Faz 5'te üç bağımsız line editor alt-ajanı okurun gördüğü 17.877
+    kelimeyi taradı. Buradaki her fikstür, o taramada ÜRETİM VERİSİNDE
+    bulunmuş ve ana ajan tarafından kodla DOĞRULANMIŞ bir kusurdur:
+
+      · altı sayfa `g4-001` gibi bir YAPIM KİMLİĞİ basıyordu;
+      · altı sayfa aynı çizelgeyi İKİ KEZ basıyordu;
+      · iki bulmaca çifti AYNI levha verisini basıyordu;
+      · beş ad iki ya da üç kez kullanılmıştı;
+      · üç anlatı satırı mekanizmanın kendisini söylüyordu.
+    """
+    print("\n⑫ ⭑ EDİTORYAL BÜTÜNLÜK ⭑")
+
+    cfg = clean_config()
+
+    def ed_root(mut=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "ed-%03d" % _RUN_SEQ[0])
+        os.makedirs(os.path.join(d, "02_MANUSCRIPT"))
+        write(os.path.join(d, ".gate"), "phase5")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        pages = [
+            {"puzzleId": "fixture-001", "gate": "threshold",
+             "title": "Birinci Kayıt", "flavour": "Bunu yazan kişi aceleci "
+             "değildi ve acele etmeyenler bakanı da yavaşlatır.",
+             "objective": "Levhadaki dizi bir ad yazıyor.",
+             "readerAction": "Diziyi soldan sağa okuyun.",
+             "figure": "  ● ○ ● ○", "clues": ["künye"], "constraints": []},
+            {"puzzleId": "fixture-002", "gate": "threshold",
+             "title": "İkinci Kayıt", "flavour": "Aynı el, başka bir gün.",
+             "objective": "Çizelgedeki satırı bulun.",
+             "readerAction": "Anahtar sütununa bakın.",
+             "printedTable": "| a | b |\n|---|---|\n| X | Y |",
+             "clues": ["künye"], "constraints": []},
+        ]
+        if mut:
+            mut(pages)
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps({"puzzles": pages, "warmUp": []}, ensure_ascii=False))
+        return d
+
+    def gate(mut=None):
+        return run_env_gate("qa_editorial.py", ed_root(mut), gate="phase5")
+
+    code, out = gate()
+    rep.check(code == 0, "editoryal bütünlük temiz kurguda GEÇER", out)
+
+    def _build_id(pages):
+        pages[1]["clues"] = ["Anahtar sütunu g4-001 kapısının cevabını taşır."]
+    code, out = gate(_build_id)
+    rep.check(code != 0,
+              "⭑ ① OKUR SAYFASINDA YAPIM KİMLİĞİ KIRMIZI ⭑ "
+              "(`g4-001` kitapta hiçbir yerde basılı değildir; okur onu "
+              "arayamaz — sözleşmenin ikinci maddesi)", out)
+
+    def _twice(pages):
+        pages[1]["figure"] = pages[1]["printedTable"]
+    code, out = gate(_twice)
+    rep.check(code != 0,
+              "⭑ ② AYNI ÇİZELGE SAYFADA İKİ KEZ BASILIRSA KIRMIZI ⭑ "
+              "('çizelge TEK YETKEDİR' diyen bir sayfa iki kopya basamaz)",
+              out)
+
+    def _twin(pages):
+        pages[1]["printedTable"] = None
+        pages[1]["figure"] = pages[0]["figure"]
+    code, out = gate(_twin)
+    rep.check(code != 0,
+              "⭑ ③ İKİ BULMACA AYNI LEVHA VERİSİNİ BASARSA KIRMIZI ⭑ "
+              "(okur ya baskı hatası sanır ya da cevabın devrettiğini)",
+              out)
+
+    def _dup_title(pages):
+        pages[1]["title"] = pages[0]["title"]
+    code, out = gate(_dup_title)
+    rep.check(code != 0,
+              "④ aynı başlık iki sayfada KIRMIZI "
+              "(ipucu ve çözüm bölümleri başlıkla dizinlenir)", out)
+
+    for mut, label in (
+        (lambda p: p[0].__setitem__("flavour", "Çizelge A'ya bakın."),
+         "çizelge adı"),
+        (lambda p: p[0].__setitem__("flavour", "Bu oymacı soldan sağa "
+                                    "yazmıyor."), "yön"),
+        (lambda p: p[0].__setitem__("flavour", "Altısını da aynı yere "
+                                    "koymuş; 6 tanesi aynı."), "rakam"),
+    ):
+        code, out = gate(mut)
+        rep.check(code != 0,
+                  "⭑ ⑤ ANLATI SATIRINDA MEKANİK (%s) KIRMIZI ⭑ "
+                  "(bir üslup düzeltmesi bir bulmacayı sessizce bozamaz)"
+                  % label, out)
+
+    # ⭑ VE KURALIN DARALTILDIĞI YER DE ÖLÇÜLÜR ⭑
+    # `STYLE § 1` harfi harfine "bir sayı geçemez" der ve o hâliyle otuz
+    # dört sayfayı kırmızı yakıyordu — çoğu yalnızca ANLATI SIRALAMASI
+    # ("İkinci yol birinciyle aynı görünür"). Sıra sözcüğü mekanik
+    # DEĞİLDİR ve kapı onu geçirmek ZORUNDADIR (K42).
+    def _ordinal(pages):
+        pages[0]["flavour"] = "İkinci yol birinciyle aynı görünür."
+    code, out = gate(_ordinal)
+    rep.check(code == 0,
+              "⭑ ⑤ SIRA SÖZCÜĞÜ MEKANİK SAYILMIYOR ⭑ "
+              "(K42 · kural ölçüye göre daraltıldı; anlatı kaçıncı "
+              "kayıtta olduğunuzu söyleyebilir)", out)
+
+    def _contradict(pages):
+        pages[0]["figure"] = "  sözcük: 7"
+        pages[0]["flavour"] = "Beşinci sözcük en kolay atlanandır."
+    code, out = gate(_contradict)
+    rep.check(code != 0,
+              "⭑ ⑤b ANLATI SAYFANIN BASTIĞI SAYIYLA ÇELİŞİRSE KIRMIZI ⭑ "
+              "(okur ikisinden birine inanır ve yanılabilir)", out)
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -2400,6 +2520,7 @@ def main() -> int:
         part9_meta_and_aha(rep, tmp)
         part10_plate_readability(rep, tmp)
         part11_crossref(rep, tmp)
+        part12_editorial(rep, tmp)
 
     print("\n" + "=" * 74)
     if rep.failed:

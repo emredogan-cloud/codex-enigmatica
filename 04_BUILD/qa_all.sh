@@ -169,11 +169,24 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 [ -f 04_BUILD/qa_crossref.py ] && \
   run "çapraz referans"         $PY 04_BUILD/qa_crossref.py \
                                    --json 06_REPORTS/qa-crossref.json
+[ -f 04_BUILD/qa_editorial.py ] && \
+  run "EDİTORYAL BÜTÜNLÜK"      $PY 04_BUILD/qa_editorial.py --gate "$GATE" \
+                                   --json 06_REPORTS/qa-editorial.json
 [ -f 04_BUILD/qa_meta.py ] && \
   run "meta-mister bütünlüğü"   $PY 04_BUILD/qa_meta.py \
                                    --json 06_REPORTS/qa-meta.json
+# ⚠ BU KAPI 'run_optional' DEĞİLDİR. Faz 5'te yazıldığında bağımlılığı
+# olmadığı görüldü: standart kütüphaneyle koşar ve ATLANAMAZ. Yol
+# haritası onu "bu kitabın en kritik teknik kapısı" diye adlandırır;
+# atlanabilen bir kapı, kapı değildir.
 [ -f 04_BUILD/qa_plate_readability.py ] && \
-  run_optional "levha okunabilirliği" $VENV_PY 04_BUILD/qa_plate_readability.py --check
+  run "⭑ LEVHA OKUNABİLİRLİĞİ ⭑" $PY 04_BUILD/qa_plate_readability.py \
+                                   --gate "$GATE" \
+                                   --json 06_REPORTS/tracked/qa-plate-readability.json
+# ⚑ Levha promptlarını üretir; GÖRSELİ üretmez (kurucu işidir).
+[ -f 04_BUILD/plate_prompts.py ] && \
+  run "gravür prompt kütüphanesi" $PY 04_BUILD/plate_prompts.py
+
 # ⚑ Prova PAKETİNİ üretir; provayı ALMAZ (A9 kurucu işidir).
 [ -f 04_BUILD/plate_proof.py ] && \
   run_optional "levha prova paketi"   $VENV_PY 04_BUILD/plate_proof.py

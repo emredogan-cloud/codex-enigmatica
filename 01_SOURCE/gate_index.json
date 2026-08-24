@@ -17,7 +17,13 @@
     "",
     "gateStructure ile senkron olmak zorundadır: project_config.json §",
     "scope.gateStructure içindeki her kimlik burada BULUNMALIDIR.",
-    "Buradaki fazla kayıtlar metaGate:true taşımak ZORUNDADIR."
+    "Buradaki fazla kayıtlar metaGate:true taşımak ZORUNDADIR.",
+    "",
+    "⚠ FAZ 5 · LEVHA SAYILARI ÖLÇÜLDÜ.",
+    "`plates.puzzle` beş kapıda da 20 yazıyordu; gerçek sayı 16/17/20/20/20.",
+    "Fark bir eksiklik DEĞİLDİR: yedi bulmaca gravür değil BASILI ÇİZELGE",
+    "taşır. Fazla bildirilen levha, kurucudan üretilmeyecek sekiz gravür",
+    "istemek ve sayfa modelinde var olmayan levhalara yer ayırmak demekti."
   ],
   "version": "1.1.0",
   "gates": [
@@ -42,7 +48,9 @@
       ],
       "plates": {
         "opening": 1,
-        "puzzle": 20
+        "puzzle": 16,
+        "puzzle$was": 20,
+        "puzzle$measured": "⚠ FAZ 5 · ÖLÇÜLDÜ. Bildirim 20 idi ve HER bulmacanın bir gravürü olduğunu varsayıyordu. Bazı bulmacalar levha değil BASILI ÇİZELGE taşır (sınıflama · kısıtlı mantık · kesişim ızgarası); onların gravürü yoktur ve olmamalıdır. Ölçülen: 16."
       },
       "pageBudget": 34,
       "purpose": "Okuru içeri almak.",
@@ -80,7 +88,9 @@
       ],
       "plates": {
         "opening": 1,
-        "puzzle": 20
+        "puzzle": 17,
+        "puzzle$was": 20,
+        "puzzle$measured": "⚠ FAZ 5 · ÖLÇÜLDÜ. Bildirim 20 idi ve HER bulmacanın bir gravürü olduğunu varsayıyordu. Bazı bulmacalar levha değil BASILI ÇİZELGE taşır (sınıflama · kısıtlı mantık · kesişim ızgarası); onların gravürü yoktur ve olmamalıdır. Ölçülen: 17."
       },
       "pageBudget": 34,
       "purpose": "Levha içi şifreyi öğretmek — kitabın imza mekaniği burada doğar.",
@@ -186,7 +196,9 @@
       ],
       "plates": {
         "opening": 0,
-        "puzzle": 2
+        "puzzle": 1,
+        "puzzle$was": 2,
+        "puzzle$measured": "⚠ FAZ 5 · ÖLÇÜLDÜ. Bildirim 2 idi ve HER bulmacanın bir gravürü olduğunu varsayıyordu. Bazı bulmacalar levha değil BASILI ÇİZELGE taşır (sınıflama · kısıtlı mantık · kesişim ızgarası); onların gravürü yoktur ve olmamalıdır. Ölçülen: 1."
       },
       "pageBudget": 6,
       "purpose": "Beş kapının çıktısı tek bir soruya bağlanır.",

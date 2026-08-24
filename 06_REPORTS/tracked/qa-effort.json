@@ -408,14 +408,14 @@
       },
       {
         "puzzleId": "g2-016",
-        "expectedEU": 8.0,
-        "worstEU": 8.0,
+        "expectedEU": 7.0,
+        "worstEU": 7.0,
         "budgetEU": 12.0,
         "declaredMinutes": 12,
-        "ratio": 0.67,
+        "ratio": 0.58,
         "repeatCount": 6,
         "repeatScore": 2,
-        "basis": "6 satır + 2 satır"
+        "basis": "6 satır + 1 satır"
       },
       {
         "puzzleId": "g2-017",
@@ -914,14 +914,14 @@
       },
       {
         "puzzleId": "g5-002",
-        "expectedEU": 6,
-        "worstEU": 6,
+        "expectedEU": 5,
+        "worstEU": 5,
         "budgetEU": 25.0,
         "declaredMinutes": 25,
-        "ratio": 0.24,
-        "repeatCount": 5,
+        "ratio": 0.2,
+        "repeatCount": 4,
         "repeatScore": 2,
-        "basis": "pasaj bulunur + 5 sözcük sayılır"
+        "basis": "pasaj bulunur + 4 sözcük sayılır"
       },
       {
         "puzzleId": "g5-003",
@@ -947,14 +947,14 @@
       },
       {
         "puzzleId": "g5-005",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 6,
+        "worstEU": 6,
         "budgetEU": 25.0,
         "declaredMinutes": 25,
-        "ratio": 0.2,
-        "repeatCount": 4,
+        "ratio": 0.24,
+        "repeatCount": 5,
         "repeatScore": 2,
-        "basis": "pasaj bulunur + 4 sözcük sayılır"
+        "basis": "pasaj bulunur + 5 sözcük sayılır"
       },
       {
         "puzzleId": "g5-006",
@@ -980,14 +980,14 @@
       },
       {
         "puzzleId": "g5-008",
-        "expectedEU": 8,
-        "worstEU": 8,
+        "expectedEU": 7,
+        "worstEU": 7,
         "budgetEU": 28.0,
         "declaredMinutes": 28,
-        "ratio": 0.29,
-        "repeatCount": 7,
-        "repeatScore": 3,
-        "basis": "pasaj bulunur + 7 sözcük sayılır"
+        "ratio": 0.25,
+        "repeatCount": 6,
+        "repeatScore": 2,
+        "basis": "pasaj bulunur + 6 sözcük sayılır"
       },
       {
         "puzzleId": "g5-009",
@@ -1057,14 +1057,14 @@
       },
       {
         "puzzleId": "g5-015",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 9,
+        "worstEU": 9,
         "budgetEU": 26.0,
         "declaredMinutes": 26,
-        "ratio": 0.27,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "pasaj bulunur + 6 sözcük sayılır"
+        "ratio": 0.35,
+        "repeatCount": 8,
+        "repeatScore": 3,
+        "basis": "pasaj bulunur + 8 sözcük sayılır"
       },
       {
         "puzzleId": "g5-016",

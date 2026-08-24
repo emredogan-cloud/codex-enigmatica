@@ -39,8 +39,8 @@
 | Yazılmış bulmaca (nihai) | **0** | 100 |
 | Onaylanmış alternatif çözüm | **0** | **0** |
 | İpucu (3 kademe) | **303** | 300 |
-| Levha | **0** üretildi / 112 planlandı | ~110 |
-| Kelime (ölçülen) | **17.214** | ~34.000 |
+| Levha | **0** üretildi / 103 planlandı | ~110 |
+| Kelime (ölçülen) | **17.224** | ~34.000 |
 | Künye | **15** (0 doğrulanmış) | — |
 
 ---

@@ -66,7 +66,7 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 | Arka madde (300 ipucu + 100 çözüm) | 48 |
 | **Modelin sayfa sayısı** | **238** |
 | Hedef | 230 |
-| Levha | 112 |
+| Levha | 103 |
 
 ## 5. Sürümler
 

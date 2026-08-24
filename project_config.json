@@ -1007,9 +1007,18 @@
     "plateBudget": {
       "$comment": "Kapı levhaları gate_index.json § plates'ten türetilir.",
       "frontMatterPlates": 3,
-      "lastQuestionPlates": 2,
+      "lastQuestionPlates": 1,
       "targetPlates": 110,
-      "tolerancePct": 10
+      "tolerancePct": 10,
+      "lastQuestionPlates$measured": [
+        "⚠ 2 → 1 · FAZ 5 · ÖLÇÜLDÜ.",
+        "Bu alan 'son soru bölümünün levhaları' demekti ama son sorunun BULMACA",
+        "levhası (pl-meta-01) zaten kapı levhaları içinde sayılıyordu; model onu",
+        "İKİ KEZ sayıyordu. Bölümde bulmaca levhasının DIŞINDA tek bir levha",
+        "vardır (pl-meta-02) ve alan artık onu sayar.",
+        "",
+        "Ölçülen toplam: 103 levha (hedef 110 ± %10 → 99–121)."
+      ]
     }
   },
   "taxonomy": {

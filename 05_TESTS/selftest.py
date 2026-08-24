@@ -1680,13 +1680,20 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
               "⭑ 4+ PUAN VERİP ÖDÜLÜN YERİNİ GÖSTEREMEYEN BULMACA YAKALANIR ⭑ "
               "(yazarın kendine verdiği not, kanıt değildir)", out)
 
+    # ⭑ K36 · KURAL DEĞİŞTİ, FİKSTÜR DE DEĞİŞTİ ⭑
+    # Eskiden "aynı imza ikinci kez 4+ alamaz"dı ve imzayı kopyalamak
+    # kırmızı yakmaya yeterdi. Artık tavan ÖLÇÜLÜYOR: tekrar, okurdan
+    # daha fazla düşünme istiyorsa 4 alabilir. Alamayacağı tek şey 5'tir
+    # — keşif bir kez olur. Fikstür o çizgiyi ölçer.
     def _dup(i, s, dd, pg):
-        dd[2]["experience"]["mechanismSignature"] = \
+        dd[3]["experience"]["mechanismSignature"] = \
             dd[1]["experience"]["mechanismSignature"]
+        dd[3]["experience"]["ahaScore"] = 5
     code, out = run_env_gate("qa_experience.py", exp_root(_dup))
     rep.check(code != 0,
-              "⭑ AYNI MEKANİZMA İKİNCİ KEZ 4+ ALAMAZ ⭑ "
-              "(sürpriz bir kez olur; ikincisi yordamdır)", out)
+              "⭑ K36 · AYNI MEKANİZMA İKİNCİ KEZ 5 ALAMAZ ⭑ "
+              "(keşif bir kez olur; ikincisi en iyi hâlde DERİNLEŞMEDİR)",
+              out)
 
     def _untaught(w):
         w.pop()
@@ -1823,6 +1830,354 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
               "Türkçe aksanlar normalize ediliyor (ö→o · ç→c · ş→s · ğ→g)")
 
 
+# ---------------------------------------------------------------------------
+def part9_meta_and_aha(rep: Report, tmp: str) -> None:
+    """⑨ ⭑ FAZ 4'ÜN İKİ YENİ KAPISI: META-MİSTER VE ÖLÇÜLEN AHA TAVANI ⭑
+
+    Her fikstür, kapının YAKALAMASI GEREKEN bir kusuru kurar. Bir kapının
+    varlığı yetmez; ısırdığı GÖRÜLMELİDİR — ve bu bölümdeki iki kusur
+    üretim verisinde GERÇEKTEN yaşandı:
+
+      · on kayıt kendi ölçülen aha tavanının üstünde puan taşıyordu
+        (tekrarlanan mekanizmaya 4 ve 5 yazılmıştı);
+      · Faz 4'e kadar meta-mistere META OLARAK bakan hiçbir kapı yoktu.
+    """
+    print("\n⑨ ⭑ META-MİSTER · ÖLÇÜLEN AHA TAVANI ⭑")
+
+    cfg = clean_config()
+    ALPHA = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"
+    GATES = ["threshold", "menagerie", "calendar", "labyrinth", "mirror"]
+    PHRASES = ["ZURNA SESİ VAR", "MELTEM ESTİ YİNE", "KAVUN KESTİ USTA",
+               "PALAMUT DÜŞTÜ DALDAN", "ŞEBEKE KURULDU ARTIK"]
+    POS = [1, 2, 3, 4, 5]
+
+    def _meta_answer(phrases, positions):
+        out = ""
+        for ph, k in zip(phrases, positions):
+            q = "".join(c for c in ph.upper() if c.isalpha())
+            out += q[-k]
+        return out
+
+    META = _meta_answer(PHRASES, POS)
+
+    def meta_root(mut=None):
+        """Beş kapı bulmacası + bir son soru — en küçük gerçek meta."""
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "meta-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/design", "02_MANUSCRIPT"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase4")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        gates = [{"id": g, "pageBudget": 34} for g in GATES] + [
+            {"id": "last-question", "pageBudget": 6, "metaGate": True}]
+        idx, sol, dsg, pages = [], [], [], []
+        for i, (g, ph) in enumerate(zip(GATES, PHRASES), 1):
+            pid = "g%d-020" % i
+            idx.append({"puzzleId": pid, "gate": g, "type": "meta",
+                        "mechanismFamily": "gate-synthesis",
+                        "status": "written", "testStatus": "tested",
+                        "leakClass": "protected", "ambiguityScore": 1,
+                        "alternativeSolutionAnalysisDone": True,
+                        "confirmedAlternativeSolutions": 0,
+                        "dependencies": []})
+            sol.append({"puzzleId": pid, "finalAnswer": ph,
+                        "hints": ["a", "b", "c"], "constraints": []})
+            dsg.append({"puzzleId": pid, "mechanismFamily": "gate-synthesis"})
+            pages.append({"puzzleId": pid, "gate": g, "title": "kapı %d" % i})
+        space = {"generator": {"kind": "printed-meta-list",
+                               "listRef": "son-soru-adaylari"},
+                 "acceptance": {"kind": "meta-synthesis",
+                                "gatePhrases": list(PHRASES),
+                                "positions": list(POS)},
+                 "declaredAcceptedCount": 1}
+        idx.append({"puzzleId": "meta-001", "gate": "last-question",
+                    "type": "meta", "mechanismFamily": "meta-synthesis",
+                    "status": "written", "testStatus": "tested",
+                    "leakClass": "protected", "ambiguityScore": 1,
+                    "alternativeSolutionAnalysisDone": True,
+                    "confirmedAlternativeSolutions": 0,
+                    "dependencies": ["g%d-020" % i for i in range(1, 6)]})
+        sol.append({"puzzleId": "meta-001", "finalAnswer": META,
+                    "hints": ["a", "b", "c"], "answerSpace": space,
+                    "constraints": ["Cevap %d harflidir." % len(META)]})
+        dsg.append({"puzzleId": "meta-001",
+                    "mechanismFamily": "meta-synthesis",
+                    "answerSpace": space})
+        pages.append({"puzzleId": "meta-001", "gate": "last-question",
+                      "title": "Son Soru"})
+        charts = {"son-soru-adaylari": {
+            "printed": False,
+            "entries": sorted({META, "ZZZZZ", "YYYYY", "XXXXX"})}}
+        book = {"puzzles": pages, "warmUp": [],
+                "frame": {"opening": ["giriş"]}}
+        if mut:
+            mut(idx, sol, dsg, book, charts, gates)
+        write(os.path.join(d, "01_SOURCE/gate_index.json"),
+              json.dumps({"gates": gates}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": idx}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": sol}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/gate-1.json"),
+              json.dumps({"puzzles": dsg}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
+              json.dumps({"charts": charts}, ensure_ascii=False))
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps(book, ensure_ascii=False))
+        return d
+
+    def meta_gate(mut=None):
+        return run_env_gate("qa_meta.py", meta_root(mut), gate="phase4")
+
+    code, out = meta_gate()
+    rep.check(code == 0, "meta kapısı temiz kurguda GEÇER", out)
+
+    def _no_contribution(idx, sol, dsg, book, charts, gates):
+        idx[-1]["dependencies"] = idx[-1]["dependencies"][:4]
+        dsg[-1]["answerSpace"]["acceptance"]["gatePhrases"] = PHRASES[:4]
+        sol[-1]["answerSpace"]["acceptance"]["gatePhrases"] = PHRASES[:4]
+    code, out = meta_gate(_no_contribution)
+    rep.check(code != 0,
+              "⭑ BİR KAPI SON SORUYA KATKI VERMİYORSA KIRMIZI ⭑ "
+              "(yol haritası § 12 · BLOKLAYICI)", out)
+
+    def _future_dep(idx, sol, dsg, book, charts, gates):
+        idx[-1]["dependencies"] = idx[-1]["dependencies"] + ["meta-002"]
+        idx.append({"puzzleId": "meta-002", "gate": "last-question",
+                    "type": "meta", "mechanismFamily": "gate-synthesis",
+                    "status": "written", "testStatus": "tested",
+                    "leakClass": "protected", "ambiguityScore": 1,
+                    "alternativeSolutionAnalysisDone": True,
+                    "confirmedAlternativeSolutions": 0, "dependencies": []})
+    code, out = meta_gate(_future_dep)
+    rep.check(code != 0,
+              "⭑ SON SORU İLERİ REFERANS VERİRSE KIRMIZI ⭑ "
+              "(okurun henüz elde etmediği bir çıktı istenemez)", out)
+
+    def _cycle(idx, sol, dsg, book, charts, gates):
+        idx[0]["dependencies"] = ["meta-001"]
+    code, out = meta_gate(_cycle)
+    rep.check(code != 0,
+              "⭑ SON SORUNUN CEVABINI KULLANAN BULMACA VARSA KIRMIZI ⭑ "
+              "(döngü: kitap kendi kapanışına bağlanamaz)", out)
+
+    def _unproducible(idx, sol, dsg, book, charts, gates):
+        sol[2]["finalAnswer"] = "BAŞKA BİR SÖZ TAMAMEN"
+    code, out = meta_gate(_unproducible)
+    rep.check(code != 0,
+              "⭑ BİLDİRİLEN KAPI SÖZÜ O KAPININ GERÇEK ÇIKTISI DEĞİLSE "
+              "KIRMIZI ⭑ (okurun elinde olmayan bir söz istenemez)", out)
+
+    def _concat(idx, sol, dsg, book, charts, gates):
+        # Cevap birleştirilmiş dizenin içinden okunabiliyor
+        joined = "".join(c for p in PHRASES for c in p.upper() if c.isalpha())
+        fake = joined[3:3 + len(META)]
+        sol[-1]["finalAnswer"] = fake
+        charts["son-soru-adaylari"]["entries"] = sorted({fake, "ZZZZZ"})
+    code, out = meta_gate(_concat)
+    rep.check(code != 0,
+              "⭑ CEVAP BİRLEŞTİRİLMİŞ SÖZLERİN İÇİNDEN OKUNUYORSA KIRMIZI ⭑ "
+              "(birleştirme çıkarım değildir; okur onu kazara bulur)", out)
+
+    def _leak_page(idx, sol, dsg, book, charts, gates):
+        book["puzzles"][1]["flavour"] = "Bir yerde %s yazıyordu." % META
+    code, out = meta_gate(_leak_page)
+    rep.check(code != 0,
+              "⭑ SON SORUNUN CEVABI BİR SAYFADA BASILIYSA KIRMIZI ⭑ "
+              "(doğrulama sayfasının anlamı kalmaz · § 12)", out)
+
+    def _leak_title(idx, sol, dsg, book, charts, gates):
+        book["puzzles"][2]["title"] = META
+    code, out = meta_gate(_leak_title)
+    rep.check(code != 0,
+              "⭑ CEVAP BİR SAYFA BAŞLIĞINDA GEÇİYORSA KIRMIZI ⭑ "
+              "(dizgide en büyük basılan yer başlıktır)", out)
+
+    def _leak_warm(idx, sol, dsg, book, charts, gates):
+        book["warmUp"] = [{"id": "w1", "teaches": "meta-synthesis",
+                           "title": "örnek", "solved": ["Cevap %s." % META]}]
+    code, out = meta_gate(_leak_warm)
+    rep.check(code != 0,
+              "⭑ CEVAP ISINMA ÖRNEĞİNDE GEÇİYORSA KIRMIZI ⭑", out)
+
+    def _printed_list(idx, sol, dsg, book, charts, gates):
+        charts["son-soru-adaylari"]["printed"] = True
+    code, out = meta_gate(_printed_list)
+    rep.check(code != 0,
+              "⭑ ADAY LİSTESİ KİTAPTA BASILIYSA KIRMIZI ⭑ "
+              "(cevap dokuz adaya iner; son soru bir seçmeye dönüşür)", out)
+
+    def _order(idx, sol, dsg, book, charts, gates):
+        idx[-1]["dependencies"] = ["g2-020", "g1-020", "g3-020",
+                                   "g4-020", "g5-020"]
+    code, out = meta_gate(_order)
+    rep.check(code != 0,
+              "⭑ KAPI SIRASI MANUSCRIPT SIRASIYLA TUTMUYORSA KIRMIZI ⭑ "
+              "(harfler doğru ama SIRA yanlış olursa cevap değişir)", out)
+
+    def _flat_positions(idx, sol, dsg, book, charts, gates):
+        flat = [2, 2, 2, 2, 2]
+        ans = _meta_answer(PHRASES, flat)
+        for rec in (sol[-1], dsg[-1]):
+            rec["answerSpace"]["acceptance"]["positions"] = flat
+        sol[-1]["finalAnswer"] = ans
+        charts["son-soru-adaylari"]["entries"] = sorted({ans, "ZZZZZ"})
+    code, out = meta_gate(_flat_positions)
+    rep.check(code != 0,
+              "⭑ BÜTÜN KONUMLAR AYNI SAYIYSA KIRMIZI ⭑ "
+              "(kapıların kendi sayıları kullanılmıyor demektir)", out)
+
+    # ── ⭑ K36 · ÖLÇÜLEN AHA TAVANI ⭑ ───────────────────────────────────
+    # Tavan yazardan gelmez: ilk kullanım 5, ölçülmüş derinleşme 4, düz
+    # tekrar 3. Ölçü `bildirilen dakika ÷ elle işlem`tir ve iki alanın da
+    # sahibi başka kapılardır.
+    LBL = ["ZURNA", "KAVUN", "VİRAJ", "TERLİK", "OYMACI", "PATİKA",
+           "SÜRAHİ", "MERCAN", "MELTEM", "ŞEBEKE", "KUNDURA", "YELPAZE"]
+    tools_k36 = {"charts": {}}
+
+    def aha_root(plan, over=None):
+        """Her kayıt: (pid, kapı, aile, dakika, aha, imza, etiket sayısı).
+
+        Elle işlem `plate-attribute` modelinden ölçülür ve etiket sayısıyla
+        DOĞRU orantılıdır; dakika bildirilendir. Oran ikisinin bölümüdür."""
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "aha-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/design", "02_MANUSCRIPT"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase4")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
+              json.dumps(tools_k36, ensure_ascii=False))
+        idx, sol, dsg, pages = [], [], [], []
+        seen_slot: dict = {}
+        for (pid, gid, fam, mins, aha, sig, n) in plan:
+            labels = LBL[:n]
+            seen_slot[gid] = seen_slot.get(gid, 0) + 1
+            idx.append({"puzzleId": pid, "gate": gid, "type": "observation",
+                        "mechanismFamily": fam, "status": "written",
+                        "testStatus": "tested", "leakClass": "protected",
+                        "slot": seen_slot[gid],
+                        "expectedCompletionMinutes": mins,
+                        "ambiguityScore": 1,
+                        "alternativeSolutionAnalysisDone": True,
+                        "confirmedAlternativeSolutions": 0})
+            sol.append({"puzzleId": pid, "finalAnswer": labels[0],
+                        "hints": ["a", "b", "c"],
+                        "answerSpace": {
+                            "generator": {"kind": "printed-lexicon"},
+                            "acceptance": {
+                                "kind": "plate-attribute", "labels": labels,
+                                "attributes": {w: (2 if w == labels[0] else 1)
+                                               for w in labels},
+                                "rule": {"op": "==", "value": 2}},
+                            "declaredAcceptedCount": 1}})
+            dsg.append({"puzzleId": pid, "mechanismFamily": fam,
+                        "experience": {
+                            "ahaScore": aha,
+                            "revelation": {"kind": "small-observation-unlocks",
+                                           "evidence": "pl-%s" % pid},
+                            "mechanismSignature": sig}})
+            pages.append({"puzzleId": pid, "plateId": "pl-%s" % pid})
+        warm = [{"id": "w1", "teaches": "plate-observation",
+                 "solved": ["örnek"]},
+                {"id": "w2", "teaches": "gate-synthesis", "solved": ["örnek"]}]
+        if over:
+            over(idx, sol, dsg, pages, warm)
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": idx}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": sol}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/gate-1.json"),
+              json.dumps({"puzzles": dsg}, ensure_ascii=False))
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps({"puzzles": pages, "warmUp": warm},
+                         ensure_ascii=False))
+        return d
+
+    # ⚠ FİKSTÜR § 11'İN RAMPA KURALLARINA DA UYMAK ZORUNDA: her kapıda
+    # ≥3 ayrı süre, kolay başlangıç, uzun eziyet yok. İlk kurgu düz
+    # sürelerle yazılmıştı ve K36 yeşilken rampa kırmızı yandı — fikstür
+    # ölçmek istediği şeyi ölçemiyordu.
+    #
+    # Çıkarım oranı = dakika ÷ elle işlem; elle işlem burada sabittir (4),
+    # yani oranı SÜRELER kurar.
+    THR_MIN = (4, 4, 5, 6, 6, 7)          # ortanca 5,5 → oran 1,375
+    MEN_MIN = (6, 6, 7, 8, 8, 9)          # ortanca 7,5 → oran 1,875
+    CAL_MIN = (10, 11, 9, 12, 13, 14)     # ortanca 11,5 → oran 2,875
+    CAL_AHA = (5, 4, 3, 3, 3, 3)          # ilk kullanım · derinleşme · yordam
+
+    def _plan(cal_scores=CAL_AHA, cal_min=CAL_MIN, men_min=MEN_MIN,
+              thr_min=THR_MIN):
+        rows = []
+        for gid, mins in (("threshold", thr_min), ("menagerie", men_min)):
+            last = len(mins) - 1
+            for i in range(len(mins)):
+                rows.append(("%s-%d" % (gid[:3], i + 1), gid,
+                             "gate-synthesis" if i == last
+                             else "plate-observation",
+                             mins[i], 5 if i < 3 else 3,
+                             "%s-sig-%d" % (gid[:3], i), 4))
+        last = len(cal_min) - 1
+        for i, (aha, mins) in enumerate(zip(cal_scores, cal_min)):
+            rows.append(("cal-%d" % (i + 1), "calendar",
+                         "gate-synthesis" if i == last else "plate-observation",
+                         mins, aha, "cal-sig-0", 4))
+        return rows
+
+    code, out = run_env_gate("qa_experience.py", aha_root(_plan()),
+                             gate="phase4")
+    rep.check(code == 0,
+              "K36 · temiz kurgu GEÇER (keşif 4 · akıcılık 3 + yükselen "
+              "çıkarım)", out)
+
+    def _five_on_reuse(i, s, dd, pg, w):
+        dd[13]["experience"]["ahaScore"] = 5          # cal-2, tekrarlanan imza
+    code, out = run_env_gate("qa_experience.py",
+                             aha_root(_plan(), _five_on_reuse), gate="phase4")
+    rep.check(code != 0,
+              "⭑ K36 · TEKRARLANAN MEKANİZMAYA 5 VERİLİRSE KIRMIZI ⭑ "
+              "(keşif bir kez olur)", out)
+
+    def _four_without_deepening(i, s, dd, pg, w):
+        # cal-3'ün çıkarım oranı cal-2'nin ALTINDA; yine de 4 iddia ediyor
+        dd[14]["experience"]["ahaScore"] = 4
+    code, out = run_env_gate("qa_experience.py",
+                             aha_root(_plan(), _four_without_deepening),
+                             gate="phase4")
+    rep.check(code != 0,
+              "⭑ K36 · ÖLÇÜLMÜŞ DERİNLEŞME OLMADAN 4 VERİLİRSE KIRMIZI ⭑ "
+              "(tekrarın ödülü çıkarımdan gelir, iddiadan değil)", out)
+
+    # Yenilik tabanı: beş tekrarın ÜÇÜ ilk kullanımla AYNI oranı taşıyor
+    # (eşitlik derinleşme değildir) → kapıda yalnızca 3 yeni/derin kayıt
+    # kalır ve taban 4'tür.
+    # ⚠ Taban yalnızca ≥10 bulmacalık kapılarda ölçülür (küçük kapıda
+    # 'yirmi düz tekrar' diye bir şey yoktur), o yüzden fikstürün akıcılık
+    # kapısı ON bulmacadır. Sürelerin ÇOĞU ilk kullanımla EŞİT: eşitlik
+    # derinleşme değildir, yalnızca iki kayıt yeni/derin kalır.
+    code, out = run_env_gate(
+        "qa_experience.py",
+        aha_root(_plan(cal_scores=(5,) + (3,) * 9,
+                       cal_min=(9, 9, 9, 9, 9, 10, 11, 9, 9, 9))),
+        gate="phase4")
+    rep.check(code != 0,
+              "⭑ K36 · AKICILIK KAPISI YENİLİK TABANINI TUTMUYORSA KIRMIZI ⭑ "
+              "(yirmi düz tekrardan bir kapı olmaz)", out)
+
+    # Çıkarım oranı tabanı: kapı hâlâ YÜKSELİYOR ama 2,0'ın altında.
+    code, out = run_env_gate(
+        "qa_experience.py",
+        aha_root(_plan(cal_scores=(5, 3, 3, 3, 3, 3),
+                       cal_min=(6, 6, 7, 7, 8, 7),
+                       men_min=(5, 5, 6, 7, 7, 6))), gate="phase4")
+    rep.check(code != 0,
+              "⭑ K36 · AKICILIK KAPISI ÇIKARIM ORANINI VERMİYORSA KIRMIZI ⭑ "
+              "(yenilikten vazgeçilen yerde düşünme artmak ZORUNDA)", out)
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -1844,6 +2199,7 @@ def main() -> int:
         part6_canary(rep, tmp)
         part7_protected_gates(rep, tmp)
         part8_answerspace(rep, tmp)
+        part9_meta_and_aha(rep, tmp)
 
     print("\n" + "=" * 74)
     if rep.failed:

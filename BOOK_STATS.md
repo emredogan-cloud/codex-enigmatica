@@ -2,7 +2,7 @@
 
 <!-- ⚠ ÜRETİLEN BELGE — 04_BUILD/update_docs.py. ELLE DÜZENLEMEYİN. -->
 
-> Kapı: `phase3` · Bu dosyadaki her sayı **ölçülmüştür**.
+> Kapı: `phase4` · Bu dosyadaki her sayı **ölçülmüştür**.
 >
 > ⚠ Bu dosya **çözüm bilgisi taşımaz** — yalnızca sayılar.
 
@@ -11,19 +11,19 @@
 | | Ölçülen | Hedef |
 |---|---:|---:|
 | Aday bulmaca | **151** | ≥130 |
-| **Yazılmış taslak** (metin + çözüm + ipucu) | **40** | — |
+| **Yazılmış taslak** (metin + çözüm + ipucu) | **101** | — |
 | Doğrulanmış bulmaca | **0** | 100 |
 | Yazılmış bulmaca (nihai) | **0** | 100 |
 | Kapı | **5** | 5 |
 | Mekanizma ailesi | **17** / 17 tanımlı | ≥10 |
-| Veri taşıyan levha adayı | **64** | — |
-| Künye | **16** (0 doğrulanmış) | — |
+| Veri taşıyan levha adayı | **59** | — |
+| Künye | **15** (0 doğrulanmış) | — |
 | `tested` durumundaki bulmaca | **0** | — |
 | **Onaylanmış alternatif çözüm** | **0** | **0** |
 | Belirsizlik puanı > 2 | **0** | **0** |
-| **Cevap uzayı bağımsız doğrulanmış** | **40 / 40** | tamamı |
-| **Elenen aday dize** (cevap uzayı toplamı) | **2114** | — |
-| İpucu (3 kademe) | **120** | 300 |
+| **Cevap uzayı bağımsız doğrulanmış** | **101 / 101** | tamamı |
+| **Elenen aday dize** (cevap uzayı toplamı) | **4762** | — |
+| İpucu (3 kademe) | **303** | 300 |
 
 ## 2. Öldürme kapısı (Faz 2)
 
@@ -61,10 +61,10 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 
 | | |
 |---|---:|
-| Ön madde | 12 |
+| Ön madde | 14 |
 | Gövde (5 kapı + son soru) | 176 |
 | Arka madde (300 ipucu + 100 çözüm) | 48 |
-| **Modelin sayfa sayısı** | **236** |
+| **Modelin sayfa sayısı** | **238** |
 | Hedef | 230 |
 | Levha | 112 |
 
@@ -72,6 +72,6 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 
 | Sürüm | Durum | Fiyat | Telif | Not |
 |---|---|---:|---:|---|
-| Hardcover | hipotez | 29.99 $ | **9.51 $** | baskı 8.48 $ · başabaş ACOS %31.7 |
-| Paperback | hipotez | 19.99 $ | **8.16 $** | baskı 3.83 $ · başabaş ACOS %40.8 |
+| Hardcover | hipotez | 29.99 $ | **9.49 $** | baskı 8.51 $ · başabaş ACOS %31.6 |
+| Paperback | hipotez | 19.99 $ | **8.14 $** | baskı 3.86 $ · başabaş ACOS %40.7 |
 | Kindle | **üretilmez** | — | — | Görsel şifreler e-okuyucuda bozulur |

@@ -164,8 +164,10 @@
       "requiresSourcing": false,
       "ambiguityRiskProfile": "ORTA — anahtarın nereden geldiği belirsizse bulmaca çözülemez hâle gelir.",
       "defaultLeakClass": "protected",
-      "answerFormat": "phrase",
-      "textBound": false
+      "answerFormat": "word",
+      "textBound": false,
+      "answerFormat$was": "phrase",
+      "answerFormat$comment": "⭑ FAZ 4 · K22 BU ALANI EZDİ ⭑ Faz 1'de bu ailenin cevabının bir SAYI/DİZİ olacağı varsayılmıştı. Faz 4'te yazıldığında mekanizma bir ARA ADIM oldu: sayı (ya da yol) basılı katalogun SATIRINI verir ve cevap o satırdaki sözcüktür. Bu, K22'nin gereğidir — her cevap basılı bir listenin üyesidir ve kabul yordamı yazardan çizelgeye taşınır. Alan tahmindi; yazım ölçümdür."
     },
     {
       "id": "script-decoding",
@@ -261,8 +263,10 @@
       "requiresSourcing": true,
       "ambiguityRiskProfile": "DÜŞÜK — aritmetik belirsizlik kaldırmaz. Risk NOTASYONDADIR.",
       "defaultLeakClass": "protected",
-      "answerFormat": "number",
-      "textBound": false
+      "answerFormat": "word",
+      "textBound": false,
+      "answerFormat$was": "number",
+      "answerFormat$comment": "⭑ FAZ 4 · K22 BU ALANI EZDİ ⭑ Faz 1'de bu ailenin cevabının bir SAYI/DİZİ olacağı varsayılmıştı. Faz 4'te yazıldığında mekanizma bir ARA ADIM oldu: sayı (ya da yol) basılı katalogun SATIRINI verir ve cevap o satırdaki sözcüktür. Bu, K22'nin gereğidir — her cevap basılı bir listenin üyesidir ve kabul yordamı yazardan çizelgeye taşınır. Alan tahmindi; yazım ölçümdür."
     },
     {
       "id": "cyclic-calendar",
@@ -285,8 +289,10 @@
       "requiresSourcing": true,
       "ambiguityRiskProfile": "ORTA — başlangıç noktası ve yön belirtilmezse iki sonuç doğar.",
       "defaultLeakClass": "protected",
-      "answerFormat": "number",
-      "textBound": false
+      "answerFormat": "word",
+      "textBound": false,
+      "answerFormat$was": "number",
+      "answerFormat$comment": "⭑ FAZ 4 · K22 BU ALANI EZDİ ⭑ Faz 1'de bu ailenin cevabının bir SAYI/DİZİ olacağı varsayılmıştı. Faz 4'te yazıldığında mekanizma bir ARA ADIM oldu: sayı (ya da yol) basılı katalogun SATIRINI verir ve cevap o satırdaki sözcüktür. Bu, K22'nin gereğidir — her cevap basılı bir listenin üyesidir ve kabul yordamı yazardan çizelgeye taşınır. Alan tahmindi; yazım ölçümdür."
     },
     {
       "id": "path-graph",
@@ -308,8 +314,10 @@
       "requiresSourcing": false,
       "ambiguityRiskProfile": "YÜKSEK — simetrik bir haritada ayna yol da geçerlidir. Simetri KIRILMALIDIR.",
       "defaultLeakClass": "protected",
-      "answerFormat": "sequence",
-      "textBound": false
+      "answerFormat": "word",
+      "textBound": false,
+      "answerFormat$was": "sequence",
+      "answerFormat$comment": "⭑ FAZ 4 · K22 BU ALANI EZDİ ⭑ Faz 1'de bu ailenin cevabının bir SAYI/DİZİ olacağı varsayılmıştı. Faz 4'te yazıldığında mekanizma bir ARA ADIM oldu: sayı (ya da yol) basılı katalogun SATIRINI verir ve cevap o satırdaki sözcüktür. Bu, K22'nin gereğidir — her cevap basılı bir listenin üyesidir ve kabul yordamı yazardan çizelgeye taşınır. Alan tahmindi; yazım ölçümdür."
     },
     {
       "id": "layered-chain",
@@ -332,8 +340,10 @@
       "requiresSourcing": false,
       "ambiguityRiskProfile": "ORTA — asıl risk belirsizlik değil KIRILGANLIKTIR: bir halka kırılırsa zincirin tamamı çözülemez olur.",
       "defaultLeakClass": "protected",
-      "answerFormat": "phrase",
-      "textBound": false
+      "answerFormat": "word",
+      "textBound": false,
+      "answerFormat$was": "phrase",
+      "answerFormat$comment": "⭑ FAZ 4 · K22 BU ALANI EZDİ ⭑ Faz 1'de bu ailenin cevabının bir SAYI/DİZİ olacağı varsayılmıştı. Faz 4'te yazıldığında mekanizma bir ARA ADIM oldu: sayı (ya da yol) basılı katalogun SATIRINI verir ve cevap o satırdaki sözcüktür. Bu, K22'nin gereğidir — her cevap basılı bir listenin üyesidir ve kabul yordamı yazardan çizelgeye taşınır. Alan tahmindi; yazım ölçümdür."
     },
     {
       "id": "back-reference",
@@ -379,8 +389,10 @@
       "requiresSourcing": false,
       "ambiguityRiskProfile": "DÜŞÜK belirsizlik, YÜKSEK kırılganlık. Tehlike yorumda değil, dizgide.",
       "defaultLeakClass": "restricted",
-      "answerFormat": "number",
-      "textBound": true
+      "answerFormat": "word",
+      "textBound": true,
+      "answerFormat$was": "number",
+      "answerFormat$comment": "⭑ FAZ 4 · K22 BU ALANI EZDİ ⭑ Faz 1'de bu ailenin cevabının bir SAYI/DİZİ olacağı varsayılmıştı. Faz 4'te yazıldığında mekanizma bir ARA ADIM oldu: sayı (ya da yol) basılı katalogun SATIRINI verir ve cevap o satırdaki sözcüktür. Bu, K22'nin gereğidir — her cevap basılı bir listenin üyesidir ve kabul yordamı yazardan çizelgeye taşınır. Alan tahmindi; yazım ölçümdür."
     },
     {
       "id": "narrative-embedded",
@@ -452,8 +464,10 @@
       "requiresSourcing": false,
       "ambiguityRiskProfile": "KRİTİK — bu bulmaca kitabın varlık sebebidir ve tek bir belirsizlik bütün deneyimi çürütür.",
       "defaultLeakClass": "protected",
-      "answerFormat": "phrase",
-      "textBound": false
+      "answerFormat": "word",
+      "textBound": false,
+      "answerFormat$was": "phrase",
+      "answerFormat$comment": "⭑ Son sorunun cevabı BEŞ HARFLİ TEK bir sözcüktür ve kitapta yoktur; doğrulama sayfasına girilir."
     }
   ]
 }

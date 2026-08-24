@@ -67,6 +67,23 @@ def pages(block: dict) -> int:
                if isinstance(v, int) and not k.endswith("$comment"))
 
 
+def _measured_words() -> int:
+    """Kelime sayısı ÖLÇÜLÜR, tahmin edilmez.
+
+    ⚠ Bu alan Faz 4'e kadar sabit **0** basıyordu — kitap boş sanılırdı.
+    Ölçüm `pilot_pages.py`in ürettiği izlenen raporda zaten duruyordu;
+    üretilen belge ona hiç bakmıyordu. Rapor yoksa 0 basar ve bu, ölçümün
+    KOŞMADIĞINI söyler."""
+    path = os.path.join(ROOT, "06_REPORTS", "tracked",
+                        "pilot-page-measure.json")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        return int((data.get("facts") or data).get("totalWords") or 0)
+    except (OSError, json.JSONDecodeError, TypeError, ValueError):
+        return 0
+
+
 def _kill_verdict() -> str:
     """Öldürme kapısı kararı — ÜRETİLEN rapordan okunur, elle yazılmaz.
 
@@ -103,6 +120,8 @@ def measure() -> dict:
 
     return {
         "gate": read_gate(),
+        "words": "{:,}".format(_measured_words()).replace(",", ".")
+                 if _measured_words() else "ÖLÇÜLMEDİ",
         # ⚠ Üretilen belgeler geçersiz kılmayı BİLMEK ZORUNDA: bilmezlerse
         # doğrulanmamış bir fazı "TAMAM" diye yazarlar.
         "override": (cfg.get("killGate") or {}).get("externalValidation") or {},
@@ -273,6 +292,50 @@ Pilot kohort **%(pilot)d** bulmaca · modellenen oturum **%(pilotMinutes)d dk**
     }
 
 
+# ⚠ Bu metin Faz 2'ye SABİTLENMİŞTİ ve Faz 4'te hâlâ "Faz 2'nin işi
+# tamamlandı" diyordu. Üretilen bir belgenin bayatlaması yetmiyor:
+# ÜRETECİN KENDİSİ de bayatlayabilir. Metin artık kapıdan TÜRER.
+_NEXT = {
+    "phase2": ("FAZ 2 · ÖLDÜRME KAPISI", "A12", "phase2",
+               "yirmi Türkçe pilot bulmaca yazıldı, cevap uzayı mimarisi "
+               "kuruldu ve yirmisi de bağımsız olarak doğrulandı, üç yeni "
+               "kapı eklendi, kanarya sırrı kuruldu"),
+    "phase3": ("FAZ 3 · KAPI II", "A12b", "phase3",
+               "Kapı II'nin yirmi bulmacası yazıldı, çapa rampası kuruldu "
+               "ve levha içi şifre çıkarıma taşındı"),
+    "phase4": ("FAZ 4 · KAPI III–V + META", "A12b", "phase4",
+               "Kapı III, IV ve V yazıldı, meta-mister kuruldu ve "
+               "`qa_meta.py` ile doğrulandı, dokuz yeni mekanizmanın ısınma "
+               "örneği yazıldı, aha politikası ölçüye bağlandı (K36) ve "
+               "sayfa modeli gerçek metinle yeniden ölçüldü"),
+    "phase5": ("FAZ 5 · YAKINSAMA", "A12b", "phase5",
+               "manuscript birleştirildi, line editor koştu, levha "
+               "okunabilirliği ölçüldü ve sızıntı denetimi yenilendi"),
+}
+
+
+def _next_action(gate: str, m: dict) -> str:
+    title, blocker, qa, done = _NEXT.get(gate, _NEXT["phase2"])
+    return """> ### \u26d4 %s \u2014 \u00d6L\u00c7\u00dcLEN KARAR: **%s**
+>
+> Bu fazın ajan tarafından yapılabilir bütün işi **tamamlandı**: %s.
+>
+> **Ama öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.**
+> Harici çözücü oturumu: **%d / 5**.
+>
+> Kalan iş **kurucuya aittir** ve ajan onu yapamaz:
+> 1. **%s** — harici çözücü oturumlarını yürüt
+>    \u2192 `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
+> 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
+> 3. `./04_BUILD/qa_all.sh %s` koştur ve kararı **oku**
+>
+> Ayrıca açık: **A9** (levha provası — paket hazır) · **A2** · **A4** ·
+> **A5** · **A6** · **A7** · **A10**
+>
+> Ayrıntı: `DECISIONS.md \u00a7 A\u00c7IK KARARLAR`""" % (
+        title, m["killVerdict"], done, m["sessions"], blocker, qa)
+
+
 def render_progress(m: dict) -> str:
     """⚠ ÜRETİLEN BİR BELGE DE YALAN SÖYLEYEBİLİR.
 
@@ -351,32 +414,14 @@ def render_progress(m: dict) -> str:
 | Onaylanmış alternatif çözüm | **%(confirmedAlts)d** | **0** |
 | İpucu (3 kademe) | **%(hints)d** | 300 |
 | Levha | **0** üretildi / %(plates)d planlandı | ~110 |
-| Kelime | **0** | ~34.000 |
+| Kelime (ölçülen) | **%(words)s** | ~34.000 |
 | Künye | **%(sources)d** (%(sourcesChecked)d doğrulanmış) | — |
 
 ---
 
 ## Sonraki izinli eylem
 
-> ### ⛔ FAZ 2 · ÖLDÜRME KAPISI: **%(killVerdict)s**
->
-> Faz 2'nin ajan tarafından yapılabilir bütün işi **tamamlandı**:
-> yirmi Türkçe pilot bulmaca yazıldı, cevap uzayı mimarisi kuruldu ve
-> yirmisi de bağımsız olarak doğrulandı, üç yeni kapı eklendi, kanarya
-> sırrı kuruldu ve dört senaryoyla kanıtlandı.
->
-> **Ama öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.**
-> Harici çözücü oturumu: **%(sessions)d / 5**.
->
-> Kalan tek iş **kurucuya aittir** ve ajan onu yapamaz:
-> 1. **A12** — beş harici çözücüyle oturumları yürüt
->    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
-> 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
-> 3. `./04_BUILD/qa_all.sh phase2` koştur ve kararı **oku**
->
-> Ayrıca açık: **A9** (levha provası — paket hazır) · **A2** · **A5** · **A7**
->
-> Ayrıntı: `DECISIONS.md § AÇIK KARARLAR`
+%(nextAction)s
 """ % {
         "gate": cur, "rows": "\n".join(rows),
         "candidates": m["candidates"], "families": m["families"],
@@ -386,7 +431,9 @@ def render_progress(m: dict) -> str:
         "confirmedAlts": m["confirmedAlts"], "plates": m["plates"],
         "sources": m["sources"], "sourcesChecked": m["sourcesChecked"],
         "killVerdict": m["killVerdict"], "sessions": m["sessions"],
+        "nextAction": _next_action(cur, m),
         "drafted": m["drafted"], "hints": m["drafted"] * 3,
+        "words": m["words"],
     }
 
 

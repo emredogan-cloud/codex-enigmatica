@@ -5,6 +5,124 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.6.0] — 2026-08-24 · FAZ 4 · KAPI III–V + META-MİSTER (kurucu geçersiz kılması)
+
+# ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
+
+`externalValidation` **değişmedi**: `founder_override_partial` ·
+`sessionsPerformed = 0` · `humanValidationPassed = false` ·
+ölçülen karar **HARD-STOP**. Bu faz *insan tarafından test edilmiş* ya da
+*harici olarak onaylanmış* diye anılamaz.
+
+### Eklendi — 61 bulmaca, dokuz ısınma, bir son soru
+
+- Kapı III · **The Calendar** (★★) · 20 bulmaca
+- Kapı IV · **The Labyrinth** (★★★) · 20 bulmaca
+- Kapı V · **The Mirror** (★★★) · 20 bulmaca — öz-göndergesel
+- **THE LAST QUESTION** — meta-mister · beş kapının çıktısı tek sözcüğe
+- **Dokuz ısınma örneği** (w9–w17) · her yeni mekanizma için bir tane
+- Toplam **101 taslak** · 303 ipucu · 4762 aday dize elendi
+
+### Eklendi — `qa_meta.py` · 29 denetim (K38)
+
+Meta-mistere **meta olarak** bakan ilk kapı: beş kapının beşi de katkı
+veriyor mu · katkılar gerçekten üretilebiliyor mu · **cevap kitapta
+YOK mu** · basit birleştirmeyle okunuyor mu · başlıklarda geçiyor mu.
+
+⚠ Ve kapının kendi sızıntı denetimleri **ilk yazımında sessizce yeşil
+yanıyordu** (büyük harf anahtar ↔ katlanmış metin). **Fikstürler
+yakaladı**, üretim verisi değil.
+
+### Değişti — ⭑ AHA POLİTİKASI ÖLÇÜYE BAĞLANDI (K36) ⭑
+
+Kitap geneli `ahaScore` ortancası 4,0'dı ve **yanıltıyordu**: Kapı
+III–V'te tekrarlanan mekanizmalara da 4 ve 5 yazılmıştı. `g3-007`,
+`g3-011` ve `g3-015`, `g3-001` ile **kelimesi kelimesine aynı talimatı**
+taşıyor.
+
+- **Tavan artık ölçülüyor**: ilk kullanım 5 · ölçülmüş derinleşme 4 ·
+  düz tekrar 3. Yazar yalnızca AŞAĞI inebilir.
+- **Eşik kapı bazında**: keşif kapıları (I·II) ≥ 4 · akıcılık kapıları
+  (III–V) ≥ 3
+- **Yerine çıkarım oranı** = dakika ÷ elle işlem — ölçülen
+  **1,00 → 1,27 → 2,32 → 3,43 → 4,42**; akıcılık tabanı 2,0 ve
+  yükselmek zorunda
+- **On puan DÜŞÜRÜLDÜ**, hiçbiri şişirilmedi
+- Aynı mekanizma koruması **kaldırılmadı, sertleştirildi**: tekrar artık
+  5 alamaz
+- Eşikler `project_config § experience` içinde — betiğe gömülü değil
+
+### Onarıldı — ⭑ İKİ GERÇEK SIZINTI · GÖRSEL DENETİM BULDU ⭑
+
+Anahtarlı alfabe levhası anahtar sözcüğü **satırın başında basar** ve
+ipucu bunu okura açıkça söyler. İki kapının anahtarı bir CEVAPTI:
+
+    g3-019'un anahtarı → g3-007'nin cevabıydı
+    g5-019'un anahtarı → g5-013'ün cevabıydı
+
+⚠ **Ve bu satırlar ilk yazımda sözcükleri AÇIKÇA yazıyordu.** Kanarya
+commit'ten önce koştu ve kendi changelog'umu sızıntı olarak yakaladı —
+haklıydı: anahtarlar değişti ama o sözcükler HÂLÂ birer cevap. K34'ün
+dersi ikinci kez ölçüldü.
+
+Anahtarlar `assign()` cevapları dağıtmadan **önce** elle seçilmişti ve
+çakışma denetimi yoktu. Yeni anahtarlar hiçbir katalogun üyesi değildir
+ve çakışma artık **üretim anında** çöker (`assert_keys_clean`).
+
+### Onarıldı — 26 kutu bir sütun kayıyordu
+
+Üç ayrı üreteçte bir-sütun hatası: sınıflama kutusunun ayırıcısı ·
+sayı taşının içerik satırı · katman taşının "dize" satırı. Ekranda
+görünmez, **basılı kutuda görünür**.
+
+### Onarıldı — `pilot_pages.py` yanlış ölçüyordu (K39)
+
+Betik Faz 2'de yazıldı; o gün yalnızca Kapı I vardı. Bütün kitabı
+topluyor, **Kapı I'in bütçesiyle** karşılaştırıyor ve arka maddeyi **×5
+ölçekliyordu**. Beş kapı yazılınca kırmızı yandı — içerik büyüdüğü için
+değil, **ölçen bozuk olduğu için**. Ölçüm artık kapı bazında.
+
+- **Araçlar levhası 2 → 4 sayfa** (408 satır · ölçülen 3,2) — sekiz yeni
+  çizelge eklendi ve kısaltmak bir cevap uzayını yok ederdi (K22)
+- **Sayfa modeli 236 → 238** · hedef 230 ± %6 içinde
+- **Kelime sayısı ölçüldü: 17.211** — üretilen belgeler sabit `0`
+  basıyordu
+
+### Onarıldı — okur dosya anahtarı görüyordu (K40)
+
+Kapı V'in yapı levhası `esik-alfabesi` gibi **dosya anahtarları**
+basıyordu. Ad artık araçlar levhasından okunur; bilinmeyen anahtar
+üretim anında çöker.
+
+### Onarıldı — ölü künye
+
+`caesar-suetonius` kaydedilmiş ama hiçbir bulmacada kullanılmıyordu →
+`g1-013` ve `g1-017`e (kaydırmalı şifre) bağlandı.
+`rawlinson-cuneiform` **çıkarıldı**: kayıt Babil altmışlık notasyonu
+diyordu, kitabın sayı sistemi ise toplamalı/çıkarmalı bir işaret
+dizisidir. Kaynağı tutmak, yapılmayan bir işi yapılmış göstermek olurdu.
+
+### Değişti — üretilen belgelerin ÜRETECİ de bayatlayabilir
+
+`ROADMAP_PROGRESS`'in "Sonraki izinli eylem" bölümü Faz 2'ye
+**sabitlenmişti** ve Faz 4'te hâlâ "Faz 2'nin işi tamamlandı" diyordu.
+Metin artık `.gate`ten türer.
+
+### Test altyapısı
+
+- `selftest` **195 → 213 denetim** · yeni `§ ⑨` bölümü
+- **11 meta fikstürü** + **5 K36 fikstürü** — her yeni kural kırık bir
+  kurguda ÇÖKÜYOR
+- Eski "aynı imza ikinci kez 4+ alamaz" fikstürü yeni kurala taşındı
+
+### Kapı
+
+- `.gate` → **`phase4`**
+- Rapor: `06_REPORTS/PHASE_4_REPORT.md`
+- Kararlar: **K36 · K37 · K38 · K39 · K40 · K41**
+
+---
+
 ## [0.5.0] — 2026-08-24 · FAZ 3 · KAPI II YAZILDI (kurucu geçersiz kılması)
 
 # ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING

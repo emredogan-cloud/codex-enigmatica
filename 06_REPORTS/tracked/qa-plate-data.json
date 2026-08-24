@@ -7,11 +7,11 @@
   ],
   "facts": {
     "indexed": 151,
-    "needProtected": 40,
-    "solutionRecords": 40,
-    "designRecords": 40,
+    "needProtected": 101,
+    "solutionRecords": 101,
+    "designRecords": 101,
     "protectedLayerPresent": true,
-    "plates": 22,
+    "plates": 30,
     "finestDistinctionMax": 5,
     "maxIdenticalRunAllowed": 5,
     "maxFigureWidth": 62,
@@ -212,6 +212,78 @@
         "bitsRequired": 5.6,
         "redundancy": 6.1,
         "finestDistinction": 1,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g3-003",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g3-006",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 29.1,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 1,
+        "figureWidth": 47
+      },
+      {
+        "puzzleId": "g3-008",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g3-013",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 34.3,
+        "bitsRequired": 5.6,
+        "redundancy": 6.1,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g3-014",
+        "acceptance": "reachable-by-glyph-reading",
+        "bitsCarried": 29.1,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 1,
+        "figureWidth": 49
+      },
+      {
+        "puzzleId": "g3-018",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 29.4,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g4-006",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 29.4,
+        "bitsRequired": 5.6,
+        "redundancy": 5.2,
+        "finestDistinction": 0,
+        "figureWidth": 46
+      },
+      {
+        "puzzleId": "g4-018",
+        "acceptance": "reachable-via-grid-coordinates",
+        "bitsCarried": 19.6,
+        "bitsRequired": 5.6,
+        "redundancy": 3.5,
+        "finestDistinction": 0,
         "figureWidth": 46
       }
     ]

@@ -763,6 +763,73 @@
       }
     }
   },
+  "experience": {
+    "$comment": [
+      "⭑ K36 · AHA ÖLÇEKLENMEZ, ÇIKARIM ÖLÇEKLENİR ⭑",
+      "",
+      "Faz 4'e kadar tek bir kitap geneli eşik vardı: ahaScore ortancası ≥ 4.",
+      "O eşik YEŞİLDİ ve YANILTIYORDU: beş kapının beşi de 4,0 gösteriyordu,",
+      "çünkü Kapı III–V'te öğretilmiş bir mekanizmanın TEKRARINA da 4",
+      "yazılmıştı. Kitap geneli ortanca, kapı düzeyindeki şişmeyi GİZLİYORDU.",
+      "",
+      "Ölçülen gerçek: Kapı III–V'in tekrar bulmacaları, ilk kullanımla AYNI",
+      "talimatı, AYNI kısıtı ve AYNI adım sayısını taşır — yalnızca verisi",
+      "farklıdır. Bunlar keşif değildir. Puanları düşürüldü ve eşik KAPI",
+      "BAZINDA yeniden kuruldu.",
+      "",
+      "Yerine geçen ölçüt uydurulmadı, VERİDE ZATEN VARDI:",
+      "  çıkarım oranı = bildirilen dakika ÷ ölçülen elle işlem",
+      "Elle işlem beş kapıda da 6–8 bandında SABİTTİR; artan tek şey",
+      "düşünmedir. Ölçülen: I 1,00 · II 1,27 · III 2,32 · IV 3,43 · V 4,42.",
+      "",
+      "Bu, kitabın kendi felsefesinin sayısıdır: YÜKSEK DÜŞÜNCE / DÜŞÜK",
+      "SÜRTÜNME. Kapı III–V mutlak yenilikten vazgeçer; karşılığında bu oranı",
+      "VERMEK ZORUNDADIR.",
+      "",
+      "⚠ ahaScore hâlâ bir KANIT DEĞİLDİR (§ K29). Bu blok onu doğrulamaz;",
+      "TAVANINI ölçüye bağlar: yazar yalnızca AŞAĞI inebilir."
+    ],
+    "ahaPolicy": {
+      "discoveryGates": [
+        "threshold",
+        "menagerie"
+      ],
+      "fluencyGates": [
+        "calendar",
+        "labyrinth",
+        "mirror"
+      ],
+      "discoveryMedianMin": 4,
+      "fluencyMedianMin": 3,
+      "lowRewardMax": 2,
+      "firstUseOnlyForFive": true,
+      "reuseNeedsMeasuredDeepening": true,
+      "noveltyFloorPerGate": 4,
+      "noveltyFloorPerGate$comment": "Bir kapı yirmi düz tekrardan oluşamaz: her kapı en az dört İLK KULLANIM ya da ÖLÇÜLMÜŞ DERİNLEŞME taşımak zorundadır. Ölçülen: III 9 · IV 8 · V 10.",
+      "ceilingRule": [
+        "ilk kullanım                                  → tavan 5",
+        "tekrar · çıkarım oranı ilk kullanımdan BÜYÜK  → tavan 4 (derinleşme)",
+        "tekrar · çıkarım oranı büyük DEĞİL            → tavan 3 (yordam)"
+      ]
+    },
+    "inferenceRatio": {
+      "$comment": [
+        "çıkarım oranı = expectedCompletionMinutes ÷ qa_effort'un ölçtüğü",
+        "elle işlem sayısı. Yazardan gelmez; ikisi de başka kapıların",
+        "denetlediği alanlardır ve çarpımı DEĞİL, bölümü ölçülür."
+      ],
+      "fluencyGateMedianMin": 2.0,
+      "mustRiseGateToGate": true,
+      "measured2026_08_24": {
+        "threshold": 1.0,
+        "menagerie": 1.27,
+        "calendar": 2.32,
+        "labyrinth": 3.43,
+        "mirror": 4.42,
+        "last-question": 6.0
+      }
+    }
+  },
   "production": {
     "trimPaperback": {
       "w": 6.0,
@@ -871,8 +938,31 @@
         "titleAndCopyright": 1,
         "frameNarrativeOpening": 3,
         "contractPage": 1,
-        "toolsPlate": 2,
-        "warmUp": 5
+        "toolsPlate": 4,
+        "warmUp": 5,
+        "toolsPlate$measured": [
+          "⚠ 2 → 4 · Faz 4 · ÖLÇÜLDÜ, tahmin edilmedi.",
+          "Araçlar levhası Faz 1'de DÖRT çizelgeydi ve 2 sayfa yeterdi. Faz 4",
+          "sekiz çizelge daha ekledi (H · I · J · K · L · M · N · O): toplam 408",
+          "satır. `pilot_pages.py` üç sütunlu dizgide 3,2 sayfa ölçtü ve kapı",
+          "kırmızı yandı.",
+          "",
+          "Kısaltmak SEÇENEK DEĞİLDİ: her çizelge bir kapının CEVAP UZAYIDIR",
+          "(K22 · basılı sözlük). Bir satırı silmek, o satırı cevap olarak",
+          "kullanan bulmacayı çözülemez yapar.",
+          "",
+          "⭑ Sayfa modeli 236 → 238. Hedef 230 ± %6 (216–244) içinde kalır."
+        ],
+        "warmUp$measured": [
+          "⭑ FAZ 4 · ISINMA ARTIK ÖN MADDEDE BİTMİYOR ⭑",
+          "Dokuz yeni örnek Kapı III–V'in mekanizmalarını öğretir ve ÖN MADDEDE",
+          "DEĞİL, kendi kapılarının açılışındadır (K37). Bu beş sayfa yalnızca",
+          "Kapı I'in yedi örneğini taşır; ölçülen 3,4 sayfa.",
+          "",
+          "Kalan dokuz örnek ölçülen 5,1 sayfadır ve kapı bütçelerinin İÇİNDE",
+          "durur: ölçülen kapı metni 10,4–14,1 sayfadır, bütçe 34'tür. Ekleme",
+          "hiçbir kapıyı taşırmadı ve sayfa sayısını DEĞİŞTİRMEDİ."
+        ]
       },
       "backMatter": {
         "hintSection$comment": "Anahtar adı bilerek 'hints' DEĞİLDİR: çözüm sızıntısı tarayıcısı '\"hints\":' kalıbını arar ve bir SAYFA SAYISI alanı o kapıyı yanlış yere kırmızı yakardı. Gürültülü bir kapı kapatılan kapıdır.",

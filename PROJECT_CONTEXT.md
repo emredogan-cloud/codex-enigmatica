@@ -2,8 +2,8 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **24 Ağustos 2026** · Faz: **3 · KAPI II YAZILDI**
-> Kapı: `phase3` · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
+> Son güncelleme: **24 Ağustos 2026** · Faz: **4 · KAPI III–V + META YAZILDI**
+> Kapı: `phase4` · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
 >
 > ## ⚠ HARİCİ İNSAN DOĞRULAMASI HÂLÂ BEKLİYOR
 >
@@ -14,20 +14,20 @@
 > | Ölçülen öldürme kapısı | ⛔ **HARD-STOP** (1/5) — **değişmedi** |
 > | Yapılan harici oturum | **0** |
 > | İnsan doğrulaması geçti mi | **HAYIR** |
-> | Faz 3 girişi | ⚑ **kurucu geçersiz kılması** (A13 · 24 Ağustos 2026) |
-> | Yazılmış bulmaca | **40** (Kapı I + Kapı II) · durum `drafted` |
+> | Faz 3–4 girişi | ⚑ **kurucu geçersiz kılması** (A13 · 24 Ağustos 2026) |
+> | Yazılmış bulmaca | **101** (beş kapı + son soru) · durum `drafted` |
 > | Doğrulanmış bulmaca | **0** — hiçbiri `tested` DEĞİL |
 >
 > ⭑ **ÜÇ ŞEY BİRBİRİNİN YERİNE GEÇMEZ:**
 > **ÖLÇÜLEN** (HARD-STOP) · **GEÇERSİZ KILINAN** (Faz 3 girişi) ·
 > **HENÜZ DOĞRULANMAMIŞ** (harici insan testi).
 >
-> Faz 3 **"harici olarak doğrulanmış" diye anılamaz.** Geçersiz kılma
-> ölçümü ezmez; `kill_gate.py` kararı her koşuda HARD-STOP olarak
+> Faz 3 ve Faz 4 **"harici olarak doğrulanmış" diye anılamaz.** Geçersiz
+> kılma ölçümü ezmez; `kill_gate.py` kararı her koşuda HARD-STOP olarak
 > yazdırmaya devam eder ve yalnızca çıkış kodu değişir.
 >
 > → Karar kaydı: `DECISIONS.md § A13` · Rapor:
-> [`06_REPORTS/PHASE_3_REPORT.md`](06_REPORTS/PHASE_3_REPORT.md)
+> [`06_REPORTS/PHASE_4_REPORT.md`](06_REPORTS/PHASE_4_REPORT.md)
 > → Bloklayıcı: **A12/A12b** — harici çözücü oturumları
 
 ---
@@ -84,27 +84,30 @@ soruya bağlayan bir meta-mister. Gravür levhaların **içine gömülmüş**
 
 | | |
 |---|---|
-| Faz | **3 · Kapı II yazıldı** (kurucu geçersiz kılmasıyla girildi) |
-| Kapı (`.gate`) | `phase3` |
+| Faz | **4 · Kapı III–V + meta-mister yazıldı** (kurucu geçersiz kılmasıyla) |
+| Kapı (`.gate`) | `phase4` |
 | Aday bulmaca | **151** / ≥130 ✅ |
-| Yazılmış (`drafted`) | **40** / 100 — Kapı I (★) + Kapı II (★★) |
+| Yazılmış (`drafted`) | **101** / 100 — beş kapı + son soru |
 | **Doğrulanmış (`validated`)** | **0** / 100 — ⚠ harici kanıt YOK |
-| Elle iş (kitap) | **234 işlem** · bildirilen sürenin **%23**'ü (tavan %33) |
-| aha ortancası | **4,0** · ödülsüz bulmaca **0** |
-| Kalite kapısı | **17 betik · selftest 195 denetim · CI yeşil** |
-| Sayfa modeli | **236** (ölçülen ipucu bütçesiyle güncellendi) |
+| Elle iş (kitap) | **686 işlem** · beş kapıda da **6–8 EU** bandında sabit |
+| aha (kapı bazında) | **4,0 / 4,0 / 3,0 / 3,0 / 3,5** — K36 |
+| **Çıkarım oranı** | **1,00 → 1,27 → 2,32 → 3,43 → 4,42** (yükseliyor) |
+| Isınma | **17 örnek · 17/17 mekanizma** öğretiliyor |
+| Kalite kapısı | **19 betik · selftest 213 denetim · CI yeşil** |
+| Sayfa modeli | **238** · kelime **17.211** (ölçülen) |
 | **Sonraki adım** | **A12/A12b** — harici çözücü oturumları (kurucu) |
 
-⚠ **FAZ 4 BAŞLAMADI ve başlamayacak.** Faz 3'ün Definition of Done'ında
-*"Kapı II için ≥2 harici çözücü testi geçti"* maddesi vardır ve o madde
-**AJAN TARAFINDAN YAPILAMAZ**.
+⚠ **FAZ 4 KURUCU GEÇERSİZ KILMASIYLA KAPANDI.** Definition of Done'ın
+*"100 bulmaca yazıldı **ve doğrulandı**"* maddesindeki ikinci yarı
+**yapılmadı ve ajan tarafından yapılamaz.**
 
 ### Ne ölçüldü, ne ölçülmedi
 
 | | |
 |---|---|
-| ✅ ÖLÇÜLDÜ | 40/40 tekil cevap · çaba · aha · tekrar yükü · levha verisi |
+| ✅ ÖLÇÜLDÜ | 101/101 tekil cevap · çaba · aha tavanı · çıkarım oranı · levha verisi |
 | ✅ ÖLÇÜLDÜ | DAG döngüsüz · yayılma yarıçapı ≤1 · sızıntı yok |
+| ✅ ÖLÇÜLDÜ | meta-mister: beş kapı katkısı · cevap kitapta **YOK** |
 | ⛔ **ÖLÇÜLMEDİ** | **hiçbir insanın bu bulmacaları çözüp çözemediği** |
 
 `06_REPORTS/solver/` **boştur** ve gerçek oturumlar gelene kadar boş kalır.
@@ -244,15 +247,15 @@ temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
 |---|---|---|---|
 | A1 | Manuscript ve çözüm katmanı politikası | — | ✅ **KAPANDI** (K10 + K14) |
 | A2 | 5 kapı teması onayı | kurucu | **Faz 2 başlamadan** |
-| A3 | **5 harici çözücü kim** | kurucu | **Faz 2 SERT BLOKLAYICISI** |
+| A3 | **5 harici çözücü kim** | kurucu | ✅ **KAPANDI** (K18) |
 | A4 | Doğrulama sayfası barındırma | kurucu | Faz 5 |
 | A5 | Kalibre edilmiş `STYLE.md` onayı | kurucu | Faz 2 |
 | A6 | Yazar biyografisi metni | kurucu | Faz 5 |
 | **A7** | **Bulmaca başına doğrulama** | kurucu | **Faz 2 başlamadan** |
-| **A8** | **Sayfa hedefi 230 onayı** | kurucu | **Faz 2 başlamadan** |
+| **A8** | **Sayfa hedefi 230 onayı** | kurucu | ✅ **KAPANDI** (K17) |
 | **A9** | **Pilot levhalarının POD provası** | kurucu | **Faz 2 başlamadan** |
 | A10 | Faz 3'e ikinci öldürme kapısı | kurucu | Faz 3 başlamadan |
-| A11 | `ENIGMATICA_CANARY_SALT` CI sırrı | kurucu | **Faz 2 başlamadan** |
+| A11 | `ENIGMATICA_CANARY_SALT` CI sırrı | kurucu | ✅ **KAPANDI** (K19) |
 | — | **Öldürme kapısı kararı** (FAIL hâlinde) | kurucu | Faz 2 |
 | — | 110 levhanın üretilmesi | kurucu | Faz 5 |
 | — | **POD prova kopya siparişi** | kurucu | Faz 5 |
@@ -262,15 +265,25 @@ temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
 
 ## 12 · Sonraki izinli eylem
 
-> **KURUCU ONAYI BEKLENİYOR.**
+> ### ⚑ FAZ 4 KAPANDI — KURUCU GEÇERSİZ KILMASIYLA
 >
-> Faz 1 tamamlandı ve `.gate` = `phase1`. Faz 2 **başlatılmadı**.
+> Ajanın yapabileceği bütün Faz 4 işi **tamamlandı**: Kapı III, IV ve V
+> yazıldı, meta-mister kuruldu ve `qa_meta.py` ile doğrulandı, dokuz yeni
+> mekanizmanın ısınma örneği yazıldı, aha politikası ölçüye bağlandı
+> (K36) ve sayfa modeli gerçek metinle yeniden ölçüldü.
 >
-> Faz 2 bir **ÖLDÜRME KAPISIDIR** ve **A3 olmadan başlayamaz**: beş harici
-> çözücü belirlenmeden yazılan yirmi bulmaca, test edilemeyecek yirmi
-> bulmacadır. **Sahte test kaydı üretilmez** — ve artık üretilemez de:
-> `validate_spec` kurucu onayı yokken hiçbir kaydın `tested` olmasına
-> izin vermez.
+> **Ama Definition of Done "100 bulmaca yazıldı VE DOĞRULANDI" diyor** ve
+> ikinci yarı ajan tarafından yapılamaz. Harici çözücü oturumu:
+> **0 / 5** · ölçülen öldürme kapısı: **HARD-STOP**.
 >
-> Ayrıca A7, A8, A9 ve A11 Faz 2'nin **tasarımını** değiştirir; sonradan
-> uygulanmaları pahalıdır.
+> Kalan iş **kurucuya aittir**:
+> 1. **A12b** — ikinci tur oturumlarını yürüt
+>    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
+> 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
+> 3. `./04_BUILD/qa_all.sh phase4` koştur ve kararı **oku**
+>
+> Ayrıca açık: **A9** (levha provası) · **A2** · **A4** · **A5** ·
+> **A6** · **A7** · **A10**
+>
+> Ayrıntı: `DECISIONS.md § AÇIK KARARLAR` ·
+> [`06_REPORTS/PHASE_4_REPORT.md`](06_REPORTS/PHASE_4_REPORT.md)

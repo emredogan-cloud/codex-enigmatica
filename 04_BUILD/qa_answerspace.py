@@ -59,6 +59,7 @@ TOOLS = os.path.join(pl.DESIGN_DIR, "tools-plate.json")
 # Üreteç ve kabul yordamı İZİN LİSTESİDİR. Yasak listesi yalnızca akla gelen
 # kaçamağı durdurur; izin listesi akla gelmemiş olanı da reddeder (K16).
 GENERATORS = {"printed-lexicon", "printed-bestiary", "printed-beast-phrases",
+              "printed-catalogue", "printed-gate-phrases", "printed-meta-list",
               "printed-phrase-list", "cyclic-shift",
               "reflection-map", "keyed-substitution", "transposition-order",
               "glyph-chart-reading", "positional-extraction"}
@@ -73,7 +74,16 @@ ACCEPTANCES = {"in-printed-lexicon", "in-printed-bestiary",
                # ── KAPI II · YARATIKLAR ──────────────────────────────────
                "reachable-via-grid-coordinates",   # imza mekaniği (Polybius)
                "misclassified-in-printed-pens",    # sınıflama
-               "reachable-by-keyed-alphabet"}      # B3 · anahtarlı alfabe
+               "reachable-by-keyed-alphabet",     # B3 · anahtarlı alfabe
+               # ── FAZ 4 · KAPI III–V + META ─────────────────────────────
+               "reachable-via-numeral-system",    # sayı sistemi
+               "reachable-via-cyclic-calendar",   # çevrimsel takvim
+               "reachable-via-path-graph",        # yol ve çizge
+               "reachable-by-layered-chain",      # katmanlı zincir
+               "reachable-by-back-reference",     # geriye gönderme
+               "reachable-via-book-structure",    # kitabın yapısı
+               "reachable-via-narrative",         # anlatıya gömülü
+               "meta-synthesis"}                  # son soru
 
 # ⚠ FAZ 2 BULGUSU — MEKANİZMA ALANI İSPAT İÇİN YETERSİZ KALABİLİR.
 #
@@ -189,6 +199,19 @@ def expand(gen: dict, plate: Plate) -> tuple[list[str], str | None]:
     kind = gen.get("kind")
     if kind == "printed-bestiary":
         return list(plate.bestiary), None
+    if kind == "printed-catalogue":
+        # ⭑ Kapı III–V'in kendi basılı listeleri ⭑ — her kapı kendi
+        # sözlüğünü taşır; ortak bir liste bir kapının cevabını ötekine
+        # gösterirdi.
+        ref = gen.get("catalogueRef") or ""
+        return [e["word"] for e in
+                (plate.charts.get(ref) or {}).get("entries", [])], None
+    if kind == "printed-gate-phrases":
+        ref = gen.get("listRef") or ""
+        return list((plate.charts.get(ref) or {}).get("entries", [])), None
+    if kind == "printed-meta-list":
+        ref = gen.get("listRef") or ""
+        return list((plate.charts.get(ref) or {}).get("entries", [])), None
     if kind == "printed-beast-phrases":
         return list(plate.beastPhrases), None
     if kind == "printed-lexicon":
@@ -343,6 +366,65 @@ def keyed_decode_row(ct: str, row: str, alphabet: str) -> str:
     return "".join(out)
 
 
+# ═══ FAZ 4 · SEKİZ YENİ KABUL YORDAMI ══════════════════════════════════
+def _table_of(plate: Plate, ref: str) -> dict:
+    return plate.charts.get(ref) or {}
+
+
+def numeral_value(symbols: str, chart: dict) -> int | None:
+    """Basılı sayı çizelgesiyle bir sembol dizisini SAYIYA çevirir.
+
+    ⭑ K1 · DEĞERLER BASILIDIR ⭑ Okur bir sistemi ezberlemez; çizelgeye
+    bakar. Zorluk, sembolün DEĞERİNİ hatırlamak değil, dizinin nasıl
+    TOPLANDIĞINI fark etmektir (büyükten küçüğe eklenir; küçük bir sembol
+    büyüğün SOLUNDAysa çıkarılır)."""
+    vals = {e["symbol"]: e["value"] for e in chart.get("entries", [])}
+    toks = [c for c in symbols if c in vals]
+    if not toks or len(toks) != len([c for c in symbols if not c.isspace()]):
+        return None
+    total, i = 0, 0
+    while i < len(toks):
+        v = vals[toks[i]]
+        if i + 1 < len(toks) and vals[toks[i + 1]] > v:
+            total += vals[toks[i + 1]] - v
+            i += 2
+        else:
+            total += v
+            i += 1
+    return total
+
+
+def cyclic_index(a: int, b: int, na: int, nb: int) -> int | None:
+    """İki çevrimin kesiştiği TEK konum (Çin kalan teoremi · ebob 1).
+
+    ⭑ Bu ailenin 'aha'sı şudur: iki küçük çevrim birlikte ÇOK BÜYÜK bir
+    çevrim yapar ve bir tarih o büyük çevrimde TEK bir yere düşer."""
+    if a < 1 or b < 1 or a > na or b > nb:
+        return None
+    for k in range(na * nb):
+        if k % na == (a - 1) % na and k % nb == (b - 1) % nb:
+            return k + 1
+    return None
+
+
+def walk_path(grid, start, moves) -> str:
+    """Basılı ızgarada bir YOL yürür ve uğradığı harfleri toplar."""
+    D = {"K": (-1, 0), "G": (1, 0), "D": (0, 1), "B": (0, -1)}
+    r, c = start
+    out = []
+    for m in moves:
+        d = D.get(m)
+        if not d:
+            return ""
+        r, c = r + d[0], c + d[1]
+        if not (0 <= r < len(grid) and 0 <= c < len(grid[r])):
+            return ""
+        ch = grid[r][c]
+        if ch and ch != "·":
+            out.append(ch)
+    return "".join(out)
+
+
 def accepts(word: str, acc: dict, plate: Plate) -> bool:
     kind = acc.get("kind")
     if kind == "in-printed-lexicon":
@@ -445,6 +527,102 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
         return keyed_decode_row(acc.get("input", ""), row,
                                 plate.alphabet) == word
 
+    if kind == "reachable-via-numeral-system":
+        chart = _table_of(plate, acc.get("numeralRef") or "")
+        n = numeral_value(acc.get("symbols", ""), chart)
+        cat = acc.get("catalogue") or []
+        return bool(n) and 1 <= n <= len(cat) and word == cat[n - 1]
+
+    if kind == "reachable-via-cyclic-calendar":
+        k = cyclic_index(acc.get("a", 0), acc.get("b", 0),
+                         acc.get("cycleA", 0), acc.get("cycleB", 0))
+        cat = acc.get("catalogue") or []
+        return bool(k) and 1 <= k <= len(cat) and word == cat[k - 1]
+
+    if kind == "reachable-via-path-graph":
+        # ⭑ İSPAT BÜTÜN YOLLARI AÇAR ⭑ — okur bir yol yürür; ispat
+        # yanlış yolların GEÇERLİ bir cevaba varmadığını gösterir.
+        for mv in acc.get("paths") or [acc.get("moves", "")]:
+            if walk_path(acc.get("grid") or [],
+                         tuple(acc.get("start") or (0, 0)), mv) == word:
+                return True
+        return False
+
+    if kind == "reachable-by-layered-chain":
+        # İki basılı dönüşüm ARDIŞIK uygulanır. Anahtarların ikisi de
+        # levhada basılıdır (K1); okur aramaz, uygular.
+        cur = acc.get("input", "")
+        for st in acc.get("stages") or []:
+            k = st.get("kind")
+            if k == "shift":
+                cur = plate.shift(cur, -int(st.get("by", 0)) % len(plate.alphabet))
+            elif k == "grid":
+                cur = col_read(cur, int(st.get("width", 0)))
+            elif k == "reflect":
+                ax, n = int(st.get("axis", 0)), len(plate.alphabet)
+                cur = "".join(plate.alphabet[(ax - plate.alphabet.index(c)) % n]
+                              for c in cur if c in plate.alphabet)
+            else:
+                return False
+            if not cur:
+                return False
+        return cur == word
+
+    if kind == "reachable-by-back-reference":
+        # ⭑ GERİYE GÖNDERME ⭑ Anahtar, ÖNCEKİ BİR KAPININ cevabıdır ve
+        # okurun elindedir. Yayılma yarıçapı qa_handoff'ta denetlenir.
+        key = acc.get("key", "")
+        table = acc.get("table") or []
+        take = acc.get("take", "ad")
+        hits = [r.get(take) for r in table if r.get(acc.get("keyColumn", "anahtar")) == key]
+        return word in hits
+
+    if kind == "reachable-via-book-structure":
+        # ⭑ § 14 · KENDİNE GÖNDERMELİ TEKİLLİK YASAĞI ⭑
+        # İlk kurgu "cevap yazarın koyduğu değerdir" diyordu ve bu bir
+        # TOTOLOJİydi — K21'in öldürmeye çalıştığı şeyin ta kendisi.
+        #
+        # Kitabın yapısı zaten BASILIDIR: çizelgelerin satırları, sıra
+        # numaraları, başlıkları. Gönderme oraya yapılır ve kabul yordamı
+        # o basılı yapıdan HESAPLANIR.
+        #
+        # ⚠ SAYFA NUMARASI AYRI BİR ŞEYDİR ve dizgiye bağlıdır (K12);
+        # Faz 5'te dizgi dondurulduktan sonra `pageLocked` alanı gelir.
+        chart = plate.charts.get(acc.get("structureRef") or "") or {}
+        entries = chart.get("entries") or []
+        i = acc.get("index", 0)
+        if not (1 <= i <= len(entries)):
+            return False
+        e = entries[i - 1]
+        val = e.get("word") if isinstance(e, dict) else e
+        return pl.squeeze(val or "") == pl.squeeze(word)
+
+    if kind == "reachable-via-narrative":
+        text = acc.get("passage", "")
+        words = [w.strip(".,;:!?—…\"'()") for w in text.split()]
+        idx = acc.get("wordIndex", 0)
+        if not (1 <= idx <= len(words)):
+            return False
+        return pl.squeeze(words[idx - 1]) == pl.squeeze(word)
+
+    if kind == "meta-synthesis":
+        # ⭑ SON SORU ⭑ Beş kapının ifadesi BİRLEŞTİRİLMEZ; her biri bir
+        # KONUM verir ve konumlar tek bir sözcüğü kurar. § 8: "the meta
+        # layer must require a final inference."
+        src = acc.get("gatePhrases") or []
+        pos = acc.get("positions") or []
+        if not src or len(src) != len(pos):
+            return False
+        # ⭑ KONUM SONDAN SAYILIR ⭑ ve çıkarımın kendisi budur: baştan
+        # sayan okur beş harf alır, onların bir sözcük OLMADIĞINI görür ve
+        # yönü çevirir. İspat da sondan sayar — yoksa kapı, okurun yapması
+        # beklenen çıkarımı atlamış olurdu.
+        try:
+            built = "".join(pl.squeeze(s)[-p] for s, p in zip(src, pos))
+        except IndexError:
+            return False
+        return pl.squeeze(word) == pl.squeeze(built)
+
     if kind == "matches-positional-extraction":
         src, pos = acc.get("sources") or [], acc.get("positions") or []
         if not src or len(src) != len(pos):
@@ -507,6 +685,17 @@ def near_miss(domain: list[str], acc: dict, plate: Plate,
         out = [decode_grid(r, chart) for r in (acc.get("readings") or [])]
     elif kind == "misclassified-in-printed-pens":
         out = list(acc.get("items") or [])
+    elif kind in ("reachable-via-numeral-system",
+                  "reachable-via-cyclic-calendar"):
+        out = list(acc.get("catalogue") or [])[:12]
+    elif kind == "reachable-via-path-graph":
+        out = [walk_path(acc.get("grid") or [],
+                         tuple(acc.get("start") or (0, 0)), mv)
+               for mv in (acc.get("paths") or [])]
+    elif kind == "reachable-by-back-reference":
+        out = [r.get(acc.get("take", "ad")) for r in acc.get("table") or []]
+    elif kind == "meta-synthesis":
+        out = list(domain)
     elif kind == "reachable-by-keyed-alphabet":
         row, ct = acc.get("keyedRow") or "", acc.get("input", "")
         out = [keyed_decode_row(ct, row, plate.alphabet)]

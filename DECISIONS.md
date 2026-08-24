@@ -652,3 +652,181 @@ Kapı V öz-göndergeseldir: kitabın **fiziksel yapısını** kullanır
 
 Bu yüzden dizgi Faz 5'te **dondurulur** ve Kapı V ondan **sonra**
 kilitlenir. Faz 6 sayfa sayısını yalnızca **doğrular**.
+
+### K36 · ⭑ AHA ÖLÇEKLENMEZ, ÇIKARIM ÖLÇEKLENİR ⭑
+**24 Ağustos 2026 · Faz 4.** Faz 4'e kadar deneyim kapısının tek eşiği
+kitap geneliydi: `ahaScore` ortancası ≥ 4. O eşik **yeşildi ve
+yanıltıyordu.**
+
+Beş kapının beşi de 4,0 gösteriyordu. Kapı kapı bakıldığında sebep
+çıktı: Kapı III–V'te öğretilmiş bir mekanizmanın **tekrarına** da 4 ve
+hatta 5 yazılmıştı. Kitap geneli ortanca, kapı düzeyindeki şişmeyi
+**gizliyordu.**
+
+> **Ve tekrarlar gerçekten tekrardı.** `g3-007`, `g3-011` ve `g3-015`,
+> `g3-001` ile **kelimesi kelimesine aynı talimatı**, aynı kısıtları ve
+> aynı adım sayısını taşıyor; yalnızca verileri farklı. Bu bir keşif
+> değildir. On kayıt kendi ölçülen tavanının üstündeydi ve puanları
+> **düşürüldü** — şişirilmedi:
+>
+> `g3-007` 4→3 · `g3-011` 4→3 · `g4-007` 4→3 · `g4-008` 4→3 ·
+> `g4-012` 4→3 · `g4-015` 5→3 · `g5-012` 4→3 · `g5-013` 5→4 ·
+> `g5-014` 4→3 · `g5-018` 5→4
+
+**① Tavan artık ÖLÇÜLÜYOR.** Yazar tavanın altına inebilir, üstüne
+çıkamaz:
+
+| durum | tavan |
+|---|---|
+| mekanizmanın **ilk kullanımı** | **5** — keşif |
+| tekrar · çıkarım oranı ilk kullanımdan **büyük** | **4** — derinleşme |
+| tekrar · çıkarım oranı büyük **değil** | **3** — yordam |
+
+**② Eşik KAPI BAZINDA ve kapının TÜRÜNE göre.** Kapı III–V öğretilmiş
+mekanizmaları **bilerek** tekrar kullanır; yol haritasının tasarımı
+budur. Onlardan Kapı I'in yenilik oranını istemek, ya sahte puan ya da
+düzinelerce alâkasız mekanizma üretirdi:
+
+    keşif kapıları (I · II)      aha ortancası ≥ 4
+    akıcılık kapıları (III–V)    aha ortancası ≥ 3
+
+**③ Yenilikten vazgeçilen yere ÇIKARIM konur.** Ölçüt uydurulmadı;
+veride zaten duruyordu:
+
+    çıkarım oranı = bildirilen dakika ÷ ölçülen elle işlem
+
+Elle işlem beş kapıda da **6–8 bandında sabittir**; artan tek şey
+düşünmedir. Ölçülen:
+
+| kapı | I | II | III | IV | V | son soru |
+|---|---:|---:|---:|---:|---:|---:|
+| çıkarım oranı | 1,00 | 1,27 | **2,32** | **3,43** | **4,42** | 6,00 |
+| aha ortancası | 4,0 | 4,0 | 3,0 | 3,0 | 3,5 | 5,0 |
+
+Akıcılık kapıları için taban **2,0**'dır ve oran kapıdan kapıya
+**yükselmek zorundadır**. Ayrıca hiçbir kapı yirmi düz tekrardan ibaret
+olamaz: kapı başına en az **dört** ilk kullanım ya da ölçülmüş
+derinleşme (ölçülen III 15 · IV 15 · V 14).
+
+⭑ **Değişmeyen şey:** *daha sonraki bir bulmaca öğrenilmiş bir
+mekanizmayı DERİNLEŞTİREBİLİR — ama yeni bir keşif ilan EDEMEZ.*
+
+Eşikler betiğin içinde değil `project_config.json § experience`
+içindedir; gerekçe `killGate` ile aynıdır: betiğe gömülü bir eşik
+sessizce düşürülebilir. Fikstürler: `selftest § ⑨`.
+
+### K37 · ⭑ ISINMA ÖN MADDEDE BİTMEZ — DERSİ KENDİ KAPISINA GÖTÜRÜR ⭑
+**24 Ağustos 2026 · Faz 4.** `qa_experience § 7` her mekanizmanın,
+ticari bulmacada karşılaşılmadan **önce**, çözülmüş küçük bir örnekle
+öğretilmesini ister. Faz 4 dokuz yeni mekanizma getirdi ve dokuzunun da
+örneği yoktu.
+
+Kolay olan, dokuzunu da ön maddeye eklemekti. **Yanlış olan da oydu:**
+Kapı IV'ün dersini ön maddeye koymak, okura otuz sayfa önce, henüz
+göremeyeceği bir şeyi anlatmaktır.
+
+Isınma örnekleri artık bir `gate` alanı taşır ve **kendi kapılarının
+açılışında** dururlar. Ön madde yalnızca Kapı I'in yedi örneğini taşır.
+
+Ölçüldü: dokuz yeni örnek **5,1 sayfa**; kapı metinleri 10,4–14,1 sayfa
+ve bütçeleri 34. **Hiçbir kapı taşmadı ve sayfa sayısı değişmedi.**
+
+⚠ Ve bir örnek, öğretmeye çalıştığı şeyin **yanlış olduğunu**
+gösteriyordu: son sorunun ısınması "sondan sayınca sözcük çıkar" diyor
+ama uydurma sözleri "ÜĞU" veriyordu. Sözler artık **aranarak** seçilir
+(baştan `DĞR` — sözcük değil; sondan `ATA` — sözcük) ve seçim üretim
+anında doğrulanır.
+
+### K38 · ⭑ SON SORUNUN CEVABI KİTAPTA BULUNMAMALIDIR — VE BUNU BİR KAPI ARAR ⭑
+**24 Ağustos 2026 · Faz 4.** Kitabın yüz cevabı basılı bir katalogda
+**bulunmak** zorundadır (K22). Son sorunun cevabı **bulunmamak**
+zorundadır — yoksa doğrulama sayfasının anlamı kalmaz (yol haritası
+Faz 4 § 12).
+
+Bu tam tersi kural hiçbir kapının işi değildi: `qa_dependency` DAG'a
+bakar ama beş kapının **beşinin birden** katkı vermesini istemez;
+`qa_answerspace` tekilliği ispatlar ama yokluğu istemez; kanarya cevabı
+**depoda** arar, kitabın **sayfalarında** değil.
+
+`qa_meta.py` o üç boşluğun kesiştiği yerde durur ve 29 denetim yapar.
+En sertleri:
+
+* beş kapının **beşi de** katkı veriyor mu (§ 12 · bloklayıcı);
+* bildirilen kapı sözü o kapının **gerçek çıktısı** mı;
+* cevap **birleştirilmiş sözlerin içinden okunuyor mu** — birleştirme bir
+  çıkarım değildir, okur onu kazara bulur;
+* cevap sayfalarda, başlıklarda, ısınmalarda, basılı çizelgelerde ya da
+  açılış anlatılarında geçiyor mu.
+
+⚠ **VE İLK YAZIMINDA O SIZINTI DENETİMLERİ SESSİZCE YEŞİL YANIYORDU.**
+Aranan anahtar büyük harfti, aranan metin ise `pl.squeeze` ile küçük
+harfe indirilip Türkçe ı/İ/I katlaması yapılmış hâldeydi: iki dize
+hiçbir zaman eşleşemezdi. Kusuru **fikstürler** yakaladı — kapı üretim
+verisinde yeşildi ve öyle kalacaktı.
+
+> **Ders:** bir sızıntı kapısının yeşili, ancak o kapının bir sızıntıyı
+> yakaladığı GÖRÜLDÜKTEN sonra bir şey ifade eder.
+
+### K39 · Bir kapı, ölçtüğü şeyin BÜYÜDÜĞÜNÜ varsaymalıdır
+**24 Ağustos 2026 · Faz 4.** `pilot_pages.py` Faz 2'de yazıldı; o gün
+kitapta yalnızca Kapı I vardı. Bütün `book.json` bulmacalarını topluyor,
+toplamı **Kapı I'in bütçesiyle** karşılaştırıyor ve arka maddeyi **×5
+ile ölçekliyordu**.
+
+İki kapı yazıldığında ölçüm iki katına çıktı ve **kimse fark etmedi**
+(bütçede pay vardı). Beş kapı yazıldığında beş katına çıktı ve kapı
+kırmızı yandı — içerik büyüdüğü için değil, **ölçenin kendisi bozuk
+olduğu için.**
+
+Ölçüm artık kapı bazındadır ve hiçbir yerde ×5 yoktur. Ölçtükleri:
+kapı metni + ısınma + açılış anlatısı + şekil satırları, kapı kapı.
+
+Aynı koşuda iki şey daha çıktı:
+
+* **Araçlar levhası 2 sayfaya sığmıyordu.** Faz 1'de dört çizelgeydi;
+  Faz 4 sekiz çizelge daha ekledi (408 satır → 3,2 sayfa). Kısaltmak
+  seçenek değildi: her çizelge bir kapının **cevap uzayıdır** (K22) ve
+  bir satırı silmek o satırı kullanan bulmacayı çözülemez yapar. Bütçe
+  **2 → 4**; sayfa modeli **236 → 238** (hedef 230 ± %6 içinde).
+* **Kelime sayısı üretilen belgelerde sabit `0` basıyordu.** Ölçüm
+  izlenen raporda zaten duruyordu; belge ona hiç bakmıyordu. Ölçülen:
+  **17.211** kelime.
+
+### K40 · Okur dosya anahtarı görmez
+**24 Ağustos 2026 · Faz 4.** Kapı V'in yapı levhası okura çizelge
+adlarını basar. Üreteç yalnızca Kapı III–V çizelgelerini tanıyordu;
+Kapı I–II'ninkiler **dosya anahtarı** olarak düşüyordu ve okur
+levhada `+ esik-alfabesi + esik-sayilari - Çizelge J` görüyordu.
+
+Ad artık araçlar levhasının kendisinden okunur ve bilinmeyen bir anahtar
+üretim anında **çöker** — sessizce slug basmaz.
+
+### K41 · Kısa cevaplar kitabın KENDİ SÖZ DAĞARCIĞIYLA çarpışır
+**24 Ağustos 2026 · Faz 4.** Faz 4'ün görsel çapraz sayfa denetimi yedi
+eşleşme buldu. **İkisi gerçek sızıntıydı** ve onarıldı (anahtarlı
+alfabenin anahtarı bir cevaptı — § K38 raporu). **Üçü değildi:**
+
+| görünüm | gerçek |
+|---|---|
+| `KAPI` · çizelge **başlığı** ve meta levhasının sütun adı | "kapı" bu kitabın **yapısal ismidir** |
+| `AYNA` · katmanlı zincir levhasında *"ayna ekseni"* | dönüşümün **adıdır** |
+| `ASMA` · `BASMA` sözcüğünün içinde | alt dize artefaktı |
+
+Üçü de **dört harflidir**. Kanaryanın tabanı altı harftir ve onları
+**bilerek** görmez: kısa sözcükler olağan nesirle çarpışır ve altı
+harfin altında bir kanarya sürekli yalancı kırmızı yakar. Taban bir
+tercih değil, `_CANARY_BAN` gerekçesinin kendisidir.
+
+⚠ **Ama bedeli var ve ölçüldü:** ısınma örneği yazarken `KAPI`
+çarpışması yüzünden çözülmüş adımlarda "kapı" sözcüğünü **kullanamadım**
+ve örnek onun etrafından yazıldı. Bir cevap, kitabın kendi öğretim
+metnini kısıtlıyorsa yanlış seçilmiştir.
+
+**Kapı I'in cevapları DEĞİŞTİRİLMEDİ** ve gerekçesi tek cümledir: o
+yirmi bulmaca **ölçülen öldürme kapısının kanıt tabanıdır** (A12 · 1/5).
+Onları değiştirmek, ölçümün ölçtüğü nesneyi değiştirmek olurdu.
+
+⭑ **Kural ileriye dönüktür:** yeni bir cevap seçilirken sözcük, kanarya
+tabanının altında olsa bile, **talimat şablonlarında ve levha
+künyelerinde** aranır. `EŞİK` bu yüzden yasaktı (K18); `KAPI` ve `AYNA`
+aynı ölçütle yasaklanırdı — ölçüt o gün yoktu.

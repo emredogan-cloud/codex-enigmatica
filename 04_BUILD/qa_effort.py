@@ -317,6 +317,53 @@ def effort_full(space: dict, plate: Plate) -> tuple[float, float, int, str]:
         c = 1 + L
         return c, c, L, "basılı anahtar satırı + %d harf çevrilir" % L
 
+    # ═══ FAZ 4 · KAPI III–V + META ═════════════════════════════════════
+    if ak == "reachable-via-numeral-system":
+        # Sembolleri çizelgeden okur (L), toplar (1), satırı bulur (1).
+        L = len([c for c in acc.get("symbols", "") if not c.isspace()])
+        c = L + 2
+        return c, c, L, "%d sembol çizelgeden okunur + toplanır + satır" % L
+
+    if ak == "reachable-via-cyclic-calendar":
+        # İki çevrim konumu okunur, kesişim BASILI çevrim çizelgesinden
+        # alınır. ⚠ Okur 260 adımı SAYMAZ — çizelge kesişimi basar.
+        c = 4
+        return c, c, 2, "iki çevrim konumu + basılı kesişim + satır"
+
+    if ak == "reachable-via-path-graph":
+        # Yolun her adımı bir harf verir.
+        P = len(acc.get("moves") or "")
+        return P, P, P, "%d adımlık yol yürünür" % P
+
+    if ak == "reachable-by-layered-chain":
+        L = len(acc.get("input", ""))
+        n = len(acc.get("stages") or [])
+        c = n + n * L
+        return c, c, L, "%d katman × (%d harf) — anahtarların ikisi de basılı" % (n, L)
+
+    if ak == "reachable-by-back-reference":
+        rows = len(acc.get("table") or [])
+        c = 1 + rows
+        return c, c, rows, "önceki kapının cevabı hatırlanır + %d satır" % rows
+
+    if ak == "reachable-via-book-structure":
+        # Sayfayı bul (1), satırı bul (1), harfleri al (L).
+        # Çizelgeyi bul (1), satırı say (1), satırı oku (1).
+        c = 3
+        return c, c, 1, "basılı yapıda çizelge + satır bulunur"
+
+    if ak == "reachable-via-narrative":
+        # ⚠ SÖZCÜK SAYMAK TEHLİKELİDİR: kırkıncı sözcüğü saymak ev
+        # ödevidir. Pasaj KISA tutulur ve maliyet sayılan sözcük kadardır.
+        n = acc.get("wordIndex", 0)
+        c = 1 + n
+        return c, c, n, "pasaj bulunur + %d sözcük sayılır" % n
+
+    if ak == "meta-synthesis":
+        n = len(acc.get("gatePhrases") or [])
+        c = n * 2
+        return c, c, n, "%d kapı ifadesi · her birinden bir harf" % n
+
     if ak == "matches-positional-extraction":
         # ⭑ MODEL DÜZELTMESİ + TASARIM ⭑ Konum sayısı ve grup işareti kapı
         # levhasında AYNI SATIRDA basılıdır; okur satır başına TEK birleşik

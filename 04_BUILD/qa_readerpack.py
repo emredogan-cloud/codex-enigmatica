@@ -97,6 +97,19 @@ GLYPH_ACCEPTANCE = {"reachable-by-glyph-reading"}
 # süs" hâline getirir.
 MIN_CANDIDATE_PEERS = 4
 
+
+def printed_words(plate) -> list:
+    """Kitapta BASILI bütün sözcük listeleri — hangi kapıdan olursa olsun."""
+    out = list(plate.lexicon) + list(plate.bestiary)
+    for name, ch in (plate.charts or {}).items():
+        if not name.endswith("katalogu"):
+            continue
+        for e in ch.get("entries") or []:
+            w = e.get("word") if isinstance(e, dict) else e
+            if w:
+                out.append(w)
+    return list(dict.fromkeys(out))
+
 # ⚠ FAZ 2 BULGUSU — VAR OLMAYAN BİR ÇİZELGEYE GÖNDERME.
 # Çizelgeler bir kez yeniden adlandırıldı; başlıklar güncellendi ama üç
 # bulmacanın gövdesi eski adlarda kaldı. Sonuç: okur sekiz ayrı cümlede
@@ -241,7 +254,11 @@ def main() -> int:
             # ⚠ Kapı II'nin cevapları Çizelge E'dedir. Akranı yalnızca
             # Eşik Sözlüğü'nde aramak, katalog bulmacalarını akransız
             # gösterir ve kapıyı YANLIŞ yerde kırmızı yakardı.
-            printed = list(plate.lexicon) + list(plate.bestiary)
+            # ⚠ Her kapının KENDİ basılı listesi var (Eşik Sözlüğü ·
+            # Yaratıklar · Gök · Geçit · Ayna). Akranı yalnızca ilk ikisinde
+            # aramak, Kapı III–V'i akransız gösterir ve kapıyı YANLIŞ yerde
+            # kırmızı yakar.
+            printed = printed_words(plate)
             peers = sum(1 for w in printed
                         if w != ans and pl.squeeze(w) in vis_sq)
             if peers < MIN_CANDIDATE_PEERS:
@@ -288,8 +305,8 @@ def main() -> int:
             if src_acc.get("kind") == "plate-attribute":
                 plausible = set(src_acc.get("labels") or [])
             else:
-                printed = list(plate.lexicon) + list(plate.bestiary)
-                plausible = {w for w in printed if len(w) == len(src_ans)}
+                plausible = {w for w in printed_words(plate)
+                             if len(w) == len(src_ans)}
             keys = set()
             for f in acc.get("filters") or []:
                 keys |= {str(r.get(f["col"]))

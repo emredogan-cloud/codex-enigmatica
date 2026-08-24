@@ -26,7 +26,15 @@
     "",
     "Kaynaklar bilerek KAMUSAL ALANDAN seçildi: bu kitap yüz levha ve yüz",
     "bulmaca üretecek; telifli bir motif tabanına yaslanmak Faz 5'te",
-    "çözülemeyecek bir hak sorunu yaratır."
+    "çözülemeyecek bir hak sorunu yaratır.",
+    "",
+    "⚠ FAZ 4 · BİR KÜNYE ÇIKARILDI: `rawlinson-cuneiform`.",
+    "Kayıt 'Babil altmışlık sayı notasyonu' diyordu; kitabın sayı sistemi",
+    "ise toplamalı/çıkarmalı bir işaret dizisidir (1·5·10·25·50) ve",
+    "altmışlık DEĞİLDİR. Kaynağı orada tutmak, yapılmayan bir işi yapılmış",
+    "göstermek olurdu — SOURCING_STANDARD'ın yasakladığı şey tam da budur.",
+    "Künye çıkarıldı; kullanılan tek sayı sistemi künyesi klasik Roma",
+    "notasyonudur ve o zaten atıflıdır."
   ],
   "version": "1.0.0",
   "sources": [
@@ -131,17 +139,6 @@
       "rightsStatus": "public-domain",
       "verificationStatus": "asserted",
       "usage": "Maya takvim çevrimlerinin çapraz doğrulaması",
-      "readerNeedsIt": false
-    },
-    {
-      "id": "rawlinson-cuneiform",
-      "kind": "numeral-system",
-      "title": "The Cuneiform Inscriptions of Western Asia",
-      "author": "H. C. Rawlinson ve ark.",
-      "year": "1861–1884",
-      "rightsStatus": "public-domain",
-      "verificationStatus": "asserted",
-      "usage": "Babil altmışlık sayı notasyonu",
       "readerNeedsIt": false
     },
     {

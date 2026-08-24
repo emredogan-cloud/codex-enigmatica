@@ -395,8 +395,12 @@ ve çerçeve anlatısı yazılırken bilinmesi gereken bir sayıdır.
 | ⛔ öldürme kapısı ⛔ | ⛔ **HARD-STOP** — geçersiz kılmayla ilerlendi |
 | sayfa bütçesi | ✅ 10 denetim · 238 sayfa · 112 levha |
 | sayfa ölçümü (`pilot_pages`) | ✅ 4 denetim · 6 kapı |
-| KDP metadata paketi | ✅ |
 | üretilen belgeler güncel | ✅ |
+
+⚠ **Bu tabloda ilk yazımda olmayan bir satır vardı** ("KDP metadata
+paketi"). `04_BUILD/metadata.py` **henüz yoktur** ve `qa_all.sh` onu
+sessizce atlar — yani o kapı koşmadı. Satır kaldırıldı. `metadata.py`,
+`interior.py` ve `editions.py` **Faz 5–6 teslimatlarıdır**.
 
 **Kırmızı kapı: yok** (öldürme kapısının ölçülen kararı hariç — o bir
 kalite ölçümü değil, bir **karardır** ve kurucu geçersiz kılmasıyla

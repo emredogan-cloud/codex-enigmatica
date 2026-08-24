@@ -103,6 +103,9 @@ def measure() -> dict:
 
     return {
         "gate": read_gate(),
+        # ⚠ Üretilen belgeler geçersiz kılmayı BİLMEK ZORUNDA: bilmezlerse
+        # doğrulanmamış bir fazı "TAMAM" diye yazarlar.
+        "override": (cfg.get("killGate") or {}).get("externalValidation") or {},
         "cfg": cfg, "gates": gates, "puzzles": puzzles,
         "candidates": len(puzzles),
         "status": st,
@@ -271,20 +274,53 @@ Pilot kohort **%(pilot)d** bulmaca · modellenen oturum **%(pilotMinutes)d dk**
 
 
 def render_progress(m: dict) -> str:
+    """⚠ ÜRETİLEN BİR BELGE DE YALAN SÖYLEYEBİLİR.
+
+    Bu tablo faz durumunu `.gate` seviyesinden ÇIKARIYORDU ve `.gate`
+    `phase3` olunca Faz 2'yi "✅ TAMAM" diye yazdı. Ama Faz 2 bir ÖLDÜRME
+    KAPISIDIR ve o kapı **harici kanıtla geçilmedi** — kurucu kararıyla
+    geçildi. Tabloyu olduğu gibi bırakmak, kurucunun açıkça yasakladığı
+    şeyi yapardı: doğrulanmamış bir fazı doğrulanmış göstermek.
+
+    Artık üç durum ayrı yazılır:
+      ✅ TAMAM            — kapısı kendi ölçütleriyle geçildi
+      ⚑ KURUCU KARARIYLA  — girildi ama doğrulama BEKLİYOR
+      ⏸ beklemede
+    """
     cur = m["gate"]
     order = [p[2] for p in PHASES]
+    ov = m.get("override") or {}
+    # Geçersiz kılma yürürlükteyse, öldürme kapısına bağlı fazlar (2 ve
+    # sonrası) "TAMAM" diye yazılamaz: harici doğrulama yapılmadı.
+    overridden = bool(ov.get("founderOverride")) and \
+        not ov.get("humanValidationPassed")
     rows = []
     for num, name, gate, branch, tag in PHASES:
-        if order.index(gate) < order.index(cur):
+        i, c = order.index(gate), order.index(cur)
+        if i <= c:
             state = "✅ **TAMAM**"
-        elif gate == cur:
-            state = "✅ **TAMAM**"
-        elif order.index(gate) == order.index(cur) + 1:
+            if overridden and i >= order.index("phase2"):
+                state = "⚑ **KURUCU KARARIYLA** — doğrulama bekliyor"
+        elif i == c + 1:
             state = "⏸ **SIRADA**"
         else:
             state = "⏸ beklemede"
         rows.append("| **%s** | %s | %s | `%s` | `%s` | %s |"
                     % (num, name, state, gate, branch, tag))
+    if overridden:
+        rows.append("")
+        rows.append("> ## ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING")
+        rows.append(">")
+        rows.append("> Ölçülen öldürme kapısı: ⛔ **HARD-STOP** (1/5) — "
+                    "**değişmedi**.")
+        rows.append("> Yapılan harici oturum: **%d** · İnsan doğrulaması "
+                    "geçti mi: **%s**"
+                    % (ov.get("sessionsPerformed", 0),
+                       "EVET" if ov.get("humanValidationPassed") else "HAYIR"))
+        rows.append(">")
+        rows.append("> Faz 2 ve sonrası **kurucu geçersiz kılmasıyla** "
+                    "ilerledi (`DECISIONS.md § A13`). Hiçbir faz "
+                    "*harici olarak doğrulanmış* değildir.")
 
     return """# ROADMAP PROGRESS — Codex Enigmatica
 

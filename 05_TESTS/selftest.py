@@ -498,6 +498,28 @@ def part5_repo_gate(rep: Report, tmp: str) -> None:
     code, out = run_structure(base)
     rep.check(code == 0, "temiz depo kopyası GEÇER (yanlış pozitif yok)", out)
 
+    # ⭑ UYARI SİLİNEMEZ ⭑ — kurucu talimatı § 7
+    # "Do not delete this warning." Bir sonraki belge tazelemesinde sessizce
+    # düşerse kimse fark etmez; bu yüzden düşmesi KIRMIZI yanar.
+    def notice_case(drop):
+        r = repo_fixture(tmp, mutate=lambda d: _drop_notice(d, drop))
+        return run_structure(r)
+
+    def _drop_notice(d, rel):
+        path = os.path.join(d, rel)
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as fh:
+                body = fh.read()
+            for v in ("EXTERNAL HUMAN VALIDATION REMAINS PENDING",
+                      "External human validation remains pending"):
+                body = body.replace(v, "her şey yolunda")
+            write(path, body)
+
+    code, out = notice_case("PROJECT_CONTEXT.md")
+    rep.check(code != 0,
+              "⭑ BEKLEYEN DOĞRULAMA UYARISI SİLİNİRSE KIRMIZI ⭑ "
+              "(kurucu talimatı § 7: 'Do not delete this warning')", out)
+
     # ⭑ KAPALI BAŞARISIZLIK: .git var ama hiçbir şey takip edilmiyor.
     # Eskiden bu durumda bütün sızıntı denetimleri boş koşup YEŞİL yanardı.
     empty = repo_fixture(tmp, add_all=False)

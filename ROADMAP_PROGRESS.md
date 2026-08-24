@@ -12,11 +12,18 @@
 |---|---|---|---|---|---|
 | **0** | Bootstrap | ✅ **TAMAM** | `phase0` | `main` | — |
 | **1** | Bulmaca mimarisi, çözülebilirlik, gizlilik | ✅ **TAMAM** | `phase1` | `faz/1-mimari` | v0.1.0 |
-| **2** | ⛔ **ÖLDÜRME KAPISI** — 20 bulmaca + 5 çözücü | ✅ **TAMAM** | `phase2` | `faz/2-pilot` | v0.2.0 |
-| **3** | Kapı II · The Menagerie | ✅ **TAMAM** | `phase3` | `faz/3-kapi-2` | v0.3.0 |
+| **2** | ⛔ **ÖLDÜRME KAPISI** — 20 bulmaca + 5 çözücü | ⚑ **KURUCU KARARIYLA** — doğrulama bekliyor | `phase2` | `faz/2-pilot` | v0.2.0 |
+| **3** | Kapı II · The Menagerie | ⚑ **KURUCU KARARIYLA** — doğrulama bekliyor | `phase3` | `faz/3-kapi-2` | v0.3.0 |
 | **4** | Kapı III–V + meta-mister | ⏸ **SIRADA** | `phase4` | `faz/4-kapi-3-5` | v0.4.0 |
 | **5** | Yakınsama + levha + doğrulama sayfası | ⏸ beklemede | `phase5` | `faz/5-yakinsama` | v0.5.0 |
 | **6** | Nihai üretim + KDP paketi | ⏸ beklemede | `release` | `faz/6-uretim` | v1.0.0 |
+
+> ## ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
+>
+> Ölçülen öldürme kapısı: ⛔ **HARD-STOP** (1/5) — **değişmedi**.
+> Yapılan harici oturum: **0** · İnsan doğrulaması geçti mi: **HAYIR**
+>
+> Faz 2 ve sonrası **kurucu geçersiz kılmasıyla** ilerledi (`DECISIONS.md § A13`). Hiçbir faz *harici olarak doğrulanmış* değildir.
 
 ---
 

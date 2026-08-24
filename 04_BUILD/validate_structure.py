@@ -556,6 +556,50 @@ def check_doc_links(rep: Report) -> None:
               ("" if not broken else " — KIRIK: %s" % broken[:5]))
 
 
+PENDING_NOTICE = "EXTERNAL HUMAN VALIDATION REMAINS PENDING"
+# Geçersiz kılma yürürlükteyken bu üç belge uyarıyı TAŞIMAK ZORUNDA.
+# Kurucu talimatı § 7 açıktır: "Do not delete this warning."
+NOTICE_REQUIRED = ("PROJECT_CONTEXT.md", "ROADMAP_PROGRESS.md",
+                   "06_REPORTS/PHASE_3_REPORT.md")
+
+
+def check_pending_notice(rep: "Report") -> None:
+    """⭑ UYARI SİLİNEMEZ ⭑
+
+    Kurucu geçersiz kılması yürürlükteyken, insanın okuduğu belgeler
+    'harici doğrulama bekliyor' uyarısını taşımak zorundadır. Bu denetim
+    olmasaydı uyarı bir sonraki belge tazelemesinde sessizce düşerdi —
+    ve bir kez düştüğünde kimse fark etmezdi.
+
+    ⚠ Denetim geçersiz kılma KAPALIYKEN sessizdir: doğrulama gerçekten
+    geldiğinde uyarıyı zorunlu kılmak, bu kez TERS yönde yalan olurdu."""
+    print("\n── ⚑ bekleyen doğrulama uyarısı ──")
+    try:
+        with open(os.path.join(ROOT, "project_config.json"),
+                  encoding="utf-8") as fh:
+            cfg = json.load(fh)
+    except (OSError, json.JSONDecodeError):
+        return
+    ov = (cfg.get("killGate") or {}).get("externalValidation") or {}
+    if not ov.get("founderOverride") or ov.get("humanValidationPassed"):
+        print("  ⊘ geçersiz kılma yürürlükte değil — denetim koşmadı")
+        return
+    missing = []
+    for rel in NOTICE_REQUIRED:
+        path = os.path.join(ROOT, rel)
+        if not os.path.exists(path):
+            missing.append("%s (yok)" % rel)
+            continue
+        with open(path, encoding="utf-8") as fh:
+            # ⚠ Büyük/küçük harf duyarsız: uyarının GÖRÜNMESİ önemlidir,
+            # bağırması değil.
+            if PENDING_NOTICE.lower() not in fh.read().lower():
+                missing.append(rel)
+    rep.check(not missing,
+              "⭑ GEÇERSİZ KILMA YÜRÜRLÜKTEYKEN UYARI HER BELGEDE DURUYOR ⭑"
+              + ("" if not missing else " — ⛔ EKSİK: %s" % missing))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -577,6 +621,7 @@ def main() -> int:
     check_secrets(rep, files)
     check_solution_leak(rep, files)
     check_contract_sync(rep)
+    check_pending_notice(rep)
     check_doc_links(rep)
 
     print("\n" + "=" * 74)

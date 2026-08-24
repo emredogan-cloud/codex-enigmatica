@@ -174,9 +174,29 @@ sanırsınız.
   kalır.
 - Kapı CI'ya eklendi (`depo, belge ve manuscript koruması` işi).
 
+Sonra ikinci bir boşluk çıktı: kapı CI'da koştu ama **hiçbir şey
+denetlemedi** — `0 denetim yeşil · manuscript yok`. `02_MANUSCRIPT/`
+bilerek takip edilmez (korunan katman), bu yüzden CI kütüphaneyi
+yeniden üretemez ve tazelik karşılaştırması orada **koşamaz**. Bu bir
+hata değil, mimarinin sonucudur — ama hiçbir şey yapmadan yeşil dönen
+bir adım, korunduğunuzu sanmanızdır.
+
+Denetimler ikiye ayrıldı:
+
+- **Manuscript gerektiren** (yeniden üret + karşılaştır) — yerelde.
+- **Takip edilen HTML'i okuyan** (kopya kimlik · hedefsiz düğme ·
+  düğmesiz kutu · kırık çıpa · dengesiz etiket · dış bağ · sır ·
+  dosya adı) — bunlar bulmacaları gerektirmez ve **CI'da koşar**.
+
+CI ortamında artık **0 değil 14 denetim** çalışır.
+
 Kapının **ısırdığı ölçüldü**: kütüphanedeki tek bir rakam elle
 değiştirildi (`exactly 5 of mark` → `exactly 9`), üreteç bunu yakaladı
 ve **çıkış kodu 1** verdi; dosya geri alınınca 0'a döndü.
+
+Manuscript'siz (CI) kipte de yedi bozuk fikstür denendi — kırık çıpa,
+hedefsiz düğme, kopya kimlik, dengesiz etiket, CDN bağı, `api_key`
+ve sağlam dosya: **altısı da çıkış 1, sağlam olan 0**.
 
 **Cevap sızıntısı:** `qa_solution_leak.py` — 4 denetim yeşil, kip A,
 281 cevap dizesi, **109 takip edilen dosya** (429 KB'lık yeni

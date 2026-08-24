@@ -280,6 +280,74 @@ def measure(fig: str) -> list:
     return out
 
 
+def audit_html(doc: str, rep) -> None:
+    """⭑ TAKİP EDİLEN HTML'İ MANUSCRIPT OLMADAN DENETLER ⭑
+
+    ⚠ Bunlar dosyanın KENDİSİNİ okur, bulmacaları değil. Bu yüzden
+    `02_MANUSCRIPT/` olmayan CI ortamında da koşarlar — kütüphane
+    takip edilen bir dosyadır ve orada bozulabilir.
+    """
+    # ── ⭑ ÜRETİLEN HTML'İN KENDİSİ DENETLENİR ⭑ ────────────────────────
+    # ⚠ Bir prompt kütüphanesi ÇALIŞMAZSA yoktur: kopyalamayan bir düğme,
+    # boşa düşen bir çıpa ya da iki kez kullanılmış bir kimlik, kurucunun
+    # yanlış metni kopyalaması demektir. Bunlar gözle görülmez; ölçülür.
+    ids = re.findall(r'\bid="([^"]+)"', doc)
+    dupe = sorted({i for i in ids if ids.count(i) > 1})
+    rep.check(not dupe,
+              "⭑ HİÇBİR HTML KİMLİĞİ İKİ KEZ KULLANILMIYOR ⭑ "
+              "(kopya kimlik = yanlış metni kopyalayan düğme)"
+              + ("" if not dupe else " — ⛔ %s" % dupe[:6]))
+
+    targets = re.findall(r'data-t="([^"]+)"', doc)
+    orphan = sorted({t for t in targets if t not in ids})
+    rep.check(not orphan,
+              "⭑ HER KOPYA DÜĞMESİNİN HEDEFİ VAR ⭑"
+              + ("" if not orphan else " — ⛔ HEDEFSİZ: %s" % orphan[:6]))
+    boxes = re.findall(r'class="prompt(?: neg)?" id="([^"]+)"', doc)
+    silent = sorted({b for b in boxes if b not in targets})
+    rep.check(not silent,
+              "her prompt kutusunun bir kopya düğmesi var"
+              + ("" if not silent else " — ⛔ DÜĞMESİZ: %s" % silent[:6]))
+
+    anchors = re.findall(r'href="#([^"]+)"', doc)
+    broken = sorted({a for a in anchors if a not in ids})
+    rep.check(not broken,
+              "her iç çıpa çözülüyor"
+              + ("" if not broken else " — ⛔ KIRIK: %s" % broken))
+
+    for tag in ("article", "details", "table", "nav", "script", "style"):
+        o = len(re.findall(r"<%s[ >]" % tag, doc))
+        c = len(re.findall(r"</%s>" % tag, doc))
+        rep.check(o == c, "<%s> etiketleri dengeli (%d/%d)" % (tag, o, c))
+
+    rep.check("<!doctype html>" in doc.lower()
+              and '<html lang="tr">' in doc
+              and 'charset="utf-8"' in doc,
+              "HTML iskeleti tam (doctype · lang · charset)")
+    rep.check("http://" not in doc and "https://" not in doc,
+              "⭑ ÇEVRİMDIŞI ÇALIŞIR ⭑ (dış bağ, CDN ya da uzak yazı tipi yok)")
+
+    # ⚠ SIR TARAMASI — kütüphane takip edilen bir dosyadır.
+    secret = re.findall(r"(?i)(CANARY_SALT|api[_-]?key|secret|token|"
+                        r"password|BEGIN [A-Z ]*PRIVATE KEY)", doc)
+    rep.check(not secret,
+              "⭑ SIR SIZINTISI YOK ⭑ (anahtar · jeton · parola)"
+              + ("" if not secret else " — ⛔ %s" % sorted(set(secret))))
+
+    # ⚠ DOSYA ADI TUTARLILIĞI — kart kimliği ile basılan dosya adı aynı mı
+    named = re.findall(r"<code>07_ASSETS/(?:raw|plates)/([^<]+)\.png</code>",
+                       doc)
+    # ⚠ § 4 ÜRETİM TABLOSU YER TUTUCU BASAR (`<prompt-kimliği>`, `0N`) ve
+    # bunlar dosya adı DEĞİLDİR; kalıp onları eler, gerçek adları eler.
+    bad_name = sorted({n for n in named
+                       if "&lt;" not in n and "0N" not in n
+                       and not re.fullmatch(r"[a-z0-9-]+", n)})
+    rep.check(not bad_name,
+              "her dosya adı küçük harf-tire kalıbında"
+              + ("" if not bad_name else " — ⛔ %s" % bad_name[:6]))
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -295,9 +363,22 @@ def main() -> int:
     rep = pl.Report(args.verbose)
     book = pl.load_json(BOOK) or {}
     if not book:
+        # ⭑ MANUSCRIPT YOK — AMA KÜTÜPHANE VAR ⭑
+        # ⚠ `02_MANUSCRIPT/` bilerek takip edilmez (korunan katman), bu
+        # yüzden CI kütüphaneyi YENİDEN ÜRETEMEZ ve tazelik denetimi
+        # orada koşamaz. Ama kütüphanenin KENDİSİ takip edilir: kopya
+        # kimlik, hedefsiz kopya düğmesi, kırık çıpa, dış bağ ya da sır
+        # orada bozulabilir ve bunları görmek için bulmacalar gerekmez.
+        # Hiçbir şey yapmadan yeşil dönmek, CI'nın koruduğunu SANMAKTIR.
         print("\n  ⊘ manuscript bu ortamda yok — kütüphane ÜRETİLEMEDİ")
-        rep.warn("prompt kütüphanesi BOŞ KOŞTU — yerelde koşturun")
-        return rep.finish("manuscript yok", None)
+        rep.warn("tazelik denetimi ATLANDI (manuscript yok) — "
+                 "yalnızca takip edilen HTML denetlendi")
+        if not os.path.exists(args.out):
+            rep.check(False, "⭑ %s DEPODA YOK ⭑ — kurucu 103 gravürü "
+                      "neyden üretecek?" % os.path.relpath(args.out, pl.ROOT))
+            return rep.finish("kütüphane yok", None)
+        audit_html(open(args.out, encoding="utf-8").read(), rep)
+        return rep.finish("manuscript yok · HTML denetlendi", None)
 
     index = {p["puzzleId"]: p for p in pl.load_index()}
     sols, _ = pl.load_protected()
@@ -436,64 +517,7 @@ def main() -> int:
             fh.write(doc)
         print("\n  ✍ %s" % rel)
 
-    # ── ⭑ ÜRETİLEN HTML'İN KENDİSİ DENETLENİR ⭑ ────────────────────────
-    # ⚠ Bir prompt kütüphanesi ÇALIŞMAZSA yoktur: kopyalamayan bir düğme,
-    # boşa düşen bir çıpa ya da iki kez kullanılmış bir kimlik, kurucunun
-    # yanlış metni kopyalaması demektir. Bunlar gözle görülmez; ölçülür.
-    ids = re.findall(r'\bid="([^"]+)"', doc)
-    dupe = sorted({i for i in ids if ids.count(i) > 1})
-    rep.check(not dupe,
-              "⭑ HİÇBİR HTML KİMLİĞİ İKİ KEZ KULLANILMIYOR ⭑ "
-              "(kopya kimlik = yanlış metni kopyalayan düğme)"
-              + ("" if not dupe else " — ⛔ %s" % dupe[:6]))
-
-    targets = re.findall(r'data-t="([^"]+)"', doc)
-    orphan = sorted({t for t in targets if t not in ids})
-    rep.check(not orphan,
-              "⭑ HER KOPYA DÜĞMESİNİN HEDEFİ VAR ⭑"
-              + ("" if not orphan else " — ⛔ HEDEFSİZ: %s" % orphan[:6]))
-    boxes = re.findall(r'class="prompt(?: neg)?" id="([^"]+)"', doc)
-    silent = sorted({b for b in boxes if b not in targets})
-    rep.check(not silent,
-              "her prompt kutusunun bir kopya düğmesi var"
-              + ("" if not silent else " — ⛔ DÜĞMESİZ: %s" % silent[:6]))
-
-    anchors = re.findall(r'href="#([^"]+)"', doc)
-    broken = sorted({a for a in anchors if a not in ids})
-    rep.check(not broken,
-              "her iç çıpa çözülüyor"
-              + ("" if not broken else " — ⛔ KIRIK: %s" % broken))
-
-    for tag in ("article", "details", "table", "nav", "script", "style"):
-        o = len(re.findall(r"<%s[ >]" % tag, doc))
-        c = len(re.findall(r"</%s>" % tag, doc))
-        rep.check(o == c, "<%s> etiketleri dengeli (%d/%d)" % (tag, o, c))
-
-    rep.check("<!doctype html>" in doc.lower()
-              and '<html lang="tr">' in doc
-              and 'charset="utf-8"' in doc,
-              "HTML iskeleti tam (doctype · lang · charset)")
-    rep.check("http://" not in doc and "https://" not in doc,
-              "⭑ ÇEVRİMDIŞI ÇALIŞIR ⭑ (dış bağ, CDN ya da uzak yazı tipi yok)")
-
-    # ⚠ SIR TARAMASI — kütüphane takip edilen bir dosyadır.
-    secret = re.findall(r"(?i)(CANARY_SALT|api[_-]?key|secret|token|"
-                        r"password|BEGIN [A-Z ]*PRIVATE KEY)", doc)
-    rep.check(not secret,
-              "⭑ SIR SIZINTISI YOK ⭑ (anahtar · jeton · parola)"
-              + ("" if not secret else " — ⛔ %s" % sorted(set(secret))))
-
-    # ⚠ DOSYA ADI TUTARLILIĞI — kart kimliği ile basılan dosya adı aynı mı
-    named = re.findall(r"<code>07_ASSETS/(?:raw|plates)/([^<]+)\.png</code>",
-                       doc)
-    # ⚠ § 4 ÜRETİM TABLOSU YER TUTUCU BASAR (`<prompt-kimliği>`, `0N`) ve
-    # bunlar dosya adı DEĞİLDİR; kalıp onları eler, gerçek adları eler.
-    bad_name = sorted({n for n in named
-                       if "&lt;" not in n and "0N" not in n
-                       and not re.fullmatch(r"[a-z0-9-]+", n)})
-    rep.check(not bad_name,
-              "her dosya adı küçük harf-tire kalıbında"
-              + ("" if not bad_name else " — ⛔ %s" % bad_name[:6]))
+    audit_html(doc, rep)
 
     rep.facts.update({"plates": len(entries), "byGate": by_gate,
                       "rawAssetsPresent": bool([

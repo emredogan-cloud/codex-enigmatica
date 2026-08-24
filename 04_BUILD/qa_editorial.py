@@ -10,13 +10,14 @@ Yol haritası Faz 5 § 13'ün uyarısı burada da geçerlidir: *"Line Editor
 bir alt-ajandır ve körü körüne kabul edilmez."* Aşağıdaki her kural, ana
 ajan tarafından ÜRETİM VERİSİNDE doğrulanmış bir kusurdan doğdu.
 
-Beş ölçüm:
+Altı ölçüm:
 
   ① YAPIM KİMLİĞİ  — okur sayfasında `g4-001` gibi bir kimlik var mı
   ② ÇİFT BASIM     — aynı çizelge sayfada İKİ KEZ mi basılıyor
   ③ İKİZ LEVHA     — iki bulmaca AYNI veriyi mi basıyor
   ④ TEKRARLANAN BAŞLIK — iki sayfa aynı adı mı taşıyor
   ⑤ ANLATI KAYDI   — anlatı satırı MEKANİK içerik taşıyor mu
+  ⑥ SAYI SÜTUNU    — cevabın satır numarası akranların arasında mı
 
 ────────────────────────────────────────────────────────────────────────
 ⭑ ⑤ HAKKINDA: KURAL DARALTILDI, ÇÜNKÜ ÖLÇÜLDÜ ⭑
@@ -171,6 +172,36 @@ def main() -> int:
                 contradict.append("%s: anlatı '%s' · levha %s"
                                   % (p["puzzleId"], said.group(1), m.group(1)))
 
+    # ── ⑥ SAYI SÜTUNU CEVABI ELE VERİYOR MU ────────────────────────────
+    # ⭑⭑ ÖLÇÜLDÜ: YEDİ LEVHANIN YEDİSİNDE ⭑⭑
+    # Sınıflama levhaları her üyenin yanına katalog satır numarasını
+    # basar. Akranlar havuzdan sırayla alındığı için numaraları kendi
+    # aralarında kümeleniyor, cevabınki kümenin DIŞINDA kalıyordu.
+    # Okur levhaya hiç bakmadan, yalnızca sayı sütununu tarayarak iki
+    # kapının sınıflama bulmacalarını çözebilirdi.
+    sols, _ = pl.load_protected()
+    # ⚠ İLK KALIP EN AZ ÜÇ SÜTUN VARSAYIYORDU ve iki sütunlu bir çizelgeyi
+    # hiç görmüyordu — fikstür yakaladı. Kalıp artık aradaki sütun
+    # sayısına bakmaz.
+    ROW = re.compile(
+        r"\|\s*([A-ZÇĞİÖŞÜ]+)\s*\|(?:[^|\n]*\|)*?\s*(\d+)\s*\|")
+    NUM = re.compile(r"\|\s*(\d+)\s*\|")
+    outlier = []
+    for p in pages:
+        blob = str(p.get("figure") or "") + str(p.get("printedTable") or "")
+        answer = (sols.get(p["puzzleId"]) or {}).get("finalAnswer")
+        if not answer:
+            continue
+        mine = next((int(m.group(2)) for m in ROW.finditer(blob)
+                     if m.group(1) == answer), None)
+        nums = [int(x) for x in NUM.findall(blob)]
+        if mine is None or len(nums) < 5:
+            continue
+        rest = [n for n in nums if n != mine]
+        if rest and (mine < min(rest) or mine > max(rest)):
+            outlier.append("%s (#%d ∉ [%d..%d])"
+                           % (p["puzzleId"], mine, min(rest), max(rest)))
+
     print("\n── ölçülen ──")
     print("  okur sayfası       %d" % len(pages))
     print("  ısınma örneği      %d" % len(warm))
@@ -181,7 +212,8 @@ def main() -> int:
                       "printedTwice": twice,
                       "twinPlates": ["+".join(t) for t in twins],
                       "duplicateTitles": dup_title,
-                      "voiceBreaches": voice, "contradictions": contradict})
+                      "voiceBreaches": voice, "contradictions": contradict,
+                      "numberOutliers": outlier})
 
     rep.check(not build_id,
               "⭑ ① HİÇBİR OKUR SAYFASI YAPIM KİMLİĞİ BASMIYOR ⭑ "
@@ -207,6 +239,11 @@ def main() -> int:
               "(çizelge adı · yön · rakam — bir üslup düzeltmesi bir "
               "bulmacayı sessizce bozamaz · STYLE § 1 · K42)"
               + ("" if not voice else " — ⛔ %s" % voice[:6]))
+    rep.check(not outlier,
+              "⭑ ⑥ CEVABIN SATIR NUMARASI AKRANLARIN ARASINDA ⭑ "
+              "(uçta duran bir numara, okurun levhaya HİÇ BAKMADAN "
+              "çözmesini sağlar — mekanizma devre dışı kalır)"
+              + ("" if not outlier else " — ⛔ %s" % outlier[:6]))
     rep.check(not contradict,
               "⭑ ⑤b ANLATI, SAYFANIN BASTIĞI SAYIYLA ÇELİŞMİYOR ⭑"
               + ("" if not contradict else " — ⛔ %s" % contradict[:5]))

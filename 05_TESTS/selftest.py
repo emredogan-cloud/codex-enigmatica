@@ -2389,6 +2389,44 @@ def part11_crossref(rep: Report, tmp: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+def _outlier_root(tmp: str, cfg: dict) -> str:
+    """⑥ için kök: korumalı katmanda GERÇEK bir cevap olmalı, çünkü kural
+    cevabın satır numarasını akranlarınkiyle karşılaştırır."""
+    _RUN_SEQ[0] += 1
+    d = os.path.join(tmp, "out-%03d" % _RUN_SEQ[0])
+    for sub in ("01_SOURCE/solutions", "02_MANUSCRIPT"):
+        os.makedirs(os.path.join(d, sub), exist_ok=True)
+    write(os.path.join(d, ".gate"), "phase5")
+    write(os.path.join(d, "project_config.json"),
+          json.dumps(cfg, ensure_ascii=False))
+    write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+          json.dumps({"puzzles": [{
+              "puzzleId": "fixture-001", "gate": "threshold",
+              "type": "logic", "mechanismFamily": "classification",
+              "status": "written", "testStatus": "tested",
+              "leakClass": "protected", "ambiguityScore": 1,
+              "alternativeSolutionAnalysisDone": True,
+              "confirmedAlternativeSolutions": 0}]}, ensure_ascii=False))
+    write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+          json.dumps({"puzzles": [{"puzzleId": "fixture-001",
+                                   "finalAnswer": "MELTEM",
+                                   "hints": ["a", "b", "c"]}]},
+                     ensure_ascii=False))
+    write(os.path.join(d, "02_MANUSCRIPT/book.json"), json.dumps({
+        "puzzles": [{
+            "puzzleId": "fixture-001", "gate": "threshold",
+            "title": "Kurgu", "flavour": "Bunu yazan kişi aceleci değildi.",
+            "objective": "Yanlış bölmedeki üyeyi bulun.",
+            "readerAction": "Nitelik sütunlarına bakın.",
+            "printedTable": ("| ad | no |\n|---|---|\n| ZURNA | 2 |\n"
+                             "| KAVUN | 3 |\n| VİRAJ | 4 |\n"
+                             "| TERLİK | 5 |\n| OYMACI | 6 |\n"
+                             "| MELTEM | 48 |"),
+            "clues": ["künye"], "constraints": []}],
+        "warmUp": []}, ensure_ascii=False))
+    return d
+
+
 def part12_editorial(rep: Report, tmp: str) -> None:
     """⑫ ⭑ EDİTORYAL BÜTÜNLÜK — LINE EDITOR'IN BULDUKLARI KALICI OLDU ⭑
 
@@ -2497,6 +2535,21 @@ def part12_editorial(rep: Report, tmp: str) -> None:
               "⭑ ⑤ SIRA SÖZCÜĞÜ MEKANİK SAYILMIYOR ⭑ "
               "(K42 · kural ölçüye göre daraltıldı; anlatı kaçıncı "
               "kayıtta olduğunuzu söyleyebilir)", out)
+
+    # ⭑ ⑥ SAYI SÜTUNU — ölçülen: yedi levhanın YEDİSİNDE cevabın satır
+    # numarası akranların dışındaydı ve okur levhaya HİÇ BAKMADAN
+    # çözebiliyordu.
+    def _outlier(pages):
+        pages[1]["printedTable"] = (
+            "| ad | no |\n|---|---|\n| ZURNA | 2 |\n| KAVUN | 3 |\n"
+            "| VİRAJ | 4 |\n| TERLİK | 5 |\n| OYMACI | 6 |\n"
+            "| MELTEM | 48 |")
+    code, out = run_env_gate(
+        "qa_editorial.py", _outlier_root(tmp, cfg), gate="phase5")
+    rep.check(code != 0,
+              "⭑ ⑥ CEVABIN SATIR NUMARASI UÇTAYSA KIRMIZI ⭑ "
+              "(okur levhaya hiç bakmadan, yalnızca sayı sütununu "
+              "tarayarak çözebilir — mekanizma devre dışı kalır)", out)
 
     def _contradict(pages):
         pages[0]["figure"] = "  sözcük: 7"

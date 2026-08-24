@@ -72,10 +72,11 @@ echo "════════════════════════�
 echo "  CODEX ENIGMATICA · KALİTE KAPILARI · kapı: $GATE"
 echo "════════════════════════════════════════════════════════════════════════"
 
-if [ "$FIX" = "1" ]; then
-  echo "▸ üretilen belgeler tazeleniyor…"
-  [ -f 04_BUILD/update_docs.py ] && $PY 04_BUILD/update_docs.py >/dev/null || true
-fi
+# ⚠ TAZELEME BURADA DEĞİL, ÖLÇÜM KAPILARINDAN SONRA (§ aşağıda).
+# Gerekçe ölçüldü: `pilot_pages` kelime sayısını GÜNCELLER ve üretilen
+# belgeler o sayıyı okur. Tazeleme başta yapılırsa belge ESKİ ölçümle
+# yazılır, sonra ölçüm değişir ve son kapı "bayat" der — içerik
+# değiştiği için değil, SIRA yanlış olduğu için.
 
 # ── YAPILANDIRMA VE VERİ ────────────────────────────────────────────────────
 run "veri bütünlüğü ve kapsam"  $PY 04_BUILD/validate_spec.py --gate "$GATE" \
@@ -239,6 +240,11 @@ fi
 [ -f 04_BUILD/metadata.py ] && \
   run "KDP metadata paketi"     $PY 04_BUILD/metadata.py --check
 
+if [ "$FIX" = "1" ]; then
+  echo
+  echo "▸ üretilen belgeler tazeleniyor (ölçümler koştuktan SONRA)…"
+  [ -f 04_BUILD/update_docs.py ] && $PY 04_BUILD/update_docs.py >/dev/null || true
+fi
 # ── ÜRETİLEN BELGELER BAYAT MI ─────────────────────────────────────────────
 [ -f 04_BUILD/update_docs.py ] && \
   run "üretilen belgeler güncel" $PY 04_BUILD/update_docs.py --check

@@ -48,6 +48,20 @@ etiket · dış bağ · sır sızıntısı · dosya adı kalıbı. Üreteç
 **22 denetim** çalıştırır. 223 düğmenin hepsi tarayıcıda tıklanarak
 ölçüldü: **yanlış metin kopyalayan 0**.
 
+### Düzeltildi — CI kütüphaneyi hiç denetlemiyordu
+
+`plate_prompts.py` yalnızca `qa_all.sh` içinden, yani yerel makinede
+çalışıyordu; CI onu hiç çağırmıyordu. Elle düzenlenmiş ya da bayat bir
+kütüphane CI'dan **yeşil geçerdi** ve dosya doğru *görüneceği* için
+kimse fark etmezdi.
+
+Üstelik `--check` bayrağı kabul ediliyor ama hiçbir şey yapmıyordu —
+her koşuda dosyayı yeniden yazıyordu. Hiçbir şey yapmayan bir bayrak,
+olmayan bir bayraktan daha kötüdür.
+
+`--check` artık yazmaz, **karşılaştırır**; kapı CI'ya eklendi ve
+ısırdığı ölçüldü (tek bir rakam değiştirildi → çıkış kodu 1).
+
 - Rapor: `06_REPORTS/IMAGE_PROMPT_LIBRARY_FINALIZATION_REPORT.md`
 
 ---

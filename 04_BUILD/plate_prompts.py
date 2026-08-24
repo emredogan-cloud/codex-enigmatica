@@ -417,14 +417,29 @@ def main() -> int:
         print("  %-14s %3d levha" % (g, n))
     print("  %-14s %3d levha" % ("TOPLAM", len(entries)))
 
-    _write_html(args.out, entries)
-    print("\n  ✍ %s" % os.path.relpath(args.out, pl.ROOT))
+    doc = _render_html(entries)
+    rel = os.path.relpath(args.out, pl.ROOT)
+    if args.check:
+        # ⚠ TAZELİK KAPISI — üreteç YAZMAZ, KARŞILAŞTIRIR. Elle düzenlenmiş
+        # ya da bayat bir kütüphane burada yakalanır; CI'da tek koruma
+        # budur, çünkü CI'nın çalışma ağacı temiz kalmalıdır.
+        onceki = (open(args.out, encoding="utf-8").read()
+                  if os.path.exists(args.out) else None)
+        rep.check(onceki == doc,
+                  "⭑ %s ÜRETEÇLE AYNI ⭑ (elle düzenlenmiş ya da bayat "
+                  "değil)" % rel
+                  + ("" if onceki == doc else
+                     " — ⛔ BAYAT: `python3 04_BUILD/plate_prompts.py` koş"))
+        print("\n  ⊙ %s (yalnızca denetlendi, yazılmadı)" % rel)
+    else:
+        with open(args.out, "w", encoding="utf-8") as fh:
+            fh.write(doc)
+        print("\n  ✍ %s" % rel)
 
     # ── ⭑ ÜRETİLEN HTML'İN KENDİSİ DENETLENİR ⭑ ────────────────────────
     # ⚠ Bir prompt kütüphanesi ÇALIŞMAZSA yoktur: kopyalamayan bir düğme,
     # boşa düşen bir çıpa ya da iki kez kullanılmış bir kimlik, kurucunun
     # yanlış metni kopyalaması demektir. Bunlar gözle görülmez; ölçülür.
-    doc = open(args.out, encoding="utf-8").read()
     ids = re.findall(r'\bid="([^"]+)"', doc)
     dupe = sorted({i for i in ids if ids.count(i) > 1})
     rep.check(not dupe,
@@ -750,7 +765,7 @@ def _card(cid, title, meta_rows, blocks, prompt_text, negative_text,
     return "\n".join(out)
 
 
-def _write_html(path: str, entries: list) -> None:
+def _render_html(entries: list) -> str:
     e = html.escape
     eng = [x for x in entries if x.get("kind") == "engraving"]
 
@@ -865,9 +880,7 @@ def _write_html(path: str, entries: list) -> None:
         "covers": "\n".join(covers),
         "aplus": "\n".join(aplus),
     }
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as fh:
-        fh.write(doc)
+    return doc
 
 
 if __name__ == "__main__":

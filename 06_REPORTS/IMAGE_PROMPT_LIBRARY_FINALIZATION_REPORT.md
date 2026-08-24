@@ -138,7 +138,8 @@ riskini doğururdu.
 ## 9 · Doğrulama
 
 `04_BUILD/qa_all.sh` — **bütün kapılar yeşil** · kapı seviyesi
-`phase5`. Üreteç kendi çıktısını denetler: **22 denetim yeşil**.
+`phase5`. Üreteç kendi çıktısını denetler: **23 denetim yeşil**
+(tazelik denetimi dâhil).
 
 Üretilen HTML'e karşı çalışan yeni denetimler:
 
@@ -152,6 +153,30 @@ riskini doğururdu.
 - her dosya adı küçük harf-tire kalıbında
 - 2 kapak · 6 A+ · geçerli Amazon modül türü · her kart bir `BRIEF`
   dayanağı taşıyor
+
+### 9.1 · Doğrulama sırasında bulunan boşluk — kapatıldı
+
+CI yeşildi ama **kütüphaneyi denetlemiyordu.** `plate_prompts.py` yalnızca
+`qa_all.sh` içinden, yani yerel makinede çalışıyordu; `.github/workflows/`
+onu hiç çağırmıyordu. Sonuç: elle düzenlenmiş ya da bayat bir kütüphane
+CI'dan **yeşil geçerdi** — ve dosya doğru *görüneceği* için kimse fark
+etmezdi.
+
+Daha kötüsü, üretecin `--check` bayrağı kabul ediliyor ama **hiçbir şey
+yapmıyordu**: her koşuda dosyayı yeniden yazıyordu. Hiçbir şey yapmayan
+bir bayrak, olmayan bir bayraktan daha kötüdür — çünkü korunduğunuzu
+sanırsınız.
+
+İkisi de kapatıldı:
+
+- `--check` artık **yazmaz, karşılaştırır**: üreteç HTML'i belleğe basar
+  ve diskteki dosyayla eşitliğini denetler. CI'nın çalışma ağacı temiz
+  kalır.
+- Kapı CI'ya eklendi (`depo, belge ve manuscript koruması` işi).
+
+Kapının **ısırdığı ölçüldü**: kütüphanedeki tek bir rakam elle
+değiştirildi (`exactly 5 of mark` → `exactly 9`), üreteç bunu yakaladı
+ve **çıkış kodu 1** verdi; dosya geri alınınca 0'a döndü.
 
 **Cevap sızıntısı:** `qa_solution_leak.py` — 4 denetim yeşil, kip A,
 281 cevap dizesi, **109 takip edilen dosya** (429 KB'lık yeni

@@ -90,6 +90,14 @@ jobs:
       # ve hata geri alınamaz (git geçmişi).
       - name: yapı, belge ve ÇÖZÜM sızıntısı denetimi
         run: python3 04_BUILD/validate_structure.py --verbose --json 06_REPORTS/tracked/structure.json
+      # ⭑ PROMPT KÜTÜPHANESİ ÜRETEÇLE AYNI MI ⭑
+      # Kütüphane ÜRETİLEN bir dosyadır ve kurucunun 103 gravürü ondan
+      # üretecektir. Elle düzenlenmiş bir kütüphane, üreteçteki ölçülen
+      # veriyle çelişen bir prompt demektir — ve bunu kimse fark etmez,
+      # çünkü dosya doğru GÖRÜNÜR. `--check` yazmaz, karşılaştırır;
+      # ayrıca kopya kimlik, hedefsiz kopya düğmesi ve kırık çıpa arar.
+      - name: prompt kütüphanesi üreteçle aynı
+        run: python3 04_BUILD/plate_prompts.py --check --verbose
       - uses: actions/upload-artifact@v4
         if: always()
         with:

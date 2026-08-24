@@ -235,7 +235,10 @@
     "metaMysteryNote": "100 bulmacanın çıktısı tek bir son soruya bağlanır. Cevap kitapta YOKTUR — doğrulama sayfasına girilir.",
     "gateOneRedesign": {
       "$comment": [
-        "B1–B6 kurucu kararları · 13 Ağustos 2026 · öldürme kapısı sonrası"
+        "B1–B6 kurucu kararları · 13 Ağustos 2026 · öldürme kapısı sonrası",
+        "İKİNCİ YÖNERGE · 24 Ağustos 2026 · 'düşük sürtünme / yüksek ödül'",
+        "Yönerge tasarım hedefini SIKTI (dakika×3 → dakika×1,0) ve deneyimi",
+        "ölçüye soktu: ahaScore, repetitionBurden, zorluk rampası, ısınma."
       ],
       "approvedAt": "2026-08-13",
       "B1_mix": {
@@ -249,7 +252,7 @@
       },
       "B2_reflectionMovedTo": "labyrinth",
       "B3_keyedAlphabetDeferredTo": "menagerie",
-      "B4_warmUpSections": 3,
+      "B4_warmUpSections": 7,
       "B5_effortMultiplier": "deferred",
       "B6_secondRoundCohort": {
         "returning": 2,
@@ -258,10 +261,46 @@
       },
       "designRules": {
         "K1": "anahtar aranmaz, levhada BASILIDIR",
-        "K2": "her bulmaca kendi süre iddiasına sığar",
+        "K2": "her bulmaca kendi süre iddiasının ÜÇTE BİRİNE sığar (×1,0)",
         "K3": "ispat sayar, okur gezmez",
-        "K4": "her mekanizma çözülmüş bir örnekle önce öğretilir",
+        "K4": "her mekanizma çözülmüş bir örnekle önce öğretilir · en kötü hâl ≤8 işlem",
         "K5": "aha işi transkripsiyon işine baskın gelir"
+      },
+      "secondDirective": {
+        "receivedAt": "2026-08-24",
+        "designTarget": {
+          "rule": "EU ≤ expectedCompletionMinutes × 1.0",
+          "previousRule": "EU ≤ expectedCompletionMinutes × 3 (EU_PER_MINUTE)",
+          "reading": "bildirilen sürenin en çok ÜÇTE BİRİ elle iştir",
+          "timeInflationForbidden": true,
+          "gate": "04_BUILD/qa_effort.py · DESIGN_RATIO"
+        },
+        "k4Ceiling": {
+          "maxManualActionsWorstCase": 8,
+          "gateSynthesisExempt": true,
+          "reason": "'Prefer 4–8 meaningful manual actions over 20–40 repetitive'"
+        },
+        "experienceMetrics": {
+          "ahaScoreMedianMin": 4,
+          "ahaScoreLowMax": 2,
+          "evidenceRequiredFrom": 4,
+          "repetitionBurdenMedianMax": 2,
+          "gate": "04_BUILD/qa_experience.py",
+          "⚠": "ahaScore YAZARIN puanıdır — tasarım sezgisi, kanıt DEĞİL. Gerçek ölçüm ikinci turun kayıt formundadır (A12b)."
+        },
+        "designRulesV2": {
+          "K1": "KÖR ARAMA YOK — gösterilebilen anahtar gösterilir",
+          "K2": "DÜŞÜNCE > YAZIM — çaba 'neden işliyor'a gider",
+          "K3": "HER BULMACANIN BİR ÖDÜLÜ VAR (ahaScore, basılı dayanakla)",
+          "K4": "KISA YÜRÜTME — 4–8 anlamlı işlem",
+          "K5": "EV ÖDEVİ YOK — kopyalama/sayma/tarama ana iş olamaz"
+        },
+        "answerVocabularyBan": {
+          "reason": "kanarya ≥6 harfli cevapları takip edilen dosyalarda ve commit mesajlarında arar; bu üyeler projenin KENDİ söz dağarcığıdır ve commit mesajı geri alınamaz",
+          "measuredAt": "2026-08-24",
+          "count": 8,
+          "where": "01_SOURCE/design/_generator/build_gate1.py · _CANARY_BAN"
+        }
       }
     }
   },
@@ -803,7 +842,7 @@
         "frameNarrativeOpening": 3,
         "contractPage": 1,
         "toolsPlate": 2,
-        "warmUp": 3
+        "warmUp": 5
       },
       "backMatter": {
         "hintSection$comment": "Anahtar adı bilerek 'hints' DEĞİLDİR: çözüm sızıntısı tarayıcısı '\"hints\":' kalıbını arar ve bir SAYFA SAYISI alanı o kapıyı yanlış yere kırmızı yakardı. Gürültülü bir kapı kapatılan kapıdır.",

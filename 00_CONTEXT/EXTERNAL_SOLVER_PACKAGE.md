@@ -2,7 +2,7 @@
 
 > **A12'nin kapanması için gereken tek şey bu belgedir.**
 >
-> Sürüm 1.0 · Faz 2 teslimatı · 13 Ağustos 2026
+> Sürüm 2.0 · ikinci yönergeden sonra · 24 Ağustos 2026
 > Protokol: [`SOLVER_TEST_PROTOCOL.md`](SOLVER_TEST_PROTOCOL.md)
 
 ---
@@ -12,15 +12,20 @@
 **Birinci tur yapıldı ve ÖLDÜRME KAPISI DÜŞTÜ: 1/5 çözücü bitirdi.**
 Baskın bırakma sebebi *"çözemedim"* değil, **"sıkıldım"**dı.
 
-Kapı I **tamamen yeniden tasarlandı** (B1–B6 onaylı) ve elle yapılacak
-iş **486 → 184 işleme** indi. İkinci tur bunu ölçer.
+Kapı I **iki kez** yeniden tasarlandı ve elle yapılacak iş
+**486 → 184 → 101 işleme** indi. İkinci tur bunu ölçer.
+
+⭑ İkinci yönerge (24 Ağustos) tasarım hedefini sıktı: bütçe artık
+`dakika × 1,0` — yani **bildirilen sürenin en çok üçte biri elle iştir**,
+kalanı düşünmeye aittir. Ölçülen pay **%32**.
 
 | | |
 |---|---|
 | Birinci tur | ⛔ **1/5 · HARD-STOP** |
 | Kapı I yeniden tasarımı | ✅ B1–B6 onaylı · yirmi bulmaca yeniden yazıldı |
-| Isınma bölümü (B4) | ✅ üç çözülmüş örnek |
-| Çaba bütçesi (`qa_effort`) | ✅ **20/20 bulmaca kendi süre iddiasına sığıyor** |
+| Isınma bölümü | ✅ **yedi** çözülmüş örnek — yedi ailenin **hepsi** |
+| Çaba bütçesi (`qa_effort` ×1,0) | ✅ **20/20** · toplam **101 elle işlem** |
+| Deneyim (`qa_experience`) | ✅ aha ortancası **4,0** · tekrar yükü **2,0** |
 | **Bulmaca başına kayıt formu** | ✅ **her bulmacanın altında basılı** |
 | **İkinci tur kohortu (B6)** | ⚑ **2 dönen + 3 yeni** |
 | **A12b — ikinci tur oturumları** | ⛔ **YAPILMADI · 0 / 5** |
@@ -138,8 +143,29 @@ verdiğim cevap     : ______________
 başka bir cevap    : ______________   ← ⭑ EN DEĞERLİ ALAN ⭑
 bu cevaptan eminim : 1 2 3 4 5
 belirsiz buldum    : 1 2 3 4 5
+zorluk             : 1 2 3 4 5
+keyif aldım        : 1 2 3 4 5
+⭑ sıkıcı mıydı     : 1 2 3 4 5        ← bu turun ASIL sorusu
+⭑ "anladım!" anı   : evet | hayır     ← ödül gerçekten yaşandı mı
+bıraktıysam sebebi : sıkıldım | takıldım | yoruldum | anlamadım
 nerede takıldım    : ______________________________
 ```
+
+### ⭑ İki yeni alan neden var
+
+Birinci turda ölçülen tek şey **bitirip bitirmedikleriydi**. Düşüren şey
+ise *"sıkıldım"* çıktı — yani kapının hiç sormadığı bir boyut.
+
+Bu turda iki soru doğrudan sorulur:
+
+* **"sıkıcı mıydı"** — `qa_effort`in ölçtüğü iş miktarının insan
+  karşılığı. Elle iş %58'den %32'ye indi; bu sayı düşmediyse model
+  yanlış yeri ölçüyordur.
+* **"anladım! anı"** — `qa_experience`in `ahaScore` puanının insan
+  karşılığı. ⚠ `ahaScore` **yazarın kendi puanıdır** ve bir kanıt
+  değildir; bu alan onun tek gerçek denetimidir. Yazarın 4–5 verdiği bir
+  bulmacada çözücülerin çoğu *"hayır"* diyorsa, **puan yanlıştır** ve
+  bulmaca ödülsüzdür.
 
 ### ⭑ "Başka bir cevap" alanı neden en değerli
 
@@ -235,12 +261,26 @@ belgeyle değil **mekanizmayla** tutulur.
 
 | | |
 |---|---:|
-| 20 bulmacanın toplam süresi (model) | 153 dk |
-| Oturum yükü (ön madde, ipucu zarfı, kapı aktarımı) | 45 dk |
-| **Modellenen oturum** | **198 dk** |
+| 20 bulmacanın bildirilen süresi | 105 dk |
+| Oturum yükü (ön madde, ısınma, ipucu zarfı, kapı aktarımı) | 45 dk |
+| **Modellenen oturum** | **150 dk** |
 | Öldürme kapısı tavanı | 240 dk |
-| Pay | **%17,5** |
+| Pay | **%37,5** |
+| ⭑ Çabanın ima ettiği **elle iş** süresi | **34 dk** (bildirilenin %32'si) |
 
 ⚠ Bu bir **model**dir. Değeri, gerçek süreyle karşılaştırılabilir
-olmasındadır. Gerçek medyan 198'in belirgin üstüne çıkarsa zorluk eğrisi
+olmasındadır. Gerçek medyan 150'nin belirgin üstüne çıkarsa zorluk eğrisi
 kırıktır — sayısal eşiği geçse bile.
+
+### ⚠ Ve bu turun ikinci işi: ÇARPANI KALİBRE ETMEK (B5)
+
+`qa_effort` çabayı işleme çevirirken **dakikada üç elle işlem**
+varsayıyor. Bu sabit **hiç ölçülmedi** — bir kez, üç bulmacanın
+sıralamasına karşı doğrulandı, o kadar.
+
+İkinci turun gerçek süreleri onu düzeltecek. Bu yüzden **başlangıç ve
+bitiş saati** her bulmacanın formunda ayrı ayrı istenir: gerçek dakika ile
+ölçülen işlem sayısının oranı, sabitin kendisidir.
+
+⚠ Kalibrasyon yapılana kadar `%32` payı da bir **tahmindir**; config'de
+`effortBudget.calibrated: false` olarak durur ve öyle kalmalıdır.

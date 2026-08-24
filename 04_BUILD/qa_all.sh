@@ -123,6 +123,12 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 [ -f 04_BUILD/qa_effort.py ] && \
   run "⭑ ÇABA BÜTÇESİ ⭑"        $PY 04_BUILD/qa_effort.py --gate "$GATE" \
                                    --json 06_REPORTS/tracked/qa-effort.json
+# ⭑ DENEYİM — çabanın ölçemediği yarı: ÖDÜL.
+# "Sıkıldım" iki şeyden gelir: iş çok, ya da iş karşılıksız. Çaba kapısı
+# birincisini ölçer; bu kapı ikincisini kısıtlar (yönerge § 7·9·10·11).
+[ -f 04_BUILD/qa_experience.py ] && \
+  run "⭑ DENEYİM ⭑"             $PY 04_BUILD/qa_experience.py --gate "$GATE" \
+                                   --json 06_REPORTS/tracked/qa-experience.json
 [ -f 04_BUILD/qa_readerpack.py ] && \
   run "⭑ OKUR PAKETİ ⭑"          $PY 04_BUILD/qa_readerpack.py --gate "$GATE" \
                                    --json 06_REPORTS/qa-readerpack.json

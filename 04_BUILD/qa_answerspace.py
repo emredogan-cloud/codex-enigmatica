@@ -66,7 +66,8 @@ ACCEPTANCES = {"in-printed-lexicon", "in-printed-phrase-list",
                "table-row", "reachable-via-number-table",
                "matches-positional-extraction",
                "reachable-by-glyph-reading", "reachable-by-transposition",
-               "reachable-by-printed-shift", "reachable-by-printed-grid"}
+               "reachable-by-printed-shift", "reachable-by-printed-grid",
+               "grid-intersection"}
 
 # ⚠ FAZ 2 BULGUSU — MEKANİZMA ALANI İSPAT İÇİN YETERSİZ KALABİLİR.
 #
@@ -228,6 +229,38 @@ def _constraint_ok(word: str, c: dict, plate: Plate) -> bool:
     return False
 
 
+
+def grid_consistent(acc: dict, plate: Plate) -> tuple[bool, str]:
+    """⭑ § 14 · KENDİNE GÖNDERMELİ TEKİLLİK YASAĞI ⭑
+
+    Kesişim ızgarası ancak ETİKETLERİ DOĞRUYSA basılı veridir. Yazar
+    "üçüncü satır III. gruptur" diye yazıp içine IV. gruptan bir sözcük
+    koyarsa, okurun okuduğu şey artık bir kural değil bir iddiadır — ve
+    tekillik yazarın sözüne dayanır.
+
+    Bu yüzden her hücre KENDİ satır ve sütun etiketine karşı denetlenir.
+    Tutmuyorsa kabul yordamı hiçbir üyeyi kabul etmez ve kapı kırmızı
+    yanar; sessizce doğru cevabı vermez."""
+    grid = acc.get("grid") or []
+    rl, cl = acc.get("rowLabels") or [], acc.get("colLabels") or []
+    if not grid or len(grid) != len(rl):
+        return False, "ızgara satır sayısı etiket sayısıyla uyuşmuyor"
+    for i, row in enumerate(grid):
+        if len(row) != len(cl):
+            return False, "%d. satır sütun sayısıyla uyuşmuyor" % (i + 1)
+        for j, w in enumerate(row):
+            if w not in plate.lexicon:
+                return False, "%s Eşik Sözlüğü'nde yok" % w
+            if not _constraint_ok(w, rl[i], plate):
+                return False, "%d. satırın etiketi hücresine uymuyor" % (i + 1)
+            if not _constraint_ok(w, cl[j], plate):
+                return False, "%d. sütunun etiketi hücresine uymuyor" % (j + 1)
+    flat = [w for row in grid for w in row]
+    if len(set(flat)) != len(flat):
+        return False, "ızgarada tekrarlanan sözcük var"
+    return True, "ızgara etiketleriyle tutarlı"
+
+
 def accepts(word: str, acc: dict, plate: Plate) -> bool:
     kind = acc.get("kind")
     if kind == "in-printed-lexicon":
@@ -266,7 +299,7 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
         quads = acc.get("readings") or [acc.get("reading", "")]
         for q in quads:
             for row in rows:
-                if row.get("dortlu") == q:
+                if row.get("okuma") == q:
                     idx = row.get("sozlukNo", 0)
                     if 1 <= idx <= len(plate.lexicon) and \
                             word == plate.lexicon[idx - 1]:
@@ -295,6 +328,21 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
     if kind == "reachable-by-printed-grid":
         ct, w = acc.get("input", ""), acc.get("width")
         return bool(ct) and w is not None and word == col_read(ct, w)
+
+    if kind == "grid-intersection":
+        # ⭑ K1/K5 · KESİŞİM ⭑ Okur ızgarayı taramaz: bir koşul SATIRI, öteki
+        # SÜTUNU seçer ve cevap kesişimde durur. "Aha" işi kesişim fikrinin
+        # kendisidir; transkripsiyon işi iki kenar okumaktır.
+        ok, _why = grid_consistent(acc, plate)
+        if not ok:
+            return False
+        rl, cl = acc.get("rowLabels") or [], acc.get("colLabels") or []
+        rr, cr = acc.get("rowRule") or {}, acc.get("colRule") or {}
+        ri = [i for i, r in enumerate(rl) if r == rr]
+        ci = [j for j, c in enumerate(cl) if c == cr]
+        if len(ri) != 1 or len(ci) != 1:
+            return False          # koşul satırı/sütunu tekil seçmiyor
+        return word == acc["grid"][ri[0]][ci[0]]
 
     if kind == "matches-positional-extraction":
         src, pos = acc.get("sources") or [], acc.get("positions") or []
@@ -342,6 +390,8 @@ def near_miss(domain: list[str], acc: dict, plate: Plate,
             d = plate.decode_glyphs(g)
             if d:
                 out.append(d)
+    elif kind == "grid-intersection":
+        out = [w for row in acc.get("grid") or [] for w in row]
     elif kind == "reachable-by-transposition":
         ct = acc.get("input", "")
         out = [col_read(ct, w) for w in acc.get("widths", [])]
@@ -413,6 +463,7 @@ def main() -> int:
     near_total = 0
 
     print("\n── alanların bağımsız açılması ──")
+    inconsistent: list[str] = []
     for p in need:
         pid = p["puzzleId"]
         rec = sols.get(pid) or {}
@@ -434,6 +485,12 @@ def main() -> int:
         elif acc.get("kind") not in ACCEPTANCES:
             bad_kind.append("%s kabul '%s'" % (pid, acc.get("kind")))
             continue
+
+        # ②b ⭑ BASILI VERİ GERÇEKTEN BASILI VERİ Mİ ⭑ (§ 14)
+        if acc.get("kind") == "grid-intersection":
+            ok, why = grid_consistent(acc, plate)
+            if not ok:
+                inconsistent.append("%s — %s" % (pid, why))
 
         # ③ BAĞIMSIZ AÇILIM
         domain, err = expand(gen, plate)
@@ -478,6 +535,9 @@ def main() -> int:
                       "minDomainSizeRequired": min_dom,
                       "nearMissCandidates": near_total})
 
+    rep.check(not inconsistent,
+              "⭑ KESİŞİM IZGARALARININ ETİKETLERİ BASILI VERİYLE TUTARLI ⭑"
+              + ("" if not inconsistent else " — ⛔ %s" % inconsistent[:4]))
     rep.check(not missing,
               "her yazılmış bulmacanın makine okunur cevap uzayı var"
               + ("" if not missing else " — ⛔ UZAYSIZ: %s" % missing[:5]))

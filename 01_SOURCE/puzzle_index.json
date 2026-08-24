@@ -123,7 +123,9 @@
       "answerFormat": "word",
       "alternativeSolutionAnalysisDone": true,
       "confirmedAlternativeSolutions": 0,
-      "dependencies": [],
+      "dependencies": [
+        "g1-001"
+      ],
       "sourceRefs": [],
       "solverTestCount": 0,
       "solverSolvedCount": 0,
@@ -209,7 +211,7 @@
       "alternativeSolutionAnalysisDone": true,
       "confirmedAlternativeSolutions": 0,
       "dependencies": [
-        "g1-004"
+        "g1-005"
       ],
       "sourceRefs": [],
       "solverTestCount": 0,
@@ -323,7 +325,9 @@
       "answerFormat": "word",
       "alternativeSolutionAnalysisDone": true,
       "confirmedAlternativeSolutions": 0,
-      "dependencies": [],
+      "dependencies": [
+        "g1-008"
+      ],
       "sourceRefs": [],
       "solverTestCount": 0,
       "solverSolvedCount": 0,
@@ -465,7 +469,7 @@
       "alternativeSolutionAnalysisDone": true,
       "confirmedAlternativeSolutions": 0,
       "dependencies": [
-        "g1-011"
+        "g1-014"
       ],
       "sourceRefs": [],
       "solverTestCount": 0,
@@ -578,20 +582,16 @@
       "alternativeSolutionAnalysisDone": true,
       "confirmedAlternativeSolutions": 0,
       "dependencies": [
-        "g1-001",
         "g1-002",
         "g1-003",
         "g1-004",
-        "g1-005",
         "g1-006",
         "g1-007",
-        "g1-008",
         "g1-009",
         "g1-010",
         "g1-011",
         "g1-012",
         "g1-013",
-        "g1-014",
         "g1-015",
         "g1-016",
         "g1-017",

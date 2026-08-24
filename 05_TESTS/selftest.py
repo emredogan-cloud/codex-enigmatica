@@ -892,7 +892,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
                                      for i, w in enumerate(LEX)]},
         "kapi-sozleri": {"entries": ["ZURNA SESİ", "MELTEM KAR",
                                      "KAVUN KESTİ"]},
-        "esik-sayilari": {"entries": [{"sira": 1, "dortlu": "2413",
+        "esik-sayilari": {"entries": [{"sira": 1, "okuma": "2413",
                                        "sozlukNo": 3}]}}}
 
     def space_root(space, answer="MELTEM", page=None, index_over=None):
@@ -1039,9 +1039,9 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     # beş ulaşılabilir cevabı vardı. Kapı bunu GÖRMEMİŞTİ çünkü kabul
     # yordamı yalnızca YAZARIN SEÇTİĞİ okumaya bakıyordu — K21'in öldürmeye
     # çalıştığı totolojinin ta kendisi, bu kez kapının kendi içinde.
-    NUM_TABLE = [{"sira": 1, "dortlu": "2413", "sozlukNo": 1},
-                 {"sira": 2, "dortlu": "4132", "sozlukNo": 5},
-                 {"sira": 3, "dortlu": "1245", "sozlukNo": 9}]
+    NUM_TABLE = [{"sira": 1, "okuma": "2413", "sozlukNo": 1},
+                 {"sira": 2, "okuma": "4132", "sozlukNo": 5},
+                 {"sira": 3, "okuma": "1245", "sozlukNo": 9}]
     ALL8 = ["2413", "4132", "1324", "3241", "2314", "3142", "1423", "4231"]
 
     d = space_root({"generator": {"kind": "printed-lexicon"},
@@ -1241,7 +1241,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     d = space_root(CHEAP, answer="VİRAJ",
                    index_over=lambda e: e.update(expectedCompletionMinutes=5))
     code, out = run_env_gate("qa_effort.py", d)
-    rep.check(code == 0, "qa_effort ucuz mekanizmada GEÇER (6 EU / 15 bütçe)",
+    rep.check(code == 0, "qa_effort ucuz mekanizmada GEÇER (3,5 EU / 5 bütçe)",
               out)
 
     d = space_root(SHIFT, index_over=lambda e: e.update(
@@ -1257,6 +1257,305 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     rep.check(code == 0 and "MUAF" in out,
               "⭑ MAHKÛM ('failed') KAYIT BÜTÇEDEN MUAF — ama ÖLÇÜLÜR ⭑ "
               "(kalıcı kırmızı bir kapı, kapatılan bir kapıdır)", out)
+
+    # ── ⭑ TASARIM HEDEFİ ×1,0 VE K4 TAVANI ⭑ ───────────────────────────
+    #
+    # Kurucunun ikinci yönergesi bütçeyi `dakika × 3`ten `dakika × 1,0`a
+    # indirdi ve en kötü hâle 8 işlemlik bir tavan koydu. İkisi de ISIRIYOR
+    # mu — yoksa yalnızca yazılı mı?
+    d = space_root(CHEAP, answer="VİRAJ",
+                   index_over=lambda e: e.update(expectedCompletionMinutes=2))
+    code, out = run_env_gate("qa_effort.py", d)
+    rep.check(code != 0,
+              "⭑ ×1,0 HEDEFİ ISIRIYOR ⭑ (3,5 EU / 2 dk bütçe — eski ×3 "
+              "kuralında GEÇERDİ)", out)
+
+    WIDE = json.loads(json.dumps(CHEAP))
+    WIDE["acceptance"]["labels"] = ["ZURNA", "KAVUN", "VİRAJ", "TERLİK",
+                                    "OYMACI", "PATİKA", "SÜRAHİ", "MERCAN",
+                                    "ŞEBEKE", "PALAMUT"]
+    for w in WIDE["acceptance"]["labels"]:
+        WIDE["acceptance"]["attributes"].setdefault(w, 1)
+    d = space_root(WIDE, answer="VİRAJ",
+                   index_over=lambda e: e.update(expectedCompletionMinutes=30))
+    code, out = run_env_gate("qa_effort.py", d)
+    rep.check(code != 0,
+              "⭑ K4 TAVANI ISIRIYOR ⭑ (en kötü 10 > 8; beklenen 5,5 bütçenin "
+              "çok altında olsa BİLE)", out)
+
+    # ── ⭑ ÇABA MODELİNİN ÜÇ VARSAYIMI DENETLENİYOR MU ⭑ ────────────────
+    #
+    # `qa_effort` üç mekanizmayı ucuz sayar ve üçünün gerekçesi de aynı:
+    # okurun aramayacağı şey LEVHADA BASILI. Varsayım denetlenmiyorsa ölçüm
+    # bir temenniden ibarettir.
+    GLYPH_SPACE = {"generator": {"kind": "printed-lexicon"},
+                   "acceptance": {"kind": "reachable-by-glyph-reading",
+                                  "glyphs": enc("MELTEM").replace("·", "│"),
+                                  "directions": ["forward", "reverse"]},
+                   "declaredAcceptedCount": 1}
+    fig_ok = "▶ " + enc("MELTEM").replace("·", "│")
+    for fig, want, label in (
+            (fig_ok, 0, "yön işareti BASILIYSA geçer"),
+            (fig_ok.replace("▶ ", ""), 1,
+             "⭑ ⑨ YÖN İŞARETİ YOKSA KIRMIZI ⭑ (okur iki yönü de dener; "
+             "ölçtüğümüz maliyet yarısıdır)")):
+        d = space_root(GLYPH_SPACE, answer="MELTEM",
+                       page={"puzzleId": "fixture-001", "figure": fig,
+                             "clues": [], "constraints": []})
+        code, out = run_env_gate("qa_readerpack.py", d)
+        rep.check((code != 0) == bool(want), "okur paketi · " + label, out)
+
+    GRID_SPACE = {"generator": {"kind": "printed-lexicon"},
+                  "acceptance": {"kind": "reachable-by-printed-grid",
+                                 "width": 2, "input": "MLEETM",
+                                 "printedGrid": True},
+                  "declaredAcceptedCount": 1}
+    d = space_root(GRID_SPACE, answer="MELTEM",
+                   page={"puzzleId": "fixture-001", "figure": "MLEETM",
+                         "clues": [], "constraints": []})
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0,
+              "⭑ ⑪ 'IZGARA BASILI' DENİP IZGARA BASILMAMIŞSA KIRMIZI ⭑ "
+              "(okur çizer, maliyet iki katına çıkar)", out)
+
+    NARROW = {"generator": {"kind": "printed-lexicon"},
+              "acceptance": {"kind": "table-row", "take": "ad",
+                             "table": [{"ad": "ZURNA", "yer": "üst"},
+                                       {"ad": "KAVUN", "yer": "alt"},
+                                       {"ad": "VİRAJ", "yer": "üst"},
+                                       {"ad": "TERLİK", "yer": "alt"},
+                                       {"ad": "OYMACI", "yer": "alt"}],
+                             "filters": [{"col": "yer", "op": "==",
+                                          "value": "üst"},
+                                         {"col": "ad", "op": "==",
+                                          "value": "ZURNA"}],
+                             "printedNarrowing": ["yer"]},
+              "declaredAcceptedCount": 1}
+    tbl = "\n".join(["| ad | yer |", "|---|---|"]
+                    + ["| %s | %s |" % (r["ad"], r["yer"])
+                       for r in NARROW["acceptance"]["table"]])
+    d = space_root(NARROW, answer="ZURNA",
+                   page={"puzzleId": "fixture-001", "printedTable": tbl,
+                         "figure": "", "clues": [], "constraints": []})
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0,
+              "⭑ ⑩ 'BASILI DARALTMA' DENİP SATIRLAR ÖBEKLENMEMİŞSE KIRMIZI ⭑ "
+              "(okur satır satır tarar; süzgeç 1 değil n işlemdir)", out)
+
+    # ── ⭑ ⑫ İKİ SAYFANIN KESİŞİMİ ⭑ ────────────────────────────────────
+    #
+    # Zincirin kaynağı levha bulmacasıdır ve altı etiketi vardır. Tüketici
+    # çizelgesinin anahtar sütunu o altı etiketten YALNIZCA BİRİNİ taşırsa,
+    # okur kaynağı hiç çözmeden cevabını iki sayfayı yan yana koyarak okur.
+    # ⚠ § ⑥ bunu göremez: iki sayfa AYRI AYRI temizdir.
+    def chain_root(keys):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "chain-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/design", "02_MANUSCRIPT"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
+              json.dumps(tools, ensure_ascii=False))
+        LBL = ["ZURNA", "KAVUN", "VİRAJ", "TERLİK", "OYMACI", "PATİKA"]
+        rows = [{"ad": "MERCAN", "nişan": keys[0]},
+                {"ad": "SÜRAHİ", "nişan": keys[1]},
+                {"ad": "ŞEBEKE", "nişan": keys[2]},
+                {"ad": "PALAMUT", "nişan": keys[3]},
+                {"ad": "KUNDURA", "nişan": keys[4]}]
+        idx = [{"puzzleId": "src", "gate": "threshold", "type": "observation",
+                "mechanismFamily": "plate-observation", "status": "written",
+                "testStatus": "tested", "leakClass": "protected", "slot": 1,
+                "expectedCompletionMinutes": 4, "ambiguityScore": 1,
+                "alternativeSolutionAnalysisDone": True,
+                "confirmedAlternativeSolutions": 0, "dependencies": []},
+               {"puzzleId": "dst", "gate": "threshold", "type": "logic",
+                "mechanismFamily": "constraint-logic", "status": "written",
+                "testStatus": "tested", "leakClass": "protected", "slot": 2,
+                "expectedCompletionMinutes": 5, "ambiguityScore": 1,
+                "alternativeSolutionAnalysisDone": True,
+                "confirmedAlternativeSolutions": 0, "dependencies": ["src"]}]
+        sol = [{"puzzleId": "src", "finalAnswer": "ZURNA",
+                "hints": ["a", "b", "c"],
+                "answerSpace": {"generator": {"kind": "printed-lexicon"},
+                                "acceptance": {
+                                    "kind": "plate-attribute", "labels": LBL,
+                                    "attributes": {w: (2 if w == "ZURNA" else 1)
+                                                   for w in LBL},
+                                    "rule": {"op": "==", "value": 2}},
+                                "declaredAcceptedCount": 1}},
+               {"puzzleId": "dst", "finalAnswer": "MERCAN",
+                "hints": ["a", "b", "c"],
+                "answerSpace": {"generator": {"kind": "printed-lexicon"},
+                                "acceptance": {
+                                    "kind": "table-row", "take": "ad",
+                                    "table": rows,
+                                    "filters": [{"col": "nişan", "op": "==",
+                                                 "value": "ZURNA"}]},
+                                "declaredAcceptedCount": 1}}]
+        tbl = "\n".join(["| ad | nişan |", "|---|---|"]
+                        + ["| %s | %s |" % (r["ad"], r["nişan"]) for r in rows])
+        pages = [{"puzzleId": "src", "plateId": "pl-src",
+                  "figure": "\n".join("%s %d" % ("◆", i + 1)
+                                      for i in range(len(LBL)))},
+                 {"puzzleId": "dst", "printedTable": tbl, "figure": ""}]
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": idx}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": sol}, ensure_ascii=False))
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps({"puzzles": pages}, ensure_ascii=False))
+        return d
+
+    d = chain_root(["ZURNA", "SEMAVER", "SEMAVER", "MELTEM", "MELTEM"])
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check(code != 0 and "⑫" in out,
+              "⭑ ⑫ ZİNCİRİN KAYNAĞI İKİ SAYFANIN KESİŞİMİNDEN OKUNUYORSA "
+              "KIRMIZI ⭑ (tek sayfaya bakan hiçbir kapı bunu göremez)", out)
+
+    d = chain_root(["ZURNA", "KAVUN", "KAVUN", "MELTEM", "MELTEM"])
+    code, out = run_env_gate("qa_readerpack.py", d)
+    rep.check("⑫" not in out,
+              "anahtar sütununda İKİ aday varsa kesişim sızdırmaz", out)
+
+    # ── ⭑ KESİŞİM IZGARASI · ETİKET İDDİA DEĞİL, NİTELİKTİR ⭑ ──────────
+    def gspace(grid):
+        return {"generator": {"kind": "printed-lexicon"},
+                "acceptance": {
+                    "kind": "grid-intersection", "grid": grid,
+                    "rowLabels": [{"op": "length", "value": 5},
+                                  {"op": "length", "value": 7}],
+                    "colLabels": [{"op": "first-letter-group", "value": 6},
+                                  {"op": "first-letter-group", "value": 3}],
+                    "rowRule": {"op": "length", "value": 5},
+                    "colRule": {"op": "first-letter-group", "value": 6}},
+                "declaredAcceptedCount": 1}
+
+    d = space_root(gspace([["ZURNA", "KAVUN"], ["YELPAZE", "KUNDURA"]]),
+                   answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code == 0, "kesişim ızgarası tutarlıysa GEÇER", out)
+
+    # Yazar "birinci satır beş harflidir" der ve içine yedi harfli koyar.
+    d = space_root(gspace([["ZURNA", "KUNDURA"], ["YELPAZE", "KAVUN"]]),
+                   answer="ZURNA")
+    code, out = run_env_gate("qa_answerspace.py", d)
+    rep.check(code != 0,
+              "⭑ IZGARA ETİKETİ HÜCREYE UYMUYORSA KIRMIZI ⭑ "
+              "(§ 14: tekillik yazarın sözüne dayanamaz)", out)
+
+    # ── ⭑ DENEYİM KAPISI ⭑ — "sıkıldım"ın ölçülemeyen yarısı ───────────
+    def exp_root(over=None, warm_over=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "exp-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE/solutions", "01_SOURCE/design", "02_MANUSCRIPT"):
+            os.makedirs(os.path.join(d, sub))
+        write(os.path.join(d, ".gate"), "phase2")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
+              json.dumps(tools, ensure_ascii=False))
+        LBL = ["ZURNA", "KAVUN", "VİRAJ", "TERLİK", "OYMACI", "PATİKA"]
+        plan = [("p1", "plate-observation", 3, 3, "obs-a"),
+                ("p2", "plate-observation", 3, 4, "obs-b"),
+                ("p3", "plate-observation", 4, 4, "obs-c"),
+                ("p4", "plate-observation", 5, 5, "obs-d"),
+                ("p5", "gate-synthesis", 6, 5, "gate")]
+        idx, sol, dsg, pages = [], [], [], []
+        for i, (pid, fam, mins, aha, sig) in enumerate(plan, 1):
+            idx.append({"puzzleId": pid, "gate": "threshold",
+                        "type": "observation", "mechanismFamily": fam,
+                        "status": "written", "testStatus": "tested",
+                        "leakClass": "protected", "slot": i,
+                        "expectedCompletionMinutes": mins,
+                        "ambiguityScore": 1,
+                        "alternativeSolutionAnalysisDone": True,
+                        "confirmedAlternativeSolutions": 0})
+            sol.append({"puzzleId": pid, "finalAnswer": LBL[i - 1],
+                        "hints": ["a", "b", "c"],
+                        "answerSpace": {
+                            "generator": {"kind": "printed-lexicon"},
+                            "acceptance": {
+                                "kind": "plate-attribute", "labels": LBL,
+                                "attributes": {w: (2 if w == LBL[i - 1] else 1)
+                                               for w in LBL},
+                                "rule": {"op": "==", "value": 2}},
+                            "declaredAcceptedCount": 1}})
+            dsg.append({"puzzleId": pid, "mechanismFamily": fam,
+                        "experience": {
+                            "ahaScore": aha,
+                            "revelation": {"kind": "small-observation-unlocks",
+                                           "evidence": "pl-%s" % pid},
+                            "mechanismSignature": sig}})
+            pages.append({"puzzleId": pid, "plateId": "pl-%s" % pid})
+        warm = [{"id": "w1", "teaches": "plate-observation",
+                 "solved": ["örnek çözüm"]},
+                {"id": "w2", "teaches": "gate-synthesis",
+                 "solved": ["örnek çözüm"]}]
+        if over:
+            over(idx, sol, dsg, pages)
+        if warm_over:
+            warm_over(warm)
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": idx}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/solutions/gate-1.json"),
+              json.dumps({"puzzles": sol}, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/design/gate-1.json"),
+              json.dumps({"puzzles": dsg}, ensure_ascii=False))
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps({"puzzles": pages, "warmUp": warm},
+                         ensure_ascii=False))
+        return d
+
+    code, out = run_env_gate("qa_experience.py", exp_root())
+    rep.check(code == 0, "deneyim kapısı temiz kurguda GEÇER", out)
+
+    def _flat(i, s, dd, pg):
+        for r in dd:
+            r["experience"]["ahaScore"] = 3
+    code, out = run_env_gate("qa_experience.py", exp_root(_flat))
+    rep.check(code != 0,
+              "⭑ § 9 · AHA ORTANCASI DÜŞÜKSE KIRMIZI ⭑ "
+              "(yirmi doğru ama ödülsüz bulmaca, ölçüme göre 'iyi' kitaptır)",
+              out)
+
+    def _unbacked(i, s, dd, pg):
+        dd[1]["experience"]["revelation"]["evidence"] = "olmayan-levha"
+    code, out = run_env_gate("qa_experience.py", exp_root(_unbacked))
+    rep.check(code != 0,
+              "⭑ 4+ PUAN VERİP ÖDÜLÜN YERİNİ GÖSTEREMEYEN BULMACA YAKALANIR ⭑ "
+              "(yazarın kendine verdiği not, kanıt değildir)", out)
+
+    def _dup(i, s, dd, pg):
+        dd[2]["experience"]["mechanismSignature"] = \
+            dd[1]["experience"]["mechanismSignature"]
+    code, out = run_env_gate("qa_experience.py", exp_root(_dup))
+    rep.check(code != 0,
+              "⭑ AYNI MEKANİZMA İKİNCİ KEZ 4+ ALAMAZ ⭑ "
+              "(sürpriz bir kez olur; ikincisi yordamdır)", out)
+
+    def _untaught(w):
+        w.pop()
+    code, out = run_env_gate("qa_experience.py", exp_root(warm_over=_untaught))
+    rep.check(code != 0,
+              "⭑ § 7 · ISINMADA ÖRNEĞİ OLMAYAN AİLE KIRMIZI ⭑ "
+              "(mantık sıçraması ikinci bırakma sebebiydi)", out)
+
+    def _spoil(w):
+        w[0]["solved"] = ["Cevap ZURNA idi."]
+    code, out = run_env_gate("qa_experience.py", exp_root(warm_over=_spoil))
+    rep.check(code != 0,
+              "⭑ ISINMA GERÇEK BİR CEVABI VERİRSE KIRMIZI ⭑ "
+              "(ısınma kitabın İÇİNDE basılıdır)", out)
+
+    def _grind(i, s, dd, pg):
+        for e, m in zip(i, [3, 3, 9, 9, 9]):
+            e["expectedCompletionMinutes"] = m
+    code, out = run_env_gate("qa_experience.py", exp_root(_grind))
+    rep.check(code != 0,
+              "⭑ § 11 · UZUN EZİYET DİZİSİ YAKALANIR ⭑ "
+              "(kolay başlangıç → uzun grind → tükeniş)", out)
 
     # ── ⛔ ÖLDÜRME KAPISI · OTURUM DÜZEYİ TOPLU KAYIT ⛔ ─────────────────
     def agg_root(total: int, finished: int, per_puzzle=None) -> str:

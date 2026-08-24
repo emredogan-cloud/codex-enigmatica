@@ -454,6 +454,85 @@ yeterince büyük olmalı" der — **ispat için**. Birkaç bulmaca, okur alanı
 Bundan sonra: alan **basılı sözlüktür**, mekanizma **kabul yordamıdır** ve
 anahtar **verilir**. Tekillik korunur, çaba düşer.
 
+### K27 · ⭑ `dakika × 3` bir TAVANDI, hedef değil — ×1,0'a inildi ⭑
+**24 Ağustos 2026 · ikinci kurucu yönergesi.** Eski bütçe `dakika × 3`tü.
+Üç bir gevşeklik payı değil, **birim çevrimidir** (dakikada üç elle işlem)
+— yani eski kural şunu söylüyordu: *bildirilen sürenin tamamı mekanik
+yürütmeye gidebilir.* Bir güvenlik tavanı olarak doğru, bir **tasarım
+hedefi** olarak anlamsız.
+
+Yeni kural `dakika × 1,0`dır ve okunuşu tektir:
+
+> **Bildirilen sürenin en çok ÜÇTE BİRİ elle iştir.** Kalan üçte iki
+> düşünmeye aittir.
+
+⚠ Ve kaçamak yönergede kapatılmıştır: *"Do not simply increase the
+expected time."* Bir bulmaca bütçesini aşıyorsa **saat değil, bulmaca**
+değişir. Yirmi bulmacanın hiçbirinin süresi yükseltilmedi.
+
+### K28 · ⭑ Çaba modeli ARAMAYI yarılıyordu, ama yalnızca bazılarını ⭑
+**24 Ağustos 2026.** `effort()` her mekanizma için (beklenen, en kötü)
+döndürür ve bütçe **beklenen**i denetler. Arama tipi mekanizmalarda
+beklenen, en kötünün yarısıdır. Ölçüldüğünde:
+
+| | |
+|---|---|
+| `cyclic-shift` · `reflection-map` | (en kötü/2, en kötü) ✅ |
+| `plate-attribute` · `table-row` | (en kötü, en kötü) ⛔ |
+
+Üçü de *"işe yarayanı bulana kadar bak"* yapısındadır. İkisi yarılanmış,
+ikisi yarılanmamıştı — bu bir politika değil, bir **gözden kaçmaydı**.
+Üç düzeltme yapıldı (levha araması yarılandı · çizelge elemesi ardışık
+benzetime geçti · glif okuması TEK yön sayıldı) ve **184 → 130 EU**.
+
+⭑ Ve üçü de **boşta durmuyor**: her biri `qa_readerpack § ⑨⑩⑪`de bir
+denetime dayanır. Levha okuma yönünü basmıyorsa, çizelge öbeklenmemişse
+veya boş ızgara basılı değilse **ölçüm de düşer**. İki kapı birbirine
+dayanır: biri varsayımı kurar, öteki onu doğrular.
+
+### K29 · ⭑ "Sıkıldım"ın ölçülmeyen yarısı: ÖDÜL ⭑
+**24 Ağustos 2026.** `qa_effort` işin MİKTARINI ölçer ve iyi ölçer. Ama
+sıkıcılığın yalnızca yarısıdır: aynı altı işlem, sonunda bir şey
+**keşfediliyorsa** zevkli, keşfedilmiyorsa ev ödevidir.
+
+`qa_experience.py` ikinci yarıyı kısıtlar: `ahaScore` ortancası ≥ 4,
+`repetitionBurden` ölçülür, zorluk rampası ve ısınma kapsamı denetlenir.
+
+> ⚠ **VE BU BİR KANIT DEĞİLDİR.** `ahaScore` yazarın kendi puanıdır;
+> yönergenin kendi sözü: *"Do NOT use ahaScore as a substitute for real
+> testing."* Kapı onu doğrulayamaz — **şişirilmesini zorlaştırır**:
+>
+> * 4+ veren her bulmaca ödülün **basılı yerini** göstermek zorundadır ve
+>   gösterdiği şey okur paketinde bulunmalıdır;
+> * **aynı mekanizma ikinci kez 4+ alamaz** — sürpriz bir kez olur;
+> * `repetitionBurden` yazardan değil, çaba modelinden **ölçülür**.
+>
+> Gerçek ölçüm A12b'nin kayıt formundadır (*"sıkıcı mıydı 1–5"*).
+
+### K30 · ⭑ Bazı sözcükler CEVAP olamaz — çünkü proje onları KONUŞUYOR ⭑
+**24 Ağustos 2026.** Kanarya altı harf ve üzeri cevapları bütün takip
+edilen dosyalarda **ve commit mesajlarında** arar. Yeni cevap kümesi
+seçildiğinde kanarya ısırdı: sekiz üye zaten depoda geçiyordu — çünkü
+bu projenin **kendi söz dağarcığıdır** (biri "ipucu merdiveni"nin adı,
+biri "cevap anahtarı"nın).
+
+⚠ Ve **commit mesajı geri alınamaz.** Yasak liste bu yüzden tahmin
+edilmedi, **ölçüldü** ve üretecin içine kondu (`_CANARY_BAN`).
+
+İki liste ayrı tutulur ve karıştırmak iki ayrı kapıyı yakar:
+**cevap olamaz** (kanarya) ≠ **etiket olamaz** (talimatın içinde saklanan
+sözcük — Faz 2'nin *"o-kuyu-n"* bulgusu).
+
+### K31 · ⭑ Sızıntı sayfada değil, İKİ SAYFANIN ARASINDA olabilir ⭑
+**24 Ağustos 2026.** Zincirli bir bulmaca, kaynağının cevabını
+tüketicinin sayfasına **basmak zorundadır** — okur elindeki sözcüğü
+orada arayacaktır. Ama o sütun kaynağın aday kümesiyle **tek bir üyede**
+kesişirse, okur kaynağı hiç çözmeden cevabını iki sayfaya bakarak okur.
+
+`qa_readerpack § ⑥` bunu **göremez**: ⑥ tek sayfaya bakar ve iki sayfa
+ayrı ayrı temizdir. Yeni denetim `§ ⑫` kesişimi ölçer ve en az **iki**
+ortak aday ister. Üretimde iki bulmacada gerçekten bulundu.
+
 ### K12 · Kapı V dizgiye bağlıdır ve en son kilitlenir
 Kapı V öz-göndergeseldir: kitabın **fiziksel yapısını** kullanır
 (sayfa numaraları, dizin, kolofon). Dizgi değişirse **kırılır**.

@@ -5,6 +5,107 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.4.0] — 2026-08-24 · DÜŞÜK SÜRTÜNME / YÜKSEK ÖDÜL (ikinci yönerge)
+
+**Tasarım hedefi sıkıldı ve deneyim ölçüye girdi.** Elle iş
+**184 → 101 işlem**; elle işin bildirilen süredeki payı **%58 → %32**;
+bütçesini aşan bulmaca **0/20** — ama bu kez bütçe `dakika × 1,0`.
+
+⚠ **Bildirilen sürelerin hiçbiri yükseltilmedi** (yönerge § 8 bunu
+yasaklıyor). Düşen tek şey iş.
+
+### Değişti — bütçe kuralı
+
+- ⭑ `qa_effort` bütçesi `dakika × 3` → **`dakika × 1,0`** (K27).
+  Üç bir gevşeklik payı değil, birim çevrimiydi; eski kural sürenin
+  **tamamının** yürütmeye gitmesine izin veriyordu. Yeni kuralın okunuşu:
+  **sürenin en çok üçte biri elle iştir**
+- ⭑ **K4 tavanı**: en kötü hâlde bile **≤ 8 elle işlem** (kapı hariç)
+
+### Düzeltildi — çaba modelinde bir gözden kaçma (K28)
+
+`effort()` arama tipi mekanizmalarda beklenen maliyeti yarılıyordu — ama
+yalnızca **ikisinde**. Levha araması ve çizelge elemesi yarılanmamıştı;
+bu bir politika değil, Faz 2'nin son saatinden kalan bir tutarsızlıktı.
+
+- `plate-attribute` bir **aramadır** → beklenen `(n+1)/2`, en kötü `n`
+- `table-row` bir **elemedir** → ardışık benzetim (sözlük için zaten vardı)
+- glif okuması **tek yöndür** — levha `▶` basar (K25'in aynısı)
+
+⭑ Ve üçü de boşta durmuyor: `qa_readerpack § ⑨⑩⑪` varsayımları
+denetler. Levha yön basmıyorsa, çizelge öbeklenmemişse veya boş ızgara
+basılı değilse **ölçüm de düşer**.
+
+Düzeltmenin payı ayrı raporlanır: **184 → 130 model**, **130 → 101
+tasarım**.
+
+### Eklendi — `04_BUILD/qa_experience.py` (14 denetim · K29)
+
+Çaba işin **miktarını** ölçer; bu kapı **ödülü** kısıtlar.
+
+- `ahaScore` ortancası ≥ 4 · ödülsüz bulmaca ≤ 2 · `repetitionBurden`
+  ölçülür (yazardan değil, çaba modelinden)
+- zorluk rampası: kolay başlangıç · uzun eziyet dizisi yok · küçük zaferler
+- ısınma **her aileyi** gerektirilmeden önce öğretiyor mu (§ 7)
+- ⚠ **`ahaScore` bir kanıt değildir** — yazarın kendi puanıdır. Kapı onu
+  doğrulamaz, **şişirilmesini zorlaştırır**: 4+ veren her bulmaca ödülün
+  **basılı yerini** göstermek zorundadır ve **aynı mekanizma ikinci kez
+  4+ alamaz**
+
+### Değişti — yirmi bulmaca
+
+- ⭑ Altmış üyelik **elle tarama kaldırıldı** → **kesişim ızgarası**
+  (18 → 7 işlem). Etiketler iddia değil, **ölçülebilir nitelik**:
+  her hücre kendi satır ve sütun etiketine karşı denetlenir (§ 14)
+- ⭑ Levha içi şifrede **dört kenar → üç kenar** (5,6 → 4,6 işlem) ve
+  başlangıç bir **köşe değil, bir kenar** (köşe iki kenar gösterir)
+- ⭑ Sıra değiştirmenin **boş ızgarası sayfaya basıldı** (8 → 6 işlem)
+- ⭑ Altı levha bulmacası artık **altı AYRI şey** fark ettiriyor:
+  eksik olan · yönelim · uzamsal ilişki · eşlik eşitliği · öbekleme ·
+  bakışım (üretim anında denetlenir)
+- Isınma bölümü **3 → 7 örnek** (B4 üç aileyi öğretiyordu; dördü
+  çözülmüş örnek görmeden geliyordu)
+- Kapı ifadesi **on beş harf**; on beş bulmaca harf verir, dördü sonraki
+  bir bulmacanın basılı anahtarı olur — **on dokuzunun hepsi kullanılır**
+- Çizelge C'nin on iki sözü de **on beş harf** (eskiden 17–24 idi ve okur
+  satır sayarak bulmacayı çözmeden bitirebilirdi)
+
+### Düzeltildi — üretimde kapıların yakaladığı beş kusur
+
+1. Zincirler **birbirine eklenmişti** (A→B→C): yayılma yarıçapı 2
+   → dört zincirin hiçbiri artık bir zincirin ucuna eklenmiyor
+2. Kitabın **kendi adı** cevap olmuştu ve her sayfanın kısıt cümlesinde
+   geçiyordu — cevap kendi sayfasında bedava duruyordu
+3. *"Üç **basamaklı** okuma"* — ve `BASAMAK` bir çizelge üyesiydi;
+   Türkçede hem merdiven basamağı hem sayı hanesi → *"üç haneli"*
+4. ⭑ **Sekiz üye cevap olamazdı**: projenin kendi söz dağarcığıdır ve
+   biri **commit mesajlarında** geçiyordu — geri alınamaz (K30).
+   Yasak liste tahmin edilmedi, **ölçüldü**
+5. Üç üçgen levhanın **metni ile şekli ayrışmıştı** ("sağ köşesinde"
+   diyordu, şekil tabana basıyordu) → başlangıç kenarı tek kaynaktan
+
+### Eklendi — `qa_readerpack § ⑫` · iki sayfanın kesişimi (K31)
+
+Zincirli bir bulmaca kaynağının cevabını tüketicinin sayfasına basmak
+zorundadır. O sütun kaynağın aday kümesiyle **tek üyede** kesişirse okur
+kaynağı çözmeden cevabını **iki sayfaya bakarak** okur.
+
+`§ ⑥` bunu göremiyordu — çünkü **tek sayfaya** bakar ve iki sayfa ayrı
+ayrı temizdi. İki bulmacada gerçekten vardı.
+
+> **Sızıntı sayfada değildi; sayfaların ARASINDAYDI.**
+
+### Değişmedi
+
+- ⛔ **Öldürme kapısı hâlâ `HARD-STOP`**, `.gate` hâlâ `phase1`
+- ⛔ **Faz 3 başlatılmadı** · tek bloklayıcı: **A12b**
+- ⛔ `EU_PER_MINUTE = 3` hâlâ **kalibre edilmemiş** (B5)
+- ⛔ Fiziksel prova alınmadı (A9)
+- `selftest` **162 → 179** denetim: yeni kapıların hepsi kendi kusurlu
+  fikstürüyle **ısırdığı kanıtlanarak** duruyor
+
+---
+
 ## [0.3.0] — 2026-08-13 · Kapı I YENİDEN TASARLANDI (B1–B6 onaylı)
 
 **Yirmi bulmaca yeniden yazıldı.** Elle yapılacak iş **486 → 184 işlem**;

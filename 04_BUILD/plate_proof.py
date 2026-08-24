@@ -134,7 +134,7 @@ def build_pdf(book: dict) -> str:
     y -= 10
     for r in charts.get("esik-sayilari", {}).get("entries", []):
         c.drawString(M, y, "  %2d   %s   -> %d"
-                     % (r["sira"], r["dortlu"], r["sozlukNo"]))
+                     % (r["sira"], r["okuma"], r["sozlukNo"]))
         y -= 11
 
     # ── levhalar ────────────────────────────────────────────────────────

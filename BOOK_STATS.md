@@ -61,10 +61,10 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 
 | | |
 |---|---:|
-| Ön madde | 10 |
+| Ön madde | 12 |
 | Gövde (5 kapı + son soru) | 176 |
 | Arka madde (300 ipucu + 100 çözüm) | 44 |
-| **Modelin sayfa sayısı** | **230** |
+| **Modelin sayfa sayısı** | **232** |
 | Hedef | 230 |
 | Levha | 112 |
 
@@ -72,6 +72,6 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 
 | Sürüm | Durum | Fiyat | Telif | Not |
 |---|---|---:|---:|---|
-| Hardcover | hipotez | 29.99 $ | **9.58 $** | baskı 8.41 $ · başabaş ACOS %32.0 |
-| Paperback | hipotez | 19.99 $ | **8.23 $** | baskı 3.76 $ · başabaş ACOS %41.2 |
+| Hardcover | hipotez | 29.99 $ | **9.56 $** | baskı 8.43 $ · başabaş ACOS %31.9 |
+| Paperback | hipotez | 19.99 $ | **8.21 $** | baskı 3.78 $ · başabaş ACOS %41.1 |
 | Kindle | **üretilmez** | — | — | Görsel şifreler e-okuyucuda bozulur |

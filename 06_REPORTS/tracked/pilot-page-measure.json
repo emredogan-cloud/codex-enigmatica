@@ -8,158 +8,158 @@
   "facts": {
     "gate": "threshold",
     "puzzles": 20,
-    "bodyWords": 1355,
-    "figureLines": 233,
-    "hintWords": 903,
-    "solutionWords": 558,
+    "bodyWords": 1292,
+    "figureLines": 239,
+    "hintWords": 860,
+    "solutionWords": 540,
     "wordsPerPage": 350,
     "measuredBodyPages": 9.4,
     "declaredBodyPages": 34,
     "toolsPlatePages": 0.9,
-    "projectedBodyPages": 47.1,
-    "projectedHintPages": 12.9,
+    "projectedBodyPages": 46.9,
+    "projectedHintPages": 12.3,
     "declaredHintPages": 22,
-    "projectedSolutionPages": 8.0,
+    "projectedSolutionPages": 7.7,
     "declaredSolutionPages": 18,
     "perPuzzle": [
       {
         "puzzleId": "g1-001",
-        "words": 66,
+        "words": 68,
         "figureLines": 9,
-        "hintWords": 41,
+        "hintWords": 38,
         "solutionWords": 28
       },
       {
         "puzzleId": "g1-002",
-        "words": 66,
-        "figureLines": 9,
-        "hintWords": 44,
+        "words": 69,
+        "figureLines": 10,
+        "hintWords": 49,
         "solutionWords": 28
       },
       {
         "puzzleId": "g1-003",
-        "words": 64,
-        "figureLines": 31,
-        "hintWords": 45,
-        "solutionWords": 28
+        "words": 66,
+        "figureLines": 28,
+        "hintWords": 35,
+        "solutionWords": 25
       },
       {
         "puzzleId": "g1-004",
-        "words": 50,
-        "figureLines": 11,
-        "hintWords": 41,
-        "solutionWords": 23
-      },
-      {
-        "puzzleId": "g1-005",
-        "words": 61,
-        "figureLines": 7,
-        "hintWords": 50,
-        "solutionWords": 30
-      },
-      {
-        "puzzleId": "g1-006",
-        "words": 74,
-        "figureLines": 13,
-        "hintWords": 49,
-        "solutionWords": 30
-      },
-      {
-        "puzzleId": "g1-007",
-        "words": 49,
-        "figureLines": 11,
-        "hintWords": 41,
-        "solutionWords": 23
-      },
-      {
-        "puzzleId": "g1-008",
-        "words": 57,
-        "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 30
-      },
-      {
-        "puzzleId": "g1-009",
-        "words": 79,
+        "words": 56,
         "figureLines": 12,
-        "hintWords": 43,
-        "solutionWords": 28
-      },
-      {
-        "puzzleId": "g1-010",
-        "words": 60,
-        "figureLines": 10,
-        "hintWords": 46,
+        "hintWords": 42,
         "solutionWords": 29
       },
       {
-        "puzzleId": "g1-011",
-        "words": 64,
-        "figureLines": 0,
-        "hintWords": 47,
-        "solutionWords": 30
-      },
-      {
-        "puzzleId": "g1-012",
-        "words": 61,
-        "figureLines": 12,
-        "hintWords": 49,
-        "solutionWords": 30
-      },
-      {
-        "puzzleId": "g1-013",
-        "words": 70,
+        "puzzleId": "g1-005",
+        "words": 57,
         "figureLines": 7,
-        "hintWords": 45,
-        "solutionWords": 26
-      },
-      {
-        "puzzleId": "g1-014",
-        "words": 61,
-        "figureLines": 18,
-        "hintWords": 46,
-        "solutionWords": 28
-      },
-      {
-        "puzzleId": "g1-015",
-        "words": 97,
-        "figureLines": 11,
-        "hintWords": 47,
-        "solutionWords": 31
-      },
-      {
-        "puzzleId": "g1-016",
-        "words": 51,
-        "figureLines": 11,
         "hintWords": 41,
         "solutionWords": 24
       },
       {
-        "puzzleId": "g1-017",
-        "words": 72,
-        "figureLines": 7,
-        "hintWords": 46,
+        "puzzleId": "g1-006",
+        "words": 78,
+        "figureLines": 14,
+        "hintWords": 39,
         "solutionWords": 26
+      },
+      {
+        "puzzleId": "g1-007",
+        "words": 38,
+        "figureLines": 11,
+        "hintWords": 42,
+        "solutionWords": 22
+      },
+      {
+        "puzzleId": "g1-008",
+        "words": 60,
+        "figureLines": 7,
+        "hintWords": 39,
+        "solutionWords": 24
+      },
+      {
+        "puzzleId": "g1-009",
+        "words": 69,
+        "figureLines": 11,
+        "hintWords": 39,
+        "solutionWords": 28
+      },
+      {
+        "puzzleId": "g1-010",
+        "words": 78,
+        "figureLines": 10,
+        "hintWords": 44,
+        "solutionWords": 26
+      },
+      {
+        "puzzleId": "g1-011",
+        "words": 71,
+        "figureLines": 10,
+        "hintWords": 58,
+        "solutionWords": 33
+      },
+      {
+        "puzzleId": "g1-012",
+        "words": 59,
+        "figureLines": 11,
+        "hintWords": 41,
+        "solutionWords": 23
+      },
+      {
+        "puzzleId": "g1-013",
+        "words": 67,
+        "figureLines": 7,
+        "hintWords": 52,
+        "solutionWords": 32
+      },
+      {
+        "puzzleId": "g1-014",
+        "words": 59,
+        "figureLines": 13,
+        "hintWords": 40,
+        "solutionWords": 27
+      },
+      {
+        "puzzleId": "g1-015",
+        "words": 73,
+        "figureLines": 11,
+        "hintWords": 45,
+        "solutionWords": 29
+      },
+      {
+        "puzzleId": "g1-016",
+        "words": 40,
+        "figureLines": 11,
+        "hintWords": 43,
+        "solutionWords": 23
+      },
+      {
+        "puzzleId": "g1-017",
+        "words": 65,
+        "figureLines": 7,
+        "hintWords": 47,
+        "solutionWords": 32
       },
       {
         "puzzleId": "g1-018",
-        "words": 66,
-        "figureLines": 9,
-        "hintWords": 42,
-        "solutionWords": 26
+        "words": 70,
+        "figureLines": 16,
+        "hintWords": 34,
+        "solutionWords": 22
       },
       {
         "puzzleId": "g1-019",
-        "words": 82,
+        "words": 73,
         "figureLines": 11,
-        "hintWords": 45,
-        "solutionWords": 30
+        "hintWords": 46,
+        "solutionWords": 29
       },
       {
         "puzzleId": "g1-020",
-        "words": 105,
-        "figureLines": 27,
-        "hintWords": 48,
+        "words": 76,
+        "figureLines": 23,
+        "hintWords": 46,
         "solutionWords": 30
       }
     ]

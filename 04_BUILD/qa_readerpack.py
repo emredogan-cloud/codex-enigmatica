@@ -33,6 +33,32 @@ Sekiz denetim — hepsi TERS YÖNDEN sorar: *okur bunu çözebilir mi?*
   ⑦ kapı bulmacasının levhası her girdi için bir satır taşıyor
   ⑧ ⭑ HİÇBİR BULMACA VAR OLMAYAN BİR ÇİZELGEYE GÖNDERMİYOR ⭑
 
+⭑ ⑨⑩⑪ · ÇABA MODELİNİN ÜÇ VARSAYIMI ⭑ (yönerge § 8 sonrası eklendi)
+
+`qa_effort` üç mekanizmayı UCUZ sayar ve üçünün de tek bir gerekçesi var:
+okurun aramak zorunda olmadığı şey LEVHADA BASILIDIR. Bu bir varsayımdır
+ve varsayımlar boşta durmaz — burada denetlenir:
+
+  ⑨ glif bulmacasının şekli OKUMA YÖNÜNÜ basıyor (▶ veya ▲)
+     → yoksa okur iki yönü de dener ve maliyet İKİYE KATLANIR
+  ⑩ basılı daraltmanın sütunu çizelgede GERÇEKTEN öbeklenmiş
+     → yoksa okur satır satır tarar ve süzgeç 1 değil, n işlemdir
+  ⑪ sıra değiştirme bulmacasının BOŞ IZGARASI şekilde basılı
+
+⭑ ⑫ · İKİ SAYFANIN KESİŞİMİ ⭑ — tek sayfaya bakan hiçbir kapının göremediği
+
+Zincirli bir bulmaca, kaynağının cevabını TÜKETİCİNİN sayfasına basmak
+ZORUNDADIR: okur elindeki sözcüğü orada arayacaktır. Ama o sütun kaynağın
+aday kümesiyle TEK bir üyede kesişirse, okur kaynağı hiç çözmeden cevabını
+okur — ve bunu iki ayrı sayfaya bakarak yapar.
+
+⚠ § ⑥ bunu göremez çünkü ⑥ TEK SAYFAYA bakar. İki sayfa ayrı ayrı temizken
+kesişimleri sızdırabilir; sızıntı sayfada değil, ARALARINDADIR.
+     → yoksa okur ızgarayı kendi çizer ve yazma+okuma iki geçiş olur
+
+⚠ Bu üç denetim düşerse çaba ölçümü de düşer. İki kapı birbirine dayanır:
+biri varsayımı kurar, öteki onu doğrular.
+
 ⚠ BU KAPI CEVAP İÇERİĞİ YAZDIRMAZ.
 
 Çıkış kodları:  0 = geçti   1 = kapı kırmızı   2 = kullanım hatası
@@ -53,6 +79,9 @@ BOOK = os.path.join(pl.ROOT, "02_MANUSCRIPT", "book.json")
 
 PLATE_ACCEPTANCE = {"plate-attribute", "reachable-via-number-table"}
 TABLE_ACCEPTANCE = {"table-row"}
+GRID_ACCEPTANCE = {"grid-intersection"}
+# Okuma yönünü basan işaretler — biri bulunmalı.
+DIRECTION_MARKS = ("▶", "▲", "◀", "▼")
 CIPHER_GENERATORS = {"cyclic-shift", "reflection-map", "keyed-substitution"}
 CIPHER_ACCEPTANCE = {"reachable-by-transposition"}
 GLYPH_ACCEPTANCE = {"reachable-by-glyph-reading"}
@@ -114,6 +143,7 @@ def main() -> int:
     no_page, no_figure, blind_figure, no_table = [], [], [], []
     no_cipher, no_glyph, answer_on_page, gate_rows = [], [], [], []
     dangling_chart = []
+    no_direction, no_grouping, no_grid, cross_leak = [], [], [], []
     checked = 0
 
     # Basılı çizelgelerin GERÇEK harfleri — başlıklardan okunur, elle
@@ -155,6 +185,12 @@ def main() -> int:
                                         % (pid, len(missing)))
 
         # ③ basılı çizelge
+        if acc.get("kind") in GRID_ACCEPTANCE:
+            tbl = page.get("printedTable") or ""
+            flat = [w for row in acc.get("grid") or [] for w in row]
+            if not tbl.strip() or any(w not in tbl for w in flat):
+                no_table.append("%s (ızgara eksik)" % pid)
+
         if acc.get("kind") in TABLE_ACCEPTANCE:
             tbl = page.get("printedTable") or ""
             rows = acc.get("table") or []
@@ -202,6 +238,59 @@ def main() -> int:
             if peers < MIN_CANDIDATE_PEERS:
                 answer_on_page.append("%s (%d akran)" % (pid, peers))
 
+        # ⭑ ⑨ · ÇABA MODELİNİN BİRİNCİ VARSAYIMI ⭑
+        # `qa_effort` glif bulmacasını TEK yön okur sayar. Bunun tek
+        # dayanağı levhanın okuma yönünü BASMASIdır. Basmıyorsa okur iki
+        # yönü de dener ve gerçek maliyet ölçtüğümüzün iki katıdır.
+        if acc.get("kind") in GLYPH_ACCEPTANCE:
+            if not any(m in fig for m in DIRECTION_MARKS):
+                no_direction.append(pid)
+
+        # ⭑ ⑩ · İKİNCİ VARSAYIM · basılı daraltma ⭑
+        # Bir süzgeci "bir bakış" saymak, çizelgenin o sütuna göre
+        # ÖBEKLENMİŞ basılmasına dayanır: eşit değerler bitişik durmalı ve
+        # öbekler arasında görünür bir ayraç olmalıdır.
+        for col in acc.get("printedNarrowing") or []:
+            tbl = page.get("printedTable") or ""
+            vals = [r.get(col) for r in acc.get("table") or []]
+            runs = [v for i, v in enumerate(vals) if i == 0 or v != vals[i - 1]]
+            if col not in tbl:
+                no_grouping.append("%s (%s sütunu basılı değil)" % (pid, col))
+            elif len(runs) != len(set(runs)):
+                no_grouping.append("%s (%s değerleri bitişik değil)" % (pid, col))
+            elif "───" not in tbl:
+                no_grouping.append("%s (öbek ayracı yok)" % pid)
+
+        # ⭑ ⑪ · ÜÇÜNCÜ VARSAYIM · boş ızgara basılı ⭑
+        if acc.get("printedGrid"):
+            if fig.count("┬") < 1 or fig.count("│") < 2:
+                no_grid.append(pid)
+
+        # ⭑ ⑫ · İKİ SAYFANIN KESİŞİMİ ⭑
+        for src in p.get("dependencies") or []:
+            src_rec = sols.get(src) or {}
+            src_acc = ((src_rec.get("answerSpace") or {})
+                       .get("acceptance") or {})
+            src_ans = src_rec.get("finalAnswer") or ""
+            if not src_ans:
+                continue
+            # Okurun kaynak için elediği aday kümesi: levha bulmacasında
+            # etiketler, ötekilerde mekanizmanın açığa vurduğu UZUNLUK.
+            if src_acc.get("kind") == "plate-attribute":
+                plausible = set(src_acc.get("labels") or [])
+            else:
+                plausible = {w for w in plate.lexicon if len(w) == len(src_ans)}
+            keys = set()
+            for f in acc.get("filters") or []:
+                keys |= {str(r.get(f["col"]))
+                         for r in acc.get("table") or []}
+            if not keys:
+                continue
+            shared = keys & plausible
+            if len(shared) < 2:
+                cross_leak.append("%s ← %s (%d ortak aday)"
+                                  % (pid, src, len(shared)))
+
         # ⑧ ⭑ var olmayan bir çizelgeye gönderme ⭑
         for letter in set(CHART_REF.findall(visible)):
             if letter not in chart_letters:
@@ -237,6 +326,21 @@ def main() -> int:
               "(≥%d akran gerekir)" % MIN_CANDIDATE_PEERS
               + ("" if not answer_on_page
                  else " — ⛔ BEDAVA CEVAP: %s" % answer_on_page[:5]))
+    rep.check(not no_direction,
+              "⭑ ⑨ GLİF LEVHASI OKUMA YÖNÜNÜ BASIYOR ⭑ (çaba modeli buna "
+              "dayanır)"
+              + ("" if not no_direction else " — ⛔ YÖNSÜZ: %s" % no_direction[:5]))
+    rep.check(not no_grouping,
+              "⭑ ⑩ BASILI DARALTMA GERÇEKTEN ÖBEKLENMİŞ ⭑ (çaba modeli buna "
+              "dayanır)"
+              + ("" if not no_grouping else " — ⛔ %s" % no_grouping[:5]))
+    rep.check(not no_grid,
+              "⭑ ⑪ SIRA DEĞİŞTİRMENİN BOŞ IZGARASI BASILI ⭑ (çaba modeli "
+              "buna dayanır)"
+              + ("" if not no_grid else " — ⛔ IZGARASIZ: %s" % no_grid[:5]))
+    rep.check(not cross_leak,
+              "⭑ ⑫ ZİNCİRİN KAYNAĞI İKİ SAYFANIN KESİŞİMİNDEN OKUNAMIYOR ⭑"
+              + ("" if not cross_leak else " — ⛔ %s" % cross_leak[:5]))
     rep.check(not dangling_chart,
               "⭑ HİÇBİR BULMACA VAR OLMAYAN BİR ÇİZELGEYE GÖNDERMİYOR ⭑"
               + ("" if not dangling_chart

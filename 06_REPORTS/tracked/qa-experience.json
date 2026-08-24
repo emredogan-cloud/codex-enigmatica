@@ -1,0 +1,226 @@
+{
+  "status": "pass",
+  "checks": 14,
+  "errors": [],
+  "warnings": [],
+  "facts": {
+    "indexed": 151,
+    "needProtected": 20,
+    "solutionRecords": 20,
+    "designRecords": 20,
+    "protectedLayerPresent": true,
+    "ahaMedian": 4.0,
+    "ahaLow": 0,
+    "repetitionMedian": 2.0,
+    "declaredMinutes": [
+      4,
+      4,
+      4,
+      6,
+      4,
+      4,
+      5,
+      4,
+      5,
+      4,
+      7,
+      4,
+      5,
+      4,
+      5,
+      5,
+      5,
+      6,
+      5,
+      15
+    ],
+    "medianMinutes": 5.0,
+    "distinctMinutes": 5,
+    "longestGrind": 1,
+    "smallWinShare": 0.8,
+    "warmUpSections": 7,
+    "familiesTaught": 7,
+    "perPuzzle": [
+      {
+        "puzzleId": "g1-001",
+        "ahaScore": 3,
+        "revelationKind": "small-observation-unlocks",
+        "evidence": "pl-g1-01",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/missing-element"
+      },
+      {
+        "puzzleId": "g1-002",
+        "ahaScore": 4,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g1-02",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/orientation"
+      },
+      {
+        "puzzleId": "g1-003",
+        "ahaScore": 4,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g1-03",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/spatial-relation"
+      },
+      {
+        "puzzleId": "g1-004",
+        "ahaScore": 4,
+        "revelationKind": "pattern-collapses",
+        "evidence": "printedTable",
+        "repeatCount": 3,
+        "repetitionBurden": 1,
+        "mechanismSignature": "table-row/constraint-logic"
+      },
+      {
+        "puzzleId": "g1-005",
+        "ahaScore": 4,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "esik-alfabesi",
+        "repeatCount": 4,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-glyph-reading/script-decoding"
+      },
+      {
+        "puzzleId": "g1-006",
+        "ahaScore": 5,
+        "revelationKind": "two-clues-agree",
+        "evidence": "pl-g1-05",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/companion-equality"
+      },
+      {
+        "puzzleId": "g1-007",
+        "ahaScore": 3,
+        "revelationKind": "two-clues-agree",
+        "evidence": "printedTable",
+        "repeatCount": 5,
+        "repetitionBurden": 2,
+        "mechanismSignature": "table-row/constraint-logic"
+      },
+      {
+        "puzzleId": "g1-008",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "esik-alfabesi",
+        "repeatCount": 4,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-glyph-reading/script-decoding"
+      },
+      {
+        "puzzleId": "g1-009",
+        "ahaScore": 4,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g1-07",
+        "repeatCount": 3,
+        "repetitionBurden": 1,
+        "mechanismSignature": "reachable-via-number-table/plate-embedded-cipher"
+      },
+      {
+        "puzzleId": "g1-010",
+        "ahaScore": 4,
+        "revelationKind": "pattern-collapses",
+        "evidence": "pl-g1-08",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/grouping"
+      },
+      {
+        "puzzleId": "g1-011",
+        "ahaScore": 5,
+        "revelationKind": "two-clues-agree",
+        "evidence": "printedTable",
+        "repeatCount": 4,
+        "repetitionBurden": 2,
+        "mechanismSignature": "grid-intersection/constraint-logic"
+      },
+      {
+        "puzzleId": "g1-012",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "esik-alfabesi",
+        "repeatCount": 4,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-glyph-reading/script-decoding"
+      },
+      {
+        "puzzleId": "g1-013",
+        "ahaScore": 5,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g1-10",
+        "repeatCount": 4,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-printed-shift/substitution-cipher"
+      },
+      {
+        "puzzleId": "g1-014",
+        "ahaScore": 3,
+        "revelationKind": "small-observation-unlocks",
+        "evidence": "pl-g1-11",
+        "repeatCount": 6,
+        "repetitionBurden": 2,
+        "mechanismSignature": "plate-attribute/asymmetry"
+      },
+      {
+        "puzzleId": "g1-015",
+        "ahaScore": 3,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g1-12",
+        "repeatCount": 3,
+        "repetitionBurden": 1,
+        "mechanismSignature": "reachable-via-number-table/plate-embedded-cipher"
+      },
+      {
+        "puzzleId": "g1-016",
+        "ahaScore": 3,
+        "revelationKind": "two-clues-agree",
+        "evidence": "printedTable",
+        "repeatCount": 5,
+        "repetitionBurden": 2,
+        "mechanismSignature": "table-row/constraint-logic"
+      },
+      {
+        "puzzleId": "g1-017",
+        "ahaScore": 3,
+        "revelationKind": "hidden-rule-becomes-obvious",
+        "evidence": "pl-g1-13",
+        "repeatCount": 4,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-printed-shift/substitution-cipher"
+      },
+      {
+        "puzzleId": "g1-018",
+        "ahaScore": 4,
+        "revelationKind": "pattern-collapses",
+        "evidence": "pl-g1-14",
+        "repeatCount": 5,
+        "repetitionBurden": 2,
+        "mechanismSignature": "reachable-by-printed-grid/transposition-cipher"
+      },
+      {
+        "puzzleId": "g1-019",
+        "ahaScore": 3,
+        "revelationKind": "second-reading-of-image",
+        "evidence": "pl-g1-15",
+        "repeatCount": 3,
+        "repetitionBurden": 1,
+        "mechanismSignature": "reachable-via-number-table/plate-embedded-cipher"
+      },
+      {
+        "puzzleId": "g1-020",
+        "ahaScore": 5,
+        "revelationKind": "pattern-collapses",
+        "evidence": "pl-g1-16",
+        "repeatCount": 15,
+        "repetitionBurden": 4,
+        "mechanismSignature": "matches-positional-extraction/gate-synthesis"
+      }
+    ]
+  }
+}

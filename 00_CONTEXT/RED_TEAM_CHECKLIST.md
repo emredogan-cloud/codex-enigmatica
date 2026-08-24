@@ -478,3 +478,105 @@ Doğru hamle bandı zorluğa göre ayırmaktır ve bunun için Kapı II (★★)
 Kapı IV (★★★) ölçümü gerekir. Karar **Faz 3'e ertelendi** ve `STYLE § 4.1`
 bunu açıkça yazar: üç bant birden ölçülmeden tek bir sayı yazmak, aynı
 hatayı ikinci kez yapmaktır.
+
+---
+
+## 6 · İKİNCİ YÖNERGE — düşük sürtünme / yüksek ödül (24 Ağustos 2026)
+
+Beş bulgu. **Hiçbiri okuyarak bulunmadı**; beşini de makine buldu.
+
+### 6.1 · ⭑ F2-28 · ÖLÇÜMÜN KENDİSİ TUTARSIZDI ⭑
+
+`effort()` her mekanizma için *(beklenen, en kötü)* döndürür ve bütçe
+**beklenen**i denetler. Arama tipi mekanizmalarda beklenen, en kötünün
+yarısıdır — ve dosya bunu **ikisine uyguluyor, ikisine uygulamıyordu**:
+
+| | |
+|---|---|
+| `cyclic-shift` · `reflection-map` | (en kötü/2, en kötü) ✅ |
+| `plate-attribute` · `table-row` | (en kötü, en kötü) ⛔ |
+
+Üçü de *"işe yarayanı bulana kadar bak"* yapısındadır. Bu bir politika
+değil, Faz 2'nin son saatinde kalmış bir **gözden kaçmaydı** ve dört ay
+boyunca kimse bakmamıştı — çünkü ölçüm **yeni**ydi ve yeni bir ölçüm
+denetlenmemiş bir ölçümdür.
+
+> **Ders:** bir kapı kurulduğu gün doğru olduğu için sonsuza kadar doğru
+> değildir. Ölçümün kendisi de gözden geçirilir.
+
+**Ne yapıldı:** üç düzeltme (184 → 130 EU) ve — daha önemlisi — üçünün
+dayandığı varsayımlar `qa_readerpack § ⑨⑩⑪`de **denetime bağlandı**.
+Bir ölçümü ucuzlatan varsayım, denetlenmiyorsa bir temennidir.
+
+### 6.2 · ⭑ F2-29 · SIZINTI SAYFADA DEĞİL, İKİ SAYFANIN ARASINDAYDI ⭑
+
+Zincirli bir bulmaca, kaynağının cevabını tüketicinin sayfasına **basmak
+zorundadır** — okur elindeki sözcüğü orada arayacaktır. Ama o sütun
+kaynağın aday kümesiyle **tek bir üyede** kesişirse, okur kaynağı hiç
+çözmeden cevabını okur.
+
+İki bulmacada gerçekten vardı. `§ ⑥` bunu **göremiyordu** çünkü ⑥ **tek
+sayfaya** bakar — ve iki sayfa ayrı ayrı **temizdi**.
+
+> **Ders:** sayfa başına denetlenen bir kural, sayfalar arasındaki
+> kusuru göremez. Kapının kapsamı, kusurun kapsamından dar olmamalıdır.
+
+**Ne yapıldı:** `qa_readerpack § ⑫` kesişimi ölçer ve en az **iki** ortak
+aday ister; kendi kusurlu fikstürüyle ısırdığı kanıtlanmıştır.
+
+### 6.3 · F2-30 · Proje kendi cevaplarını konuşuyordu
+
+Kanarya altı harf ve üzeri cevapları takip edilen bütün dosyalarda **ve
+commit mesajlarında** arar. Yeni cevap kümesi seçildiğinde **sekiz üye**
+zaten depoda geçiyordu — biri *"ipucu merdiveni"*nin adı, biri *"cevap
+anahtarı"*nın. İkisi **commit mesajlarındaydı** ve commit mesajı **geri
+alınamaz**.
+
+> **Ders:** kitabın söz dağarcığı ile projenin söz dağarcığı çakışır.
+> Yasak liste tahmin edilemez, **ölçülür**.
+
+**Ne yapıldı:** liste ölçüldü ve üretecin içine kondu (`_CANARY_BAN`).
+İki ayrı liste tutulur ve karıştırmak iki ayrı kapıyı yakar:
+**cevap olamaz** (kanarya) ≠ **etiket olamaz** (F2-20).
+
+### 6.4 · F2-31 · Bir sözcük hem merdiven basamağı hem sayı hanesidir
+
+*"Üç **basamaklı** okuma"* cümlesi bir çizelge üyesinin adını içeriyordu
+ve ipucu kapısı onu haklı olarak bir **cevap anahtarı** saydı. Türkçede
+*basamak* iki anlamlıdır.
+
+Bu, Faz 2'nin *"o-**kuyu**-n"* bulgusunun (F2-20) **eş anlamlı akrabası**:
+orada bir fiil bir etiketi saklıyordu, burada bir terim.
+
+> **Ders:** çok anlamlı sözcükler bir dilin normal hâlidir; bulmaca
+> kitabında bir **kusur kaynağıdır**. Talimat metni sözlükle çakışmaz.
+
+**Ne yapıldı:** terim değiştirildi (*"üç haneli"*). Kapı zaten ısırıyordu;
+düzeltilen şey kapı değil, metindi.
+
+### 6.5 · F2-32 · Levhanın metni ile şekli yeniden ayrıştı
+
+Üç üçgen levhanın *"ne görüyorsunuz"* cümlesi **elle** yazılmıştı; künye
+cümlesi **üretiliyordu**. Metin *"sağ köşesinde kırık diş"* diyordu, şekil
+kırık dişi **tabana** basıyordu.
+
+Bu tam olarak `plates.py`nin var olma sebebi olan kusurdur (Faz 2'nin on
+bir metin–levha çelişkisi) ve **aynı dosyada yeniden doğdu** — çünkü
+üçüncü bir alan (`input`) tek kaynağın **dışında** kalmıştı.
+
+> **Ders:** "tek kaynak" kuralı, kaynağı paylaşan **bütün** alanları
+> kapsamalıdır. Dışarıda kalan tek bir alan, kuralı tamamen geçersiz kılar.
+
+**Ne yapıldı:** başlangıç kenarı `START_EDGE` içinde **tek yerde** durur;
+şekil, künye ve giriş cümlesi üçü de oradan beslenir.
+
+### 6.6 · ⚠ Kapatılmayan sınır — `ahaScore` bir kanıt değildir
+
+`qa_experience` yazarın kendi puanını **doğrulayamaz**. Yaptığı şey
+şişirilmesini zorlaştırmaktır (basılı dayanak · aynı mekanizma ikinci kez
+4+ alamaz · tekrar yükü modelden ölçülür).
+
+⚠ **Bu sınır açıkça yazılıdır ve kapatılmış gibi davranılmamalıdır.**
+Gerçek ölçüm A12b'nin kayıt formundadır: *"anladım! anı yaşadım mı"*.
+Yazarın 4–5 verdiği bir bulmacada çözücülerin çoğu *"hayır"* diyorsa,
+**puan yanlıştır** — ve o zaman düzeltilecek şey bulmacadır, puan değil.

@@ -1702,6 +1702,18 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
               "⭑ § 7 · ISINMADA ÖRNEĞİ OLMAYAN AİLE KIRMIZI ⭑ "
               "(mantık sıçraması ikinci bırakma sebebiydi)", out)
 
+    # ⭑ § 7b · AİLE DEĞİL, İŞLEM DÜZEYİNDE ⭑
+    # Ölçülen: `layered-chain` ailesi öğretilmiş görünüyordu ama o
+    # ailenin İKİ işlemi var ve üç levha ikincisini ("ayna ekseni")
+    # basıyordu — kitabın hiçbir yerinde öğretilmeden.
+    def _untaught_op(i, s, dd, pg):
+        pg[1]["figure"] = "  ║  2 · ayna ekseni: 18  ║"
+    code, out = run_env_gate("qa_experience.py", exp_root(_untaught_op))
+    rep.check(code != 0,
+              "⭑ § 7b · LEVHANIN BASTIĞI ÖĞRETİLMEMİŞ BİR İŞLEM KIRMIZI ⭑ "
+              "(bir AİLE öğretilmiş olabilir; içindeki bir İŞLEM "
+              "öğretilmemiş olabilir)", out)
+
     def _spoil(w):
         w[0]["solved"] = ["Cevap ZURNA idi."]
     code, out = run_env_gate("qa_experience.py", exp_root(warm_over=_spoil))

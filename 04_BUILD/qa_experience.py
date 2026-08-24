@@ -362,11 +362,15 @@ def main() -> int:
              [x for x in sorted(gate_aha_med) if x not in GATE_ORDER]:
         kind = ("keşif" if g in discovery else
                 "akıcı" if g in fluency else "—")
-        need = (pol["discoveryMedianMin"] if g in discovery else
-                pol["fluencyMedianMin"] if g in fluency else 0)
+        # ⚠ BU DEĞİŞKEN 'need' ADINI TAŞIYORDU ve fonksiyonun bulmaca
+        # listesini (`need`) EZİYORDU. Kusur gizli kaldı çünkü altındaki
+        # kod listeyi bir daha kullanmıyordu — ta ki § 7b eklenene
+        # kadar; o zaman 'int' üzerinde döngü kurmaya çalıştı.
+        need_med = (pol["discoveryMedianMin"] if g in discovery else
+                    pol["fluencyMedianMin"] if g in fluency else 0)
         print("  %-14s %6s %6.1f %7.2f %8d   (aha ≥ %g%s)"
               % (g, kind, gate_aha_med[g], gate_ratio_med.get(g, 0),
-                 by_gate_novel.get(g, 0), need,
+                 by_gate_novel.get(g, 0), need_med,
                  " · çıkarım ≥ %g" % rat["fluencyGateMedianMin"]
                  if g in fluency else ""))
 
@@ -416,6 +420,37 @@ def main() -> int:
     rep.check(not untaught,
               "⭑ § 7 · HER MEKANİZMA GEREKMEDEN ÖNCE ÖĞRETİLİYOR ⭑"
               + ("" if not untaught else " — ⛔ ÖRNEĞİ YOK: %s" % untaught))
+
+    # ── ⭑ § 7b · AİLE DEĞİL, İŞLEM DÜZEYİNDE ⭑ ─────────────────────────
+    # ⚠ FAZ 5 · LINE EDITOR BULGUSU. § 7 AİLEYİ denetliyordu ve
+    # `layered-chain` ailesi öğretilmiş görünüyordu — ama o ailenin İKİ
+    # işlemi var ve ısınma yalnızca birini gösteriyordu. Üç levha
+    # "ayna ekseni" basıyor ve o işlem kitabın HİÇBİR YERİNDE
+    # öğretilmiyordu; okur onunla ilk kez Kapı IV'ün ikinci
+    # bulmacasında karşılaşıyordu.
+    #
+    # Bir aile öğretilmiş olabilir; içindeki bir İŞLEM öğretilmemiş
+    # olabilir. Kural artık levhanın BASTIĞI işlem adına bakar.
+    op_names = {"kaydırma", "ızgara", "ayna ekseni"}
+    taught_txt = pl.norm(" ".join(
+        " ".join([str(w.get(f) or "") for f in ("lead", "note", "title")]
+                 + [str(x) for x in (w.get("solved") or [])])
+        for w in warm)
+        + " " + " ".join(str(x) for x in
+                         ((book.get("matter") or {}).get("cipherReference")
+                          or [])))
+    printed_ops: set = set()
+    for p in need:
+        fig = pl.norm(str((pages.get(p["puzzleId"]) or {}).get("figure") or ""))
+        printed_ops |= {o for o in op_names if pl.norm(o) in fig}
+    untaught_ops = sorted(o for o in printed_ops
+                          if pl.norm(o) not in taught_txt)
+    rep.check(not untaught_ops,
+              "⭑ § 7b · LEVHANIN BASTIĞI HER İŞLEM ÖĞRETİLİYOR ⭑ "
+              "(bir AİLE öğretilmiş olabilir; içindeki bir İŞLEM "
+              "öğretilmemiş olabilir)"
+              + ("" if not untaught_ops
+                 else " — ⛔ ÖĞRETİLMEYEN: %s" % untaught_ops))
     rep.check(not spoiled,
               "⭑ ISINMA HİÇBİR GERÇEK CEVABI VERMİYOR ⭑"
               + ("" if not spoiled else " — ⛔ SIZINTI: %d bulmaca" % len(spoiled)))

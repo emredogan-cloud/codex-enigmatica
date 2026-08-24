@@ -102,6 +102,12 @@
 !06_REPORTS/*_REDESIGN_PROPOSAL.md
 # ⭑ İkinci yönergenin raporu — yeniden tasarımın ÖLÇÜMÜ. Cevap taşımaz.
 !06_REPORTS/GATE_1_LOW_FRICTION_REPORT.md
+# ⭑ LINE EDITOR RAPORU — yol haritası Faz 5 § 3'ün adıyla istediği
+# teslimat ve PROJECT_CONTEXT ona BAĞ VERİR. Gitignore'da kalması klonda
+# kırık bağ demekti ve CI tam olarak bunu yakaladı — üçüncü kez aynı
+# ders (K18 · yeniden tasarım önerisi · .gitkeep). Rapor CEVAP TAŞIMAZ:
+# üç alt-ajanın hiçbiri çözümleri görmedi ve kanarya dosyayı tarar.
+!06_REPORTS/LINE_EDITOR_REPORT.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:

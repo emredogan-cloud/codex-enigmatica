@@ -104,7 +104,10 @@ def glyph_ok(ch: str) -> bool:
     if (ch in ASCII_OK or ch in PUNCT_OK or ch in GEOMETRIC_OK
             or ch in MATH_OK or ch in ARROW_OK):
         return True
-    if 0x0100 <= o <= 0x017F:            # Latin Extended-A (Türkçe)
+    if 0x00A0 <= o <= 0x017F:            # Latin-1 ek + Latin Ext-A
+        # ⚠ 'â' (U+00E2) yirmi sayfada geçiyor ve TÜRKÇENİN kendisidir
+        # ("hâlde", "hâlâ"). İlk kurgu bu bloğu dışarıda bırakmıştı ve
+        # kapı, kitabın doğru yazılmış sözcüklerini kusur sayıyordu.
         return True
     if 0x2500 <= o <= 0x259F:            # kutu çizimi + blok
         return True
@@ -119,11 +122,13 @@ GLYPH_ROLE = {
     "▶": "ok-sağ", "►": "ok-sağ", "▻": "ok-sağ", "▸": "ok-sağ",
     "◀": "ok-sol", "◄": "ok-sol", "◅": "ok-sol", "◂": "ok-sol",
     "↻": "dönüş", "↺": "dönüş", "⟳": "dönüş",
+    # ⚠ '─' bir KUTU çizgisi, '–' ve '—' ise NOKTALAMADIR; ilk kurgu
+    # üçünü tek rol saydı ve nesirdeki tireleri kusur gösterdi. Yatay
+    # rolü kaldırıldı: bağlamları farklıdır.
     # ⚠ '·', '•' ve '◦' AYNI ROLDE DEĞİLDİR ve ilk kurgu onları tek rol
     # sayıp haksız yere kırmızı yaktı: '·' bir ayraç/dolgu, '•' sayı
     # çizelgesinde BİR değeri, '◦' bir sayım işaretidir. Karışma riskini
     # rol kuralı değil, ⑥ (aynı şekilde ikisi de veri) ölçer.
-    "─": "yatay", "—": "yatay", "–": "yatay",
 }
 
 # ⭑ KARIŞABİLİR ÇİFTLER ⭑ Aynı temel biçimin dolu/boş ya da küçük/büyük
@@ -168,6 +173,26 @@ def longest_run(text: str) -> tuple[int, str]:
         if cur > run:
             run, what = cur, ch
     return run, what
+
+
+def reader_text(book: dict):
+    """Okurun gördüğü METİN — şekil değil, ama glif taşır.
+
+    ⚠ İlk kurgu yalnızca şekillere bakıyordu ve bir kapı bulmacasının
+    İPUCU CÜMLESİNDE üçüncü bir ok çifti (▸ ◂) duruyordu; kapı onu
+    görmedi. Bir glif dağarcığı kuralı, glifin bulunabileceği HER YERE
+    bakmak zorundadır."""
+    for p in book.get("puzzles", []):
+        yield ("%s/metin" % p["puzzleId"],
+               " ".join([str(p.get(f) or "") for f in
+                         ("title", "flavour", "objective", "readerAction")]
+                        + [str(x) for x in (p.get("clues") or [])]
+                        + [str(x) for x in (p.get("constraints") or [])]))
+    for w in book.get("warmUp", []):
+        yield ("%s/metin" % w.get("id"),
+               " ".join([str(w.get(f) or "") for f in
+                         ("title", "lead", "note")]
+                        + [str(x) for x in (w.get("solved") or [])]))
 
 
 def figures(book: dict):
@@ -275,6 +300,17 @@ def main() -> int:
         # ⑨ TALİMAT GÖRÜNÜRLÜĞÜ — şeklin bir künyesi olmak zorunda
         if not any(str(x).strip() for x in legend):
             no_legend.append(name)
+
+    # ── METİNDEKİ GLİFLER ──────────────────────────────────────────────
+    for name, txt in reader_text(book):
+        bad = sorted({c for c in txt if not glyph_ok(c)})
+        if bad:
+            bad_glyph.append("%s → %s" % (name, " ".join(
+                "%s(U+%04X)" % (c, ord(c)) for c in bad[:4])))
+        for ch in set(txt):
+            role = GLYPH_ROLE.get(ch)
+            if role:
+                book_roles.setdefault(role, {}).setdefault(ch, []).append(name)
 
     widths = [r["width"] for r in rows] or [0]
     heights = [r["height"] for r in rows] or [0]

@@ -11,9 +11,9 @@
     "bodyWordsByGate": {
       "threshold": 1704,
       "menagerie": 1778,
-      "calendar": 1615,
-      "labyrinth": 1561,
-      "mirror": 1430,
+      "calendar": 1616,
+      "labyrinth": 1562,
+      "mirror": 1431,
       "last-question": 132
     },
     "figureLinesByGate": {
@@ -73,7 +73,7 @@
     "declaredSolutionPages": 18,
     "toolsPlateRows": 408,
     "toolsPlatePages": 3.24,
-    "totalWords": 17211,
+    "totalWords": 17214,
     "perPuzzle": [
       {
         "puzzleId": "g1-001",
@@ -550,7 +550,7 @@
       {
         "puzzleId": "g3-020",
         "gate": "calendar",
-        "words": 77,
+        "words": 78,
         "figureLines": 27,
         "hintWords": 46,
         "solutionWords": 28
@@ -710,7 +710,7 @@
       {
         "puzzleId": "g4-020",
         "gate": "labyrinth",
-        "words": 70,
+        "words": 71,
         "figureLines": 27,
         "hintWords": 46,
         "solutionWords": 28
@@ -870,7 +870,7 @@
       {
         "puzzleId": "g5-020",
         "gate": "mirror",
-        "words": 70,
+        "words": 71,
         "figureLines": 27,
         "hintWords": 46,
         "solutionWords": 28

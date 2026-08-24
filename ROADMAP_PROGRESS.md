@@ -40,7 +40,7 @@
 | Onaylanmış alternatif çözüm | **0** | **0** |
 | İpucu (3 kademe) | **303** | 300 |
 | Levha | **0** üretildi / 112 planlandı | ~110 |
-| Kelime (ölçülen) | **17.211** | ~34.000 |
+| Kelime (ölçülen) | **17.214** | ~34.000 |
 | Künye | **15** (0 doğrulanmış) | — |
 
 ---

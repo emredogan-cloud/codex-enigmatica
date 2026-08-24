@@ -2278,6 +2278,104 @@ def part10_plate_readability(rep: Report, tmp: str) -> None:
 
 
 
+# ---------------------------------------------------------------------------
+def part11_crossref(rep: Report, tmp: str) -> None:
+    """⑪ ⭑ ÇAPRAZ REFERANS — SÖZLEŞMENİN İKİNCİ MADDESİNİN KORUYUCUSU ⭑
+
+    *"Hiçbiri kitabın dışındaki bilgiyi gerektirmez."* Boşa düşen bir
+    gönderme o sözü bozar: okur ya kitabın dışına çıkar ya da çıkamaz ve
+    bulmacayı çözülemez sanır.
+
+    ⚠ Üretim verisinde GERÇEKTEN bulundu: Kapı III–V'in kapı bulmacaları
+    *"bu kapının söz çizelgesinde"* diyordu ve çizelgeyi ADIYLA
+    ANMIYORDU — oysa Kapı I ve II onu adıyla anar. Okur o kalıbı
+    öğrenmiş olarak gelir ve on altı çizelgenin arasında arar.
+    """
+    print("\n⑪ ⭑ ÇAPRAZ REFERANS ⭑")
+
+    cfg = clean_config()
+
+    def xref_root(mut=None):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "xref-%03d" % _RUN_SEQ[0])
+        for sub in ("01_SOURCE", "02_MANUSCRIPT"):
+            os.makedirs(os.path.join(d, sub), exist_ok=True)
+        write(os.path.join(d, ".gate"), "phase5")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        write(os.path.join(d, "01_SOURCE/gate_index.json"),
+              json.dumps({"gates": [{"id": "threshold"}]}, ensure_ascii=False))
+        idx = [{"puzzleId": "fixture-001", "gate": "threshold",
+                "type": "cipher", "mechanismFamily": "substitution-cipher",
+                "status": "written", "testStatus": "tested",
+                "leakClass": "protected", "ambiguityScore": 1,
+                "alternativeSolutionAnalysisDone": True,
+                "confirmedAlternativeSolutions": 0}]
+        charts = {
+            "esik-alfabesi": {"id": "A", "title": "Çizelge A · Eşik Alfabesi",
+                              "table": [{"letter": "A"}]},
+            "esik-sozlugu": {"id": "B", "title": "Çizelge B · Eşik Sözlüğü",
+                             "entries": [{"no": 1, "word": "ZURNA"}]},
+        }
+        page = {"puzzleId": "fixture-001", "gate": "threshold",
+                "title": "kurgu", "plateId": "pl-fixture-01",
+                "objective": "Çizelge A'yı kullanın.",
+                "readerAction": "Levha pl-fixture-01'e bakın.",
+                "clues": ["Harfler Çizelge A'da basılıdır."],
+                "constraints": ["Cevap Eşik Sözlüğü'nün bir üyesidir."]}
+        book = {"puzzles": [page], "toolsPlate": charts, "matter": {}}
+        if mut:
+            mut(idx, book, charts, page)
+        write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
+              json.dumps({"puzzles": idx}, ensure_ascii=False))
+        write(os.path.join(d, "02_MANUSCRIPT/book.json"),
+              json.dumps(book, ensure_ascii=False))
+        return d
+
+    def gate(mut=None):
+        return run_env_gate("qa_crossref.py", xref_root(mut), gate="phase5")
+
+    code, out = gate()
+    rep.check(code == 0, "çapraz referans temiz kurguda GEÇER", out)
+
+    def _ghost_chart(idx, book, charts, page):
+        page["clues"] = ["Harfler Çizelge Z'de basılıdır."]
+    code, out = gate(_ghost_chart)
+    rep.check(code != 0,
+              "⭑ ① OLMAYAN BİR ÇİZELGEYE GÖNDERME KIRMIZI ⭑ "
+              "(boşa düşen gönderme okuru kitabın DIŞINA iter)", out)
+
+    def _ghost_cat(idx, book, charts, page):
+        page["constraints"] = ["Cevap Gölge Kataloğu'nun bir üyesidir."]
+    code, out = gate(_ghost_cat)
+    rep.check(code != 0,
+              "⭑ ② OLMAYAN BİR KATALOG ADINA GÖNDERME KIRMIZI ⭑ "
+              "(Faz 1'de çizelgeler bir kez yeniden adlandırıldı ve bir "
+              "kısıt cümlesi eski adı taşımaya devam etti)", out)
+
+    def _ghost_puzzle(idx, book, charts, page):
+        page["clues"] = ["Anahtar g9-999 bulmacasının cevabıdır."]
+    code, out = gate(_ghost_puzzle)
+    rep.check(code != 0,
+              "③ envanterde olmayan bir bulmacaya gönderme KIRMIZI", out)
+
+    def _other_plate(idx, book, charts, page):
+        page["readerAction"] = "Levha pl-baska-99'a bakın."
+    code, out = gate(_other_plate)
+    rep.check(code != 0,
+              "④ başka bir sayfanın levhasına gönderme KIRMIZI", out)
+
+    def _dead_chart(idx, book, charts, page):
+        charts["kapi-sozleri"] = {"id": "C", "title": "Çizelge C · Kapı Sözleri",
+                                  "entries": ["ZURNA SESİ"]}
+    code, out = gate(_dead_chart)
+    rep.check(code != 0,
+              "⑥ basılan ama hiç anılmayan çizelge KIRMIZI "
+              "(okurun hiç yönlendirilmediği bir sayfa, sayfa israfıdır)",
+              out)
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -2301,6 +2399,7 @@ def main() -> int:
         part8_answerspace(rep, tmp)
         part9_meta_and_aha(rep, tmp)
         part10_plate_readability(rep, tmp)
+        part11_crossref(rep, tmp)
 
     print("\n" + "=" * 74)
     if rep.failed:

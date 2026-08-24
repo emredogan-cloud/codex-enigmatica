@@ -180,6 +180,40 @@ def main() -> int:
         else:
             used_charts.add(by_name[name])
 
+    # ── ⑤ KAPI AÇILIŞI YENİ ÇİZELGESİNİ ADIYLA ANIYOR MU ─────────────
+    # ⚠ FAZ 5 · ÖN MADDE BİR SÖZ VERİYOR: *"Bir kapıda yeni bir çizelge
+    # gerektiğinde, o çizelge kapının açılışında ADIYLA anılır — aramanız
+    # istenmez."* Line editor ölçtü: BEŞ AÇILIŞIN HİÇBİRİ tek bir çizelge
+    # adı anmıyordu. Verilen bir söz, tutulduğu ÖLÇÜLMEDİKÇE bir sözdür.
+    frame_key = {"threshold": "frame", "menagerie": "frame2",
+                 "calendar": "frame3", "labyrinth": "frame4",
+                 "mirror": "frame5"}
+    by_gate: dict = {}
+    for p in pages:
+        s_ = by_gate.setdefault(p.get("gate"), set())
+        txt = page_text(p)
+        s_.update(L for L in CHART_REF.findall(txt) if L in by_letter)
+        for stem, kind in CATALOGUE_REF.findall(txt):
+            key = by_name.get("%s %s" % (stem, kind))
+            if key:
+                s_.add(next(L for L, k in by_letter.items() if k == key))
+    introduced: set = set()
+    silent = []
+    for gid in [g.get("id") for g in gi.get("gates", [])]:
+        fresh = sorted(x for x in by_gate.get(gid, set()) if x not in introduced)
+        introduced |= set(fresh)
+        if not fresh:
+            continue
+        opening = " ".join((book.get(frame_key.get(gid, "")) or {})
+                           .get("opening") or [])
+        missing = [x for x in fresh if "Çizelge %s" % x not in opening]
+        if missing:
+            silent.append("%s → %s" % (gid, " ".join(missing)))
+    rep.check(not silent,
+              "⭑ ⑤ HER KAPI AÇILIŞI KENDİ YENİ ÇİZELGESİNİ ADIYLA ANIYOR ⭑ "
+              "(ön madde bunu SÖZ VERİYOR)"
+              + ("" if not silent else " — ⛔ SESSİZ: %s" % silent))
+
     # ⑥ ÖLÜ ÇİZELGE — basılan ama hiç anılmayan
     # ⚠ `printed: false` olanlar ispat alanıdır; kitapta basılmazlar ve
     # anılmamaları BEKLENİR.

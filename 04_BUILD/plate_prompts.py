@@ -15,7 +15,7 @@ olan** bir kemerdir. Bu yüzden her prompt üç bölümdür:
 
     KOMPOZİSYON   nesne ve sahne — üslup buradadır
     ⭑ VERİ ⭑      DEĞİŞTİRİLEMEZ sayılar ve konumlar
-    YASAK         gravürcünün ekleyemeyeceği şeyler
+    YASAK         gravürcünün koyamayacağı şeyler
 
 ⚠ VERİ BÖLÜMÜ ELLE YAZILMAZ: her bulmacanın kendi şeklinden ÜRETİLİR.
 Bir levhanın verisi değiştiğinde prompt da değişir; ikisinin ayrışması
@@ -169,6 +169,32 @@ NON_PUZZLE = [
 ]
 
 
+def skeleton(fig: str) -> str:
+    """Şeklin İSKELETİ — harfler değil, GEOMETRİ.
+
+    ⭑⭑ BU FONKSİYON BİR SIZINTIYI ONARIR VE İKİ KEZ HAKLIDIR ⭑⭑
+
+    ① Prompt kütüphanesi ilk yazımda dizgideki şekli OLDUĞU GİBİ
+       basıyordu. Bazı levhalar çizelgedir ve çizelgenin bir sütunu
+       ADAY CEVAPLARDIR: dosya beş gerçek cevabı düz metin olarak
+       taşıdı — ve `07_ASSETS/` TAKİP EDİLEN bir dizindir. Kanarya onu
+       bir sonraki koşuda yakaladı.
+
+    ② Ve zaten harflere gerek YOKTU: bu kütüphanenin kendi mutlak
+       yasağı *"no text, letters, numerals or captions inside the
+       image"* diyor. Gravürcünün ihtiyacı geometridir — kaç göz, kaç
+       istasyon, hangi kenar. Harfleri kitap dizer.
+
+    Harf ve rakam `·` olur; çerçeve, işaret ve boşluk korunur."""
+    out = []
+    for ch in fig:
+        if ch.isalpha() or ch.isdigit():
+            out.append("·")
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
 def measure(fig: str) -> list:
     """Levhanın DEĞİŞTİRİLEMEZ sayıları — şeklin kendisinden."""
     out = []
@@ -226,7 +252,7 @@ def main() -> int:
             "family": fam,
             "scene": FAMILY_SCENE.get(fam, "An engraved diagrammatic plate."),
             "data": measure(fig),
-            "figure": fig,
+            "figure": skeleton(fig),
         })
 
     # ⭑ BULMACA DIŞI LEVHALAR — kütüphane 104'ün HEPSİNİ taşımalı ⭑
@@ -241,7 +267,10 @@ def main() -> int:
     # ⚠ HİÇBİR PROMPT BİR CEVAP TAŞIYAMAZ.
     leak = []
     for e in entries:
-        blob = pl.squeeze(e["scene"] + " " + " ".join(e["data"]))
+        # ⚠ `figure` DE TARANIR. İlk kurgu yalnızca `scene` ve `data`ya
+        # bakıyordu ve sızıntı tam olarak taranmayan alandaydı.
+        blob = pl.squeeze(e["scene"] + " " + " ".join(e["data"])
+                          + " " + e.get("figure", ""))
         for a in answers:
             if len(a) >= 4 and a in blob:
                 leak.append("%s → %s" % (e["plate"], a))

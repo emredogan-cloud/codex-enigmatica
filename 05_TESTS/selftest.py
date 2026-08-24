@@ -2323,7 +2323,11 @@ def part11_crossref(rep: Report, tmp: str) -> None:
                 "readerAction": "Levha pl-fixture-01'e bakın.",
                 "clues": ["Harfler Çizelge A'da basılıdır."],
                 "constraints": ["Cevap Eşik Sözlüğü'nün bir üyesidir."]}
-        book = {"puzzles": [page], "toolsPlate": charts, "matter": {}}
+        # ⭑ Açılış, kapının YENİ çizelgelerini adıyla anmak zorundadır
+        # (`qa_crossref § ⑤`) — fikstürün temiz hâli de anmalıdır.
+        book = {"puzzles": [page], "toolsPlate": charts, "matter": {},
+                "frame": {"opening": [
+                    "Bu kapıda ilk kez Çizelge A ve Çizelge B gerekecek."]}}
         if mut:
             mut(idx, book, charts, page)
         write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
@@ -2364,6 +2368,14 @@ def part11_crossref(rep: Report, tmp: str) -> None:
     code, out = gate(_other_plate)
     rep.check(code != 0,
               "④ başka bir sayfanın levhasına gönderme KIRMIZI", out)
+
+    def _silent_opening(idx, book, charts, page):
+        book["frame"]["opening"] = ["Bu kapı bir şey söylemiyor."]
+    code, out = gate(_silent_opening)
+    rep.check(code != 0,
+              "⭑ ⑤ KAPI AÇILIŞI YENİ ÇİZELGESİNİ ANMAZSA KIRMIZI ⭑ "
+              "(ön madde 'aramanız istenmez' diye SÖZ VERİYOR; verilen "
+              "bir söz ölçülmedikçe yalnızca bir sözdür)", out)
 
     def _dead_chart(idx, book, charts, page):
         charts["kapi-sozleri"] = {"id": "C", "title": "Çizelge C · Kapı Sözleri",

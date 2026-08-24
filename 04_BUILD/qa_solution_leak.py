@@ -146,14 +146,44 @@ def read_gate() -> str:
 
 
 def tracked_files() -> list[str]:
+    """⭑⭑ TAKİP EDİLEN **VE EDİLECEK** DOSYALAR ⭑⭑
+
+    ⚠ FAZ 5 · KANARYANIN KÖR NOKTASI ÖLÇÜLDÜ VE KAPATILDI.
+
+    Bu fonksiyon yalnızca `git ls-files` diyordu: **zaten takip edilen**
+    dosyalar. Yeni üretilmiş, henüz commit edilmemiş bir dosya
+    kanaryaya GÖRÜNMÜYORDU. Ve tam olarak öyle oldu:
+
+        · `plate_prompts.py` yeni bir HTML üretti,
+        · kanarya koştu ve YEŞİL yandı (dosya takip edilmiyordu),
+        · `git add -A` onu ekledi, commit gitti,
+        · CI'daki kanarya beş cevabı buldu ve KIRMIZI yandı.
+
+    Kanarya commit'ten ÖNCE koşuyordu (K34'ün süreç dersi) ama BAKMASI
+    GEREKEN dosyaya bakmıyordu. Süreç doğruydu; kapsam eksikti.
+
+    Kapsam artık şudur: takip edilenler **+ `.gitignore`'un dışlamadığı
+    her yeni dosya**. Yani bir sonraki `git add -A` ile depoya girecek her
+    şey, eklenmeden ÖNCE taranır."""
     try:
         out = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT,
                              capture_output=True, text=True, timeout=30)
         if out.returncode != 0:
             return []
-        return [p for p in out.stdout.split("\0") if p.strip()]
+        files = [p for p in out.stdout.split("\0") if p.strip()]
     except (OSError, subprocess.SubprocessError):
         return []
+    try:
+        # `--others --exclude-standard` = takip edilmeyen AMA gitignore'un
+        # dışlamadığı dosyalar. Bunlar bir sonraki commit'in adayıdır.
+        nxt = subprocess.run(
+            ["git", "ls-files", "-z", "--others", "--exclude-standard"],
+            cwd=ROOT, capture_output=True, text=True, timeout=30)
+        if nxt.returncode == 0:
+            files += [p for p in nxt.stdout.split("\0") if p.strip()]
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return sorted(set(files))
 
 
 def commit_messages() -> list[str]:

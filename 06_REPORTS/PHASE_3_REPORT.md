@@ -303,6 +303,7 @@ Faz 3'te **beş** bulgu; hiçbiri okuyarak bulunmadı.
 | F3-03 | İki çizelge hücresi, **bağımlı olmadıkları** bulmacaların cevabını basıyordu — § ⑫ oraya bakmıyordu | üretim assert'i |
 | F3-04 | Akran havuzu tükendi; son levha **iki etiketle** kaldı | `qa_effort` |
 | F3-05 | Bir Kapı I levhası **trim'e sığmıyordu** (66 > 62 karakter) | `qa_plate_data` |
+| F3-06 | ⭑ Bir cevap, bu raporun **kendi cümlesinde** geçiyordu — commit'ten SONRA | `qa_solution_leak` |
 
 ### ⭑ F3-02 · kanarya ters de arar (K34)
 
@@ -310,6 +311,19 @@ Elli aday ad tarandı. Biri **düz biçimde temizdi** ama ters çevrildiğinde
 sık bir Türkçe ekin içine düşüyordu. **Ders: bir adı kanaryaya karşı
 denerken ters biçimini de dene.** Kanarya bunu zaten yapıyordu; ben
 yapmıyordum.
+
+### ⭑ F3-06 · kanarya bu raporun kendi cümlesini yakaladı
+
+Bir yazı gerecinin adı Kapı II'nin cevaplarından biriydi. Sonra bu rapora
+*"gerçek ölçüm ... kâğıt ve gözle yapılır"* diye yazdım — ve kanarya
+kendi raporumu **sızıntı** saydı. Haklıydı.
+
+⚠ Ve bu kez **commit'ten sonra** koştu: CI kırmızı yandı. Commit
+**mesajı** temizdi (geri alınamayan kanal) ve düzeltme bir sonraki
+commit'e sığdı, ama ders süreçtir: **kanarya commit'ten ÖNCE koşar.**
+
+İki katalog üyesi artık cevap olamaz (biri ters okumada, biri bu
+cümlede yakalandı) ve ikisi de **akran olarak katalogda kalır**.
 
 ### ⭑ F3-03 · sızıntı kapının BAKTIĞI YERİN DIŞINDA (K35)
 

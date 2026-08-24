@@ -624,6 +624,18 @@ dosyada** geçiyordu.
 > **Ders:** bir adı kanaryaya karşı denerken TERS biçimini de dene.
 > Kanarya bunu zaten yapıyordu; ben yapmıyordum.
 
+**Ve ikincisi commit'ten SONRA çıktı.** Bir yazı gerecinin adı cevap
+olmuştu; sonra bu projenin kendi raporuna *"gerçek ölçüm ... kâğıt ve
+gözle yapılır"* diye yazdım ve kanarya kendi raporumu sızıntı saydı —
+**haklıydı.**
+
+> ⭑ **Asıl ders süreçtir:** kanarya commit'ten ÖNCE koşar. Bu kez
+> sonra koştu ve CI kırmızı yandı. Commit MESAJI temizdi (geri
+> alınamayan kanal); düzeltme bir sonraki commit'e sığdı.
+
+İki üye artık `build_gate2._ANSWER_BAN` içinde, gerekçesiyle birlikte —
+ve ikisi de **katalogda akran olarak kalır**. Yasak dar tutulur.
+
 ### K35 · Sızıntı, kapının BAKTIĞI YERİN DIŞINDA olabilir
 **24 Ağustos 2026.** `qa_readerpack § ⑫` zincirin kaynağını iki sayfanın
 kesişiminden okumayı engeller — ama yalnızca **bildirilen bağımlılık**

@@ -108,6 +108,12 @@
 # ders (K18 · yeniden tasarım önerisi · .gitkeep). Rapor CEVAP TAŞIMAZ:
 # üç alt-ajanın hiçbiri çözümleri görmedi ve kanarya dosyayı tarar.
 !06_REPORTS/LINE_EDITOR_REPORT.md
+# ⭑ PROMPT KÜTÜPHANESİ SONLANDIRMA RAPORU — dördüncü kez aynı ders.
+# Kütüphane bir ÜRÜN değil, kurucunun görsel üretiminde kullanacağı
+# araçtır ve bu rapor onun ölçümüdür. Cevap taşımaz: yalnızca kart
+# sayıları, piksel ölçüleri ve denetim sonuçları vardır; kanarya
+# dosyayı takip edilen dosya olarak tarar.
+!06_REPORTS/IMAGE_PROMPT_LIBRARY_FINALIZATION_REPORT.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:

@@ -5,6 +5,53 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.7.1] — 2026-08-24 · GÖRSEL PROMPT KÜTÜPHANESİ · YENİDEN İNŞA
+
+# ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
+
+Bu sürüm **hiçbir doğrulama durumunu değiştirmez**:
+`externalValidation = founder_override_partial` · `sessionsPerformed = 0`
+· `humanValidationPassed = false` · ölçülen karar **HARD-STOP**.
+`07_ASSETS/raw/` hâlâ **boştur** — **üretilmiş görsel: 0**.
+
+### Değişti — kütüphane bir belge değil, ARAÇ oldu
+
+`07_ASSETS/IMAGE_PROMPT_LIBRARY.html` yeniden inşa edildi: sekiz
+bölüm · yapışkan gezinme · **223 kopya düğmesi** (eskiden 0) · 102
+katlanır blok · gömülü CSS/JS, dış bağ yok — **çevrimdışı açılır**.
+
+Eski kütüphane doğruydu ama kullanılamazdı: kurucu 103 promptu elle
+seçmek zorundaydı. Eksik olan veri değil, belgenin çalışmasıydı.
+
+### Eklendi — ticari promptlar
+
+**2 kapak konsepti** (6 × 9 in · 1800 × 2700 px · metin-güvenli
+alanlar; **sırt ölçüsü YOK** — iç blok dondurulmadı, K12) ve
+**6 A+ modülü** (gerçek Amazon modül türleri ve ölçüleri). Sekizinin
+hepsi bir `BRIEF §` dayanağı taşır; hepsi **metinsizdir**.
+
+Yeni üreteç: `04_BUILD/prompt_catalog.py` — gravür promptları
+bulmacadan **ölçülür**, kapak/A+ promptları `BRIEF.md`'den gelen
+**ticari karardır**; ikisi ayrı dosyada durur.
+
+### ⭑ Korundu — 103 gravür promptu, ölçülerek kanıtlandı
+
+Eski kütüphane `git show HEAD:` ile çıkarılıp karşılaştırıldı:
+**VERİ FARKI: 0**. Dokuz bulmaca-dışı kimlik `VISUAL_ARCHITECTURE § 2`
+kuralına uyduruldu (`pl-` → `dc-`/`tl-`); **94 bulmaca kimliğine
+dokunulmadı**.
+
+### Eklendi — üreteç kendi HTML'ini denetler
+
+Kopya kimlik · hedefsiz düğme · düğmesiz kutu · kırık çıpa · dengesiz
+etiket · dış bağ · sır sızıntısı · dosya adı kalıbı. Üreteç
+**22 denetim** çalıştırır. 223 düğmenin hepsi tarayıcıda tıklanarak
+ölçüldü: **yanlış metin kopyalayan 0**.
+
+- Rapor: `06_REPORTS/IMAGE_PROMPT_LIBRARY_FINALIZATION_REPORT.md`
+
+---
+
 ## [0.7.0] — 2026-08-24 · FAZ 5 · YAKINSAMA + LEVHA + LINE EDITOR
 
 # ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING

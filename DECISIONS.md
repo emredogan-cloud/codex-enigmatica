@@ -830,3 +830,110 @@ Onları değiştirmek, ölçümün ölçtüğü nesneyi değiştirmek olurdu.
 tabanının altında olsa bile, **talimat şablonlarında ve levha
 künyelerinde** aranır. `EŞİK` bu yüzden yasaktı (K18); `KAPI` ve `AYNA`
 aynı ölçütle yasaklanırdı — ölçüt o gün yoktu.
+
+### K42 · ⭑ ANLATI KURALI ÖLÇÜYE GÖRE DARALTILDI ⭑
+**24 Ağustos 2026 · Faz 5.** `STYLE § 1` anlatı satırı için şunu der:
+*"bir sayı, bir yön, bir konum veya bir çizelge adı geçemez."*
+
+Kural bir kapıya bağlandığında **otuz dört sayfa** kırmızı yandı. Ve
+otuz dördün büyük çoğunluğu şuydu:
+
+> *"İkinci yol birinciyle aynı görünür."*
+> *"Üçüncü sayım. Artık ne aradığınızı biliyorsunuz."*
+
+Bunlar mekanik değil, **anlatı sıralamasıdır**: bir kütüphaneci kaçıncı
+kayıtta olduğunuzu söyleyebilir. Kuralın koruduğu şey sıralama değil,
+**bir üslup düzeltmesinin bir bulmacayı sessizce bozmasıdır**.
+
+Kural daraltıldı ve daraltıldığı yazıldı:
+
+| ⛔ yasak | gerekçe |
+|---|---|
+| çizelge adı | bir çizelge adı daima mekaniktir |
+| yön sözcüğü | bu kitapta yön daima mekaniktir |
+| **rakam** | nesirde bir rakam daima bir niceliktir |
+| sayfayla çelişki | anlatının sayısı levhanınkiyle tutmuyorsa okur birine inanır |
+
+| ✅ serbest | gerekçe |
+|---|---|
+| sıra sözcüğü | anlatı sıralamasıdır, mekanik değil |
+
+⭑ Ve daraltmanın kendisi de **fikstürle ölçülür**: sıra sözcüğü taşıyan
+bir anlatı satırı kapıdan GEÇMEK zorundadır. Bir kuralı gevşetmek ile
+bir kuralı DOĞRU YERE koymak arasındaki fark, ikincisinin de test
+edilmesidir.
+
+### K43 · ⭑ BİR TEKİLLİK İSPATI, İSPATLADIĞI ŞEYİ VARSAYAMAZ ⭑
+**24 Ağustos 2026 · Faz 5.** Line editor bir çizelge bulmacasının **iki
+cevabı olduğunu** bildirdi. Doğrulandı ve sebep bildirilenden ağırdı:
+kabul yordamında iki süzgeç vardı — biri okurun sayfadan aldığı sütun,
+öteki `take` sütununa yazılmış ve **değeri bulmacanın kendi cevabıydı**.
+
+O süzgeçle ispat daima tek üye bulur ve `qa_answerspace` **yeşil yanar**.
+Ama okurun elinde o süzgeç yoktur ve sayfa ona iki satır bırakır.
+Sözleşmenin **birinci sözü** o sayfada tutulmuyordu.
+
+`qa_answerspace` artık `take` sütununa yapılan süzgeçleri **atar**:
+ispat, okurun gerçekten sahip olduğu süzgeçlerle koşar.
+
+> **Ders:** bir ispatın yeşili, ispatın NEYİ VARSAYDIĞI bilinmeden bir
+> şey ifade etmez. Bu kapı yüz bir bulmacada iki yıl yeşil yanabilirdi.
+
+### K44 · ⭑ KİTAP OLMAYAN BİR HATAYI VAAT EDEMEZ ⭑
+**24 Ağustos 2026 · Faz 5.** Yedi sayfa şunu basıyordu: *"Katmanlar ters
+sırada uygulanırsa ad çıkmaz."* Ölçüldü: **yedi bulmacanın yedisinde**
+ters sıra **aynı cevabı** veriyor — katmanlardan biri harf DEĞİŞTİRİR,
+öteki harf YERİNİ değiştirir ve bu iki işlem birbirinin yerine geçer.
+
+⚠ **Bu, kolay bir bulmacadan kötüdür.** İki sırayı da deneyen okur aynı
+cevabı iki kez alır. Sözleşmenin birinci sözünün açıklaması ona
+*"ikinci bir okuma bulduysanız ya siz ya kitap yanılmıştır"* der — yani
+kitap, kendi vaadiyle kendini bozuk gösteriyordu.
+
+Kural geneldir ve `qa_editorial § ⑦` onu ölçer: **bir sayfa "şunu
+yaparsan cevap ÇIKMAZ" diyorsa, o şey gerçekten cevabı bozmak
+zorundadır.**
+
+### K45 · ⭑ AİLE ÖĞRETİLMİŞ OLABİLİR; İŞLEM ÖĞRETİLMEMİŞ OLABİLİR ⭑
+**24 Ağustos 2026 · Faz 5.** Üç levha "ayna ekseni" basıyor ve o işlem
+kitabın **hiçbir yerinde** öğretilmiyordu — ne ısınmada, ne şifre
+referansında. Okur onunla ilk kez Kapı IV'ün **ikinci** bulmacasında
+karşılaşıyordu.
+
+Ve `qa_experience § 7` bunu göremiyordu çünkü **AİLEYİ** denetliyor:
+`layered-chain` ailesi öğretilmiş görünüyordu. Ama o ailenin iki işlemi
+var ve ısınma yalnızca birini gösteriyordu.
+
+§ 7b eklendi: **levhanın BASTIĞI her işlem adı** öğretilmiş olmalıdır.
+
+### K46 · ⭑ KANARYA, HENÜZ TAKİP EDİLMEYEN DOSYAYI GÖRMÜYORDU ⭑
+**24 Ağustos 2026 · Faz 5.** Yeni üretilen levha prompt kütüphanesi
+**beş cevabı** düz metin taşıyordu ve commit edildi; CI'daki kanarya
+onu buldu ve kırmızı yandı.
+
+⚠ **Ve kanarya commit'ten ÖNCE koşmuştu** (K34'ün süreç dersi
+uygulanmıştı) — **yeşil yanmıştı**. Çünkü `git ls-files` yalnızca
+ZATEN TAKİP EDİLEN dosyaları verir; yeni üretilmiş bir dosya kanaryaya
+görünmüyordu.
+
+> **Süreç doğruydu; kapsam eksikti.** Bir kapının ne zaman koştuğu,
+> neye baktığı bilinmeden bir şey ifade etmez.
+
+Kapsam artık: takip edilenler **+ `.gitignore`'un dışlamadığı her yeni
+dosya** — yani bir sonraki commit'e girecek her şey, girmeden önce.
+Taranan dosya 100 → 106.
+
+### K47 · Levha bir resim değil, bulmacanın VERİSİDİR
+**24 Ağustos 2026 · Faz 5.** Gravür prompt kütüphanesi levhanın dizgi
+karşılığını **olduğu gibi** basıyordu ve bazı levhalar çizelgedir:
+dosya gerçek cevapları taşıdı (K46).
+
+Ama harflere zaten gerek yoktu. Kütüphanenin kendi mutlak yasağı
+*"no text, letters, numerals or captions inside the image"* der:
+gravürcünün ihtiyacı **geometridir** — kaç göz, kaç istasyon, hangi
+kenar. Harfleri kitap dizer.
+
+Şekil artık **iskelet** olarak basılır: harf ve rakam `·`, çerçeve ve
+işaret korunur. Ve prompt kütüphanesi, sayfa modelinin istediği levha
+sayısının **hepsini** taşımak zorundadır — eksik bir prompt, kurucunun
+eksiği kendi keşfetmesi demektir.

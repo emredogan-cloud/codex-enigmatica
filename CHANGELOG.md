@@ -5,6 +5,98 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.7.0] — 2026-08-24 · FAZ 5 · YAKINSAMA + LEVHA + LINE EDITOR
+
+# ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
+
+`externalValidation` **değişmedi**: `founder_override_partial` ·
+`sessionsPerformed = 0` · `humanValidationPassed = false` ·
+ölçülen karar **HARD-STOP**. `07_ASSETS/raw/` **boştur** — 103 gravürün
+hiçbiri üretilmedi. POD prova **alınmadı**. Doğrulama sayfası **canlı
+değil**.
+
+### Eklendi — ön madde, arka madde, kapanış
+
+Başlık · künye · çerçeve anlatı · **SÖZLEŞME SAYFASI** (dört söz) ·
+araçlar girişi · ısınma girişi · ipucu girişi · çözüm girişi · şifre
+referansı · kaynaklar · kolofon · **çerçeve anlatının kapanışı**.
+Ölçülen kelime: **17.612**.
+
+### Eklendi — dört yeni kapı
+
+| kapı | denetim | ne arar |
+|---|---:|---|
+| `qa_plate_readability.py` | 9 | levha basılabilir mi · ayırt edilebilir mi |
+| `qa_crossref.py` | 6 | kitabın kendi içine göndermeleri tutuyor mu |
+| `qa_editorial.py` | 8 | line editor'ın bulduğu SINIFLAR |
+| `metadata.py` · `plate_prompts.py` | — | KDP paketi · 103 gravür promptu |
+
+### ⭑ LINE EDITOR — üç bağımsız alt-ajan
+
+17.877 kelime tarandı: **23 BLOCKING · 52 MAJOR · 39 MINOR**. Hiçbiri
+körü körüne kabul edilmedi; her bulgu kodla doğrulandı ya da
+gerekçesiyle reddedildi (`06_REPORTS/LINE_EDITOR_REPORT.md`).
+
+**⛔ TEKİLLİK İSPATI DAİRESELDİ (K43).** Bir çizelge bulmacasının kabul
+yordamına CEVABIN KENDİSİ ikinci bir süzgeç olarak yazılmıştı. İspat
+daima tek üye buluyor ve kapı YEŞİL yanıyordu — ama okurun elinde o
+süzgeç yok ve sayfa ona İKİ satır bırakıyordu.
+
+**⛔ ÜÇ KAPI BULMACASI ÇÖZÜLEMEZDİ.** Levha üç sütun basıyordu ama ipucu
+DÖRDÜNCÜ bir sütundan söz ediyordu ve o sütun hiç basılmıyordu. Doğru
+cevabı bulan okura levha "bu bulmaca yanlış" diyordu.
+
+**⛔ KİTAP OLMAYAN BİR HATAYI VAAT EDİYORDU (K44).** Yedi sayfa "ters
+sıra ad vermez" diyordu; 7/7'de ters sıra AYNI cevabı veriyor.
+
+**⛔ SAYI SÜTUNU CEVABI ELE VERİYORDU.** 7/7 levhada cevabın katalog
+numarası akranların dışındaydı: okur levhaya bakmadan çözebilirdi.
+
+**⛔ ÖĞRETİLMEMİŞ İŞLEM (K45).** Üç levha "ayna ekseni" basıyor ve o
+işlem kitabın hiçbir yerinde öğretilmiyordu. § 7 AİLEYİ denetliyordu.
+
+Ayrıca: yapım kimlikleri okur sayfasında · aynı çizelge iki kez basılı ·
+iki bulmaca aynı levha · beş tekrarlanan başlık · üç anlatı satırında
+mekanik · ön madde çizelge sayısını yanlış veriyor · ısınma sırası bozuk
+· beş kapı açılışı çizelgesini anmıyor · sözleşme ile çözüm bölümü
+çelişiyor · dört ısınma örneğinde kusur · doğrulama sayfası hiç
+tanıtılmıyor.
+
+### ⭑ KANARYANIN KÖR NOKTASI (K46) — CI kırmızısı
+
+Yeni üretilen prompt kütüphanesi BEŞ CEVABI taşıdı ve commit edildi.
+Kanarya commit'ten ÖNCE koştu ve YEŞİL yandı: `git ls-files` yalnızca
+ZATEN TAKİP EDİLEN dosyaları verir. **Süreç doğruydu; kapsam eksikti.**
+Kapsam artık takip edilenler + eklenecek olanlar (100 → 106 dosya).
+
+### Onarıldı — görsel
+
+62 sütunu aşan 9 satır · dingbat/emoji bloğundan 15 glif (61 karakter) ·
+altı ayrı ok karakteri → iki · sayılan işaretle dolgu karışıyordu ·
+26 kutu bir sütun kayıyordu · okur dosya anahtarı görüyordu · ızgara
+dolgusu kitabın alfabesinde olmayan harfler taşıyordu.
+
+### Değişti
+
+- Levha bütçesi **112 → 103** (ölçüldü: yedi bulmaca çizelge taşır,
+  son sorunun levhası iki kez sayılıyordu)
+- Anlatı kuralı **ölçüye göre daraltıldı** (K42) — ve daraltma da
+  fikstürle test edildi
+- `qa_all.sh` belge tazelemesi ölçüm kapılarından SONRAYA alındı
+
+### Test altyapısı
+
+- `selftest` **213 → 242 denetim**
+- Faz 5'te eklenen her kural, kırık bir kurguda ÇÖKTÜĞÜ GÖRÜLEREK eklendi
+
+### Kapı
+
+- `.gate` → **`phase5`**
+- Rapor: `06_REPORTS/PHASE_5_REPORT.md` · `06_REPORTS/LINE_EDITOR_REPORT.md`
+- Kararlar: **K42 · K43 · K44 · K45 · K46 · K47**
+
+---
+
 ## [0.6.0] — 2026-08-24 · FAZ 4 · KAPI III–V + META-MİSTER (kurucu geçersiz kılması)
 
 # ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING

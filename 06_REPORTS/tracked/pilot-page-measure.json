@@ -3,7 +3,7 @@
   "checks": 4,
   "errors": [],
   "warnings": [
-    "metin payı bütçenin yarısından az: threshold 14.9/34, menagerie 12.7/34, calendar 11.4/34, labyrinth 12.5/34, mirror 9.8/34, last-question 1.3/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
+    "metin payı bütçenin yarısından az: threshold 14.3/34, menagerie 12.3/34, calendar 11.4/34, labyrinth 12.5/34, mirror 9.8/34, last-question 1.3/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
   ],
   "facts": {
     "puzzles": 101,
@@ -25,7 +25,7 @@
       "last-question": 15
     },
     "warmUpWordsByGate": {
-      "threshold": 645,
+      "threshold": 675,
       "menagerie": 108,
       "calendar": 304,
       "labyrinth": 379,
@@ -41,15 +41,15 @@
       "last-question": 13
     },
     "frameWordsByGate": {
-      "threshold": 336,
-      "menagerie": 251,
+      "threshold": 112,
+      "menagerie": 107,
       "calendar": 70,
       "labyrinth": 68,
       "mirror": 56
     },
     "measuredBodyPagesByGate": {
-      "threshold": 14.9,
-      "menagerie": 12.7,
+      "threshold": 14.3,
+      "menagerie": 12.3,
       "calendar": 11.4,
       "labyrinth": 12.5,
       "mirror": 9.8,
@@ -63,7 +63,7 @@
       "mirror": 34,
       "last-question": 6
     },
-    "measuredBodyPagesTotal": 62.6,
+    "measuredBodyPagesTotal": 61.6,
     "declaredBodyPagesTotal": 176,
     "hintWords": 4446,
     "measuredHintPages": 12.7,
@@ -73,7 +73,7 @@
     "declaredSolutionPages": 18,
     "toolsPlateRows": 408,
     "toolsPlatePages": 3.24,
-    "totalWords": 17950,
+    "totalWords": 17612,
     "perPuzzle": [
       {
         "puzzleId": "g1-001",

@@ -2,7 +2,7 @@
 
 <!-- ⚠ ÜRETİLEN BELGE — 04_BUILD/update_docs.py. ELLE DÜZENLEMEYİN. -->
 
-> Kapı: `phase4`
+> Kapı: `phase5`
 
 ---
 
@@ -15,8 +15,8 @@
 | **2** | ⛔ **ÖLDÜRME KAPISI** — 20 bulmaca + 5 çözücü | ⚑ **KURUCU KARARIYLA** — doğrulama bekliyor | `phase2` | `faz/2-pilot` | v0.2.0 |
 | **3** | Kapı II · The Menagerie | ⚑ **KURUCU KARARIYLA** — doğrulama bekliyor | `phase3` | `faz/3-kapi-2` | v0.3.0 |
 | **4** | Kapı III–V + meta-mister | ⚑ **KURUCU KARARIYLA** — doğrulama bekliyor | `phase4` | `faz/4-kapi-3-5` | v0.4.0 |
-| **5** | Yakınsama + levha + doğrulama sayfası | ⏸ **SIRADA** | `phase5` | `faz/5-yakinsama` | v0.5.0 |
-| **6** | Nihai üretim + KDP paketi | ⏸ beklemede | `release` | `faz/6-uretim` | v1.0.0 |
+| **5** | Yakınsama + levha + doğrulama sayfası | ⚑ **KURUCU KARARIYLA** — doğrulama bekliyor | `phase5` | `faz/5-yakinsama` | v0.5.0 |
+| **6** | Nihai üretim + KDP paketi | ⏸ **SIRADA** | `release` | `faz/6-uretim` | v1.0.0 |
 
 > ## ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
 >
@@ -40,16 +40,16 @@
 | Onaylanmış alternatif çözüm | **0** | **0** |
 | İpucu (3 kademe) | **303** | 300 |
 | Levha | **0** üretildi / 103 planlandı | ~110 |
-| Kelime (ölçülen) | **17.950** | ~34.000 |
+| Kelime (ölçülen) | **17.612** | ~34.000 |
 | Künye | **15** (0 doğrulanmış) | — |
 
 ---
 
 ## Sonraki izinli eylem
 
-> ### ⛔ FAZ 4 · KAPI III–V + META — ÖLÇÜLEN KARAR: **HARD-STOP**
+> ### ⛔ FAZ 5 · YAKINSAMA — ÖLÇÜLEN KARAR: **HARD-STOP**
 >
-> Bu fazın ajan tarafından yapılabilir bütün işi **tamamlandı**: Kapı III, IV ve V yazıldı, meta-mister kuruldu ve `qa_meta.py` ile doğrulandı, dokuz yeni mekanizmanın ısınma örneği yazıldı, aha politikası ölçüye bağlandı (K36) ve sayfa modeli gerçek metinle yeniden ölçüldü.
+> Bu fazın ajan tarafından yapılabilir bütün işi **tamamlandı**: manuscript birleştirildi, line editor koştu, levha okunabilirliği ölçüldü ve sızıntı denetimi yenilendi.
 >
 > **Ama öldürme kapısı ölçemediği bir şeyi geçmiş sayamaz.**
 > Harici çözücü oturumu: **0 / 5**.
@@ -58,7 +58,7 @@
 > 1. **A12b** — harici çözücü oturumlarını yürüt
 >    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
 > 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
-> 3. `./04_BUILD/qa_all.sh phase4` koştur ve kararı **oku**
+> 3. `./04_BUILD/qa_all.sh phase5` koştur ve kararı **oku**
 >
 > Ayrıca açık: **A9** (levha provası — paket hazır) · **A2** · **A4** ·
 > **A5** · **A6** · **A7** · **A10**

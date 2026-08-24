@@ -2,8 +2,8 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **24 Ağustos 2026** · Faz: **4 · KAPI III–V + META YAZILDI**
-> Kapı: `phase4` · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
+> Son güncelleme: **24 Ağustos 2026** · Faz: **5 · YAKINSAMA + LEVHA**
+> Kapı: `phase5` · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
 >
 > ## ⚠ HARİCİ İNSAN DOĞRULAMASI HÂLÂ BEKLİYOR
 >
@@ -14,7 +14,7 @@
 > | Ölçülen öldürme kapısı | ⛔ **HARD-STOP** (1/5) — **değişmedi** |
 > | Yapılan harici oturum | **0** |
 > | İnsan doğrulaması geçti mi | **HAYIR** |
-> | Faz 3–4 girişi | ⚑ **kurucu geçersiz kılması** (A13 · 24 Ağustos 2026) |
+> | Faz 3–5 girişi | ⚑ **kurucu geçersiz kılması** (A13 · 24 Ağustos 2026) |
 > | Yazılmış bulmaca | **101** (beş kapı + son soru) · durum `drafted` |
 > | Doğrulanmış bulmaca | **0** — hiçbiri `tested` DEĞİL |
 >
@@ -22,12 +22,12 @@
 > **ÖLÇÜLEN** (HARD-STOP) · **GEÇERSİZ KILINAN** (Faz 3 girişi) ·
 > **HENÜZ DOĞRULANMAMIŞ** (harici insan testi).
 >
-> Faz 3 ve Faz 4 **"harici olarak doğrulanmış" diye anılamaz.** Geçersiz
+> Faz 3, 4 ve 5 **"harici olarak doğrulanmış" diye anılamaz.** Geçersiz
 > kılma ölçümü ezmez; `kill_gate.py` kararı her koşuda HARD-STOP olarak
 > yazdırmaya devam eder ve yalnızca çıkış kodu değişir.
 >
 > → Karar kaydı: `DECISIONS.md § A13` · Rapor:
-> [`06_REPORTS/PHASE_4_REPORT.md`](06_REPORTS/PHASE_4_REPORT.md)
+> [`06_REPORTS/PHASE_5_REPORT.md`](06_REPORTS/PHASE_5_REPORT.md)
 > → Bloklayıcı: **A12/A12b** — harici çözücü oturumları
 
 ---
@@ -84,22 +84,22 @@ soruya bağlayan bir meta-mister. Gravür levhaların **içine gömülmüş**
 
 | | |
 |---|---|
-| Faz | **4 · Kapı III–V + meta-mister yazıldı** (kurucu geçersiz kılmasıyla) |
-| Kapı (`.gate`) | `phase4` |
+| Faz | **5 · yakınsama · line editor · levha kapısı** (kurucu geçersiz kılmasıyla) |
+| Kapı (`.gate`) | `phase5` |
 | Aday bulmaca | **151** / ≥130 ✅ |
 | Yazılmış (`drafted`) | **101** / 100 — beş kapı + son soru |
 | **Doğrulanmış (`validated`)** | **0** / 100 — ⚠ harici kanıt YOK |
 | Elle iş (kitap) | **686 işlem** · beş kapıda da **6–8 EU** bandında sabit |
-| aha (kapı bazında) | **4,0 / 4,0 / 3,0 / 3,0 / 3,5** — K36 |
+| aha (kapı bazında) | **4,0 / 4,0 / 3,0 / 3,0 / 3,0** — K36 |
 | **Çıkarım oranı** | **1,00 → 1,27 → 2,32 → 3,43 → 4,42** (yükseliyor) |
 | Isınma | **17 örnek · 17/17 mekanizma** öğretiliyor |
-| Kalite kapısı | **19 betik · selftest 213 denetim · CI yeşil** |
-| Sayfa modeli | **238** · kelime **17.211** (ölçülen) |
+| Kalite kapısı | **24 betik · selftest 242 denetim · CI yeşil** |
+| Sayfa modeli | **238** · levha **103** · kelime **17.612** (ölçülen) |
 | **Sonraki adım** | **A12/A12b** — harici çözücü oturumları (kurucu) |
 
-⚠ **FAZ 4 KURUCU GEÇERSİZ KILMASIYLA KAPANDI.** Definition of Done'ın
-*"100 bulmaca yazıldı **ve doğrulandı**"* maddesindeki ikinci yarı
-**yapılmadı ve ajan tarafından yapılamaz.**
+⚠ **FAZ 5'İN AJAN İŞİ BİTTİ; DÖRT MADDESİ KURUCUYA AİT.** 103 gravür
+**üretilmedi**, POD prova **alınmadı**, dizgi **dondurulmadı**,
+doğrulama sayfası **canlı değil**. Hiçbiri uydurulmadı.
 
 ### Ne ölçüldü, ne ölçülmedi
 
@@ -108,6 +108,8 @@ soruya bağlayan bir meta-mister. Gravür levhaların **içine gömülmüş**
 | ✅ ÖLÇÜLDÜ | 101/101 tekil cevap · çaba · aha tavanı · çıkarım oranı · levha verisi |
 | ✅ ÖLÇÜLDÜ | DAG döngüsüz · yayılma yarıçapı ≤1 · sızıntı yok |
 | ✅ ÖLÇÜLDÜ | meta-mister: beş kapı katkısı · cevap kitapta **YOK** |
+| ✅ ÖLÇÜLDÜ | levha okunabilirliği · çapraz referans · editoryal bütünlük |
+| ⛔ **ÖLÇÜLMEDİ** | **mürekkebin kâğıt üzerindeki davranışı** (A9) |
 | ⛔ **ÖLÇÜLMEDİ** | **hiçbir insanın bu bulmacaları çözüp çözemediği** |
 
 `06_REPORTS/solver/` **boştur** ve gerçek oturumlar gelene kadar boş kalır.
@@ -265,25 +267,28 @@ temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
 
 ## 12 · Sonraki izinli eylem
 
-> ### ⚑ FAZ 4 KAPANDI — KURUCU GEÇERSİZ KILMASIYLA
+> ### ⚑ FAZ 5'İN AJAN İŞİ BİTTİ — DÖRT MADDE KURUCUYA AİT
 >
-> Ajanın yapabileceği bütün Faz 4 işi **tamamlandı**: Kapı III, IV ve V
-> yazıldı, meta-mister kuruldu ve `qa_meta.py` ile doğrulandı, dokuz yeni
-> mekanizmanın ısınma örneği yazıldı, aha politikası ölçüye bağlandı
-> (K36) ve sayfa modeli gerçek metinle yeniden ölçüldü.
+> Yazıldı: ön madde · sözleşme sayfası · arka madde · çerçeve anlatının
+> kapanışı. Üretildi: dört yeni kalite kapısı, KDP metadata paketi ve
+> **103 gravür promptu**. Üç bağımsız **line editor** alt-ajanı 17.877
+> kelimeyi taradı; **23 bloklayıcı sınıf** doğrulandı ve onarıldı.
 >
-> **Ama Definition of Done "100 bulmaca yazıldı VE DOĞRULANDI" diyor** ve
-> ikinci yarı ajan tarafından yapılamaz. Harici çözücü oturumu:
-> **0 / 5** · ölçülen öldürme kapısı: **HARD-STOP**.
+> **Ama Definition of Done'ın dört maddesi ajan tarafından yapılamaz:**
 >
-> Kalan iş **kurucuya aittir**:
-> 1. **A12b** — ikinci tur oturumlarını yürüt
->    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
-> 2. sonuçları `06_REPORTS/solver/` altına yaz, sayaçları güncelle
-> 3. `./04_BUILD/qa_all.sh phase4` koştur ve kararı **oku**
+> 1. **103 gravürün üretilmesi** — `07_ASSETS/raw/` BOŞ
+>    → prompt kütüphanesi hazır: `07_ASSETS/IMAGE_PROMPT_LIBRARY.html`
+> 2. **A9** — POD prova kopya ve levha okunabilirliğinin KÂĞITTA ölçümü
+> 3. **dizgi dondurma** — gerçek levhalar gelmeden yapılamaz (K12:
+>    Kapı V sayfa numaralarına bağlıdır ve kırılacak bir şey kilitlenmez)
+> 4. **A4** — doğrulama sayfasının barındırılması
 >
-> Ayrıca açık: **A9** (levha provası) · **A2** · **A4** · **A5** ·
-> **A6** · **A7** · **A10**
+> Ve hepsinin üstünde duran tek bloklayıcı değişmedi:
+> **A12b — harici çözücü oturumları.** Harici oturum: **0 / 5** ·
+> ölçülen öldürme kapısı: **HARD-STOP**.
+>
+> Ayrıca açık: **A2** · **A5** · **A6** · **A7** · **A10**
 >
 > Ayrıntı: `DECISIONS.md § AÇIK KARARLAR` ·
-> [`06_REPORTS/PHASE_4_REPORT.md`](06_REPORTS/PHASE_4_REPORT.md)
+> [`06_REPORTS/PHASE_5_REPORT.md`](06_REPORTS/PHASE_5_REPORT.md) ·
+> [`06_REPORTS/LINE_EDITOR_REPORT.md`](06_REPORTS/LINE_EDITOR_REPORT.md)

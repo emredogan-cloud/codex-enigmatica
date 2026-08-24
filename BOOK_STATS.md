@@ -2,7 +2,7 @@
 
 <!-- ⚠ ÜRETİLEN BELGE — 04_BUILD/update_docs.py. ELLE DÜZENLEMEYİN. -->
 
-> Kapı: `phase4` · Bu dosyadaki her sayı **ölçülmüştür**.
+> Kapı: `phase5` · Bu dosyadaki her sayı **ölçülmüştür**.
 >
 > ⚠ Bu dosya **çözüm bilgisi taşımaz** — yalnızca sayılar.
 

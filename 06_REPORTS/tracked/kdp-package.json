@@ -1,0 +1,46 @@
+{
+  "status": "pass",
+  "checks": 16,
+  "errors": [],
+  "warnings": [],
+  "facts": {
+    "interior": {
+      "exists": true,
+      "bytes": 71665790,
+      "header": "%PDF-1.4",
+      "pages": 263,
+      "embeddedFontStreams": 4,
+      "fonts": [
+        "AAAAAA+DejaVuSansMono",
+        "AAAAAA+DejaVuSerif",
+        "AAAAAA+DejaVuSerif-Bold",
+        "AAAAAA+DejaVuSerif-Italic",
+        "Helvetica"
+      ],
+      "mediaBoxIn": [
+        6.0,
+        9.0
+      ]
+    },
+    "cover": {
+      "exists": true,
+      "bytes": 34583268,
+      "header": "%PDF-1.4",
+      "pages": 1,
+      "embeddedFontStreams": 2,
+      "fonts": [
+        "AAAAAA+DejaVuSerif",
+        "AAAAAA+DejaVuSerif-Bold",
+        "Helvetica"
+      ],
+      "mediaBoxIn": [
+        12.9075,
+        9.25
+      ]
+    },
+    "aplusModules": 6,
+    "pageCount": 263,
+    "paperbackFiles": 3,
+    "aplusFiles": 7
+  }
+}

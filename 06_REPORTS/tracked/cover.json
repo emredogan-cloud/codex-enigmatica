@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "checks": 7,
+  "errors": [],
+  "warnings": [],
+  "facts": {
+    "spineIn": 0.6575,
+    "widthIn": 12.9075,
+    "heightIn": 9.25,
+    "pages": 263,
+    "paper": "cream",
+    "artCropPx": [
+      1193,
+      855
+    ],
+    "barcodeBoxIn": [
+      3.875,
+      0.375,
+      2.0,
+      1.2
+    ],
+    "spineTextPrinted": true,
+    "art": "codex-enigmatica-wrap-cover-option-01.png"
+  }
+}

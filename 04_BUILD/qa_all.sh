@@ -191,6 +191,8 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 # ── KURUCU GÖRSELLERİ ─────────────────────────────────────────────────────
 [ -f 04_BUILD/asset_ingest.py ] && \
   run "kurucu görsel envanteri" $PY 04_BUILD/asset_ingest.py
+[ -f 04_BUILD/kdp_package.py ] && \
+  run "KDP paketi + preflight"  $PY 04_BUILD/kdp_package.py
 [ -f 04_BUILD/kdp_handbook.py ] && \
   run "KDP el kitabı"           $PY 04_BUILD/kdp_handbook.py
 

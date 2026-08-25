@@ -62,10 +62,14 @@ COVER_W_IN, COVER_H_IN = 6.0, 9.0
 DPI_TARGET = 300.0
 DPI_FLOOR = 300.0
 
+# ⚠ SIRA ÖNEMLİDİR: `wrap-cover-` öneki `cover-` öneğinden ÖNCE
+# denenmelidir, yoksa sarmal kapak "ÖN KAPAK" sanılır ve 6×9 inçlik bir
+# ön kapak kutusuna göre ölçülür — sarmal ise iki kapak artı sırttır.
 CLASSES = {
     "pl-": "GRAVÜR · bulmaca verisi",
     "dc-": "GRAVÜR · süs",
     "tl-": "GRAVÜR · araç",
+    "codex-enigmatica-wrap-cover-": "KAPAK SARMAL",
     "codex-enigmatica-cover-": "KAPAK ÖN",
     "codex-enigmatica-aplus-": "A+",
 }
@@ -301,6 +305,14 @@ def main() -> int:
             pw, ph, dpi = print_fit(w, h, COVER_W_IN, COVER_H_IN)
             row.update({"printW_in": pw, "printH_in": ph, "effectiveDpi": dpi,
                         "target": "%.0f × %.0f in" % (COVER_W_IN, COVER_H_IN)})
+        elif cls == "KAPAK SARMAL":
+            # ⚠ Sarmalın FİZİKSEL hedefi HENÜZ YOK: genişlik
+            # arka(6") + SIRT + ön(6") eder ve sırt sayfa sayısından
+            # türer. Sayfa sayısı dondurulmadan bir DPI iddia etmek,
+            # uydurulmuş bir ölçüdür. Piksel ve en-boy ölçülür, DPI
+            # bilerek boş bırakılır.
+            row.update({"effectiveDpi": None,
+                        "target": "sırt dondurulunca hesaplanır (K12)"})
         elif cls == "A+":
             pid = name[:-4].replace("codex-enigmatica-", "")
             tw, th = ap_target.get(pid, (0, 0))

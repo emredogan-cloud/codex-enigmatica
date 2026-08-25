@@ -9,12 +9,12 @@
 
 | | |
 |---|---|
-| Ölçülen sayfa | 238 |
+| Ölçülen sayfa | 263 |
 | Bulmaca · kapı · ipucu | 101 · 5 · 303 |
 | İşlenmiş levha | 103 / 103 |
 | İşlenmiş ön kapak | 2 / 2 |
 | İşlenmiş A+ | 6 / 6 |
-| Ajan tarafından hazır adım | 1 / 13 |
+| Ajan tarafından hazır adım | 3 / 13 |
 
 ## 1 · ⭑ YALNIZCA KURUCUNUN YAPABİLECEĞİ İŞLER ⭑
 
@@ -36,25 +36,25 @@ bir rapor yanlıştır.
 
 | | |
 |---|---|
-| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 238 sayfa ölçtü. |
+| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 263 sayfa ölçtü. |
 | KDP'DE NEREYE | Bookshelf → Create → Paperback → Manuscript → Upload paperback manuscript |
 | NE GİRECEĞİM | — |
-| HANGİ DOSYA | `08_OUTPUT/interior-paperback.pdf` |
-| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 238 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
+| HANGİ DOSYA | `08_OUTPUT/PAPERBACK/interior.pdf` |
+| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 263 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
 | BAŞARILI OLURSA | KDP 'Manuscript uploaded successfully' der ve Previewer açılır. |
-| DURUM | **BEKLIYOR** |
+| DURUM | **HAZIR** |
 
-### 🔴 Kapak dosyasını hazırla
+### 🔵 Kapak dosyasını hazırla
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Paperback SARMAL kapak (arka + sırt + ön), tek PDF. |
+| NE YAPACAĞIM | Paperback SARMAL kapak (arka + sırt + ön), tek PDF — ÜRETİLDİ. |
 | KDP'DE NEREYE | Paperback Content → Book Cover → Upload a cover you already have |
 | NE GİRECEĞİM | — |
-| HANGİ DOSYA | `08_OUTPUT/cover-paperback.pdf` |
-| NE KONTROL EDECEĞİM | Sırt genişliği sayfa sayısından türer. ELDEKİ KAPAK SANATI YALNIZCA ÖN KAPAKTIR; gerilerek sarmal yapılamaz. |
-| BAŞARILI OLURSA | Sarmal sanat gelmeden bu adım açılmaz. |
-| DURUM | **BEKLIYOR** |
+| HANGİ DOSYA | `08_OUTPUT/PAPERBACK/cover.pdf` |
+| NE KONTROL EDECEĞİM | Sırt ÖLÇÜLEN sayfa sayısından türetildi. Previewer'da sırt yazısının ortalandığını ve barkod alanının boş olduğunu doğrulayın. |
+| BAŞARILI OLURSA | KDP kapağı kabul eder ve Previewer açılır. |
+| DURUM | **HAZIR** |
 
 ### 🟢 Fiyat ve dağıtım
 
@@ -64,7 +64,7 @@ bir rapor yanlıştır.
 | KDP'DE NEREYE | Paperback Rights & Pricing |
 | NE GİRECEĞİM | 19.99 USD |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 238 sayfa değişirse telif de değişir. |
+| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 263 sayfa değişirse telif de değişir. |
 | BAŞARILI OLURSA | KDP net telif tutarını gösterir. |
 | DURUM | **BEKLIYOR** |
 
@@ -77,7 +77,7 @@ bir rapor yanlıştır.
 | NE YAPACAĞIM | Aynı iç blok, hardcover trim ve pay kurallarıyla. |
 | KDP'DE NEREYE | Create → Hardcover → Manuscript |
 | NE GİRECEĞİM | — |
-| HANGİ DOSYA | `08_OUTPUT/interior-hardcover.pdf` |
+| HANGİ DOSYA | `08_OUTPUT/HARDCOVER/interior.pdf` |
 | NE KONTROL EDECEĞİM | Hardcover'da KDP daha geniş iç pay ve menteşe (hinge) payı ister; paperback dosyası olduğu gibi KULLANILAMAZ. |
 | BAŞARILI OLURSA | Yükleme kabul edilir ve Previewer açılır. |
 | DURUM | **BEKLIYOR** |
@@ -89,7 +89,7 @@ bir rapor yanlıştır.
 | NE YAPACAĞIM | Hardcover sarmal — sırt ve menteşe payı paperback'ten FARKLIDIR. |
 | KDP'DE NEREYE | Hardcover Content → Book Cover |
 | NE GİRECEĞİM | — |
-| HANGİ DOSYA | `08_OUTPUT/cover-hardcover.pdf` |
+| HANGİ DOSYA | `08_OUTPUT/HARDCOVER/cover.pdf` |
 | NE KONTROL EDECEĞİM | Hardcover sarmalı ayrı şablondur. Paperback kapağı buraya yüklenmez. |
 | BAŞARILI OLURSA | Sarmal sanat gelmeden bu adım açılmaz. |
 | DURUM | **BEKLIYOR** |
@@ -170,7 +170,7 @@ bir rapor yanlıştır.
 | KDP'DE NEREYE | Rights & Pricing |
 | NE GİRECEĞİM | Yukarıdaki tutarlar |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 238 sayfaya göre kuruldu. |
+| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 263 sayfaya göre kuruldu. |
 | BAŞARILI OLURSA | KDP her pazar için telif tutarını gösterir. |
 | DURUM | **BEKLIYOR** |
 

@@ -120,6 +120,12 @@
 # onları hiç görmemesi demektir. Cevap TAŞIMAZ: sızıntıyı tarif eder,
 # cevabı yazmaz — ve kanarya dosyayı takip edilen dosya olarak tarar.
 !06_REPORTS/FINAL_ASSET_PRODUCTION_REPORT.md
+# ⭑ ÜRETİM PASI RAPORLARI — bütçe ve nihai KDP durumu ⭑
+# Harcama raporu ANAHTAR TAŞIMAZ (yalnızca token sayısı ve tutar).
+# Nihai üretim raporu, bir sonraki oturumun neyin hazır neyin bloklu
+# olduğunu görmesinin tek yoludur. İkisi de kanaryayla taranır.
+!06_REPORTS/OPENAI_14_ENGRAVINGS_COST_REPORT.md
+!06_REPORTS/FINAL_KDP_PRODUCTION_REPORT.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:
@@ -159,6 +165,10 @@
 07_ASSETS/kindle/**/*
 07_ASSETS/web/**/*
 07_ASSETS/plates/**/*
+# ⚠ `07_ASSETS/back/` kurucunun YEDEK/özgün büyük dosyalarıdır (her biri
+# ~3 MB). Diğer varlık dizinleri gibi depo dışıdır; ikili dosya deponun
+# işi değildir ve `back/` deseni önceki kurallara takılmıyordu.
+07_ASSETS/back/*
 !07_ASSETS/**/.gitkeep
 !07_ASSETS/**/README.md
 

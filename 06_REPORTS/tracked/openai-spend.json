@@ -1,0 +1,38 @@
+{
+ "$comment": [
+  "ÜRETİLEN DOSYA — 04_BUILD/engrave_openai.py.",
+  "Kümülatif OpenAI harcaması. ANAHTAR İÇERMEZ."
+ ],
+ "model": "gpt-image-1",
+ "size": "1024x1024",
+ "quality": "high",
+ "targetUsd": 3.0,
+ "ceilingUsd": 4.0,
+ "calls": [
+  {
+   "id": "pl-g3-03",
+   "usd": 0.168065,
+   "inputTokens": 333,
+   "outputTokens": 4160,
+   "bytes": 2679757,
+   "seconds": 38.1
+  },
+  {
+   "id": "pl-g3-03",
+   "usd": 0.16835,
+   "inputTokens": 390,
+   "outputTokens": 4160,
+   "bytes": 2277590,
+   "seconds": 35.0
+  },
+  {
+   "id": "pl-g3-03",
+   "usd": 0.1685,
+   "inputTokens": 420,
+   "outputTokens": 4160,
+   "bytes": 2912208,
+   "seconds": 40.6
+  }
+ ],
+ "totalUsd": 0.504915
+}

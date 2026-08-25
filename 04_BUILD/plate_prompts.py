@@ -83,13 +83,30 @@ FORBIDDEN = [
 ]
 
 FAMILY_SCENE = {
+    # ⚠ "A ROW" YETMEDİ. Model altı nesne yerine kırk beş kaidelik bir
+    # IZGARA çizdi (pl-g1-08) — sayılabilir veri kırk beşe dağıldı.
+    # Satır sayısı artık açıkça BİR'dir ve adet VERİDEN gelir.
     "plate-observation": (
-        "A row of near-identical architectural or ritual objects on a "
-        "plinth, engraved as a specimen plate. Their sameness is the "
-        "point; a single one differs."),
+        "ONE SINGLE HORIZONTAL ROW of near-identical architectural or "
+        "ritual objects standing on a common plinth, engraved as a "
+        "specimen plate, seen straight on. Exactly one row — never a "
+        "grid, never stacked rows, never a repeating wallpaper pattern. "
+        "The number of objects is fixed by the data below and by "
+        "nothing else. Their sameness is the point; a single one "
+        "differs."),
+    # ⚠ "SEEN FACE-ON" YETMEDİ. İlk üretimde model bunu üç boyutlu,
+    # perspektifli bir halka olarak çizdi: istasyonlar arkaya doğru
+    # daralıyor, eşit büyüklükte olmuyor ve SAYILAMIYOR. Kütüphanenin
+    # kendi yasağı ("no perspective foreshortening on counted elements")
+    # ihlal edilmiş oluyordu. Sahne artık nesneyi değil, ÇİZİM BİÇİMİNİ
+    # tarif ediyor: bu bir halka resmi değil, düz bir DİYAGRAMDIR.
     "plate-embedded-cipher": (
-        "A single ring, band or strip of worked metal seen face-on, its "
-        "surface divided into regular stations."),
+        "A FLAT ANNULAR DIAGRAM: a ring drawn as a plain circular band "
+        "seen from DIRECTLY ABOVE — orthographic and perfectly circular, "
+        "with no thickness, no depth, no rim, no interior wall, no cast "
+        "shadow and no three-quarter view. The band is divided into "
+        "equal wedge stations by plain radial rules, and every station "
+        "is the same size because the ring is not tilted."),
     "substitution-cipher": (
         "An alphabet wheel or slide rule of two concentric bands, the "
         "inner one rotated against the outer."),
@@ -207,6 +224,31 @@ def engraving_prompt(entry: dict) -> str:
     sonda yasak. Görsel modeller son talimatı en güçlü tutar; yasağın
     sonda olması bu yüzdendir."""
     data = "\n".join("  · " + d for d in entry["data"])
+
+    # ⭑ SAYIYI BAŞA AL ⭑
+    # ⚠ Görsel modeller listenin ortasındaki bir sayıyı kaçırıyor: aynı
+    # levha için önce 8, sonra 12 istasyon çizildi — sözleşme 7 diyordu.
+    # Sayı, sahnenin İLK cümlesinde geçtiğinde çok daha güçlü tutuluyor.
+    # Bu bir üslup tercihi değil, ölçülmüş bir başarısızlığın onarımıdır.
+    lead = []
+    for d in entry["data"]:
+        m = re.match(r"exactly (\d+) stations", d)
+        if m:
+            lead.append("The band has EXACTLY %s stations — count them: "
+                        "%s equal wedges, %s plain radial dividing rules, "
+                        "no more and no fewer."
+                        % (m.group(1), m.group(1), m.group(1)))
+        m = re.match(r"exactly (\d+) of mark '(.+?)'", d)
+        if m:
+            lead.append("There are EXACTLY %s marks of the form '%s' — "
+                        "count them; %s and only %s."
+                        % (m.group(1), m.group(2), m.group(1), m.group(1)))
+        m = re.match(r"the engraved field is (\d+) bands", d)
+        if m and entry.get("mech") == "plate-observation":
+            lead.append("The single row holds EXACTLY %s objects."
+                        % m.group(1))
+    head = entry["scene"] + ("\n\n" + " ".join(lead) if lead else "")
+
     return (
         "%s\n"
         "\n"
@@ -221,7 +263,7 @@ def engraving_prompt(entry: dict) -> str:
         "foreshortening.\n"
         "\n"
         "ABSOLUTE CONSTRAINTS — %s."
-        % (entry["scene"].strip(), STYLE, data,
+        % (head.strip(), STYLE, data,
            "; ".join(f.rstrip(".") for f in FORBIDDEN)))
 
 

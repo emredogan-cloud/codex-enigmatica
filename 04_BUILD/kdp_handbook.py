@@ -65,10 +65,18 @@ def collect(meta: dict) -> dict:
         # ⚠ İÇ BLOK PDF'İ YOK ve bu bilerek böyledir: dizgi DONDURULMADI
         # (K12) ve gerçek levhalar yeni geldi. Var gibi göstermek,
         # kurucuyu olmayan bir dosyayı aramaya göndermektir.
-        "interiorPb": probe("08_OUTPUT/interior-paperback.pdf"),
-        "interiorHc": probe("08_OUTPUT/interior-hardcover.pdf"),
-        "wrapPb": probe("08_OUTPUT/cover-paperback.pdf"),
-        "wrapHc": probe("08_OUTPUT/cover-hardcover.pdf"),
+        # ⚠ YOLLAR GERÇEK ÇIKTIYLA AYNI OLMAK ZORUNDA. Önceki sürümde
+        # burada var olmayan adlar yazılıydı ve el kitabı, üretilmiş
+        # dosyaları "bekliyor" gösteriyordu — kurucuyu hazır bir dosyayı
+        # aramaya göndermek, olmayan bir dosyayı hazır göstermek kadar
+        # kötüdür.
+        "interiorPb": probe("08_OUTPUT/PAPERBACK/interior.pdf"),
+        "coverPb": probe("08_OUTPUT/PAPERBACK/cover.pdf"),
+        "metaPb": probe("08_OUTPUT/PAPERBACK/metadata.json"),
+        "sumsPb": probe("08_OUTPUT/PAPERBACK/SHA256SUMS"),
+        "aplusPkg": probe("08_OUTPUT/APLUS", "dir", 6),
+        "interiorHc": probe("08_OUTPUT/HARDCOVER/interior.pdf"),
+        "wrapHc": probe("08_OUTPUT/HARDCOVER/cover.pdf"),
         "wrapRaw1": probe("07_ASSETS/raw/%s" % CAT.WRAPS[0]["file"]),
         "wrapRaw2": probe("07_ASSETS/raw/%s" % CAT.WRAPS[1]["file"]),
     }
@@ -123,18 +131,19 @@ def steps(meta: dict, files: dict) -> list:
                 "state": files["interiorPb"]["state"],
             },
             {
-                "id": "pb-2", "flag": "🔴",
+                "id": "pb-2", "flag": "🔵",
                 "adim": "Kapak dosyasını hazırla",
-                "ne": "Paperback SARMAL kapak (arka + sırt + ön), tek PDF.",
+                "ne": "Paperback SARMAL kapak (arka + sırt + ön), tek PDF — "
+                      "ÜRETİLDİ.",
                 "nere": "Paperback Content → Book Cover → Upload a "
                         "cover you already have",
                 "gir": "—",
-                "dosya": files["wrapPb"]["path"],
-                "kontrol": "Sırt genişliği sayfa sayısından türer. "
-                           "ELDEKİ KAPAK SANATI YALNIZCA ÖN KAPAKTIR; "
-                           "gerilerek sarmal yapılamaz.",
-                "basari": "Sarmal sanat gelmeden bu adım açılmaz.",
-                "state": files["wrapPb"]["state"],
+                "dosya": files["coverPb"]["path"],
+                "kontrol": "Sırt ÖLÇÜLEN sayfa sayısından türetildi. "
+                           "Previewer'da sırt yazısının ortalandığını ve "
+                           "barkod alanının boş olduğunu doğrulayın.",
+                "basari": "KDP kapağı kabul eder ve Previewer açılır.",
+                "state": files["coverPb"]["state"],
             },
             {
                 "id": "pb-3", "flag": "🟢",
@@ -533,7 +542,7 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
           % (label, got, need, pill(st)))
     for label, key in (("Paperback iç blok", "interiorPb"),
                        ("Hardcover iç blok", "interiorHc"),
-                       ("Paperback sarmal kapak", "wrapPb"),
+                       ("Paperback sarmal kapak", "coverPb"),
                        ("Hardcover sarmal kapak", "wrapHc")):
         A('<tr><th>%s</th><td><code>%s</code> %s</td></tr>'
           % (label, files[key]["path"], pill(files[key]["state"])))

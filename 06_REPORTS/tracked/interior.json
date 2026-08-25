@@ -1,0 +1,21 @@
+{
+  "status": "pass",
+  "checks": 7,
+  "errors": [],
+  "warnings": [],
+  "facts": {
+    "pages": 263,
+    "gutterIn": 0.5,
+    "hintsTypeset": 303,
+    "solutionsTypeset": 100,
+    "metaWithheld": [
+      "meta-001"
+    ],
+    "pdfMB": 71.67,
+    "trim": [
+      6.0,
+      9.0
+    ],
+    "path": "08_OUTPUT/PAPERBACK/interior.pdf"
+  }
+}

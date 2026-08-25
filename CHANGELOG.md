@@ -5,6 +5,54 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.9.0] — 2026-08-25 · ÜRETİM PASI · İÇ BLOK + KAPAK + KDP PAKETİ
+
+# ⛔ YÜKLEMEYİ ENGELLEYEN İKİ ŞEY
+
+**① DİL:** iç blok TÜRKÇE, metadata İNGİLİZCE ilan ediyor. İngilizce
+dönüşüm A12'ye bağlı ve alfabe farkı yüzünden bütün şifreli dizeleri
+yeniden üretmeyi gerektiriyor. **② CEVAP SIZINTISI:** `e341a5f` commit
+mesajı hâlâ açık; onarım Kapı 3-4-5 üretecinin kırığına bağlı.
+Ayrıntı: `06_REPORTS/FINAL_KDP_PRODUCTION_REPORT.md`.
+
+### Eklendi — iç blok, kapak, paket ÜRETİLDİ
+
+`interior.py` · `covers.py` · `kdp_package.py` · `plate_render.py` ·
+`engrave_openai.py`. **263 sayfa** (eski 238 TAHMİNİ atıldı), sırt
+**0,6575 in**, tam kapak **12,908 × 9,250 in**, paket + sağlama
+toplamları. Preflight **16 denetim yeşil**.
+
+### ⭑ Yakalandı — kitap kendi sözünü bozuyordu
+
+Sözleşme: *"Son sorunun cevabı … bu kitabın hiçbir yerinde basılı
+değildir."* İlk yapı meta cevabını çözüm bölümüne BASIYORDU — yani
+meta-mister, ürünün bütün kancası, yok oluyordu. Artık basılmıyor.
+
+Ayrıca: başlık sayfasına ham Python sözlüğü basılmıştı; arka maddenin
+dörtte biri (şifre referansı, kaynaklar, kolofon, kapanış) hiç
+basılmamıştı; levhaların krem zemini krem kâğıtta gri kutu olacaktı
+(gri tona çevrildi, zemin beyaza çekildi — PDF 1272 MB → 71,7 MB).
+
+### 14 gravür — API bırakıldı, kod çizdi
+
+`pl-g3-03` üç kez üretildi: 8, 12, 12 istasyon (sözleşme 7). Üslup
+düzeldi, sayı düzelmedi. Görsel model sayamıyorsa sayma işi ona
+verilmez: on dördü deterministik çizildi, nihai baskı çözünürlüğünde.
+**Harcama 0,5049 USD** (hedef 3 · tavan 4).
+
+### Düzeltildi — kendi kodum iki kapıyı kırdı
+
+`covers.py`/`interior.py` kurucu değerlerini GÖMÜYORDU (tek doğruluk
+kaynağı ihlali) · `interior.json` yasak alan adı taşıyordu
+(`hints`/`solutions` → `hintsTypeset`/`solutionsTypeset`) · bir yorum
+satırı 8 karakterlik bir cevabı taşıyordu (K41). Üçü de kapılarca
+yakalandı ve düzeltildi.
+
+- Rapor: `06_REPORTS/FINAL_KDP_PRODUCTION_REPORT.md` ·
+  `06_REPORTS/OPENAI_14_ENGRAVINGS_COST_REPORT.md`
+
+---
+
 ## [0.8.0] — 2026-08-25 · KURUCU VARLIKLARI · İŞLEME + KDP PAKETİ
 
 # ⛔ İKİ BLOKLAYICI AÇIK

@@ -153,6 +153,19 @@ def main() -> int:
                if isinstance(v, int))
     body = sum(g.get("pageBudget", 0) for g in gi.get("gates", []))
     pages = front + body + back
+    modelled = pages
+
+    # ⭑ ÖLÇÜM TAHMİNİ YENER ⭑
+    # ⚠ Buradaki `pages` bir SAYFA MODELİ tahminidir ve iç blok
+    # üretilmeden önce elde olan tek sayıdır. Ama iç blok ARTIK
+    # üretiliyor: `interior.py` gerçek sayfayı sayar. Tahmini korumak,
+    # arka kapağa yanlış sayfa sayısı basmak ve sırtı yanlış
+    # hesaplamak demektir — ikisi de POD'da geri dönüşsüzdür.
+    measured = ((pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "interior.json")) or {})
+        .get("facts") or {}).get("pages")
+    if measured:
+        pages = int(measured)
 
     index = pl.load_index()
     drafted = [p for p in index if p.get("status") in
@@ -170,7 +183,8 @@ def main() -> int:
     print("  başlık        %s" % meta["title"])
     print("  yazar         %s" % meta["author"])
     print("  yayıncı       %s" % meta["publisher"])
-    print("  sayfa         %d" % meta["pageCount"])
+    print("  sayfa         %d%s" % (meta["pageCount"],
+          "  ⭑ ÖLÇÜLDÜ (model %d)" % modelled if measured else "  (model)"))
     print("  BISAC         %s" % ", ".join(b["code"] for b in meta["bisac"]))
     print("  anahtar kel.  %d / 7" % len(meta["keywords"]))
     print("  sürüm         %s" % ", ".join(

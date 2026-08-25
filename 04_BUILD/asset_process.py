@@ -139,13 +139,63 @@ def plan(name: str) -> dict | None:
     return None
 
 
+def write_index(failed: list | None = None) -> dict:
+    """⭑ KAYIT, BİR KOŞUNUN GÜNLÜĞÜ DEĞİL, DİSKİN ÖLÇÜMÜDÜR ⭑
+
+    ⚠ Bu fonksiyon bir hatadan doğdu: kayıt önce "bu koşuda ne yaptım"ı
+    yazıyordu ve `--only` ile yapılan sekiz tekil koşu, 103 gravürlük
+    koşunun kaydını sırayla EZDİ. Sonunda dosyada tek bir varlık kaldı,
+    oysa diskte 111 tane vardı.
+
+    Bir koşunun günlüğü kırılgandır: kısmi koşu, çökme, karışık çağrı
+    onu yalancı yapar. Diskin ölçümü kırılgan değildir — ne varsa odur.
+    """
+    import asset_ingest as ING
+    rows = []
+    for sub, cls in (("plates", "GRAVÜR"), ("print", "KAPAK ÖN"),
+                     ("web", "A+")):
+        d = os.path.join(pl.ROOT, "07_ASSETS", sub)
+        if not os.path.isdir(d):
+            continue
+        for f in sorted(x for x in os.listdir(d) if x.endswith(".png")):
+            m = ING.measure(os.path.join(d, f))
+            if "error" in m:
+                continue
+            row = {"file": f, "class": cls,
+                   "dst": "07_ASSETS/%s/%s" % (sub, f),
+                   "final": [m["w"], m["h"]], "dpiMeta": m["dpiMeta"]}
+            if cls != "A+":
+                box = ((ING.BOX_W_IN, ING.BOX_H_IN) if cls == "GRAVÜR"
+                       else (ING.COVER_W_IN, ING.COVER_H_IN))
+                _, _, row["effectiveDpi"] = ING.print_fit(m["w"], m["h"], *box)
+            rows.append(row)
+
+    doc = {"$comment": ["ÜRETİLEN DOSYA — 04_BUILD/asset_process.py.",
+                        "Bir koşunun günlüğü DEĞİL, 07_ASSETS altındaki",
+                        "işlenmiş dosyaların ÖLÇÜMÜDÜR."],
+           "model": MODEL, "gravureDpi": GRAVURE_DPI, "coverDpi": COVER_DPI,
+           "processed": len(rows), "failed": failed or [], "assets": rows}
+    os.makedirs(os.path.dirname(LOG), exist_ok=True)
+    json.dump(doc, open(LOG, "w", encoding="utf-8"),
+              ensure_ascii=False, indent=1)
+    return doc
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--only", help="tek dosya adı (deneme için)")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--tmp", default="/tmp/enigmatica-upscale")
+    ap.add_argument("--index", action="store_true",
+                    help="yükseltme YAPMA, yalnızca diski ölçüp kaydı yaz")
     args = ap.parse_args()
+
+    if args.index:
+        d = write_index()
+        print("\n  ✍ %s  (%d işlenmiş varlık ölçüldü)"
+              % (os.path.relpath(LOG, pl.ROOT), d["processed"]))
+        return 0
 
     if not os.path.exists(UPSCAYL):
         print("⛔ Upscayl CLI yok: %s" % UPSCAYL)
@@ -196,11 +246,7 @@ def main() -> int:
             if os.path.exists(tmp):
                 os.remove(tmp)
 
-    os.makedirs(os.path.dirname(LOG), exist_ok=True)
-    json.dump({"model": MODEL, "gravureDpi": GRAVURE_DPI,
-               "coverDpi": COVER_DPI, "processed": len(done),
-               "failed": failed, "assets": done},
-              open(LOG, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    write_index(failed)
 
     print("\n" + "=" * 74)
     print("  ✓ %d işlendi · ⛔ %d başarısız · %.1f dk"

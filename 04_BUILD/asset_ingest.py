@@ -139,11 +139,122 @@ def aplus_targets() -> dict:
     return out
 
 
+SHEET = os.path.join(pl.ROOT, "07_ASSETS", "PLATE_VERIFICATION.html")
+
+
+def build_sheet(rows: list) -> int:
+    """⭑ SAYIM SAYFASI — levhanın YANINDA sözleşmesi ⭑
+
+    ⚠ NEDEN OTOMATİK SAYILMIYOR: denendi ve GÜVENİLMEDİ. Eşikleme
+    gravürün taramasını işaret sanıyor (bir levhada 5 yerine 44 saydı),
+    özilinti ise armoniklere kilitleniyor (6 yerine 2,6). Güvenilmez bir
+    sayaç, sayaç olmamasından KÖTÜDÜR: yanlış yeşil, bakılmamış bir
+    levhayı bakılmış gösterir.
+
+    Bu yüzden ajan sayıyı ÖLÇMEZ; insanın ölçmesini MÜMKÜN KILAR.
+    Her levha, kendi değiştirilemez sayılarının yanına basılır.
+    """
+    lib = open(LIB, encoding="utf-8").read()
+    import html as _h
+    strip = lambda x: _h.unescape(re.sub("<[^>]+>", "", x)).strip()
+    data = {}
+    for m in re.finditer(r'<article class="card" id="([a-z0-9-]+)">(.*?)'
+                         r'(?=<article class="card"|<h2 )', lib, re.S):
+        dm = re.search(r'⭑ VERİ — DEĞİŞTİRİLEMEZ ⭑</h4><ul class="data">'
+                       r'(.*?)</ul>', m.group(2), re.S)
+        if dm:
+            data[m.group(1)] = [strip(x) for x in
+                                re.findall(r"<li>(.*?)</li>", dm.group(1), re.S)]
+
+    grav = [r for r in rows if r["class"].startswith("GRAVÜR")]
+    grav.sort(key=lambda r: r["file"])
+    cards, n_count = [], 0
+    for r in grav:
+        pid = r["file"][:-4]
+        items = data.get(pid, [])
+        counted = [i for i in items if i.startswith("exactly")]
+        if counted:
+            n_count += 1
+        li = "".join('<li class="%s">%s</li>'
+                     % ("k" if i.startswith("exactly") else "", _h.escape(i))
+                     for i in items) or "<li class='n'>sayı taahhüdü yok</li>"
+        cards.append(
+            '<article><label><input type="checkbox" id="v-%s"> '
+            '<b>%s</b></label>'
+            '<img src="raw/%s" alt="%s" loading="lazy">'
+            '<ul>%s</ul></article>' % (pid, pid, r["file"], pid, li))
+
+    doc = """<title>Levha Sayım Sayfası</title>
+<style>
+:root{--bg:#faf7f2;--ink:#241f1a;--mut:#6d6459;--line:#ded5c7;--card:#fff;
+--hot:#8f2f2f;--hotbg:#f6e9e9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#17150f;--ink:#ece5d8;--mut:#a2988a;--line:#3a3328;--card:#1f1c15;
+--hot:#e79191;--hotbg:#2c1c1c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:15px/1.6 Georgia,serif;padding:0 18px 70px}
+.w{max-width:1280px;margin:0 auto}
+h1{margin:26px 0 4px}
+p.s{color:var(--mut);margin:0 0 16px}
+.bar{position:sticky;top:0;background:var(--bg);padding:10px 0;
+border-bottom:1px solid var(--line);z-index:5;font:700 13px monospace}
+.g{display:grid;gap:14px;margin-top:16px;
+grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
+article{background:var(--card);border:1px solid var(--line);
+border-radius:11px;padding:11px}
+article img{width:100%;height:auto;border:1px solid var(--line);
+border-radius:7px;margin:8px 0;background:#fff}
+label{cursor:pointer;font:600 13px monospace}
+label input{width:16px;height:16px;vertical-align:-3px}
+ul{margin:0;padding-left:17px;font-size:12.5px;color:var(--mut)}
+li.k{color:var(--hot);background:var(--hotbg);font-weight:700;
+padding:2px 5px;border-radius:4px;margin:2px 0;list-style:none;
+margin-left:-17px}
+li.n{font-style:italic}
+.note{border-left:4px solid var(--hot);background:var(--hotbg);
+padding:11px 14px;border-radius:0 9px 9px 0;margin:14px 0}
+</style>
+<div class="w">
+<h1>Levha Sayım Sayfası</h1>
+<p class="s">__N__ gravür · __C__ tanesi sayı taahhüdü taşıyor ·
+bu dosya <code>04_BUILD/asset_ingest.py --sheet</code> ile üretildi.</p>
+<div class="note"><b>⚠ BU SAYIMI AJAN YAPMADI VE YAPAMAZ.</b><br>
+Otomatik sayım denendi ve güvenilmedi: eşikleme gravürün kendi
+taramasını işaret sanıyor, özilinti armoniklere kilitleniyor. Güvenilmez
+bir sayaç sayaç olmamasından <b>kötüdür</b> — bakılmamış bir levhayı
+bakılmış gösterir.<br><br>
+Kırmızı satırlar <b>sayılacak</b> şartlardır. Levhada sayın. Tutmuyorsa
+o levha <b>yeniden üretilir</b>; veri pazarlığa kapalıdır.</div>
+<div class="bar" id="c">0 / __N__</div>
+<div class="g">__CARDS__</div>
+</div>
+<script>
+(function(){var K="enigmatica-plate-verify";
+var s={};try{s=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
+var b=[].slice.call(document.querySelectorAll("input"));
+function t(){var n=b.filter(function(x){return x.checked}).length;
+document.getElementById("c").textContent=n+" / "+b.length+
+" doğrulandı";}
+b.forEach(function(x){if(s[x.id]){x.checked=true}
+x.addEventListener("change",function(){s[x.id]=x.checked;
+try{localStorage.setItem(K,JSON.stringify(s))}catch(e){}t()})});
+t();})();
+</script>"""
+    doc = (doc.replace("__CARDS__", "\n".join(cards))
+              .replace("__N__", str(len(grav)))
+              .replace("__C__", str(n_count)))
+    open(SHEET, "w", encoding="utf-8").write(doc)
+    return len(grav)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--json", default=OUT)
+    ap.add_argument("--sheet", action="store_true",
+                    help="levha sayım sayfasını üret")
     args = ap.parse_args()
 
     print("=" * 74)
@@ -324,6 +435,30 @@ def main() -> int:
                   % (web_seen, len(apl))
                   + ("" if not web_bad else " — ⛔ %s" % web_bad[:3]))
 
+    # ── ⭑ LEVHA SAYFAYA SIĞIYOR MU ⭑ ──────────────────────────────────
+    # ⚠ ETKİN DPI YETERLİ OLSA BİLE bir levha sayfaya TAM GENİŞLİKTE
+    # oturmayabilir: çok uzun bir levha yükseklikten sınırlanır ve
+    # sütundan dar basılır. DPI düşmez ama FİZİKSEL detay küçülür —
+    # 0,3 mm'lik bir boşluk 0,22 mm olur ve nokta yayılması altında
+    # kapanır. Veri taşıyan bir levhada bu, sayılamayan bir işarettir.
+    narrow = []
+    for r in grav:
+        if not r.get("aspect"):
+            continue
+        need_h = BOX_W_IN / r["aspect"]          # tam genişlikte yükseklik
+        if need_h > BOX_H_IN:
+            w_in = BOX_H_IN * r["aspect"]        # yükseklikten sınırlanır
+            narrow.append((r["file"], round(w_in, 2),
+                           round(100 * w_in / BOX_W_IN)))
+    if narrow:
+        rep.warn("%d levha sütun genişliğine SIĞMIYOR, yükseklikten "
+                 "sınırlanıyor ve dar basılacak: %s — en küçük detay "
+                 "aynı oranda küçülür (POD provasında ölçülmeli · A9)"
+                 % (len(narrow), ", ".join("%s %.2f in (%%%d)" % n
+                                           for n in narrow)))
+    else:
+        rep.check(True, "her levha sütun genişliğine sığıyor")
+
     # ── ÖZET ──────────────────────────────────────────────────────────────
     print("\n── teslim ──")
     print("  %-28s %3d" % ("toplam dosya", len(rows)))
@@ -356,6 +491,11 @@ def main() -> int:
     print("  %s   ⚠ bu bir İDDİADIR, ölçüm değil" % sorted(
         x for x in meta_dpi if x is not None))
 
+    if args.sheet:
+        n = build_sheet(rows)
+        print("\n  ✍ %s  (%d levha)"
+              % (os.path.relpath(SHEET, pl.ROOT), n))
+
     rep.facts.update({
         "delivered": len(rows), "expected": len(expected),
         "gravure": len(grav), "cover": len(cov), "aplus": len(apl),
@@ -364,6 +504,7 @@ def main() -> int:
         "aplusAspectMismatch": [b[0] for b in ap_bad],
         "dpiFloor": DPI_FLOOR,
         "printBoxIn": [BOX_W_IN, BOX_H_IN],
+        "narrowPlates": [n[0] for n in narrow],
         "assets": rows,
     })
     return rep.finish("%d varlık ölçüldü" % len(rows), args.json)

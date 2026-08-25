@@ -11,10 +11,10 @@
 |---|---|
 | Ölçülen sayfa | 238 |
 | Bulmaca · kapı · ipucu | 101 · 5 · 303 |
-| İşlenmiş levha | 37 / 103 |
-| İşlenmiş ön kapak | 0 / 2 |
-| İşlenmiş A+ | 0 / 6 |
-| Ajan tarafından hazır adım | 0 / 13 |
+| İşlenmiş levha | 103 / 103 |
+| İşlenmiş ön kapak | 2 / 2 |
+| İşlenmiş A+ | 6 / 6 |
+| Ajan tarafından hazır adım | 1 / 13 |
 
 ## 1 · ⭑ YALNIZCA KURUCUNUN YAPABİLECEĞİ İŞLER ⭑
 
@@ -117,10 +117,10 @@ bir rapor yanlıştır.
 | NE YAPACAĞIM | Görseller METİNSİZDİR; başlık ve gövde metni Amazon'un kendi alanlarına yazılır. |
 | KDP'DE NEREYE | Bookshelf → ⋯ → Edit A+ Content → Create A+ Content |
 | NE GİRECEĞİM | Her modülün başlık ve gövde metni (aşağıda kopyalanabilir). |
-| HANGİ DOSYA | `07_ASSETS/web/ (0/6 hazır)` |
+| HANGİ DOSYA | `07_ASSETS/web/ (6/6 hazır)` |
 | NE KONTROL EDECEĞİM | Modül türü ve piksel ölçüsü kartla aynı olmalı. Görselde metin GÖRÜNMEMELİ. |
 | BAŞARILI OLURSA | Önizlemede görsel + metin ayrı ayrı görünür. |
-| DURUM | **BEKLIYOR** |
+| DURUM | **HAZIR** |
 
 ### 🟢 Moderasyona gönder
 

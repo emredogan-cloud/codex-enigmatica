@@ -114,6 +114,12 @@
 # sayıları, piksel ölçüleri ve denetim sonuçları vardır; kanarya
 # dosyayı takip edilen dosya olarak tarar.
 !06_REPORTS/IMAGE_PROMPT_LIBRARY_FINALIZATION_REPORT.md
+# ⭑ NİHAİ VARLIK ÜRETİM RAPORU — beşinci kez aynı ders.
+# Bu rapor iki BLOKLAYICI taşır (genel geçmişteki cevap sızıntısı ve
+# kırık Kapı 3-4-5 üreteci). Gitignore'da kalması, bir sonraki oturumun
+# onları hiç görmemesi demektir. Cevap TAŞIMAZ: sızıntıyı tarif eder,
+# cevabı yazmaz — ve kanarya dosyayı takip edilen dosya olarak tarar.
+!06_REPORTS/FINAL_ASSET_PRODUCTION_REPORT.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:
@@ -142,6 +148,11 @@
 # ③ GÖRSEL VARLIKLAR ──────────────────────────────────────────────────────
 # ~110 levha × 4 format çok büyüktür. Ayrıca bu projede levhalar BULMACA
 # TAŞIR: bir levhanın public depoda durması, çözümü sızdırabilir.
+# ⚠ SAYIM SAYFASI YEREL BİR ARAÇTIR, TESLİMAT DEĞİL: içindeki 103
+# görsele göreli yol verir ve o görseller depoda yoktur. Takip edilseydi
+# klonda 103 kırık resim olurdu. Kurucu onu kendi makinesinde üretir:
+#   python3 04_BUILD/asset_ingest.py --sheet
+07_ASSETS/PLATE_VERIFICATION.html
 07_ASSETS/raw/*
 07_ASSETS/processed/**/*
 07_ASSETS/print/**/*

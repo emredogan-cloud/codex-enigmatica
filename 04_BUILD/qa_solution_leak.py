@@ -317,9 +317,43 @@ def main() -> int:
     ap.add_argument("--gate", default=None)
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--json", default=None)
+    ap.add_argument("--scan-file", metavar="YOL",
+                    help="tek bir metni tara ve çık — COMMIT MESAJI İÇİN")
     ap.add_argument("--emit-manifest", action="store_true",
                     help="tuzlu künyeyi üret (yerelde, korumalı katman varken)")
     args = ap.parse_args()
+
+    # ── ⭑ COMMIT MESAJINI YAZMADAN ÖNCE TARA ⭑ ─────────────────────────
+    # ⚠ BU BAYRAK BİR KAZADAN DOĞDU. Bir commit mesajı, sıradan bir
+    # Türkçe kelimenin ORTASINDA bir cevabı taşıdı ve itildi. Commit
+    # mesajı GERİ ALINAMAZ: force-push bile GitHub'da eski nesneyi SHA
+    # ile erişilebilir bırakır. Dosya taraması bunu yakalamaz, çünkü
+    # mesaj hiçbir dosyada yoktur.
+    #
+    # Kullanım — commit'ten ÖNCE:
+    #   git commit -F mesaj.txt  yerine
+    #   python3 04_BUILD/qa_solution_leak.py --scan-file mesaj.txt \
+    #     && git commit -F mesaj.txt
+    if args.scan_file:
+        try:
+            body = open(args.scan_file, encoding="utf-8").read()
+        except OSError as exc:
+            print("⛔ okunamadı: %s" % exc)
+            return 2
+        answers = collect_answers()
+        if not answers:
+            print("⛔ korumalı katman yok — tarama YAPILAMADI (kip B'de "
+                  "bu bayrak çalışmaz; yerelde koşturun)")
+            return 2
+        hit = scan_plain(body, answers)
+        if hit:
+            print("⛔ METİN %d BULMACANIN CEVABINI TAŞIYOR — YAZMAYIN"
+                  % len(hit))
+            print("   (hangi cevap olduğu BASILMAZ; metni yeniden yazın)")
+            return 1
+        print("✅ metin temiz — %d cevap dizesine karşı tarandı"
+              % sum(len(v) for v in answers.values()))
+        return 0
 
     gate_level = args.gate or read_gate()
     if gate_level not in VALID_GATES:

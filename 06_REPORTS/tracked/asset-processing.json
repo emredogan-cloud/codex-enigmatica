@@ -1,0 +1,1229 @@
+{
+ "$comment": [
+  "ÜRETİLEN DOSYA — 04_BUILD/asset_process.py.",
+  "Bir koşunun günlüğü DEĞİL, 07_ASSETS altındaki",
+  "işlenmiş dosyaların ÖLÇÜMÜDÜR."
+ ],
+ "model": "upscayl-standard-4x",
+ "gravureDpi": 600.0,
+ "coverDpi": 300.0,
+ "processed": 111,
+ "failed": [],
+ "assets": [
+  {
+   "file": "dc-front-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-front-01.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-front-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-front-02.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-gate-1.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-gate-1.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-gate-2.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-gate-2.png",
+   "final": [
+    2700,
+    2161
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-gate-3.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-gate-3.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-gate-4.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-gate-4.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-gate-5.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-gate-5.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "dc-meta-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/dc-meta-02.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-01.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-02.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-03.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-03.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-04.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-04.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-05.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-05.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-06.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-06.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-07.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-07.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-08.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-08.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-09.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-09.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-10.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-10.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-11.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-11.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-12.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-12.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-13.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-13.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-14.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-14.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-15.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-15.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g1-16.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g1-16.png",
+   "final": [
+    2475,
+    4500
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-01.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-02.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-03.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-03.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-04.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-04.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-05.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-05.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-07.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-07.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-08.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-08.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-09.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-09.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-10.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-10.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-12.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-12.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-13.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-13.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-14.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-14.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-15.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-15.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-17.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-17.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-18.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-18.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-19.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-19.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g2-20.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g2-20.png",
+   "final": [
+    2000,
+    4500
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-01.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-02.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-03.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-03.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-04.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-04.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-05.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-05.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-06.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-06.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-07.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-07.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-08.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-08.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-09.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-09.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-10.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-10.png",
+   "final": [
+    2700,
+    2161
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-11.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-11.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-12.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-12.png",
+   "final": [
+    2700,
+    2161
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-13.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-13.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-14.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-14.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-15.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-15.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-16.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-16.png",
+   "final": [
+    2700,
+    2161
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-17.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-17.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-18.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-18.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-19.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-19.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g3-20.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g3-20.png",
+   "final": [
+    1982,
+    4500
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-01.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-02.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-03.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-03.png",
+   "final": [
+    2700,
+    2176
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-04.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-04.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-05.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-05.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-06.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-06.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-07.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-07.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-08.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-08.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-09.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-09.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-10.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-10.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-11.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-11.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-12.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-12.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-13.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-13.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-14.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-14.png",
+   "final": [
+    2700,
+    1080
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-15.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-15.png",
+   "final": [
+    2700,
+    1800
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-16.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-16.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-17.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-17.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-18.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-18.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-19.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-19.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g4-20.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g4-20.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-01.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-02.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-02.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-03.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-03.png",
+   "final": [
+    2700,
+    3600
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-04.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-04.png",
+   "final": [
+    2700,
+    3600
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-05.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-05.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-06.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-06.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-07.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-07.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-08.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-08.png",
+   "final": [
+    2700,
+    2025
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-09.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-09.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-10.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-10.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-11.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-11.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-12.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-12.png",
+   "final": [
+    2700,
+    2025
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-13.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-13.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-14.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-14.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-15.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-15.png",
+   "final": [
+    2700,
+    2025
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-16.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-16.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-17.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-17.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-18.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-18.png",
+   "final": [
+    2700,
+    2025
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-19.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-19.png",
+   "final": [
+    2700,
+    2025
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-g5-20.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-g5-20.png",
+   "final": [
+    1981,
+    4500
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "pl-meta-01.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/pl-meta-01.png",
+   "final": [
+    2700,
+    2252
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "tl-front-03.png",
+   "class": "GRAVÜR",
+   "dst": "07_ASSETS/plates/tl-front-03.png",
+   "final": [
+    2700,
+    2700
+   ],
+   "dpiMeta": 236.2,
+   "effectiveDpi": 600.0
+  },
+  {
+   "file": "cover-option-01-front.png",
+   "class": "KAPAK ÖN",
+   "dst": "07_ASSETS/print/cover-option-01-front.png",
+   "final": [
+    1800,
+    2700
+   ],
+   "dpiMeta": 118.1,
+   "effectiveDpi": 300.0
+  },
+  {
+   "file": "cover-option-02-front.png",
+   "class": "KAPAK ÖN",
+   "dst": "07_ASSETS/print/cover-option-02-front.png",
+   "final": [
+    1800,
+    2700
+   ],
+   "dpiMeta": 118.1,
+   "effectiveDpi": 300.0
+  },
+  {
+   "file": "codex-enigmatica-aplus-01.png",
+   "class": "A+",
+   "dst": "07_ASSETS/web/codex-enigmatica-aplus-01.png",
+   "final": [
+    1940,
+    600
+   ],
+   "dpiMeta": 28.4
+  },
+  {
+   "file": "codex-enigmatica-aplus-02.png",
+   "class": "A+",
+   "dst": "07_ASSETS/web/codex-enigmatica-aplus-02.png",
+   "final": [
+    600,
+    600
+   ],
+   "dpiMeta": 28.4
+  },
+  {
+   "file": "codex-enigmatica-aplus-03.png",
+   "class": "A+",
+   "dst": "07_ASSETS/web/codex-enigmatica-aplus-03.png",
+   "final": [
+    600,
+    600
+   ],
+   "dpiMeta": 28.4
+  },
+  {
+   "file": "codex-enigmatica-aplus-04.png",
+   "class": "A+",
+   "dst": "07_ASSETS/web/codex-enigmatica-aplus-04.png",
+   "final": [
+    600,
+    600
+   ],
+   "dpiMeta": 28.4
+  },
+  {
+   "file": "codex-enigmatica-aplus-05.png",
+   "class": "A+",
+   "dst": "07_ASSETS/web/codex-enigmatica-aplus-05.png",
+   "final": [
+    1940,
+    600
+   ],
+   "dpiMeta": 28.4
+  },
+  {
+   "file": "codex-enigmatica-aplus-06.png",
+   "class": "A+",
+   "dst": "07_ASSETS/web/codex-enigmatica-aplus-06.png",
+   "final": [
+    1940,
+    600
+   ],
+   "dpiMeta": 28.4
+  }
+ ]
+}

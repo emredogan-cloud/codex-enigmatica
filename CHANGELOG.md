@@ -5,6 +5,66 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.8.0] — 2026-08-25 · KURUCU VARLIKLARI · İŞLEME + KDP PAKETİ
+
+# ⛔ İKİ BLOKLAYICI AÇIK
+
+**① Genel depodaki bir commit mesajında bir cevap var** (`e341a5f`,
+kanarya kip A ile yakaladı; CI kip B'de künye BAYAT olduğu için
+görmedi). **② Seçilen onarım (cevabı değiştirmek) uygulanamadı:**
+Kapı 3-4-5 üreteci kırık ve bu **değişikliğimden önce de** kırıktı
+(`g5-013`, yapı çifti bulunamadı). Ayrıntı:
+`06_REPORTS/FINAL_ASSET_PRODUCTION_REPORT.md § 1`.
+
+# ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING
+
+`founder_override_partial` · `sessionsPerformed = 0` ·
+`humanValidationPassed = false` · **HARD-STOP**.
+
+### Eklendi — kurucu 111 görsel teslim etti, hepsi ölçüldü
+
+Envanter 111/111, eksik yok. Üç sayı ayrı tutuldu: gerçek piksel,
+metadata etiketi (hepsi 72 diyordu — bir iddia) ve **etkin DPI** (gerçek
+piksel ÷ fiziksel ölçü — bir ölçüm). Gravürlerin **77/103'ü** 300 dpi
+altındaydı, kapaklar 170.
+
+İşleme: Real-ESRGAN 4× → hedefe indir → alfa düzleştir → etiketle.
+**111/111 işlendi**, ~64 dk. Gravürler artık 600 dpi, kapaklar 1800×2700,
+A+ tam Amazon ölçüsünde. Sayılabilir işaretlerin korunduğu ölçüldü.
+
+### ⭑ Düzeltildi — sözleşmenin KENDİSİ yanlıştı
+
+`2·3` gösterimindeki nokta bir AYRAÇTIR. `measure()` onu işaret sayıyor,
+12 levhaya `exactly N of mark '·'` diye olmayan bir şart yazıyordu — ve
+o şart istasyon sayısını da bozuyordu. Gravürcü yedi noktaya yer açmak
+için sekizinci istasyonu açtı; `pl-g3-03` ve `pl-g3-08` böyle çıktı.
+Bulmaca verisine dokunulmadı; veriyi yanlış OKUYAN türetme düzeltildi.
+**14 levha yeniden üretilmeli** (12 yanlış sözleşme + `pl-g1-07`,
+`pl-g1-08` sayım hatası).
+
+### Eklendi — iki tam sarmal kapak promptu (§ 20-24)
+
+`wrap-cover-option-01/02`, arka·sırt·ön bölgeleriyle. **Nihai piksel
+ölçüsü bilerek çivilenmedi** (sırt sayfa sayısından türer, K12) ve bir
+denetim çivilemeyi kırmızıya çeviriyor.
+
+### Eklendi — KDP el kitabı ve Türkçe çevrimdışı kılavuz
+
+`08_OUTPUT/KDP_UPLOAD_HANDBOOK.md` · `KDP_UPLOAD_GUIDE.html`.
+A–G, 13 adım, 30 kopya düğmesi, 33 kutucuk, localStorage.
+Hazırlık göstergesi **dosya sistemine bakarak** doldurulur.
+
+### Eklendi — sayım sayfası, çünkü ajan sayamadı
+
+Otomatik sayım denendi ve güvenilmedi (eşikleme 5 yerine 44 saydı,
+özilinti 6 yerine 2,6). Güvenilmez bir sayaç sayaç olmamasından
+kötüdür. Ajan sayıyı ölçmez; `asset_ingest.py --sheet` insanın
+ölçmesini mümkün kılar.
+
+- Rapor: `06_REPORTS/FINAL_ASSET_PRODUCTION_REPORT.md`
+
+---
+
 ## [0.7.1] — 2026-08-24 · GÖRSEL PROMPT KÜTÜPHANESİ · YENİDEN İNŞA
 
 # ⚠ EXTERNAL HUMAN VALIDATION REMAINS PENDING

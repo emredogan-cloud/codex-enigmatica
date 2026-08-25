@@ -1,12 +1,12 @@
 {
   "status": "pass",
-  "checks": 8,
+  "checks": 9,
   "errors": [],
   "warnings": [
     "⏳ KURUCU TESLİMATI BEKLENİYOR: codex-enigmatica-wrap-cover-option-01.png, codex-enigmatica-wrap-cover-option-02.png — bu bir eksiklik değil, sıradaki adımdır",
     "HAM katmanda 79 dosya <300 dpi (en düşük codex-enigmatica-cover-option-01.png @ 170.7) — yükseltme GEREKLİ, `04_BUILD/asset_process.py`",
-    "işleme TAMAMLANMADI: 37/105 dosya hazır",
-    "HAM katmanda 3 A+ modülü modül oranında DEĞİL (codex-enigmatica-aplus-01.png 1.82≠3.23, codex-enigmatica-aplus-05.png 1.90≠3.23, codex-enigmatica-aplus-06.png 1.62≠3.23) — hat merkezden KIRPACAK; kırpma kompozisyon kaybıdır, kurucu onayına tabidir"
+    "HAM katmanda 3 A+ modülü modül oranında DEĞİL (codex-enigmatica-aplus-01.png 1.82≠3.23, codex-enigmatica-aplus-05.png 1.90≠3.23, codex-enigmatica-aplus-06.png 1.62≠3.23) — hat merkezden KIRPACAK; kırpma kompozisyon kaybıdır, kurucu onayına tabidir",
+    "4 levha sütun genişliğine SIĞMIYOR, yükseklikten sınırlanıyor ve dar basılacak: pl-g1-16.png 4.12 in (%92), pl-g2-20.png 3.33 in (%74), pl-g3-20.png 3.30 in (%73), pl-g5-20.png 3.30 in (%73) — en küçük detay aynı oranda küçülür (POD provasında ölçülmeli · A9)"
   ],
   "facts": {
     "delivered": 111,
@@ -109,6 +109,12 @@
     "printBoxIn": [
       4.5,
       7.5
+    ],
+    "narrowPlates": [
+      "pl-g1-16.png",
+      "pl-g2-20.png",
+      "pl-g3-20.png",
+      "pl-g5-20.png"
     ],
     "assets": [
       {

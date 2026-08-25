@@ -162,6 +162,14 @@
 # 06_REPORTS/tracked/ altındadır (K18: rapor depoda durur, ürün durmaz).
 08_OUTPUT/**/*
 !08_OUTPUT/**/.gitkeep
+# ⭑ KDP EL KİTABI VE KILAVUZU DEPODA DURUR ⭑
+# ⚠ 08_OUTPUT ÜRÜN paketidir ve kapalıdır (içine kitabın kendisi girer).
+# Bu iki dosya ÜRÜN DEĞİL TALİMATTIR: kurucunun panelde izleyeceği
+# adımlar. Klonda bulunmamaları, kurucunun kılavuzsuz kalması demek —
+# K18'in aynısı: rapor durur, ÜRÜN durmaz. Cevap taşımazlar ve kanarya
+# ikisini de tarar.
+!08_OUTPUT/KDP_UPLOAD_HANDBOOK.md
+!08_OUTPUT/KDP_UPLOAD_GUIDE.html
 
 09_ARCHIVE/*
 !09_ARCHIVE/.gitkeep

@@ -188,6 +188,12 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
 [ -f 04_BUILD/plate_prompts.py ] && \
   run "gravür prompt kütüphanesi" $PY 04_BUILD/plate_prompts.py
 
+# ── KURUCU GÖRSELLERİ ─────────────────────────────────────────────────────
+[ -f 04_BUILD/asset_ingest.py ] && \
+  run "kurucu görsel envanteri" $PY 04_BUILD/asset_ingest.py
+[ -f 04_BUILD/kdp_handbook.py ] && \
+  run "KDP el kitabı"           $PY 04_BUILD/kdp_handbook.py
+
 # ⚑ Prova PAKETİNİ üretir; provayı ALMAZ (A9 kurucu işidir).
 [ -f 04_BUILD/plate_proof.py ] && \
   run_optional "levha prova paketi"   $VENV_PY 04_BUILD/plate_proof.py

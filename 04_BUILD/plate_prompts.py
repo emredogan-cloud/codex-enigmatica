@@ -255,8 +255,20 @@ def measure(fig: str) -> list:
     """Levhanın DEĞİŞTİRİLEMEZ sayıları — şeklin kendisinden."""
     out = []
     lines = [x for x in fig.splitlines() if x.strip()]
+
+    # ⭑ `2·3` GÖSTERİMİNDEKİ NOKTA BİR AYRAÇTIR, İŞARET DEĞİL ⭑
+    # ⚠ BU SATIR BİR TESLİMAT HATASINDAN DOĞDU. Ayraç noktaları işaret
+    # sayılınca on iki levhanın sözleşmesine "exactly 7 of mark '·'"
+    # diye olmayan bir şart yazıldı — ve o şart istasyon sayısını da
+    # bozdu: gravürcü yedi noktaya yer açmak için sekizinci istasyonu
+    # açtı. Teslim edilen pl-g3-03 ve pl-g3-08 tam olarak böyle çıktı,
+    # yedi istasyon isteyen bir bulmacaya sekiz istasyonlu bir halka.
+    # Nokta ile ayrılan sayı çiftleri kitabın DİZDİĞİ değerlerdir;
+    # gravüre hiç girmezler.
+    counting = re.sub(r"(?<=\d)·(?=\d)", "", fig)
+
     counts = {}
-    for ch in fig:
+    for ch in counting:
         if ch in MARKS:
             counts[ch] = counts.get(ch, 0) + 1
     for ch, n in sorted(counts.items(), key=lambda x: -x[1]):
@@ -432,7 +444,7 @@ def main() -> int:
     # kitabın kendi söz dağarcığıyla çarpışır ve künyeyi taramak kapıyı
     # gürültüye boğar. Kopyalanan metin ise ISTISNASIZ taranır.
     PROMPT_FIELDS = ("concept", "composition", "safe")
-    for _x in list(CAT.COVERS) + list(CAT.APLUS):
+    for _x in list(CAT.COVERS) + list(CAT.APLUS) + list(CAT.WRAPS):
         blob = pl.squeeze(" ".join(str(_x.get(k) or "")
                                    for k in PROMPT_FIELDS))
         for a in answers:
@@ -454,12 +466,49 @@ def main() -> int:
     rep.check(not bad_mod,
               "her A+ modülü GERÇEK bir Amazon modül türüne bağlı"
               + ("" if not bad_mod else " — ⛔ %s" % bad_mod))
-    no_claim = [x["id"] for x in (CAT.COVERS + CAT.APLUS)
+    no_claim = [x["id"] for x in (CAT.COVERS + CAT.APLUS + CAT.WRAPS)
                 if not str(x.get("claim") or "").startswith("BRIEF")]
     rep.check(not no_claim,
               "⭑ HER TİCARİ İDDİA `BRIEF.md`YE DAYANIYOR ⭑ "
               "(ticari mesaj uydurulmaz)"
               + ("" if not no_claim else " — ⛔ DAYANAKSIZ: %s" % no_claim))
+
+    # ── ⭑ TAM SARMAL KAPAK ⭑ ───────────────────────────────────────────
+    rep.check(len(CAT.WRAPS) == 2,
+              "iki sarmal kapak promptu var (%d)" % len(CAT.WRAPS))
+    zones = ("back", "spine", "front", "safe", "cli")
+    miss_zone = [w["id"] for w in CAT.WRAPS
+                 if any(not str(w.get(z) or "").strip() for z in zones)]
+    rep.check(not miss_zone,
+              "⭑ HER SARMALDA ARKA · SIRT · ÖN BÖLGESİ TANIMLI ⭑ "
+              "(bölgesiz bir sarmal promptu üç ayrı panel çizdirir)"
+              + ("" if not miss_zone else " — ⛔ %s" % miss_zone))
+
+    # ⚠ § 23 KURALI: sırt genişliği sayfa sayısından türer ve iç blok
+    # DONDURULMADI (K12). Sarmal promptuna bugün bir piksel ölçüsü
+    # yazmak, yarın atılacak bir ölçü yazmaktır — ve kurucu onu ölçü
+    # sanıp o boyutta üretir.
+    hard = []
+    for w in CAT.WRAPS:
+        body = CAT.wrap_prompt(w)
+        if re.search(r"\d{3,5}\s*[×x]\s*\d{3,5}", body):
+            hard.append(w["id"])
+    rep.check(not hard,
+              "⭑ SARMAL PROMPTU NİHAİ PİKSEL ÖLÇÜSÜ ÇİVİLEMİYOR ⭑ "
+              "(sırt dondurulmadı — K12)"
+              + ("" if not hard else " — ⛔ ÇİVİLENMİŞ: %s" % hard))
+
+    # ⚠ Sarmalın tek gerçek düşmanı üç ayrı panel ve boş beyaz sırttır.
+    negtxt = " ".join(CAT.WRAP_NEGATIVE).lower()
+    for need, why in (("triptych", "üç panel"), ("spine", "boş sırt"),
+                      ("fold", "kırım kılavuzu"), ("barcode", "barkod")):
+        rep.check(need in negtxt,
+                  "sarmal olumsuz kısıtı '%s' yasağını taşıyor" % why)
+
+    want_files = {"codex-enigmatica-wrap-cover-option-01.png",
+                  "codex-enigmatica-wrap-cover-option-02.png"}
+    rep.check({w["file"] for w in CAT.WRAPS} == want_files,
+              "⭑ SARMAL DOSYA ADLARI YÖNERGEDEKİYLE AYNI ⭑")
 
     no_data = [e["plate"] for e in entries if not e["data"]]
     rep.check(not no_data,
@@ -704,7 +753,31 @@ onaylı ifadeye işaret eder.
 </div>
 %(aplus)s
 
-<h2 id="teslim">8 · Kurucu teslim kontrol listesi</h2>
+<h2 id="sarmal">8 · ⭑ TAM SARMAL KAPAK — SIRADAKİ TESLİMAT ⭑ · %(n_wr)d</h2>
+<div class="note stop">
+<strong>⚠ ELDEKİ KAPAK SANATI YALNIZCA ÖN KAPAKTIR.</strong>
+Bir ön kapağı gerip sarmal yapmak sırtı bulanık bir şerit, arka kapağı
+esnetilmiş bir kopya yapar. KDP bunu geri çevirir; çevirmese bile raf
+değeri biter. Sarmal <strong>ayrı bir sanat işidir</strong>.
+<br><br>
+⭑ <strong>NİHAİ PİKSEL ÖLÇÜSÜ BURADA YAZMIYOR — ÇÜNKÜ HENÜZ BİLİNMİYOR.</strong>
+Sarmal genişliği <code>arka 6" + SIRT + ön 6"</code> eder ve sırt genişliği
+sayfa sayısıyla kâğıt cinsinden türer. İç blok <strong>dondurulmadı</strong>
+(K12). Prompt "yeterince büyük sürekli yatay çözünürlük" ister; nihai
+kırpma ve ölçekleme CLI hattının işidir.
+</div>
+<table>
+<tr><th>Ne isteniyor</th><th>Dosya adı</th><th>Nereye</th></tr>
+<tr><td>Sarmal seçenek 01</td>
+    <td><code>codex-enigmatica-wrap-cover-option-01.png</code></td>
+    <td><code>%(raw)s/</code></td></tr>
+<tr><td>Sarmal seçenek 02</td>
+    <td><code>codex-enigmatica-wrap-cover-option-02.png</code></td>
+    <td><code>%(raw)s/</code></td></tr>
+</table>
+%(wraps)s
+
+<h2 id="teslim">9 · Kurucu teslim kontrol listesi</h2>
 <ol>
 <li>Her prompt kartında <strong>prompt kopyala</strong> ile metni al —
     düğme <em>yalnızca</em> nihai promptu kopyalar, künyeyi değil.</li>
@@ -852,6 +925,41 @@ def _render_html(entries: list) -> str:
             "; ".join(n.rstrip(".") for n in CAT.COVER_NEGATIVE) + ".",
             collapsed))
 
+    # ── TAM SARMAL KAPAK KARTLARI ──────────────────────────────────────
+    # ⚠ Teslim edilen kapak sanatı YALNIZCA ÖN KAPAKTIR. Sarmal ayrı bir
+    # teslimattır ve bu kartlar onu ister; ön kapağı gerip sarmal yapmak
+    # sırtı bulanık bir şerit yapar ve KDP geri çevirir.
+    wraps = []
+    for wnum, wr in enumerate(CAT.WRAPS, 1):
+        meta = [
+            ("Prompt kimliği", "<code>%s</code>" % e(wr["id"])),
+            ("Konsept", e(wr["concept"][:120]) + "…"),
+            ("Trim", CAT.WRAP_TRIM),
+            ("Beklenen en-boy", CAT.WRAP_ASPECT),
+            ("Önerilen piksel", CAT.WRAP_PIXELS),
+            ("HAM dosya", "<code>%s/%s</code>" % (RAW_DIR, e(wr["file"]))),
+            ("HAM konumu", "<code>%s/</code> · <b>%s/ DEĞİL</b> — kurucu "
+                           "HAM verir, nihai kapağı ajan kurar"
+             % (RAW_DIR, COVER_FINAL)),
+            ("Ticari dayanak", "<code>%s</code>" % e(wr["claim"])),
+        ]
+        blocks = [
+            ("Sinyal", "<p>%s</p>" % e(wr["signal"])),
+            ("Arka bölge", "<p>%s</p>" % e(wr["back"])),
+            ("Sırt bölgesi", "<p class='safe'>%s</p>" % e(wr["spine"])),
+            ("Ön bölge", "<p>%s</p>" % e(wr["front"])),
+            ("Metin-güvenli alanlar",
+             "<p class='safe'>%s</p>" % e(wr["safe"]).replace("\n", "<br>")),
+            ("CLI tipografi notu", "<p>%s</p>" % e(wr["cli"])),
+        ]
+        collapsed = [("Kompozisyon notu", "<p>%s</p>" % e(wr["composition"]))]
+        wraps.append(_card(
+            wr["id"], "%s <small><code>%s</code></small>"
+            % (e(wr["name"]), e(wr["id"])), meta, blocks,
+            CAT.wrap_prompt(wr),
+            "; ".join(n.rstrip(".") for n in CAT.WRAP_NEGATIVE) + ".",
+            collapsed))
+
     # ── A+ KARTLARI ────────────────────────────────────────────────────
     aplus = []
     for m in CAT.APLUS:
@@ -888,11 +996,13 @@ def _render_html(entries: list) -> str:
          ("uretim", "Üretim"), ("gravur", "Gravür · %d" % len(eng)),
          ("kapak", "Kapak · %d" % len(covers)),
          ("aplus", "A+ · %d" % len(aplus)),
+         ("sarmal", "Sarmal · %d" % len(wraps)),
          ("teslim", "Teslim"))))
 
     doc = _TEMPLATE % {
         "n_eng": len(eng), "n_cov": len(covers), "n_ap": len(aplus),
-        "total": len(eng) + len(covers) + len(aplus),
+        "n_wr": len(wraps),
+        "total": len(eng) + len(covers) + len(aplus) + len(wraps),
         "nav": nav,
         "style": e(STYLE),
         "forbidden": "".join("<li>%s</li>" % e(f) for f in FORBIDDEN),
@@ -903,6 +1013,7 @@ def _render_html(entries: list) -> str:
         "cards": "\n".join(cards),
         "covers": "\n".join(covers),
         "aplus": "\n".join(aplus),
+        "wraps": "\n".join(wraps),
     }
     return doc
 

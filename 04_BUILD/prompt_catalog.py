@@ -162,6 +162,181 @@ COVER_NEGATIVE = NEGATIVE_COMMON + [
     "no three-panel or triptych layout",
 ]
 
+# ═══ TAM SARMAL KAPAK ═════════════════════════════════════════════════
+# ⚠ BU BÖLÜM NEDEN VAR: teslim edilen iki kapak sanatı YALNIZCA ÖN
+# KAPAKTIR. Bir ön kapağı gerip sarmal yapmak, sırtı bulanık bir şerit
+# ve arka kapağı esnetilmiş bir kopya hâline getirir — KDP bunu geri
+# çevirir, çevirmese bile raf değeri biter. Sarmal, ayrı bir sanat
+# işidir ve kurucudan AYRI bir teslimat olarak istenir.
+#
+# ⭑ NİHAİ PİKSEL ÖLÇÜSÜ BURADA YAZILMAZ ⭑
+# Sarmal genişliği = arka(6") + SIRT + ön(6") ve sırt genişliği sayfa
+# sayısıyla kâğıt cinsinden türer. İç blok DONDURULMADI (K12), dolayısıyla
+# sırt bilinmiyor. Şimdi bir sayı yazmak, sonra atılacak bir sayı yazmaktır.
+# Prompt "yeterince büyük sürekli yatay çözünürlük" ister; CLI hattı
+# nihai KDP şablonuna kendisi kırpar ve ölçekler.
+
+WRAP_TRIM = "arka 6 × 9 in · SIRT (dondurulmadı) · ön 6 × 9 in"
+WRAP_ASPECT = ("yaklaşık 4 : 3 yatay — kesin oran sırt genişliği "
+               "dondurulunca netleşir")
+WRAP_PIXELS = ("sürekli yatay çözünürlük, en az 6000 px genişlik · "
+               "300 dpi'ın üstünde · RGB · TEK parça, panel yok")
+WRAP_RAW = "07_ASSETS/raw/"
+
+WRAPS = [
+    {
+        "id": "wrap-cover-option-01",
+        "file": "codex-enigmatica-wrap-cover-option-01.png",
+        "name": "SARMAL 01 — “SÜREKLİ ARŞİV YÜZEYİ”",
+        "concept": (
+            "One continuous antiquarian scholar's archive surface "
+            "spanning the entire book wrap. A single uninterrupted "
+            "historical material — aged leather and parchment — reads as "
+            "one object photographed in one shot, not as three designs "
+            "placed side by side."),
+        "signal": (
+            "Tek bir tarihsel yüzey. Kitap kapalıyken rafta bir cilt "
+            "gibi durur; açıldığında tek bir gravür masası olduğu "
+            "görülür."),
+        "composition": (
+            "FULL BLEED CONTINUOUS WRAP read left to right as BACK, "
+            "SPINE, FRONT — with NO visible panel boundary, NO triptych, "
+            "NO seam and NO fold guide anywhere. Detail density RISES "
+            "steadily from left to right so the eye is carried toward the "
+            "front half. The surface material runs unbroken across the "
+            "whole image."),
+        "back": (
+            "LEFT THIRD — quiet parchment-and-archive ground with only a "
+            "few sparse engraved objects near the outer edge: one folded "
+            "map corner, one small copper plate, one closed volume. The "
+            "large central region of this third stays calm and open."),
+        "spine": (
+            "CENTRE VERTICAL STRIP — visually continuous with the "
+            "surrounding leather and parchment. It is the SAME material "
+            "passing through, never a drawn strip, never a blank white "
+            "band, never a ruled panel. No object of importance sits on "
+            "this axis."),
+        "front": (
+            "RIGHT THIRD — the strongest visual concentration: an open "
+            "engraved puzzle folio as the focal object, with a brass "
+            "cipher wheel, a geometric instrument, a sealed envelope, "
+            "stacked copper plates and fragments of a mechanical puzzle "
+            "arranged around it. This is where the composition resolves."),
+        "safe": (
+            "BACK middle region — a calm low-detail area large enough for "
+            "back-cover copy.\n"
+            "FRONT upper region — a calm band for the title.\n"
+            "FRONT lower region — a calm band for the author name.\n"
+            "SPINE centre — stable, even material for spine typography.\n"
+            "⭑ These zones must be calm GROUND, not drawn boxes: no "
+            "panel, no frame, no plaque, no rectangle of flat colour."),
+        "cli": (
+            "Tipografi SONRADAN, CLI ile vektör olarak eklenir: ön "
+            "başlık, yazar, sırt başlığı ve sırt yazarı. Sanat "
+            "değiştirilmez; opak beyaz metin kutusu KULLANILMAZ. Bu "
+            "yüzden güvenli alanlar gerçekten sakin olmalıdır."),
+        "claim": "BRIEF § 4.3 nesne değeri · § 6.1 levhanın içindeki şifre",
+    },
+    {
+        "id": "wrap-cover-option-02",
+        "file": "codex-enigmatica-wrap-cover-option-02.png",
+        "name": "SARMAL 02 — “GİZLİ BİLGİNİN HARİTASI”",
+        "concept": (
+            "One continuous topographic map of hidden knowledge spanning "
+            "the complete book wrap: an antiquarian engraved map "
+            "landscape whose routes cross the whole surface and converge "
+            "at a single point on the front."),
+        "signal": (
+            "“Bütün gizli sistem tek bir noktada birleşiyor.” Bilimsel "
+            "ve editoryal; fantezi haritası ya da oyun haritası DEĞİL."),
+        "composition": (
+            "FULL BLEED CONTINUOUS WRAP read left to right as BACK, "
+            "SPINE, FRONT — one single map, NO panel divisions, NO "
+            "triptych, NO visible fold guides. Engraved routes travel "
+            "from the left edge across the whole surface and tighten "
+            "toward a single convergence point in the front third."),
+        "back": (
+            "LEFT THIRD — an antiquarian map and archive landscape: "
+            "sparse engraved objects, subtle routes and a few isolated "
+            "puzzle artifacts set well apart. Open, quiet ground "
+            "dominates."),
+        "spine": (
+            "CENTRE VERTICAL STRIP — a natural vertical continuation of "
+            "the map: one route running through it, one fine engraved "
+            "border, a subtle central axis. NOT a blank strip, NOT an "
+            "artificial spine panel, NOT a separate design."),
+        "front": (
+            "RIGHT THIRD — the map converges on a central intellectual "
+            "object: a cipher apparatus with an engraved puzzle plate, a "
+            "compass-like instrument, a sealed final document and a "
+            "geometric mechanism. This reads as the point where the "
+            "entire hidden system resolves."),
+        "safe": (
+            "BACK middle region — a calm low-detail area for back-cover "
+            "copy.\n"
+            "FRONT upper region — a calm band for the title.\n"
+            "FRONT lower region — a calm band for the author name.\n"
+            "SPINE centre — visually stable enough for later vector "
+            "typography.\n"
+            "⭑ Routes and engraved lines must NOT cross these zones, and "
+            "the zones must be calm GROUND — never a drawn panel."),
+        "cli": (
+            "Sırt genişliği ve kırım payları nihai sayfa sayısından "
+            "türetilir; sanat o şablona CLI ile kırpılır. Önemli hiçbir "
+            "öge kırım hattına oturmamalıdır."),
+        "claim": "BRIEF § 6.3 tek meta-mister · § 6.4 doğrulanabilir çözüm",
+    },
+]
+
+WRAP_NEGATIVE = NEGATIVE_COMMON + [
+    "no visible panel boundary, no triptych, no three separate panels, "
+    "no seam, no fold guide, no printed crop marks",
+    "no blank white spine strip and no drawn spine panel — the spine is "
+    "the same continuous material as its surroundings",
+    "no barcode, no ISBN block, no publisher logo, no watermark",
+    "no important artwork element sitting on the fold lines",
+    "no book mockup, no 3D book, no perspective book object",
+    "no fantasy, no RPG, no game-map styling, no children's-book styling",
+]
+
+
+def wrap_prompt(item: dict) -> str:
+    """Sarmal kapak için TEK kopyalanabilir blok.
+
+    ⚠ Ön kapak promptundan AYRI bir birleştirici gerekir: sarmalın üç
+    bölgesi (arka · sırt · ön) tek bir sürekli yüzeyde tarif edilmek
+    zorundadır. Ön kapak kalıbını kullanmak, modelin üç ayrı panel
+    çizmesine yol açan tam olarak o hatadır."""
+    return "\n".join([
+        item["concept"].strip(),
+        "",
+        "COMPOSITION — " + item["composition"].strip(),
+        "",
+        "BACK ZONE — " + item["back"].strip(),
+        "",
+        "SPINE ZONE — " + item["spine"].strip(),
+        "",
+        "FRONT ZONE — " + item["front"].strip(),
+        "",
+        "STYLE — " + COMMERCIAL_STYLE,
+        "",
+        "COLOUR — " + COMMERCIAL_COLOUR,
+        "",
+        "LIGHT — " + COMMERCIAL_LIGHT,
+        "",
+        "TEXT-SAFE AREAS — " + item["safe"].replace("\n", " ").strip(),
+        "",
+        "FORMAT — Create at a sufficiently large continuous horizontal "
+        "resolution for final KDP wrap construction; preserve fine "
+        "engraved detail. One single continuous image. The exact final "
+        "pixel size is NOT fixed yet: the spine width depends on the "
+        "final interior page count, and the CLI pipeline will crop and "
+        "resize this artwork to the exact KDP template.",
+        "",
+        "ABSOLUTE CONSTRAINTS — " + "; ".join(WRAP_NEGATIVE[:5]) + ".",
+    ])
+
+
 # ═══ A+ İÇERİK ════════════════════════════════════════════════════════
 # ⚠ ÖLÇÜLER VE MODÜL TÜRLERİ UYDURULMADI. Portföyün üretimde kullanılan
 # A+ spesifikasyonundan alındı (THE-MYTH-HUNTERS-FIELD-BOOK ·
@@ -308,6 +483,50 @@ APLUS = [
             "Amazon's own field",
     },
 ]
+
+# ── A+ TİCARİ METNİ · İNGİLİZCE ───────────────────────────────────────
+# ⚠ İNGİLİZCE, ÇÜNKÜ ÜRÜN SAYFASI İNGİLİZCEDİR. Künye alanları Türkçe
+# kalır (kurucu okur); Amazon'a giden metin İngilizcedir. Türkçe bir
+# satırın ürün sayfasına düşmesi ticari bir hatadır.
+#
+# ⭑ HER SATIRIN BİR `BRIEF §` DAYANAĞI VAR ⭑ Bir A+ modülü ürün
+# vaadidir; dayanaksız bir cümle burada uydurulmuş bir vaattir.
+# GÖRSEL METİNSİZDİR: bu metin Amazon'un KENDİ başlık/gövde alanına
+# yazılır, görsele çizilmez.
+APLUS_COPY = {
+    "aplus-01": (
+        "Not a puzzle book. An object with a hidden system.",
+        "One hundred engraved enigmas and a single unbroken mystery. "
+        "Five gates, twenty puzzles each, bound as a volume meant to sit "
+        "on a shelf rather than be thrown away."),                # § 4.3 · § 1
+    "aplus-02": (
+        "The cipher is inside the plate.",
+        "The code is not printed beside the engraving — it is printed "
+        "inside it: in the direction of the hatching, the order of the "
+        "symbols, the ornament along the edge. Over one hundred original "
+        "plates, each one carrying its own puzzle."),                # § 6.1
+    "aplus-03": (
+        "You are allowed to give up.",
+        "Every puzzle carries a three-tier hint ladder that narrows the "
+        "search without ever handing over the answer. Taking a hint is "
+        "not losing."),                                             # § 6.2
+    "aplus-04": (
+        "From observation to inference.",
+        "Every answer is a member of a catalogue printed inside this "
+        "book. Nothing here asks you to leave it, and nothing here "
+        "rewards guessing."),                                # § 4.1 · § 4.4
+    "aplus-05": (
+        "Five gates. One passage.",
+        "The gates open in order, and each one changes what the next one "
+        "asks of you. What you learn in the first is the tool you need "
+        "in the last."),                                     # § 1 · § 6.3
+    "aplus-06": (
+        "The last question.",
+        "When the five gates are open they give you five phrases that "
+        "say nothing on their own. The answer to the last question is "
+        "not printed anywhere in this book — it is verified online."),
+                                                             # § 6.3 · § 6.4
+}
 
 APLUS_NEGATIVE = NEGATIVE_COMMON + [
     "no headline, no body copy, no call to action baked into the image — "

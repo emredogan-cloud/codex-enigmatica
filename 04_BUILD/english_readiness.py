@@ -52,12 +52,23 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
+    # ⚠ `--gate` KABUL EDİLİR VE BU BİR SÜS DEĞİLDİR. CI'ın metin kapısı
+    # döngüsü her kapıyı `--gate <seviye> --verbose` ile çağırır; bu betik
+    # yeniden yazılırken argüman düştü ve CI KIRMIZI yandı — yerelde
+    # yanmadan, çünkü `qa_all.sh` onu argümansız çağırıyor. İki çağıran, iki
+    # imza: kapı ikisini de kabul etmek zorundadır.
+    ap.add_argument("--gate", default=None)
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--json", default=OUT)
     args = ap.parse_args()
 
+    gate_level = args.gate or pl.read_gate()
+    if gate_level not in pl.VALID_GATES:
+        print("HATA: geçersiz kapı seviyesi: %s" % gate_level, file=sys.stderr)
+        return 2
+
     print("=" * 74)
-    print("  İNGİLİZCE YENİDEN İNŞA DOĞRULAMASI")
+    print("  İNGİLİZCE YENİDEN İNŞA DOĞRULAMASI · kapı: %s" % gate_level)
     print("=" * 74)
 
     rep = pl.Report(args.verbose)
@@ -176,6 +187,7 @@ def main() -> int:
         rep.warn("harici insan doğrulaması 0 — yeniden inşa bunu değiştirmez")
 
     rep.facts.update({
+        "gate": gate_level,
         "manuscriptLanguage": book_lang,
         "productionLanguage": prod,
         "rebuildComplete": book_lang == prod and len(letters) == 26,

@@ -6,6 +6,7 @@
     "harici insan doğrulaması 0 — yeniden inşa bunu değiştirmez"
   ],
   "facts": {
+    "gate": "phase5",
     "manuscriptLanguage": "en",
     "productionLanguage": "en",
     "rebuildComplete": true,

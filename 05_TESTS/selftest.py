@@ -48,6 +48,7 @@ import argparse
 import copy
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -2642,6 +2643,51 @@ def part12_editorial(rep: Report, tmp: str) -> None:
 
 
 
+def part13_ci_signatures(rep) -> None:
+    """⭑⭑ CI'IN ÇAĞIRDIĞI HER KAPI, CI'IN GEÇTİĞİ ARGÜMANI KABUL ETMELİ ⭑⭑
+
+    ⚠ BU BÖLÜM BİR CI KIRMIZISINDAN DOĞDU ve iki çağıran arasındaki
+    boşluktan geldi:
+
+        qa_all.sh          →  python3 04_BUILD/english_readiness.py
+        .github/validate   →  python3 04_BUILD/english_readiness.py --gate X
+
+    Bir kapı yeniden yazıldı ve `--gate` argümanı düştü. Yerelde her şey
+    yeşildi — `qa_all.sh` onu argümansız çağırıyor — ve CI kırmızı yandı.
+    Yani kusur kapının KENDİSİNDE değil, İKİ ÇAĞIRANIN AYRIŞMASINDAYDI ve
+    hiçbir yerel koşu onu göremezdi.
+
+    Bu denetim iş akışının kendi listesini OKUR (elle yazılmaz: yeni bir
+    kapı eklendiğinde liste kendiliğinden büyür) ve her betiğin `--gate`
+    kabul ettiğini doğrular."""
+    wf = os.path.join(ROOT, ".github", "workflows", "validate.yml")
+    if not os.path.isfile(wf):
+        rep.check(False, "CI iş akışı bulunamadı — imza denetimi yapılamadı")
+        return
+    text = open(wf, encoding="utf-8").read()
+    # `for g in a b c; do … --gate "$LEVEL"` kalıbındaki kapı listeleri
+    names: list[str] = []
+    for m in re.finditer(r"for\s+g\s+in\s+([a-z0-9_ ]+);\s*do(.*?)done",
+                         text, re.S):
+        if "--gate" in m.group(2):
+            names += m.group(1).split()
+    rep.check(bool(names),
+              "CI'ın `--gate` ile çağırdığı kapı listesi okundu (%d)"
+              % len(names))
+    missing = []
+    for n in names:
+        path = os.path.join(ROOT, "04_BUILD", n + ".py")
+        if not os.path.isfile(path):
+            continue                      # henüz doğmamış kapı — CI atlar
+        src = open(path, encoding="utf-8").read()
+        if '"--gate"' not in src and "'--gate'" not in src:
+            missing.append(n)
+    rep.check(not missing,
+              "⭑ CI'IN ÇAĞIRDIĞI HER KAPI `--gate` KABUL EDİYOR ⭑ "
+              "(iki çağıran, tek imza)"
+              + ("" if not missing else " — ⛔ %s" % missing))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -2667,6 +2713,7 @@ def main() -> int:
         part10_plate_readability(rep, tmp)
         part11_crossref(rep, tmp)
         part12_editorial(rep, tmp)
+    part13_ci_signatures(rep)
 
     print("\n" + "=" * 74)
     if rep.failed:

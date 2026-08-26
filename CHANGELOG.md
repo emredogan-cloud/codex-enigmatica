@@ -108,6 +108,21 @@ reddeder.
 ⚠ Kindle **%35 planı** seçilmelidir: 46,0 MB'da %70'in teslimat ücreti
 6,905 $ ve telifi 0,088 $'a düşürür. Sınır ~23,3 MB.
 
+### Onarıldı — CI KIRMIZI YANDI VE HAKLIYDI
+
+İlk push'ta `metin kalite kapıları` işi düştü: `english_readiness.py`
+yeniden yazılırken `--gate` argümanı düştü ve **CI o kapıyı `--gate` ile
+çağırıyor**. Yerelde her şey yeşildi çünkü `qa_all.sh` onu argümansız
+çağırıyor.
+
+⭑ Kusur kapının kendisinde değil, **iki çağıranın ayrışmasındaydı** — ve
+hiçbir yerel koşu onu göremezdi.
+
+`selftest`'e on üçüncü bölüm eklendi: iş akışının kendi kapı listesini
+**okur** (elle yazılmaz) ve her betiğin `--gate` kabul ettiğini doğrular.
+Fikstürle ispatlandı: argüman kaldırıldığında selftest kırmızı yanıyor.
+**244 denetim.**
+
 ### ⚠ DEĞİŞMEYEN
 
 Ölçülen öldürme kapısı **HARD-STOP** · harici çözücü oturumu **0 / 5** ·

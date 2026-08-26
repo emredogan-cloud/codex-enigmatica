@@ -377,6 +377,28 @@ def main() -> int:
     meta = pl.load_json(META) or {}
     inter = (pl.load_json(INTERIOR) or {}).get("facts") or {}
     pages = args.pages or inter.get("pages") or 0
+
+    # ── ⭑ `--check` ÜRETMEZ ⭑ ─────────────────────────────────────────
+    # ⚠ Aynı kusur iç blokta da vardı ve aynı bedeli ödetiyordu: bayrak
+    # bildiriliyor, hiç okunmuyor, kapak her koşuda YENİDEN üretiliyordu.
+    # `qa_all.sh` içinde bu adım `kdp_package.py`den SONRA koşar; PDF her
+    # üretimde gömülü zaman damgası yüzünden değişir ve yayın paketinin
+    # SHA256 toplamları TUTMAZ.
+    if args.check:
+        out = args.out or os.path.join(
+            pl.ROOT, "08_OUTPUT", args.binding.upper(), "cover.pdf")
+        stats = pl.load_json(
+            STATS if args.binding == "paperback"
+            else STATS.replace("cover.json", "cover-hardcover.json")) or {}
+        f = stats.get("facts", stats)
+        ok = os.path.isfile(out)
+        rep.check(ok, "kapak PDF var (%s)" % os.path.relpath(out, pl.ROOT))
+        rep.check(int(f.get("pages") or 0) == int(pages),
+                  "⭑ KAPAK SAYFA SAYISI İÇ BLOKLA TUTUYOR ⭑ (%s / %s)"
+                  % (f.get("pages"), pages))
+        rep.check(bool(f.get("spineIn")),
+                  "sırt genişliği kayıtlı (%s in)" % f.get("spineIn"))
+        return rep.finish("%s · --check" % args.binding, None)
     rep.check(bool(pages), "⭑ SAYFA SAYISI ÖLÇÜLEN İÇ BLOKTAN ⭑ (%s)"
               % (pages or "YOK"))
     if not pages:

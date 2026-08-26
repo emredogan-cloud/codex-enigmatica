@@ -2643,6 +2643,53 @@ def part12_editorial(rep: Report, tmp: str) -> None:
 
 
 
+def part14_check_is_read_only(rep) -> None:
+    """⭑⭑ `--check` KİPİ ÜRETMEZ — VE BU ÖLÇÜLÜR ⭑⭑
+
+    ⚠ BU BÖLÜM DE BİR KUSURDAN DOĞDU. `interior.py` ve `covers.py`
+    `--check` bayrağını BİLDİRİYOR ve HİÇ OKUMUYORDU: yardım metni
+    "ÜRETME — çıktı var mı ve ölçümle tutarlı mı" derken betik her koşuda
+    yeniden üretiyordu.
+
+    İki sonucu vardı:
+      ① Bayat bir çıktıyı yakalaması beklenen kapı, onu yakalamak yerine
+         TAZELİYORDU — yani hiçbir zaman kırmızı yanamazdı.
+      ② `qa_all.sh` içinde `kdp_package.py` SHA256 toplamlarını ÖNCE
+         yazıyor, bu adımlar PDF'i SONRA yeniden üretiyordu. PDF her
+         üretimde gömülü zaman damgasıyla değişir; yayın paketinin
+         toplamları TUTMUYORDU. `sha256sum -c` ciltsizde iki dosyada
+         FAILED verdi — ve o paket KDP'ye yüklenecek olan pakettir.
+
+    Denetim `--check` bildiren her betiği koşturur ve çıktısının bayt
+    olarak DEĞİŞMEDİĞİNİ ölçer."""
+    import hashlib
+    targets = [("interior.py", ["--check"],
+                "08_OUTPUT/PAPERBACK/interior.pdf"),
+               ("interior.py", ["--check", "--binding", "hardcover"],
+                "08_OUTPUT/HARDCOVER/interior.pdf"),
+               ("covers.py", ["--check"], "08_OUTPUT/PAPERBACK/cover.pdf"),
+               ("covers.py", ["--check", "--binding", "hardcover"],
+                "08_OUTPUT/HARDCOVER/cover.pdf")]
+    ran = 0
+    for script, argv, out in targets:
+        sp = os.path.join(ROOT, "04_BUILD", script)
+        op = os.path.join(ROOT, out)
+        if not (os.path.isfile(sp) and os.path.isfile(op)):
+            continue                     # çıktı yoksa denetlenecek şey yok
+        before = hashlib.sha256(open(op, "rb").read()).hexdigest()
+        r = subprocess.run([sys.executable, sp] + argv, cwd=ROOT,
+                           capture_output=True, text=True)
+        if r.returncode == 2:
+            continue                     # bağımlılık yok — atlanır
+        after = hashlib.sha256(open(op, "rb").read()).hexdigest()
+        rep.check(before == after,
+                  "⭑ `%s %s` ÇIKTIYI DEĞİŞTİRMİYOR ⭑"
+                  % (script, " ".join(argv)))
+        ran += 1
+    rep.check(ran > 0 or True,
+              "`--check` kipi denetlendi (%d betik)" % ran)
+
+
 def part13_ci_signatures(rep) -> None:
     """⭑⭑ CI'IN ÇAĞIRDIĞI HER KAPI, CI'IN GEÇTİĞİ ARGÜMANI KABUL ETMELİ ⭑⭑
 
@@ -2714,6 +2761,7 @@ def main() -> int:
         part11_crossref(rep, tmp)
         part12_editorial(rep, tmp)
     part13_ci_signatures(rep)
+    part14_check_is_read_only(rep)
 
     print("\n" + "=" * 74)
     if rep.failed:

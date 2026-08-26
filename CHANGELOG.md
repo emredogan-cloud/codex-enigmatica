@@ -123,6 +123,27 @@ hiçbir yerel koşu onu göremezdi.
 Fikstürle ispatlandı: argüman kaldırıldığında selftest kırmızı yanıyor.
 **244 denetim.**
 
+### Onarıldı — `--check` KİPİ ÜRETİYORDU VE YAYIN PAKETİNİN TOPLAMLARI TUTMUYORDU
+
+`interior.py` ve `covers.py` `--check` bayrağını **bildiriyor ve hiç
+okumuyordu**. Yardım metni *"ÜRETME — çıktı var mı ve ölçümle tutarlı mı"*
+diyor; betikler her koşuda yeniden üretiyordu.
+
+İki sonucu vardı ve ikincisi **KDP'ye yüklenecek paketi** etkiliyordu:
+
+1. Bayat bir çıktıyı yakalaması beklenen kapı, onu yakalamak yerine
+   **tazeliyordu** — yani hiçbir zaman kırmızı yanamazdı.
+2. `qa_all.sh` içinde `kdp_package.py` SHA256 toplamlarını **önce**
+   yazıyor, bu adımlar PDF'i **sonra** yeniden üretiyordu. PDF her
+   üretimde gömülü zaman damgasıyla bayt olarak değişir.
+   **Ölçüldü:** `sha256sum -c` ciltsiz pakette **iki dosyada FAILED**.
+
+`--check` artık gerçekten denetler: dosya var mı, boyut ölçümle tutuyor
+mu, kayıtlı sayfa/ipucu/çözüm sayısı tam mı, son sorunun cevabı
+basılmamış mı. Ve `selftest`'e 14. bölüm eklendi: `--check` bildiren her
+betik koşturulur ve çıktısının **bayt olarak değişmediği** ölçülür.
+Fikstürle ispatlandı. **244 → 249 denetim.**
+
 ### ⚠ DEĞİŞMEYEN
 
 Ölçülen öldürme kapısı **HARD-STOP** · harici çözücü oturumu **0 / 5** ·

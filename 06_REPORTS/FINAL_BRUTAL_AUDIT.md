@@ -89,7 +89,7 @@ bırakır; %35 planı 3,497 $. **%35 seçilmelidir** — ya da EPUB
 
 ---
 
-## 4 · YENİDEN İNŞANIN AÇIĞA ÇIKARDIĞI ONBEŞ KUSUR
+## 4 · YENİDEN İNŞANIN AÇIĞA ÇIKARDIĞI ON YEDİ KUSUR
 
 Hepsi onarıldı. Hiçbiri İngilizceye özgü değildi — **on beşi de Türkçe
 baskıda da vardı** ve tesadüfen görünmüyordu.
@@ -126,6 +126,20 @@ kapısı **çözülemez yedi bulmacayı yeşil değil, sessiz** yapardı.
 işi iki ayrı kopyayla yapıyordu.** Yardımcılar tek yere alındı
 (`_protected_layer § TYPESETTING`); on beş kusurun sekizi o ayrışmadan
 doğmuştu.
+
+### Ve ikisi ÜRETİM HATTININ KENDİSİNDEYDİ
+
+| # | ne olmuştu | ağırlık |
+|---|---|---|
+| ⑯ | `--check` kipi **üretiyordu** — bayrak bildirilmiş, hiç okunmamış | ⛔ bayatlığı yakalaması beklenen kapı onu tazeliyordu |
+| ⑰ | bu yüzden **yayın paketinin SHA256 toplamları tutmuyordu** | ⛔ `sha256sum -c` ciltsizde iki dosyada FAILED |
+
+⑰ doğrudan KDP'ye yüklenecek paketi etkiliyordu: `kdp_package.py`
+toplamları önce yazıyor, `--check` adımları PDF'i sonra yeniden
+üretiyordu ve PDF her üretimde gömülü zaman damgasıyla değişir.
+
+Onarıldı ve `selftest` 14. bölümü artık `--check` bildiren her betiğin
+çıktısını **bayt olarak** karşılaştırıyor.
 
 ### Ve bir tanesi levha çiziciydi
 

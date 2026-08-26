@@ -617,6 +617,44 @@ def main() -> int:
     args.out = args.out or os.path.join(
         pl.ROOT, "08_OUTPUT", args.binding.upper(), "interior.pdf")
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
+
+    # ── ⭑ `--check` ÜRETMEZ ⭑ ─────────────────────────────────────────
+    # ⚠⚠ BU BAYRAK BİLDİRİLMİŞTİ VE HİÇ OKUNMUYORDU. Yardım metni
+    # "ÜRETME — çıktı var mı ve ölçümle tutarlı mı" diyor; betik her
+    # koşuda YENİDEN ÜRETİYORDU. İki sonucu vardı ve ikincisi ürünü
+    # etkiliyordu:
+    #
+    #   ① Bayat bir çıktıyı yakalaması BEKLENEN kapı, onu yakalamak
+    #      yerine TAZELİYORDU. Yakalayamayan bir kapı, kapı değildir.
+    #   ② `qa_all.sh` sırasında `kdp_package.py` SHA256 toplamlarını
+    #      ÖNCE yazıyor, bu adım PDF'i SONRA yeniden üretiyordu. PDF her
+    #      üretimde gömülü zaman damgası yüzünden bayt olarak değişir —
+    #      yani yayın paketinin toplamları TUTMUYORDU. Ölçüldü:
+    #      `sha256sum -c` ciltsizde iki dosyada FAILED verdi.
+    if args.check:
+        stats = pl.load_json(
+            STATS if args.binding == "paperback"
+            else STATS.replace("interior.json", "interior-hardcover.json")) or {}
+        facts = stats.get("facts", stats)
+        ok = os.path.isfile(args.out)
+        rep.check(ok, "iç blok PDF var (%s)"
+                  % os.path.relpath(args.out, pl.ROOT))
+        if ok:
+            mb = os.path.getsize(args.out) / 1e6
+            rep.check(abs(mb - float(facts.get("pdfMB") or 0)) < 0.6,
+                      "PDF boyutu ölçümle tutuyor (%.1f MB / kayıt %.1f MB)"
+                      % (mb, float(facts.get("pdfMB") or 0)))
+            rep.check(int(facts.get("pages") or 0) >= 24
+                      and int(facts.get("pages") or 0) % 2 == 0,
+                      "kayıtlı sayfa sayısı geçerli (%s)" % facts.get("pages"))
+            rep.check(facts.get("metaWithheld") == ["meta-001"],
+                      "⭑ SON SORUNUN CEVABI BASILMADI ⭑ (kayıt)")
+            rep.check(int(facts.get("hintsTypeset") or 0) >= 300
+                      and int(facts.get("solutionsTypeset") or 0) == 100,
+                      "kayıtlı ipucu/çözüm sayısı tam (%s / %s)"
+                      % (facts.get("hintsTypeset"),
+                         facts.get("solutionsTypeset")))
+        return rep.finish("%s · --check" % args.binding, None)
     tmp = args.out + ".pass1"
     # ⚠ Yazar ve yayıncı BURADA YAZILMAZ; metadata.json'dan gelir.
     info = build(book, sols, gutter_for(250, args.binding), tmp, meta)

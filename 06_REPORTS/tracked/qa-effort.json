@@ -9,10 +9,10 @@
     "solutionRecords": 101,
     "designRecords": 101,
     "protectedLayerPresent": true,
-    "totalExpectedEU": 686.3,
-    "totalWorstEU": 766.8,
+    "totalExpectedEU": 719.3,
+    "totalWorstEU": 799.8,
     "declaredMinutes": 1786,
-    "impliedMinutes": 229,
+    "impliedMinutes": 240,
     "euPerMinute": 3,
     "designRatio": 1.0,
     "k4CeilingByDifficulty": {
@@ -331,14 +331,14 @@
       },
       {
         "puzzleId": "g2-009",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 9.0,
         "declaredMinutes": 9,
-        "ratio": 0.78,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "çapa bulunur + 6 istasyon ızgarada aranır"
+        "ratio": 0.89,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "çapa bulunur + 7 istasyon ızgarada aranır"
       },
       {
         "puzzleId": "g2-010",
@@ -408,14 +408,14 @@
       },
       {
         "puzzleId": "g2-016",
-        "expectedEU": 7.0,
-        "worstEU": 7.0,
+        "expectedEU": 6.0,
+        "worstEU": 6.0,
         "budgetEU": 12.0,
         "declaredMinutes": 12,
-        "ratio": 0.58,
+        "ratio": 0.5,
         "repeatCount": 6,
         "repeatScore": 2,
-        "basis": "6 satır + 1 satır"
+        "basis": "6 satır"
       },
       {
         "puzzleId": "g2-017",
@@ -496,14 +496,14 @@
       },
       {
         "puzzleId": "g3-004",
-        "expectedEU": 4,
-        "worstEU": 4,
+        "expectedEU": 3,
+        "worstEU": 3,
         "budgetEU": 15.0,
         "declaredMinutes": 15,
-        "ratio": 0.27,
-        "repeatCount": 2,
+        "ratio": 0.2,
+        "repeatCount": 1,
         "repeatScore": 1,
-        "basis": "2 sembol çizelgeden okunur + toplanır + satır"
+        "basis": "1 sembol çizelgeden okunur + toplanır + satır"
       },
       {
         "puzzleId": "g3-005",
@@ -529,14 +529,14 @@
       },
       {
         "puzzleId": "g3-007",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 5,
+        "worstEU": 5,
         "budgetEU": 15.0,
         "declaredMinutes": 15,
-        "ratio": 0.47,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "5 sembol çizelgeden okunur + toplanır + satır"
+        "ratio": 0.33,
+        "repeatCount": 3,
+        "repeatScore": 1,
+        "basis": "3 sembol çizelgeden okunur + toplanır + satır"
       },
       {
         "puzzleId": "g3-008",
@@ -573,14 +573,14 @@
       },
       {
         "puzzleId": "g3-011",
-        "expectedEU": 6,
-        "worstEU": 6,
+        "expectedEU": 3,
+        "worstEU": 3,
         "budgetEU": 15.0,
         "declaredMinutes": 15,
-        "ratio": 0.4,
-        "repeatCount": 4,
-        "repeatScore": 2,
-        "basis": "4 sembol çizelgeden okunur + toplanır + satır"
+        "ratio": 0.2,
+        "repeatCount": 1,
+        "repeatScore": 1,
+        "basis": "1 sembol çizelgeden okunur + toplanır + satır"
       },
       {
         "puzzleId": "g3-012",
@@ -617,14 +617,14 @@
       },
       {
         "puzzleId": "g3-015",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 4,
+        "worstEU": 4,
         "budgetEU": 15.0,
         "declaredMinutes": 15,
-        "ratio": 0.33,
-        "repeatCount": 3,
+        "ratio": 0.27,
+        "repeatCount": 2,
         "repeatScore": 1,
-        "basis": "3 sembol çizelgeden okunur + toplanır + satır"
+        "basis": "2 sembol çizelgeden okunur + toplanır + satır"
       },
       {
         "puzzleId": "g3-016",
@@ -650,25 +650,25 @@
       },
       {
         "puzzleId": "g3-018",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 18.0,
         "declaredMinutes": 18,
-        "ratio": 0.39,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "çapa bulunur + 6 istasyon ızgarada aranır"
+        "ratio": 0.44,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "çapa bulunur + 7 istasyon ızgarada aranır"
       },
       {
         "puzzleId": "g3-019",
-        "expectedEU": 8,
-        "worstEU": 8,
+        "expectedEU": 10,
+        "worstEU": 10,
         "budgetEU": 17.0,
         "declaredMinutes": 17,
-        "ratio": 0.47,
-        "repeatCount": 7,
+        "ratio": 0.59,
+        "repeatCount": 9,
         "repeatScore": 3,
-        "basis": "basılı anahtar satırı + 7 harf çevrilir"
+        "basis": "basılı anahtar satırı + 9 harf çevrilir"
       },
       {
         "puzzleId": "g3-020",
@@ -683,25 +683,25 @@
       },
       {
         "puzzleId": "g4-001",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 24.0,
         "declaredMinutes": 24,
-        "ratio": 0.29,
-        "repeatCount": 7,
+        "ratio": 0.33,
+        "repeatCount": 8,
         "repeatScore": 3,
-        "basis": "7 adımlık yol yürünür"
+        "basis": "8 adımlık yol yürünür"
       },
       {
         "puzzleId": "g4-002",
-        "expectedEU": 12,
-        "worstEU": 12,
+        "expectedEU": 16,
+        "worstEU": 16,
         "budgetEU": 25.0,
         "declaredMinutes": 25,
-        "ratio": 0.48,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "2 katman × (5 harf) — anahtarların ikisi de basılı"
+        "ratio": 0.64,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "2 katman × (7 harf) — anahtarların ikisi de basılı"
       },
       {
         "puzzleId": "g4-003",
@@ -716,14 +716,14 @@
       },
       {
         "puzzleId": "g4-004",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 26.0,
         "declaredMinutes": 26,
-        "ratio": 0.19,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "5 adımlık yol yürünür"
+        "ratio": 0.31,
+        "repeatCount": 8,
+        "repeatScore": 3,
+        "basis": "8 adımlık yol yürünür"
       },
       {
         "puzzleId": "g4-005",
@@ -738,58 +738,58 @@
       },
       {
         "puzzleId": "g4-006",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 27.0,
         "declaredMinutes": 27,
-        "ratio": 0.26,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "çapa bulunur + 6 istasyon ızgarada aranır"
+        "ratio": 0.3,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "çapa bulunur + 7 istasyon ızgarada aranır"
       },
       {
         "puzzleId": "g4-007",
-        "expectedEU": 8,
-        "worstEU": 8,
+        "expectedEU": 7,
+        "worstEU": 7,
         "budgetEU": 26.0,
         "declaredMinutes": 26,
-        "ratio": 0.31,
-        "repeatCount": 8,
+        "ratio": 0.27,
+        "repeatCount": 7,
         "repeatScore": 3,
-        "basis": "8 adımlık yol yürünür"
+        "basis": "7 adımlık yol yürünür"
       },
       {
         "puzzleId": "g4-008",
-        "expectedEU": 14,
-        "worstEU": 14,
+        "expectedEU": 16,
+        "worstEU": 16,
         "budgetEU": 28.0,
         "declaredMinutes": 28,
-        "ratio": 0.5,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "2 katman × (6 harf) — anahtarların ikisi de basılı"
+        "ratio": 0.57,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "2 katman × (7 harf) — anahtarların ikisi de basılı"
       },
       {
         "puzzleId": "g4-009",
-        "expectedEU": 8,
-        "worstEU": 8,
+        "expectedEU": 10,
+        "worstEU": 10,
         "budgetEU": 25.0,
         "declaredMinutes": 25,
-        "ratio": 0.32,
-        "repeatCount": 7,
+        "ratio": 0.4,
+        "repeatCount": 9,
         "repeatScore": 3,
-        "basis": "basılı ızgara · 7 harf yazılır + tek okuma"
+        "basis": "basılı ızgara · 9 harf yazılır + tek okuma"
       },
       {
         "puzzleId": "g4-010",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 27.0,
         "declaredMinutes": 27,
-        "ratio": 0.19,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "5 adımlık yol yürünür"
+        "ratio": 0.3,
+        "repeatCount": 8,
+        "repeatScore": 3,
+        "basis": "8 adımlık yol yürünür"
       },
       {
         "puzzleId": "g4-011",
@@ -804,58 +804,58 @@
       },
       {
         "puzzleId": "g4-012",
-        "expectedEU": 14,
-        "worstEU": 14,
+        "expectedEU": 16,
+        "worstEU": 16,
         "budgetEU": 28.0,
         "declaredMinutes": 28,
-        "ratio": 0.5,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "2 katman × (6 harf) — anahtarların ikisi de basılı"
+        "ratio": 0.57,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "2 katman × (7 harf) — anahtarların ikisi de basılı"
       },
       {
         "puzzleId": "g4-013",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 25.0,
         "declaredMinutes": 25,
-        "ratio": 0.2,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "5 adımlık yol yürünür"
+        "ratio": 0.32,
+        "repeatCount": 8,
+        "repeatScore": 3,
+        "basis": "8 adımlık yol yürünür"
       },
       {
         "puzzleId": "g4-014",
-        "expectedEU": 10,
-        "worstEU": 10,
+        "expectedEU": 9,
+        "worstEU": 9,
         "budgetEU": 29.0,
         "declaredMinutes": 29,
-        "ratio": 0.34,
-        "repeatCount": 9,
+        "ratio": 0.31,
+        "repeatCount": 8,
         "repeatScore": 3,
-        "basis": "basılı anahtar satırı + 9 harf çevrilir"
+        "basis": "basılı anahtar satırı + 8 harf çevrilir"
       },
       {
         "puzzleId": "g4-015",
-        "expectedEU": 14,
-        "worstEU": 14,
+        "expectedEU": 16,
+        "worstEU": 16,
         "budgetEU": 26.0,
         "declaredMinutes": 26,
-        "ratio": 0.54,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "2 katman × (6 harf) — anahtarların ikisi de basılı"
+        "ratio": 0.62,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "2 katman × (7 harf) — anahtarların ikisi de basılı"
       },
       {
         "puzzleId": "g4-016",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 28.0,
         "declaredMinutes": 28,
-        "ratio": 0.18,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "5 adımlık yol yürünür"
+        "ratio": 0.29,
+        "repeatCount": 8,
+        "repeatScore": 3,
+        "basis": "8 adımlık yol yürünür"
       },
       {
         "puzzleId": "g4-017",
@@ -870,25 +870,25 @@
       },
       {
         "puzzleId": "g4-018",
-        "expectedEU": 5,
-        "worstEU": 5,
+        "expectedEU": 8,
+        "worstEU": 8,
         "budgetEU": 29.0,
         "declaredMinutes": 29,
-        "ratio": 0.17,
-        "repeatCount": 4,
-        "repeatScore": 2,
-        "basis": "çapa bulunur + 4 istasyon ızgarada aranır"
+        "ratio": 0.28,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "çapa bulunur + 7 istasyon ızgarada aranır"
       },
       {
         "puzzleId": "g4-019",
-        "expectedEU": 7,
-        "worstEU": 7,
+        "expectedEU": 9,
+        "worstEU": 9,
         "budgetEU": 28.0,
         "declaredMinutes": 28,
-        "ratio": 0.25,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "basılı ızgara · 6 harf yazılır + tek okuma"
+        "ratio": 0.32,
+        "repeatCount": 8,
+        "repeatScore": 3,
+        "basis": "basılı ızgara · 8 harf yazılır + tek okuma"
       },
       {
         "puzzleId": "g4-020",
@@ -958,14 +958,14 @@
       },
       {
         "puzzleId": "g5-006",
-        "expectedEU": 14,
-        "worstEU": 14,
+        "expectedEU": 16,
+        "worstEU": 16,
         "budgetEU": 27.0,
         "declaredMinutes": 27,
-        "ratio": 0.52,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "2 katman × (6 harf) — anahtarların ikisi de basılı"
+        "ratio": 0.59,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "2 katman × (7 harf) — anahtarların ikisi de basılı"
       },
       {
         "puzzleId": "g5-007",
@@ -1046,14 +1046,14 @@
       },
       {
         "puzzleId": "g5-014",
-        "expectedEU": 14,
-        "worstEU": 14,
+        "expectedEU": 16,
+        "worstEU": 16,
         "budgetEU": 29.0,
         "declaredMinutes": 29,
-        "ratio": 0.48,
-        "repeatCount": 6,
-        "repeatScore": 2,
-        "basis": "2 katman × (6 harf) — anahtarların ikisi de basılı"
+        "ratio": 0.55,
+        "repeatCount": 7,
+        "repeatScore": 3,
+        "basis": "2 katman × (7 harf) — anahtarların ikisi de basılı"
       },
       {
         "puzzleId": "g5-015",
@@ -1101,14 +1101,14 @@
       },
       {
         "puzzleId": "g5-019",
-        "expectedEU": 6,
-        "worstEU": 6,
+        "expectedEU": 10,
+        "worstEU": 10,
         "budgetEU": 28.0,
         "declaredMinutes": 28,
-        "ratio": 0.21,
-        "repeatCount": 5,
-        "repeatScore": 2,
-        "basis": "basılı anahtar satırı + 5 harf çevrilir"
+        "ratio": 0.36,
+        "repeatCount": 9,
+        "repeatScore": 3,
+        "basis": "basılı anahtar satırı + 9 harf çevrilir"
       },
       {
         "puzzleId": "g5-020",

@@ -3,23 +3,23 @@
   "checks": 8,
   "errors": [],
   "warnings": [
-    "hesaplayıcı 263 sayfaya göre koştu, iç blok 264 — sırt +0.00225 in düzeltildi; kesinlik isteniyorsa hesaplayıcı 264 sayfayla yeniden koşturulmalı",
-    "⚑ SANAT DOĞAL 82 dpi — 300'e yükseltildi ama kazanılan detay TAHMİNDİR; baskıda YUMUŞAK görünebilir. Gereken: 4308 × 3125 px (bkz. COVER_ARTWORK_GENERATION_GUIDE)"
+    "hesaplayıcı 263 sayfaya göre koştu, iç blok 274 — sırt +0.02477 in düzeltildi; kesinlik isteniyorsa hesaplayıcı 274 sayfayla yeniden koşturulmalı",
+    "⚑ SANAT DOĞAL 82 dpi — 300'e yükseltildi ama kazanılan detay TAHMİNDİR; baskıda YUMUŞAK görünebilir. Gereken: 4315 × 3125 px (bkz. COVER_ARTWORK_GENERATION_GUIDE)"
   ],
   "facts": {
     "binding": "hardcover",
-    "spineIn": 0.7833,
-    "widthIn": 14.3593,
+    "spineIn": 0.8058,
+    "widthIn": 14.3818,
     "heightIn": 10.417,
-    "pages": 264,
+    "pages": 274,
     "paper": "white",
     "artCropPx": [
-      1179,
+      1180,
       855
     ],
-    "nativeDpi": 82.1,
+    "nativeDpi": 82.0,
     "renderedPx": [
-      4308,
+      4315,
       3125
     ],
     "hingeIn": 0.394,
@@ -34,8 +34,8 @@
     ],
     "spineTextPrinted": true,
     "staleCalculator": false,
-    "spineDeltaIn": 0.00225,
-    "deltaPages": 1,
+    "spineDeltaIn": 0.02477,
+    "deltaPages": 11,
     "worstContrast": 1.01,
     "haloUsed": 17,
     "typeRowsTotal": 19,

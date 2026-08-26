@@ -6,9 +6,9 @@
   "facts": {
     "interior": {
       "exists": true,
-      "bytes": 71666276,
+      "bytes": 70395916,
       "header": "%PDF-1.4",
-      "pages": 264,
+      "pages": 274,
       "embeddedFontStreams": 4,
       "fonts": [
         "AAAAAA+DejaVuSansMono",
@@ -24,7 +24,7 @@
     },
     "cover": {
       "exists": true,
-      "bytes": 34594529,
+      "bytes": 34655881,
       "header": "%PDF-1.3",
       "pages": 1,
       "embeddedFontStreams": 2,
@@ -34,12 +34,12 @@
         "Helvetica"
       ],
       "mediaBoxIn": [
-        12.91,
+        12.935,
         9.25
       ]
     },
     "aplusModules": 6,
-    "pageCount": 264,
+    "pageCount": 274,
     "files": {
       "PAPERBACK": 3,
       "APLUS": 7,
@@ -49,9 +49,9 @@
     "hardcover": {
       "interior": {
         "exists": true,
-        "bytes": 68554193,
+        "bytes": 67344824,
         "header": "%PDF-1.4",
-        "pages": 264,
+        "pages": 274,
         "embeddedFontStreams": 4,
         "fonts": [
           "AAAAAA+DejaVuSansMono",
@@ -67,7 +67,7 @@
       },
       "cover": {
         "exists": true,
-        "bytes": 42426470,
+        "bytes": 42490749,
         "header": "%PDF-1.3",
         "pages": 1,
         "embeddedFontStreams": 2,
@@ -77,7 +77,7 @@
           "Helvetica"
         ],
         "mediaBoxIn": [
-          14.3593,
+          14.3818,
           10.417
         ]
       }
@@ -91,22 +91,22 @@
       "coverType": [
         {
           "text": "CODEX ENIGMATICA",
-          "contrast": 1.11,
+          "contrast": 1.17,
           "halo": true
         },
         {
           "text": "One Hundred Engraved Enigmas and",
-          "contrast": 1.69,
+          "contrast": 1.7,
           "halo": true
         },
         {
           "text": "a Single Unbroken Mystery",
-          "contrast": 1.4,
+          "contrast": 1.36,
           "halo": true
         },
         {
           "text": "EMRE DOĞAN",
-          "contrast": 1.24,
+          "contrast": 1.17,
           "halo": true
         }
       ],
@@ -117,7 +117,7 @@
       "metaWithheld": [
         "meta-001"
       ],
-      "bytes": 46028809,
+      "bytes": 46032509,
       "epub": "08_OUTPUT/KINDLE/codex-enigmatica.epub",
       "buyerNote": "About this digital edition — This is the complete Codex Enigmatica: all 101 puzzles, all 303 hints and the full solution section. Every engraved plate is reproduced digitally and can be enlarged on screen to examine the fine detail each puzzle depends on. The puzzles are solved by observation and inference, so nothing here requires you to write in the book. If you prefer to annotate the plates by hand, or want the engravings at their printed size, the paperback and hardcover editions are made for that."
     }

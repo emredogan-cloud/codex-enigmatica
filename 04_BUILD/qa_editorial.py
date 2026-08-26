@@ -62,7 +62,7 @@ import _protected_layer as pl                                  # noqa: E402
 BOOK = os.path.join(pl.ROOT, "02_MANUSCRIPT", "book.json")
 
 BUILD_ID = re.compile(r"\b(g\d+-\d{3}|meta-\d{3}|pl-[a-z0-9-]+)\b")
-CHART_NAME = re.compile(r"Çizelge\s+[A-ZÇĞİÖŞÜ]|Katalo[ğg]u|Sözlü[ğg]ü")
+CHART_NAME = re.compile(r"Chart\s+[A-Z]\b|Catalogue|Lexicon")
 DIRECTION = re.compile(
     r"\b(soldan|sağdan|yukarıdan|aşağıdan|ters(?:ine|ten)?|baştan|sondan"
     r"|saat yönünde|sol kenar|sağ kenar)\b", re.IGNORECASE)

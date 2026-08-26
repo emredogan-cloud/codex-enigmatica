@@ -3,28 +3,28 @@
   "checks": 7,
   "errors": [],
   "warnings": [
-    "⚑ SANAT DOĞAL 92 dpi — 300'e yükseltildi ama kazanılan detay TAHMİNDİR; baskıda YUMUŞAK görünebilir. Gereken: 3873 × 2775 px (bkz. COVER_ARTWORK_GENERATION_GUIDE)"
+    "⚑ SANAT DOĞAL 92 dpi — 300'e yükseltildi ama kazanılan detay TAHMİNDİR; baskıda YUMUŞAK görünebilir. Gereken: 3880 × 2775 px (bkz. COVER_ARTWORK_GENERATION_GUIDE)"
   ],
   "facts": {
     "binding": "paperback",
-    "spineIn": 0.66,
-    "widthIn": 12.91,
+    "spineIn": 0.685,
+    "widthIn": 12.935,
     "heightIn": 9.25,
-    "pages": 264,
+    "pages": 274,
     "paper": "cream",
     "artCropPx": [
-      1193,
+      1196,
       855
     ],
-    "nativeDpi": 92.4,
+    "nativeDpi": 92.5,
     "renderedPx": [
-      3873,
+      3880,
       2775
     ],
     "hingeIn": 0.0,
     "wrapIn": 0.125,
     "spineSafeIn": [
-      0.535,
+      0.56,
       8.5
     ],
     "barcodeBoxIn": [
@@ -35,7 +35,7 @@
     "staleCalculator": false,
     "spineDeltaIn": 0,
     "deltaPages": 0,
-    "worstContrast": 1.05,
+    "worstContrast": 1.01,
     "haloUsed": 18,
     "typeRowsTotal": 19,
     "edgeContrastMin": 17.69,

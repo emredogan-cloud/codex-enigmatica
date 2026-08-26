@@ -27,6 +27,11 @@
 | **B5** | `qa_effort` çarpanı | ORTA | ikinci tur | ⏸ **ERTELENDİ** — gerçek süreyle kalibre |
 | **B6** | İkinci tur kohortu | KRİTİK | — | ✅ **C ONAYLANDI** · 2 dönen + 3 yeni |
 | **A12b** | ⭑ **İkinci tur oturumları** ⭑ | **KRİTİK** | **Faz 3 için** | ⛔ **AÇIK — TEK BLOKLAYICI** |
+| **A13** | Faz 3–5'e kurucu geçersiz kılmasıyla giriş | KRİTİK | Faz 3 | ⚑ **KURUCU KARARI** — ölçüm ezilmedi |
+| **A14** | ⭑ **İngilizce kaynak düzeyinde yeniden inşa** ⭑ | **KRİTİK** | Faz 6 | ✅ **KAPANDI → K42** · § aşağı |
+| **A15** | Ciltli hesaplayıcının **274 sayfayla** yenilenmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — betik sırtı +0,0203 in düzeltti ve bunu söylüyor |
+| **A16** | Kapak sarmalının **doğal çözünürlükte** yeniden üretilmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — ciltsiz 92,5 dpi · ciltli 82,0 dpi |
+| **A17** | 31 deterministik tabletin **gravür üslubuna yükseltilmesi** | DÜŞÜK | isteğe bağlı | **AÇIK** — bütçe kararı · § K42 ⑦ |
 
 ---
 
@@ -200,6 +205,69 @@ ayrı bir karardır ve **A12**'dedir.
 ---
 
 ## ALINMIŞ KARARLAR
+
+### K42 · ⭑ İNGİLİZCE KAYNAK DÜZEYİNDE YENİDEN İNŞA ⭑ (26 Ağustos 2026)
+
+**Karar:** Ticari kitap %100 İngilizce olacak ve bu bir çeviri değil, bir
+**kaynak düzeyinde yeniden inşadır**. Türkçe pilot silinmez; arşivlenir ve
+üretim hattı ona **hiç bakmaz**.
+
+**Neden çeviri değil — ölçülen gerekçe:**
+
+| | Türkçe | İngilizce |
+|---|---|---|
+| alfabe | 29 harf | **26 harf** |
+| işaret grubu | 5·5+4 | **5·5·4·4·4·4** |
+| kaydırma uzayı | 28 | **25** |
+| ayna ekseni | 29 | **26** |
+
+Grup yapısı değişince ona dayanan her kısıt bulmacası, her glif, her
+Polybius koordinatı ve her kaydırma yeniden üretilmek zorundadır. Basılı
+sözlük yeniden yazılınca **her cevap değişir**.
+
+⚠ **BEŞERLİ BÖLME REDDEDİLDİ.** 26 harfi beşerli bölmek altıncı gruba TEK
+harf bırakır ve kapı levhası her slotun GRUBUNU basar — tek üyeli bir grup
+o harfi bedava verir. Bölme dengelendi ve Çizelge F (Halka Tablosu) artık
+aynı gruplardan türer: bir harfin GRUBU ile SATIRI aynı sayıdır.
+
+**Yedi alt karar:**
+
+1. **Cevapları çözücü atar.** Pilot Kapı I'in on dokuz cevabını elle
+   listeliyordu; yönerge § 8 bunu yasaklar. `assign()` artık 101 cevabın
+   hepsini dağıtır ve Kapı I'de bu bir **arama**dır (üç koşul aynı anda).
+2. **Cevap yasağı ölçülür, elde tutulmaz.** Kanaryanın kendi kurallarıyla
+   üretim anında hesaplanır. Bir aday **ön maddenin kendi cümlesinin
+   içinde** yakalandı; sözleşme cümlesi değiştirilemez, **süzgeç genişledi**.
+3. **Anahtarlı alfabenin anahtarları hiçbir katalogun üyesi değildir** ve
+   çakışma üretim anında denetlenir.
+4. **Son sorunun cevabı ölçümle bir kez reddedildi:** ilk seçim `member`
+   sözcüğünün içinde yaşıyordu ve bu kitap her sayfada *"a member of Chart
+   B"* der. Kural: son cevap, kitabın kullanacağı sıradan bir İngilizce
+   sözcüğün alt dizesi olamaz.
+5. **On bir dekor ifadenin meta konumunda farklı harf taşıması** artık beş
+   kapının beşinde de üretim anında denetlenir.
+6. **Kapı katmanında dört, dizgi katmanında on bir kusur** açığa çıktı ve
+   onarıldı; **on beşi de Türkçe baskıda da vardı**. İkisi ürünü bitiren
+   cinstendi: biri son sorunun cevabını kitaba basıyordu, öteki sözleşmenin
+   doğrulama vaadini bir yer tutucuyla karşılıyordu.
+7. **Sözleşmesi değişen 31 levha deterministik çizildi (0,00 $).** Aynı
+   sözleşme görsel modele üç kez verilmiş ve 8/12/12 istasyonla dönmüştü;
+   *model sayamıyorsa sayma işi modele verilmez.* Bedeli dürüstçe kayıtta:
+   31 tablet, kalan 72 gravürden **görsel olarak daha sadedir** (A17).
+
+**Ölçülen sonuç:** ticari yüzeyde **0** Türkçe sözcük · 101/101 tekil cevap
+· üç format yeniden üretildi (274 / 274 sayfa · 46,0 MB) · bütün kapılar
+`release` seviyesinde yeşil.
+
+⚠ **VE YENİDEN İNŞA BİR DOĞRULAMA DEĞİLDİR.** Ölçülen öldürme kapısı hâlâ
+**HARD-STOP**, harici oturum **0 / 5**. İnşa, ölçülecek şeyi değiştirdiği
+için doğrulamayı devralamaz — sıfırdan gerektirir (A12b).
+
+→ [`06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md`](06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md)
+→ [`06_REPORTS/FINAL_BRUTAL_AUDIT.md`](06_REPORTS/FINAL_BRUTAL_AUDIT.md)
+
+---
+
 
 ### K1 · Ortak kütüphane YOK — üç proje tam izole
 **12 Ağustos 2026 · bootstrap.** Talimat § 31 bir ajanın tek klasörle

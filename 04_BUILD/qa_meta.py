@@ -313,8 +313,11 @@ def main() -> int:
     page = pages.get(mid) or {}
     rep.check(bool(page),
               "son sorunun okur sayfası var")
+    # ⚠ The test used to look for the Turkish word only; the English
+    # edition states the same constraint in English and the gate went red
+    # on a book that DOES tell the reader.
     declared_len = [c for c in (msol.get("constraints") or [])
-                    if "harf" in c.lower()]
+                    if "harf" in c.lower() or "letter" in c.lower()]
     rep.check(bool(declared_len),
               "okura cevabın kaç harf olduğu SÖYLENİYOR")
 

@@ -119,38 +119,58 @@ class Plate:
     def __init__(self, data: dict) -> None:
         ch = (data or {}).get("charts", {})
         self.charts = ch
-        self.alphabet = ch.get("esik-alfabesi", {}).get("alphabet", "")
+        self.alphabet = ch.get("threshold-alphabet", {}).get("alphabet", "")
         self.lexicon = [e["word"] for e in
-                        ch.get("esik-sozlugu", {}).get("entries", [])]
-        self.phrases = ch.get("kapi-sozleri", {}).get("entries", [])
-        self.numbers = ch.get("esik-sayilari", {}).get("entries", [])
+                        ch.get("threshold-lexicon", {}).get("entries", [])]
+        self.phrases = ch.get("gate-sayings", {}).get("entries", [])
+        self.numbers = ch.get("threshold-numbers", {}).get("entries", [])
         # ── KAPI II · basılı yetke ────────────────────────────────────
         self.bestiary = [e["word"] for e in
-                         ch.get("yaratiklar-katalogu", {}).get("entries", [])]
-        self.beastPhrases = ch.get("yaratik-sozleri", {}).get("entries", [])
+                         ch.get("bestiary-catalogue", {}).get("entries", [])]
+        self.beastPhrases = ch.get("beast-sayings", {}).get("entries", [])
 
     @property
     def ok(self) -> bool:
         return bool(self.alphabet and self.lexicon)
 
+    # ⭑ THE MARK GROUPS COME FROM THE CHART, NOT FROM ARITHMETIC ⭑
+    # ⚠ These three methods used to compute `i // 5`, which silently
+    # assumed a 29-letter alphabet split five-five-five-five-five-four.
+    # The English alphabet is 26 letters and its groups are 5·5·4·4·4·4, so
+    # the arithmetic would have put every letter from K onward in the wrong
+    # group — and the gate would have accepted NOBODY while reporting a
+    # clean "0 accepted" for seven puzzles. Chart A publishes `markGroups`;
+    # that is the authority. The uniform fallback is kept only for
+    # fixtures that predate the field.
+    def _groups(self) -> list[str]:
+        mg = (self.charts.get("threshold-alphabet") or {}).get("markGroups")
+        if mg:
+            return [g.get("letters", "") for g in mg]
+        return [self.alphabet[i:i + 5] for i in range(0, len(self.alphabet), 5)]
+
     def group(self, ch: str) -> int:
-        i = self.alphabet.index(ch)
-        return i // 5 + 1
+        for i, g in enumerate(self._groups(), 1):
+            if ch in g:
+                return i
+        raise ValueError(ch)
 
     def glyph_of(self, ch: str) -> str:
-        i = self.alphabet.index(ch)
-        return "',+/\\x"[i // 5] * (i % 5 + 1)
+        for i, g in enumerate(self._groups()):
+            if ch in g:
+                return "',+/\\x"[i] * (g.index(ch) + 1)
+        raise ValueError(ch)
 
     def decode_glyphs(self, seq: str) -> str | None:
+        groups = self._groups()
         out = []
         for g in seq.split("│"):
             g = "".join(g.split())
             if not g or len(set(g)) != 1 or g[0] not in "',+/\\x" or len(g) > 5:
                 return None
-            i = "',+/\\x".index(g[0]) * 5 + len(g) - 1
-            if i >= len(self.alphabet):
+            gi = "',+/\\x".index(g[0])
+            if gi >= len(groups) or len(g) > len(groups[gi]):
                 return None
-            out.append(self.alphabet[i])
+            out.append(groups[gi][len(g) - 1])
         return "".join(out)
 
     def shift(self, w: str, k: int) -> str:
@@ -409,7 +429,11 @@ def cyclic_index(a: int, b: int, na: int, nb: int) -> int | None:
 
 def walk_path(grid, start, moves) -> str:
     """Basılı ızgarada bir YOL yürür ve uğradığı harfleri toplar."""
-    D = {"K": (-1, 0), "G": (1, 0), "D": (0, 1), "B": (0, -1)}
+    # ⚠ THE STEP LETTERS ARE THE ENGLISH ONES. The pilot used the Turkish
+    # compass initials and "D" meant EAST there; in English "D" means DOWN.
+    # A shared table would have silently walked one of the two the wrong
+    # way, so there is only one table and it is the printed one.
+    D = {"U": (-1, 0), "D": (1, 0), "R": (0, 1), "L": (0, -1)}
     r, c = start
     out = []
     for m in moves:
@@ -482,8 +506,8 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
         quads = acc.get("readings") or [acc.get("reading", "")]
         for q in quads:
             for row in rows:
-                if row.get("okuma") == q:
-                    idx = row.get("sozlukNo", 0)
+                if row.get("reading") == q:
+                    idx = row.get("lexiconNo", 0)
                     if 1 <= idx <= len(plate.lexicon) and \
                             word == plate.lexicon[idx - 1]:
                         return True
@@ -591,7 +615,7 @@ def accepts(word: str, acc: dict, plate: Plate) -> bool:
         key = acc.get("key", "")
         table = acc.get("table") or []
         take = acc.get("take", "ad")
-        hits = [r.get(take) for r in table if r.get(acc.get("keyColumn", "anahtar")) == key]
+        hits = [r.get(take) for r in table if r.get(acc.get("keyColumn", "key")) == key]
         return word in hits
 
     if kind == "reachable-via-book-structure":
@@ -682,9 +706,9 @@ def near_miss(domain: list[str], acc: dict, plate: Plate,
         take = acc.get("take", "ad")
         out = [r.get(take, "") for r in acc.get("table", [])]
     elif kind == "reachable-via-number-table":
-        out = [plate.lexicon[r["sozlukNo"] - 1]
+        out = [plate.lexicon[r["lexiconNo"] - 1]
                for r in acc.get("table", [])
-               if 1 <= r.get("sozlukNo", 0) <= len(plate.lexicon)]
+               if 1 <= r.get("lexiconNo", 0) <= len(plate.lexicon)]
     elif kind == "in-printed-phrase-list" or \
             kind == "matches-positional-extraction":
         out = list(plate.phrases)

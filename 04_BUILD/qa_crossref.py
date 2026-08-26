@@ -50,8 +50,21 @@ import _protected_layer as pl                                  # noqa: E402
 BOOK = os.path.join(pl.ROOT, "02_MANUSCRIPT", "book.json")
 GATE_INDEX = os.path.join(pl.ROOT, "01_SOURCE", "gate_index.json")
 
-CHART_REF = re.compile(r"Çizelge\s+([A-ZÇĞİÖŞÜ]{1,3})\b")
-CATALOGUE_REF = re.compile(r"([A-ZÇĞİÖŞÜ][a-zçğıöşü]+)\s+(Kataloğu|Sözlüğü)")
+CHART_REF = re.compile(r"Chart\s+([A-Z]{1,3})\b")
+# ⚠ THIS PATTERN WAS TURKISH ("… Kataloğu | Sözlüğü") and it silently
+# matched nothing once the charts were renamed for the English edition —
+# which reports every catalogue as NEVER MENTIONED. It now matches the
+# English chart names, and the comparison strips a leading "The" on both
+# sides so that "the Sky Catalogue" in a clue resolves to the chart titled
+# "Chart H · The Sky Catalogue".
+CATALOGUE_REF = re.compile(
+    r"\b((?:[A-Z][a-z]+\s+)+(?:Catalogue|Lexicon|Alphabet|Sayings|Table|"
+    r"Marks|Numbers))\b")
+
+
+def _cat_key(name: str) -> str:
+    n = " ".join(str(name).split()).lower()
+    return n[4:] if n.startswith("the ") else n
 # ⚠ KALIP 'g[1-5]' İDİ VE BİR KUSURU GÖRMÜYORDU: yanlış yazılmış bir
 # gönderme (g9-999) kalıba uymadığı için REFERANS SAYILMIYOR, dolayısıyla
 # denetlenmiyordu. Fikstür yakaladı. Kalıp artık kapı numarasına
@@ -106,7 +119,7 @@ def main() -> int:
         title = str(ch.get("title") or "")
         # "Çizelge H · Gök Kataloğu" → "Gök Kataloğu"
         if "·" in title:
-            by_name[title.split("·", 1)[1].strip()] = key
+            by_name[_cat_key(title.split("·", 1)[1])] = key
 
     index = {p["puzzleId"]: p for p in pl.load_index()}
     pages = book.get("puzzles", [])
@@ -136,13 +149,13 @@ def main() -> int:
         for letter in CHART_REF.findall(txt):
             refs += 1
             if letter not in by_letter:
-                bad_chart.append("%s → Çizelge %s" % (pid, letter))
+                bad_chart.append("%s → Chart %s" % (pid, letter))
             else:
                 used_charts.add(by_letter[letter])
 
-        for stem, kind in CATALOGUE_REF.findall(txt):
+        for name in CATALOGUE_REF.findall(txt):
             refs += 1
-            name = "%s %s" % (stem, kind)
+            name = _cat_key(name)
             if name not in by_name:
                 bad_cat.append("%s → %s" % (pid, name))
             else:
@@ -169,12 +182,12 @@ def main() -> int:
     for letter in CHART_REF.findall(matter_txt):
         refs += 1
         if letter not in by_letter:
-            bad_chart.append("ön/arka madde → Çizelge %s" % letter)
+            bad_chart.append("ön/arka madde → Chart %s" % letter)
         else:
             used_charts.add(by_letter[letter])
-    for stem, kind in CATALOGUE_REF.findall(matter_txt):
+    for name in CATALOGUE_REF.findall(matter_txt):
         refs += 1
-        name = "%s %s" % (stem, kind)
+        name = _cat_key(name)
         if name not in by_name:
             bad_cat.append("ön/arka madde → %s" % name)
         else:
@@ -193,8 +206,8 @@ def main() -> int:
         s_ = by_gate.setdefault(p.get("gate"), set())
         txt = page_text(p)
         s_.update(L for L in CHART_REF.findall(txt) if L in by_letter)
-        for stem, kind in CATALOGUE_REF.findall(txt):
-            key = by_name.get("%s %s" % (stem, kind))
+        for name in CATALOGUE_REF.findall(txt):
+            key = by_name.get(_cat_key(name))
             if key:
                 s_.add(next(L for L, k in by_letter.items() if k == key))
     introduced: set = set()
@@ -206,7 +219,7 @@ def main() -> int:
             continue
         opening = " ".join((book.get(frame_key.get(gid, "")) or {})
                            .get("opening") or [])
-        missing = [x for x in fresh if "Çizelge %s" % x not in opening]
+        missing = [x for x in fresh if "Chart %s" % x not in opening]
         if missing:
             silent.append("%s → %s" % (gid, " ".join(missing)))
     rep.check(not silent,

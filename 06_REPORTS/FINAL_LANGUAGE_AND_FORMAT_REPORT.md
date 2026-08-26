@@ -1,5 +1,68 @@
 # NİHAİ DİL VE FORMAT RAPORU
 
+**Son güncelleme:** 26 Ağustos 2026 · **İngilizce yeniden inşa TAMAMLANDI**
+
+> # ✅ DİL BLOKLAYICISI KALKTI
+>
+> Ticari yüzeyde ölçülen Türkçe sözcük: **9 533 → 0**.
+>
+> Ve bu bir çeviri değildi. Alfabe 29 → 26 harfe indi, altı işaret
+> grubunun yapısı değişti, **101 cevabın hepsi yeniden atandı**, bütün
+> şifreli dizeler yeniden üretildi ve beş katalog sıfırdan kuruldu.
+> Ayrıntı: [`FINAL_ENGLISH_REBUILD_REPORT.md`](FINAL_ENGLISH_REBUILD_REPORT.md)
+
+---
+
+## 0 · Dil kapısı — ÖLÇÜLEN SON DURUM
+
+`04_BUILD/qa_language.py` · beş ticari dosya + metadata + A+ metni:
+
+| Yüzey | Türkçe sözcük | Durum |
+|---|---:|---|
+| Ürün metadatası (başlık, alt başlık, açıklama, anahtar kelime, BISAC) | **0** | ✅ |
+| A+ başlık ve gövde metni (6 modül) | **0** | ✅ |
+| Ciltsiz kapak | **0** | ✅ |
+| Ciltli kapak | **0** | ✅ |
+| **Ciltsiz iç blok** | **0** | ✅ |
+| **Ciltli iç blok** | **0** | ✅ |
+| **Kindle EPUB** | **0** | ✅ |
+| `metadata.language` | `en` | ✅ |
+
+⚠ **MUAF OLANLAR DEĞİŞMEDİ ve değişmemelidir:** kurucuya bakan raporlar,
+KDP el kitabı, üreteç yorumları ve kaynak kodu Türkçedir. Kapı yalnızca
+ALICIYA ULAŞAN yüzeyi ölçer. Özel adlar (yazar, yayıncı) metadata'dan
+okunur ve kanıt sayılmaz.
+
+---
+
+## 0b · Üç format — ÖLÇÜLEN SON DURUM
+
+| | ciltsiz | ciltli | Kindle |
+|---|---:|---:|---:|
+| sayfa | **274** | **274** | — |
+| iç kenar payı | 0,500 in | 0,625 in | — |
+| sırt | **0,6850 in** | **0,8058 in** | — |
+| tam kapak | 12,935 × 9,250 in | 14,382 × 10,417 in | — |
+| dosya | 70,4 MB | 67,3 MB | **46,0 MB** |
+| ipucu / çözüm | 303 / 100 | 303 / 100 | 303 / 100 |
+| son sorunun cevabı | **basılmadı** | **basılmadı** | **basılmadı** |
+| liste · telif | 19,99 $ · **7,856 $** | 29,99 $ · **9,056 $** | 9,99 $ · **3,497 $ (%35)** |
+
+⚠ Üç uyarı yürürlüktedir ve `FINAL_BRUTAL_AUDIT.md § 3` altında
+ayrıntılıdır: kapak sanatı doğal çözünürlüğün altında (92,5 / 82,0 dpi),
+ciltli hesaplayıcı 263 sayfayla koştu (iç blok 274), Kindle %70 planı bu
+dosya boyunda kayıptır.
+
+---
+
+> ## ⬇ AŞAĞISI TARİHSEL KAYITTIR — 26 Ağustos 2026, dönüşümden ÖNCE
+>
+> Silinmedi: bloklayıcının neye benzediği ve neden bir çeviri işi
+> olmadığı, kararın gerekçesidir.
+
+---
+
+# (TARİHSEL)
 **Tarih:** 26 Ağustos 2026
 
 > # ⛔ TEK BLOKLAYICI: DİL

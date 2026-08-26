@@ -3,57 +3,57 @@
   "checks": 4,
   "errors": [],
   "warnings": [
-    "metin payı bütçenin yarısından az: threshold 14.3/34, menagerie 12.3/34, calendar 11.4/34, labyrinth 12.5/34, mirror 9.8/34, last-question 1.3/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
+    "metin payı bütçenin yarısından az: menagerie 15.0/34, calendar 14.6/34, labyrinth 15.5/34, mirror 13.0/34, last-question 1.6/6 — kalan pay LEVHAYA aittir ve Faz 5'te dizgiyle ölçülerek kapanır (K12)"
   ],
   "facts": {
     "puzzles": 101,
     "wordsPerPage": 350,
     "bodyWordsByGate": {
-      "threshold": 1710,
-      "menagerie": 1780,
-      "calendar": 1622,
-      "labyrinth": 1633,
-      "mirror": 1454,
-      "last-question": 103
+      "threshold": 2459,
+      "menagerie": 2640,
+      "calendar": 2536,
+      "labyrinth": 2572,
+      "mirror": 2460,
+      "last-question": 149
     },
     "figureLinesByGate": {
       "threshold": 239,
       "menagerie": 266,
       "calendar": 216,
-      "labyrinth": 244,
+      "labyrinth": 248,
       "mirror": 192,
       "last-question": 15
     },
     "warmUpWordsByGate": {
-      "threshold": 675,
-      "menagerie": 108,
-      "calendar": 304,
-      "labyrinth": 379,
-      "mirror": 184,
-      "last-question": 120
+      "threshold": 898,
+      "menagerie": 125,
+      "calendar": 458,
+      "labyrinth": 424,
+      "mirror": 245,
+      "last-question": 167
     },
     "warmUpLinesByGate": {
-      "threshold": 64,
-      "menagerie": 10,
+      "threshold": 68,
+      "menagerie": 9,
       "calendar": 25,
-      "labyrinth": 33,
-      "mirror": 17,
+      "labyrinth": 30,
+      "mirror": 18,
       "last-question": 13
     },
     "frameWordsByGate": {
-      "threshold": 112,
-      "menagerie": 107,
-      "calendar": 70,
-      "labyrinth": 68,
-      "mirror": 56
+      "threshold": 211,
+      "menagerie": 206,
+      "calendar": 99,
+      "labyrinth": 100,
+      "mirror": 91
     },
     "measuredBodyPagesByGate": {
-      "threshold": 14.3,
-      "menagerie": 12.3,
-      "calendar": 11.4,
-      "labyrinth": 12.5,
-      "mirror": 9.8,
-      "last-question": 1.3
+      "threshold": 17.5,
+      "menagerie": 15.0,
+      "calendar": 14.6,
+      "labyrinth": 15.5,
+      "mirror": 13.0,
+      "last-question": 1.6
     },
     "declaredBodyPagesByGate": {
       "threshold": 34,
@@ -63,825 +63,825 @@
       "mirror": 34,
       "last-question": 6
     },
-    "measuredBodyPagesTotal": 61.6,
+    "measuredBodyPagesTotal": 77.2,
     "declaredBodyPagesTotal": 176,
-    "hintWords": 4446,
-    "measuredHintPages": 12.7,
+    "hintWords": 6646,
+    "measuredHintPages": 19.0,
     "declaredHintPages": 26,
-    "solutionWords": 2681,
-    "measuredSolutionPages": 7.7,
+    "solutionWords": 3910,
+    "measuredSolutionPages": 11.2,
     "declaredSolutionPages": 18,
-    "toolsPlateRows": 408,
-    "toolsPlatePages": 3.24,
-    "totalWords": 17612,
+    "toolsPlateRows": 423,
+    "toolsPlatePages": 3.36,
+    "totalWords": 26396,
     "perPuzzle": [
       {
         "puzzleId": "g1-001",
         "gate": "threshold",
-        "words": 87,
+        "words": 117,
         "figureLines": 9,
-        "hintWords": 38,
-        "solutionWords": 28
+        "hintWords": 66,
+        "solutionWords": 36
       },
       {
         "puzzleId": "g1-002",
         "gate": "threshold",
-        "words": 89,
+        "words": 134,
         "figureLines": 10,
-        "hintWords": 49,
-        "solutionWords": 28
+        "hintWords": 74,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g1-003",
         "gate": "threshold",
-        "words": 89,
+        "words": 127,
         "figureLines": 28,
-        "hintWords": 35,
-        "solutionWords": 25
+        "hintWords": 59,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g1-004",
         "gate": "threshold",
-        "words": 79,
+        "words": 111,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 29
+        "hintWords": 66,
+        "solutionWords": 45
       },
       {
         "puzzleId": "g1-005",
         "gate": "threshold",
-        "words": 73,
+        "words": 98,
         "figureLines": 7,
-        "hintWords": 41,
-        "solutionWords": 24
+        "hintWords": 62,
+        "solutionWords": 36
       },
       {
         "puzzleId": "g1-006",
         "gate": "threshold",
-        "words": 100,
+        "words": 155,
         "figureLines": 14,
-        "hintWords": 39,
-        "solutionWords": 26
+        "hintWords": 63,
+        "solutionWords": 33
       },
       {
         "puzzleId": "g1-007",
         "gate": "threshold",
-        "words": 53,
+        "words": 77,
         "figureLines": 11,
-        "hintWords": 42,
-        "solutionWords": 22
+        "hintWords": 70,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g1-008",
         "gate": "threshold",
-        "words": 79,
+        "words": 108,
         "figureLines": 7,
-        "hintWords": 39,
-        "solutionWords": 24
+        "hintWords": 64,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g1-009",
         "gate": "threshold",
-        "words": 90,
+        "words": 122,
         "figureLines": 11,
-        "hintWords": 39,
-        "solutionWords": 28
+        "hintWords": 61,
+        "solutionWords": 36
       },
       {
         "puzzleId": "g1-010",
         "gate": "threshold",
-        "words": 105,
+        "words": 147,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 26
+        "hintWords": 64,
+        "solutionWords": 32
       },
       {
         "puzzleId": "g1-011",
         "gate": "threshold",
-        "words": 93,
+        "words": 123,
         "figureLines": 10,
-        "hintWords": 58,
-        "solutionWords": 33
+        "hintWords": 79,
+        "solutionWords": 48
       },
       {
         "puzzleId": "g1-012",
         "gate": "threshold",
-        "words": 77,
+        "words": 111,
         "figureLines": 11,
-        "hintWords": 41,
-        "solutionWords": 23
+        "hintWords": 67,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g1-013",
         "gate": "threshold",
-        "words": 90,
+        "words": 140,
         "figureLines": 7,
-        "hintWords": 52,
-        "solutionWords": 32
+        "hintWords": 78,
+        "solutionWords": 47
       },
       {
         "puzzleId": "g1-014",
         "gate": "threshold",
-        "words": 80,
+        "words": 103,
         "figureLines": 13,
-        "hintWords": 40,
-        "solutionWords": 27
+        "hintWords": 67,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g1-015",
         "gate": "threshold",
-        "words": 94,
+        "words": 121,
         "figureLines": 11,
-        "hintWords": 45,
-        "solutionWords": 29
+        "hintWords": 62,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g1-016",
         "gate": "threshold",
-        "words": 58,
+        "words": 92,
         "figureLines": 11,
-        "hintWords": 43,
-        "solutionWords": 23
+        "hintWords": 65,
+        "solutionWords": 36
       },
       {
         "puzzleId": "g1-017",
         "gate": "threshold",
-        "words": 81,
+        "words": 143,
         "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 32
+        "hintWords": 79,
+        "solutionWords": 47
       },
       {
         "puzzleId": "g1-018",
         "gate": "threshold",
-        "words": 94,
+        "words": 148,
         "figureLines": 16,
-        "hintWords": 34,
-        "solutionWords": 22
+        "hintWords": 63,
+        "solutionWords": 42
       },
       {
         "puzzleId": "g1-019",
         "gate": "threshold",
-        "words": 92,
+        "words": 132,
         "figureLines": 11,
-        "hintWords": 46,
-        "solutionWords": 29
+        "hintWords": 62,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g1-020",
         "gate": "threshold",
-        "words": 107,
+        "words": 150,
         "figureLines": 23,
-        "hintWords": 46,
-        "solutionWords": 30
+        "hintWords": 73,
+        "solutionWords": 46
       },
       {
         "puzzleId": "g2-001",
         "gate": "menagerie",
-        "words": 96,
+        "words": 142,
         "figureLines": 21,
-        "hintWords": 46,
-        "solutionWords": 31
+        "hintWords": 64,
+        "solutionWords": 42
       },
       {
         "puzzleId": "g2-002",
         "gate": "menagerie",
-        "words": 102,
+        "words": 116,
         "figureLines": 7,
-        "hintWords": 49,
-        "solutionWords": 31
+        "hintWords": 60,
+        "solutionWords": 39
       },
       {
         "puzzleId": "g2-003",
         "gate": "menagerie",
-        "words": 60,
+        "words": 113,
         "figureLines": 10,
-        "hintWords": 52,
-        "solutionWords": 28
+        "hintWords": 67,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g2-004",
         "gate": "menagerie",
-        "words": 97,
+        "words": 141,
         "figureLines": 21,
-        "hintWords": 44,
-        "solutionWords": 30
+        "hintWords": 68,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g2-005",
         "gate": "menagerie",
-        "words": 100,
+        "words": 123,
         "figureLines": 7,
-        "hintWords": 45,
-        "solutionWords": 31
+        "hintWords": 55,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g2-006",
         "gate": "menagerie",
-        "words": 66,
+        "words": 93,
         "figureLines": 13,
-        "hintWords": 41,
-        "solutionWords": 25
+        "hintWords": 61,
+        "solutionWords": 33
       },
       {
         "puzzleId": "g2-007",
         "gate": "menagerie",
-        "words": 67,
+        "words": 107,
         "figureLines": 7,
-        "hintWords": 42,
-        "solutionWords": 24
+        "hintWords": 64,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g2-008",
         "gate": "menagerie",
-        "words": 93,
+        "words": 140,
         "figureLines": 21,
-        "hintWords": 46,
-        "solutionWords": 30
+        "hintWords": 65,
+        "solutionWords": 41
       },
       {
         "puzzleId": "g2-009",
         "gate": "menagerie",
-        "words": 102,
+        "words": 151,
         "figureLines": 11,
-        "hintWords": 49,
-        "solutionWords": 32
+        "hintWords": 55,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g2-010",
         "gate": "menagerie",
-        "words": 72,
+        "words": 118,
         "figureLines": 10,
-        "hintWords": 42,
-        "solutionWords": 25
+        "hintWords": 68,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g2-011",
         "gate": "menagerie",
-        "words": 98,
+        "words": 121,
         "figureLines": 8,
-        "hintWords": 51,
-        "solutionWords": 29
+        "hintWords": 60,
+        "solutionWords": 41
       },
       {
         "puzzleId": "g2-012",
         "gate": "menagerie",
-        "words": 101,
+        "words": 146,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 33
+        "hintWords": 56,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g2-013",
         "gate": "menagerie",
-        "words": 100,
+        "words": 145,
         "figureLines": 21,
-        "hintWords": 43,
-        "solutionWords": 30
+        "hintWords": 68,
+        "solutionWords": 41
       },
       {
         "puzzleId": "g2-014",
         "gate": "menagerie",
-        "words": 67,
+        "words": 107,
         "figureLines": 7,
-        "hintWords": 43,
-        "solutionWords": 24
+        "hintWords": 67,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g2-015",
         "gate": "menagerie",
-        "words": 105,
+        "words": 157,
         "figureLines": 11,
-        "hintWords": 54,
-        "solutionWords": 32
+        "hintWords": 61,
+        "solutionWords": 36
       },
       {
         "puzzleId": "g2-016",
         "gate": "menagerie",
-        "words": 57,
+        "words": 107,
         "figureLines": 12,
-        "hintWords": 44,
-        "solutionWords": 24
+        "hintWords": 63,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g2-017",
         "gate": "menagerie",
-        "words": 95,
+        "words": 145,
         "figureLines": 21,
-        "hintWords": 44,
-        "solutionWords": 30
+        "hintWords": 68,
+        "solutionWords": 43
       },
       {
         "puzzleId": "g2-018",
         "gate": "menagerie",
-        "words": 124,
+        "words": 161,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 31
+        "hintWords": 65,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g2-019",
         "gate": "menagerie",
-        "words": 84,
+        "words": 141,
         "figureLines": 9,
-        "hintWords": 53,
-        "solutionWords": 30
+        "hintWords": 72,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g2-020",
         "gate": "menagerie",
-        "words": 94,
+        "words": 166,
         "figureLines": 27,
-        "hintWords": 51,
-        "solutionWords": 30
+        "hintWords": 73,
+        "solutionWords": 55
       },
       {
         "puzzleId": "g3-001",
         "gate": "calendar",
-        "words": 84,
+        "words": 133,
         "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 28
+        "hintWords": 73,
+        "solutionWords": 49
       },
       {
         "puzzleId": "g3-002",
         "gate": "calendar",
-        "words": 93,
+        "words": 135,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 34
+        "hintWords": 75,
+        "solutionWords": 42
       },
       {
         "puzzleId": "g3-003",
         "gate": "calendar",
-        "words": 97,
+        "words": 140,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 27
+        "hintWords": 69,
+        "solutionWords": 43
       },
       {
         "puzzleId": "g3-004",
         "gate": "calendar",
-        "words": 82,
+        "words": 131,
         "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 28
+        "hintWords": 73,
+        "solutionWords": 47
       },
       {
         "puzzleId": "g3-005",
         "gate": "calendar",
-        "words": 91,
+        "words": 132,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 35
+        "hintWords": 75,
+        "solutionWords": 45
       },
       {
         "puzzleId": "g3-006",
         "gate": "calendar",
-        "words": 57,
+        "words": 99,
         "figureLines": 7,
-        "hintWords": 42,
-        "solutionWords": 24
+        "hintWords": 64,
+        "solutionWords": 39
       },
       {
         "puzzleId": "g3-007",
         "gate": "calendar",
-        "words": 79,
+        "words": 127,
         "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 28
+        "hintWords": 73,
+        "solutionWords": 47
       },
       {
         "puzzleId": "g3-008",
         "gate": "calendar",
-        "words": 89,
+        "words": 129,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 27
+        "hintWords": 69,
+        "solutionWords": 42
       },
       {
         "puzzleId": "g3-009",
         "gate": "calendar",
-        "words": 83,
+        "words": 122,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 34
+        "hintWords": 75,
+        "solutionWords": 43
       },
       {
         "puzzleId": "g3-010",
         "gate": "calendar",
-        "words": 83,
+        "words": 139,
         "figureLines": 21,
-        "hintWords": 47,
-        "solutionWords": 25
+        "hintWords": 64,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g3-011",
         "gate": "calendar",
-        "words": 73,
+        "words": 118,
         "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 28
+        "hintWords": 73,
+        "solutionWords": 46
       },
       {
         "puzzleId": "g3-012",
         "gate": "calendar",
-        "words": 83,
+        "words": 123,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 34
+        "hintWords": 75,
+        "solutionWords": 42
       },
       {
         "puzzleId": "g3-013",
         "gate": "calendar",
-        "words": 93,
+        "words": 131,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 27
+        "hintWords": 69,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g3-014",
         "gate": "calendar",
-        "words": 56,
+        "words": 96,
         "figureLines": 7,
-        "hintWords": 42,
-        "solutionWords": 24
+        "hintWords": 64,
+        "solutionWords": 41
       },
       {
         "puzzleId": "g3-015",
         "gate": "calendar",
-        "words": 75,
+        "words": 122,
         "figureLines": 7,
-        "hintWords": 47,
-        "solutionWords": 28
+        "hintWords": 73,
+        "solutionWords": 47
       },
       {
         "puzzleId": "g3-016",
         "gate": "calendar",
-        "words": 83,
+        "words": 123,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 34
+        "hintWords": 75,
+        "solutionWords": 43
       },
       {
         "puzzleId": "g3-017",
         "gate": "calendar",
-        "words": 74,
+        "words": 130,
         "figureLines": 21,
-        "hintWords": 47,
-        "solutionWords": 25
+        "hintWords": 64,
+        "solutionWords": 40
       },
       {
         "puzzleId": "g3-018",
         "gate": "calendar",
-        "words": 90,
+        "words": 137,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 27
+        "hintWords": 69,
+        "solutionWords": 44
       },
       {
         "puzzleId": "g3-019",
         "gate": "calendar",
-        "words": 73,
+        "words": 126,
         "figureLines": 9,
-        "hintWords": 50,
-        "solutionWords": 29
+        "hintWords": 72,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g3-020",
         "gate": "calendar",
-        "words": 84,
+        "words": 143,
         "figureLines": 27,
-        "hintWords": 46,
-        "solutionWords": 28
+        "hintWords": 75,
+        "solutionWords": 49
       },
       {
         "puzzleId": "g4-001",
         "gate": "labyrinth",
-        "words": 100,
+        "words": 145,
         "figureLines": 11,
-        "hintWords": 33,
-        "solutionWords": 21
+        "hintWords": 61,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g4-002",
         "gate": "labyrinth",
-        "words": 81,
+        "words": 127,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 33
       },
       {
         "puzzleId": "g4-003",
         "gate": "labyrinth",
-        "words": 75,
+        "words": 133,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 22
+        "hintWords": 57,
+        "solutionWords": 30
       },
       {
         "puzzleId": "g4-004",
         "gate": "labyrinth",
-        "words": 95,
+        "words": 136,
         "figureLines": 11,
-        "hintWords": 33,
-        "solutionWords": 21
+        "hintWords": 61,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g4-005",
         "gate": "labyrinth",
-        "words": 74,
+        "words": 115,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 34
       },
       {
         "puzzleId": "g4-006",
         "gate": "labyrinth",
-        "words": 90,
+        "words": 129,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 27
+        "hintWords": 69,
+        "solutionWords": 41
       },
       {
         "puzzleId": "g4-007",
         "gate": "labyrinth",
-        "words": 96,
+        "words": 131,
         "figureLines": 11,
-        "hintWords": 33,
-        "solutionWords": 21
+        "hintWords": 61,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g4-008",
         "gate": "labyrinth",
-        "words": 80,
+        "words": 129,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 34
       },
       {
         "puzzleId": "g4-009",
         "gate": "labyrinth",
-        "words": 69,
-        "figureLines": 18,
-        "hintWords": 37,
-        "solutionWords": 22
+        "words": 124,
+        "figureLines": 20,
+        "hintWords": 62,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g4-010",
         "gate": "labyrinth",
-        "words": 95,
+        "words": 137,
         "figureLines": 11,
-        "hintWords": 33,
-        "solutionWords": 21
+        "hintWords": 61,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g4-011",
         "gate": "labyrinth",
-        "words": 72,
+        "words": 133,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 22
+        "hintWords": 57,
+        "solutionWords": 31
       },
       {
         "puzzleId": "g4-012",
         "gate": "labyrinth",
-        "words": 72,
+        "words": 116,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 34
       },
       {
         "puzzleId": "g4-013",
         "gate": "labyrinth",
-        "words": 95,
+        "words": 135,
         "figureLines": 11,
-        "hintWords": 33,
-        "solutionWords": 21
+        "hintWords": 61,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g4-014",
         "gate": "labyrinth",
-        "words": 72,
+        "words": 121,
         "figureLines": 9,
-        "hintWords": 50,
-        "solutionWords": 29
+        "hintWords": 72,
+        "solutionWords": 39
       },
       {
         "puzzleId": "g4-015",
         "gate": "labyrinth",
-        "words": 72,
+        "words": 121,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 34
       },
       {
         "puzzleId": "g4-016",
         "gate": "labyrinth",
-        "words": 89,
+        "words": 129,
         "figureLines": 11,
-        "hintWords": 33,
-        "solutionWords": 21
+        "hintWords": 61,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g4-017",
         "gate": "labyrinth",
-        "words": 74,
+        "words": 129,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 22
+        "hintWords": 57,
+        "solutionWords": 32
       },
       {
         "puzzleId": "g4-018",
         "gate": "labyrinth",
-        "words": 89,
+        "words": 129,
         "figureLines": 11,
-        "hintWords": 44,
-        "solutionWords": 27
+        "hintWords": 69,
+        "solutionWords": 41
       },
       {
         "puzzleId": "g4-019",
         "gate": "labyrinth",
-        "words": 66,
-        "figureLines": 16,
-        "hintWords": 37,
-        "solutionWords": 22
+        "words": 120,
+        "figureLines": 18,
+        "hintWords": 62,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g4-020",
         "gate": "labyrinth",
-        "words": 77,
+        "words": 133,
         "figureLines": 27,
-        "hintWords": 46,
-        "solutionWords": 28
+        "hintWords": 75,
+        "solutionWords": 49
       },
       {
         "puzzleId": "g5-001",
         "gate": "mirror",
-        "words": 77,
+        "words": 131,
         "figureLines": 7,
-        "hintWords": 36,
-        "solutionWords": 24
+        "hintWords": 66,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g5-002",
         "gate": "mirror",
-        "words": 67,
+        "words": 115,
         "figureLines": 8,
-        "hintWords": 37,
-        "solutionWords": 22
+        "hintWords": 60,
+        "solutionWords": 33
       },
       {
         "puzzleId": "g5-003",
         "gate": "mirror",
-        "words": 72,
+        "words": 130,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 23
+        "hintWords": 57,
+        "solutionWords": 33
       },
       {
         "puzzleId": "g5-004",
         "gate": "mirror",
-        "words": 83,
+        "words": 142,
         "figureLines": 7,
-        "hintWords": 36,
-        "solutionWords": 24
+        "hintWords": 66,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g5-005",
         "gate": "mirror",
-        "words": 66,
+        "words": 112,
         "figureLines": 8,
-        "hintWords": 37,
-        "solutionWords": 22
+        "hintWords": 60,
+        "solutionWords": 33
       },
       {
         "puzzleId": "g5-006",
         "gate": "mirror",
-        "words": 70,
+        "words": 116,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 34
       },
       {
         "puzzleId": "g5-007",
         "gate": "mirror",
-        "words": 73,
+        "words": 125,
         "figureLines": 7,
-        "hintWords": 36,
-        "solutionWords": 24
+        "hintWords": 66,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g5-008",
         "gate": "mirror",
-        "words": 68,
+        "words": 122,
         "figureLines": 8,
-        "hintWords": 37,
-        "solutionWords": 22
+        "hintWords": 60,
+        "solutionWords": 32
       },
       {
         "puzzleId": "g5-009",
         "gate": "mirror",
-        "words": 81,
+        "words": 121,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 34
+        "hintWords": 75,
+        "solutionWords": 43
       },
       {
         "puzzleId": "g5-010",
         "gate": "mirror",
-        "words": 71,
+        "words": 120,
         "figureLines": 7,
-        "hintWords": 36,
-        "solutionWords": 24
+        "hintWords": 66,
+        "solutionWords": 35
       },
       {
         "puzzleId": "g5-011",
         "gate": "mirror",
-        "words": 72,
+        "words": 128,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 23
+        "hintWords": 57,
+        "solutionWords": 32
       },
       {
         "puzzleId": "g5-012",
         "gate": "mirror",
-        "words": 67,
+        "words": 115,
         "figureLines": 8,
-        "hintWords": 37,
-        "solutionWords": 22
+        "hintWords": 60,
+        "solutionWords": 32
       },
       {
         "puzzleId": "g5-013",
         "gate": "mirror",
-        "words": 73,
+        "words": 127,
         "figureLines": 7,
-        "hintWords": 36,
-        "solutionWords": 24
+        "hintWords": 66,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g5-014",
         "gate": "mirror",
-        "words": 71,
+        "words": 114,
         "figureLines": 10,
-        "hintWords": 44,
-        "solutionWords": 23
+        "hintWords": 60,
+        "solutionWords": 34
       },
       {
         "puzzleId": "g5-015",
         "gate": "mirror",
-        "words": 68,
+        "words": 118,
         "figureLines": 8,
-        "hintWords": 37,
-        "solutionWords": 22
+        "hintWords": 60,
+        "solutionWords": 31
       },
       {
         "puzzleId": "g5-016",
         "gate": "mirror",
-        "words": 82,
+        "words": 120,
         "figureLines": 9,
-        "hintWords": 58,
-        "solutionWords": 34
+        "hintWords": 75,
+        "solutionWords": 43
       },
       {
         "puzzleId": "g5-017",
         "gate": "mirror",
-        "words": 70,
+        "words": 128,
         "figureLines": 12,
-        "hintWords": 42,
-        "solutionWords": 22
+        "hintWords": 57,
+        "solutionWords": 31
       },
       {
         "puzzleId": "g5-018",
         "gate": "mirror",
-        "words": 73,
+        "words": 122,
         "figureLines": 7,
-        "hintWords": 36,
-        "solutionWords": 25
+        "hintWords": 66,
+        "solutionWords": 37
       },
       {
         "puzzleId": "g5-019",
         "gate": "mirror",
-        "words": 73,
+        "words": 121,
         "figureLines": 9,
-        "hintWords": 50,
-        "solutionWords": 29
+        "hintWords": 72,
+        "solutionWords": 38
       },
       {
         "puzzleId": "g5-020",
         "gate": "mirror",
-        "words": 77,
+        "words": 133,
         "figureLines": 27,
-        "hintWords": 46,
-        "solutionWords": 28
+        "hintWords": 75,
+        "solutionWords": 49
       },
       {
         "puzzleId": "meta-001",
         "gate": "last-question",
-        "words": 103,
+        "words": 149,
         "figureLines": 15,
-        "hintWords": 55,
-        "solutionWords": 31
+        "hintWords": 73,
+        "solutionWords": 42
       }
     ]
   }

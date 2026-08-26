@@ -1,36 +1,22 @@
 {
-  "status": "fail",
+  "status": "pass",
   "checks": 8,
-  "errors": [
-    "⭑ PAPERBACK IÇ BLOK İNGİLİZCE ⭑ (3221 Türkçe sözcük)",
-    "⭑ HARDCOVER IÇ BLOK İNGİLİZCE ⭑ (3221 Türkçe sözcük)",
-    "⭑ KINDLE EPUB İNGİLİZCE ⭑ (3091 Türkçe sözcük)"
-  ],
+  "errors": [],
   "warnings": [],
   "facts": {
-    "turkishWordsOnCommercialSurface": 9533,
+    "turkishWordsOnCommercialSurface": 0,
     "findings": {
       "metadata": {},
       "aplus": {},
       "paperback iç blok": {
-        "words": 3221,
-        "chars": 11824,
-        "examples": [
-          "Yüz Gravür Bilmece ve Kırılmamış Tek Bir Sır · Üçüncü Cil",
-          "Gravür Bilmece ve Kırılmamış Tek Bir Sır · Üçüncü Cilt Bir bulma",
-          "ek Bir Sır · Üçüncü Cilt Bir bulmaca kitabı, bir grimoire gibi ci",
-          "ir Sır · Üçüncü Cilt Bir bulmaca kitabı, bir grimoire gibi ciltle"
-        ]
+        "words": 0,
+        "chars": 0,
+        "examples": []
       },
       "hardcover iç blok": {
-        "words": 3221,
-        "chars": 11822,
-        "examples": [
-          "Yüz Gravür Bilmece ve Kırılmamış Tek Bir Sır · Üçüncü Cil",
-          "Gravür Bilmece ve Kırılmamış Tek Bir Sır · Üçüncü Cilt Bir bulma",
-          "ek Bir Sır · Üçüncü Cilt Bir bulmaca kitabı, bir grimoire gibi ci",
-          "ir Sır · Üçüncü Cilt Bir bulmaca kitabı, bir grimoire gibi ciltle"
-        ]
+        "words": 0,
+        "chars": 0,
+        "examples": []
       },
       "paperback kapak": {
         "words": 0,
@@ -43,14 +29,9 @@
         "examples": []
       },
       "Kindle EPUB": {
-        "words": 3091,
-        "chars": 11161,
-        "examples": [
-          "ght Yüz Gravür Bilmece ve Kırılmamış Tek Bir Sır Yazar: Yay",
-          "Gravür Bilmece ve Kırılmamış Tek Bir Sır Yazar: Yayıncı: Birinci b",
-          "r: Yayıncı: Birinci basım. Bu kitaptaki bütün çizelgeler, alfabeler",
-          "ptaki bütün çizelgeler, alfabeler ve sayı dizgeleri bu kitap için kurulmu"
-        ]
+        "words": 0,
+        "chars": 0,
+        "examples": []
       }
     }
   }

@@ -134,6 +134,13 @@
 !06_REPORTS/HARDCOVER_PRODUCTION_REPORT.md
 !06_REPORTS/KINDLE_PRODUCTION_REPORT.md
 !06_REPORTS/COVER_ARTWORK_GENERATION_GUIDE.md
+# ⭑ İNGİLİZCE YENİDEN İNŞANIN İKİ RAPORU DEPODA DURUR ⭑
+# PROJECT_CONTEXT ve DECISIONS ikisine de BAĞ VERİR; gitignore'da kalmaları
+# klonda kırık bağ demektir ve bu ders bu depoda dört kez öğrenildi
+# (K18 · yeniden tasarım önerisi · .gitkeep · line editor raporu).
+# ⚠ İkisi de CEVAP TAŞIMAZ ve kanarya ikisini de her koşuda tarar.
+!06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md
+!06_REPORTS/FINAL_BRUTAL_AUDIT.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:

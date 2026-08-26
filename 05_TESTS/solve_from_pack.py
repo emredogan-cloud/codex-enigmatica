@@ -54,14 +54,14 @@ def solve_page(page: dict, charts: dict) -> tuple[str, str]:
     """(türetilen cevap, hangi yoldan) — yalnızca sayfadan."""
     fig = page.get("figure") or ""
     tbl = page.get("printedTable") or ""
-    alpha = charts.get("esik-alfabesi", {}).get("alphabet", "")
-    lex = [e["word"] for e in charts.get("esik-sozlugu", {}).get("entries", [])]
+    alpha = charts.get("threshold-alphabet", {}).get("alphabet", "")
+    lex = [e["word"] for e in charts.get("threshold-lexicon", {}).get("entries", [])]
     best = [e["word"] for e in
-            charts.get("yaratiklar-katalogu", {}).get("entries", [])]
+            charts.get("bestiary-catalogue", {}).get("entries", [])]
     words = lex + best
 
     # ① IZGARA KOORDİNATI — istasyonları oku, Çizelge F'de ara
-    grid = charts.get("halka-tablosu", {}).get("rows")
+    grid = charts.get("ring-table", {}).get("rows")
     if grid and STATION.search(fig):
         # ⚠ HALKADA SATIR SIRASI METİN SIRASI DEĞİLDİR: üst sıra soldan
         # sağa, ALT SIRA SAĞDAN SOLA okunur ve levha onu zaten ters
@@ -130,7 +130,7 @@ def solve_page(page: dict, charts: dict) -> tuple[str, str]:
                 return w, "glif okuma"
 
     # ③ ANAHTARLI SATIR — iki hizalı satır + dize
-    if alpha and "anahtar" in fig and "dize" in fig:
+    if alpha and "key" in fig and "dize" in fig:
         rows = [l for l in fig.splitlines() if l.strip()]
         try:
             keyed = "".join(rows[1].split()[1:])

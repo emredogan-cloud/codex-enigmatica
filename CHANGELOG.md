@@ -5,6 +5,119 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [1.0.0] — 2026-08-26 · ⭑ İNGİLİZCE TİCARİ SÜRÜM · KAYNAK DÜZEYİNDE YENİDEN İNŞA ⭑
+
+# ✅ DİL BLOKLAYICISI KALKTI — 9 533 → 0
+
+Ticari kitabın tamamı İngilizcedir ve bu **bir çeviri değildir.** Alfabe
+29 → 26 harfe indi, altı işaret grubunun yapısı değişti, **101 cevabın
+hepsi çözücüyle yeniden atandı**, bütün şifreli dizeler yeniden üretildi,
+beş katalog sıfırdan kuruldu, meta zinciri yeniden kuruldu, **31 levha**
+yeniden çizildi ve üç formatın üçü de yeniden üretildi.
+
+→ [`06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md`](06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md)
+→ [`06_REPORTS/FINAL_BRUTAL_AUDIT.md`](06_REPORTS/FINAL_BRUTAL_AUDIT.md) · karar: `DECISIONS.md § K42`
+
+### Eklendi — İNGİLİZCE KAYNAK KATMANI
+
+`01_SOURCE/design/_generator_en/` · 16 modül · **tek yetke**. Türkçe pilot
+silinmedi: üreteci ve bütün çıktısı `09_ARCHIVE/pilot-tr/` altındadır ve
+üretim hattı oraya **hiç bakmaz**.
+
+* **26 harflik alfabe · dengeli gruplar** (5·5·4·4·4·4). Beşerli bölme
+  reddedildi: altıncı gruba TEK harf bırakıyor ve kapı levhası o harfi
+  bedava veriyordu. Çizelge F artık aynı gruplardan türer — bir harfin
+  GRUBU ile SATIRI aynı sayıdır.
+* **Cevapları çözücü atar.** Pilot Kapı I'in on dokuz cevabını elle
+  listeliyordu. `assign()` artık 101'inin hepsini dağıtır; Kapı I'de bu bir
+  aramadır (üç koşul aynı anda: harf · zincir uzunluğu · doldurulabilir
+  ızgara).
+* **Cevap yasağı ölçülür.** Kanaryanın kendi kurallarıyla üretim anında.
+  Bir aday ön maddenin kendi cümlesinde yakalandı (`know-LEDGE-from
+  outside this book`); söz daralmadı, süzgeç genişledi.
+* **Son sorunun cevabı bir kez reddedildi:** ilk seçim `member` sözcüğünün
+  içinde yaşıyordu ve kitap her sayfada *"a member of Chart B"* der.
+
+### Onarıldı — KAPI KATMANINDA DÖRT KUSUR
+
+Hiçbiri İngilizceye özgü değildi; dördü de Türkçe baskıda da vardı.
+
+* `qa_answerspace` harf grubunu `i // 5` ile hesaplıyordu — 26 harfte
+  **yedi bulmacayı "0 kabul"** yapardı. Grup artık Çizelge A'dan okunur.
+* `qa_readerpack` katalogları **çizelge ADINA göre** buluyordu; artık
+  girdilerinin ŞEKLİNE göre bulur.
+* `qa_readerpack` levha etiket numarasını yalnızca tek katalogda arıyordu.
+* `qa_crossref` · `qa_editorial` · `qa_meta` göndermeleri Türkçe kalıpla
+  arıyordu.
+
+`05_TESTS/selftest.py` fikstürleri İngilizceye taşındı: **242 denetim.**
+
+### Onarıldı — DİZGİ KATMANINDA ON BİR KUSUR
+
+İkisi ürünü bitiren cinstendi:
+
+* ⛔ `printed: false` işaretli çizelge **basılıyordu** — o çizelge son
+  sorunun aday listesidir ve **cevabı içerir**.
+* ⛔ Sözleşme sayfası `verificationPending` alanını — **kurucuya ait açık
+  bir iş kaydını** — okura doğrulama adresi diye basıyordu.
+
+Ve dokuzu daha: on yedi çözülmüş örneğin şekli ve adımları hiç
+basılmıyordu · ön/arka madde satır başına bir paragraf diziliyordu · kapı
+açılışları ham Python listesi olarak basılıyordu · sözleşme sözleri ve
+şifre referansı Python demeti olarak · son soru bölümü iki kez, altında
+Kapı V'in açılışı · `**kalın**` işaretleri olduğu gibi · levha şekli sayfa
+sınırında ikiye bölünebiliyordu · dört arka madde başlığı iki kez · Kapı
+III–V'in 61 sayfasında `AMAÇ` = `GİRDİ` · çevrim levhası çizelge adını
+kesiyordu.
+
+⭑ **Kök sebep:** baskı ve Kindle üreticileri aynı işi iki ayrı kopyayla
+yapıyordu. Dizgi yardımcıları tek yere alındı
+(`_protected_layer § TYPESETTING`).
+
+### Değişti — LEVHA ÇİZİCİ GENİŞLETİLDİ
+
+Sözleşmesi değişen **31 levha** deterministik çizildi (**0,00 $**).
+`plate_render.py` daha önce iki aile çizebiliyordu; artık geri kalan her
+aile **cetvelli tablet** olarak çizilir.
+
+⚠ Ve bir kusur onarıldı: `_mark` dokuz karakteri tanıyordu, **Çizelge A'nın
+altı işaretinin altısı da aynı dolu noktaya düşüyordu.** Yazı çözme
+levhaları tam olarak o altı işaretten kuruludur. Artık **çizgiye göre**
+çizilirler (üstünde/altında/keserek · dik/eğik) ve çizgi de basılır.
+
+⚑ **Dürüst sınır:** 31 tablet, kalan 72 gravürden görsel olarak daha
+sadedir. Kesin ama sade, zengin ama yanlış sayılıya tercih edildi (A17).
+
+### Değişti — `english_readiness.py` bir DOĞRULAYICIYA dönüştü
+
+Eski hâli bir iş listesiydi ve her koşuda *"DÖNÜŞÜM BAŞLAYAMAZ"*
+yazdırıyordu. Dönüşüm yapıldı; aynı cümleyi yazdırmaya devam eden bir kapı
+kitabın durumu hakkında yalan söyler. Artık yeniden inşanın **gerçekten
+olup olmadığını** ölçer — ve tek üyeli bir işaret grubunun geri gelmesini
+reddeder.
+
+### Ölçülen — ÜÇ FORMAT
+
+| | ciltsiz | ciltli | Kindle |
+|---|---:|---:|---:|
+| sayfa | **274** | **274** | — |
+| sırt | 0,6850 in | 0,8058 in | — |
+| dosya | 70,4 MB | 67,3 MB | 46,0 MB |
+| telif | **7,856 $** | **9,056 $** | **3,497 $ (%35)** |
+
+⚠ Kindle **%35 planı** seçilmelidir: 46,0 MB'da %70'in teslimat ücreti
+6,905 $ ve telifi 0,088 $'a düşürür. Sınır ~23,3 MB.
+
+### ⚠ DEĞİŞMEYEN
+
+Ölçülen öldürme kapısı **HARD-STOP** · harici çözücü oturumu **0 / 5** ·
+`humanValidationPassed = false` · `founder_override_partial = true`.
+
+**Yeniden inşa bir doğrulama değildir** ve inşa ölçülecek şeyi
+değiştirdiği için doğrulamayı devralamaz.
+
+---
+
 ## [0.10.0] — 2026-08-26 · CİLTLİ + KINDLE + KAPAK TİPOGRAFİSİ
 
 # ⛔ TEK BLOKLAYICI: DİL

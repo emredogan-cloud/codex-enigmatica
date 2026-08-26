@@ -104,7 +104,7 @@ def build_pdf(book: dict) -> str:
 
     # ── araçlar levhası ─────────────────────────────────────────────────
     charts = book.get("toolsPlate", {})
-    alpha = charts.get("esik-alfabesi", {})
+    alpha = charts.get("threshold-alphabet", {})
     c.showPage()
     y = page_header("ARAÇLAR LEVHASI · Çizelge A — Eşik Alfabesi",
                     "En kucuk ayirt edilmesi gereken detay: bir isaret.")
@@ -116,7 +116,7 @@ def build_pdf(book: dict) -> str:
         c.drawString(M, y, line)
         y -= 10
 
-    lex = charts.get("esik-sozlugu", {}).get("entries", [])
+    lex = charts.get("threshold-lexicon", {}).get("entries", [])
     c.showPage()
     y = page_header("ARAÇLAR LEVHASI · Çizelge B — Eşik Sözlüğü")
     c.setFont("Courier", 7.5)
@@ -128,13 +128,13 @@ def build_pdf(book: dict) -> str:
     c.showPage()
     y = page_header("ARAÇLAR LEVHASI · Çizelge D ve E")
     c.setFont("Courier", 8)
-    for e in charts.get("kapi-sozleri", {}).get("entries", []):
+    for e in charts.get("gate-sayings", {}).get("entries", []):
         c.drawString(M, y, "  " + e)
         y -= 12
     y -= 10
-    for r in charts.get("esik-sayilari", {}).get("entries", []):
+    for r in charts.get("threshold-numbers", {}).get("entries", []):
         c.drawString(M, y, "  %2d   %s   -> %d"
-                     % (r["sira"], r["okuma"], r["sozlukNo"]))
+                     % (r["row"], r["reading"], r["lexiconNo"]))
         y -= 11
 
     # ── levhalar ────────────────────────────────────────────────────────

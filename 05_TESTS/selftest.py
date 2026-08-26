@@ -913,23 +913,23 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
         return "".join(ALPHA[(ALPHA.index(c) + k) % 29] for c in w)
 
     tools = {"charts": {
-        "esik-alfabesi": {"alphabet": ALPHA,
+        "threshold-alphabet": {"alphabet": ALPHA,
                           "table": [{"letter": c, "glyph": glyph(c)}
                                     for c in ALPHA]},
-        "esik-sozlugu": {"entries": [{"no": i + 1, "word": w}
+        "threshold-lexicon": {"entries": [{"no": i + 1, "word": w}
                                      for i, w in enumerate(LEX)]},
-        "kapi-sozleri": {"entries": ["ZURNA SESİ", "MELTEM KAR",
+        "gate-sayings": {"entries": ["ZURNA SESİ", "MELTEM KAR",
                                      "KAVUN KESTİ"]},
-        "esik-sayilari": {"entries": [{"sira": 1, "okuma": "2413",
-                                       "sozlukNo": 3}]},
+        "threshold-numbers": {"entries": [{"row": 1, "reading": "2413",
+                                       "lexiconNo": 3}]},
         # ── KAPI II · basılı yetke ────────────────────────────────────
-        "yaratiklar-katalogu": {"entries": [{"no": i + 1, "word": w}
+        "bestiary-catalogue": {"entries": [{"no": i + 1, "word": w}
                                             for i, w in enumerate(LEX)]},
-        "halka-tablosu": {
+        "ring-table": {
             "rows": [list(ALPHA[r * 5:r * 5 + 5]) for r in range(5)]
             + [list(ALPHA[25:]) + ["·"]],
             "rowCount": 6, "colCount": 5},
-        "yaratik-sozleri": {"entries": ["ZURNA MELTEM KAVUN"]}}}
+        "beast-sayings": {"entries": ["ZURNA MELTEM KAVUN"]}}}
 
     def space_root(space, answer="MELTEM", page=None, index_over=None):
         _RUN_SEQ[0] += 1
@@ -1055,7 +1055,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
 
     # ⭑ Var olmayan bir çizelgeye gönderme — Faz 2'de üç bulmacada,
     # sekiz ayrı cümlede yaşandı. Okur bunu KENDİ hatası sanır.
-    d = space_root(CLEAN, page=dict(PAGE, clues=["Çizelge Z'ye bakın."]))
+    d = space_root(CLEAN, page=dict(PAGE, clues=["See Chart Z."]))
     code, out = run_env_gate("qa_readerpack.py", d)
     rep.check(code != 0,
               "⭑ VAR OLMAYAN BİR ÇİZELGEYE GÖNDERME YAKALANIR ⭑", out)
@@ -1075,9 +1075,9 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
     # beş ulaşılabilir cevabı vardı. Kapı bunu GÖRMEMİŞTİ çünkü kabul
     # yordamı yalnızca YAZARIN SEÇTİĞİ okumaya bakıyordu — K21'in öldürmeye
     # çalıştığı totolojinin ta kendisi, bu kez kapının kendi içinde.
-    NUM_TABLE = [{"sira": 1, "okuma": "2413", "sozlukNo": 1},
-                 {"sira": 2, "okuma": "4132", "sozlukNo": 5},
-                 {"sira": 3, "okuma": "1245", "sozlukNo": 9}]
+    NUM_TABLE = [{"row": 1, "reading": "2413", "lexiconNo": 1},
+                 {"row": 2, "reading": "4132", "lexiconNo": 5},
+                 {"row": 3, "reading": "1245", "lexiconNo": 9}]
     ALL8 = ["2413", "4132", "1324", "3241", "2314", "3142", "1423", "4231"]
 
     d = space_root({"generator": {"kind": "printed-lexicon"},
@@ -1110,7 +1110,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
               json.dumps(cfg, ensure_ascii=False))
         t = json.loads(json.dumps(tools))
         if phrases is not None:
-            t["charts"]["kapi-sozleri"]["entries"] = phrases
+            t["charts"]["gate-sayings"]["entries"] = phrases
         write(os.path.join(d, "01_SOURCE/design/tools-plate.json"),
               json.dumps(t, ensure_ascii=False))
         write(os.path.join(d, "01_SOURCE/gate_index.json"),
@@ -1475,7 +1475,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
           "acceptance": {"kind": "reachable-via-grid-coordinates",
                          "coordinates": coords_of("MELTEM"),
                          "readings": [coords_of("MELTEM")],
-                         "gridRef": "halka-tablosu"},
+                         "gridRef": "ring-table"},
           "declaredAcceptedCount": 1}
     d = space_root(GC, answer="MELTEM")
     code, out = run_env_gate("qa_answerspace.py", d)
@@ -1490,7 +1490,7 @@ def part8_answerspace(rep: Report, tmp: str) -> None:
                            "coordinates": ZUR,
                            "readings": ring_readings(ZUR)
                            + [coords_of("KAVUN")],
-                           "gridRef": "halka-tablosu"},
+                           "gridRef": "ring-table"},
             "declaredAcceptedCount": 1}
     d = space_root(both, answer="ZURNA")
     code, out = run_env_gate("qa_answerspace.py", d)
@@ -1904,7 +1904,7 @@ def part9_meta_and_aha(rep: Report, tmp: str) -> None:
             dsg.append({"puzzleId": pid, "mechanismFamily": "gate-synthesis"})
             pages.append({"puzzleId": pid, "gate": g, "title": "kapı %d" % i})
         space = {"generator": {"kind": "printed-meta-list",
-                               "listRef": "son-soru-adaylari"},
+                               "listRef": "last-question-candidates"},
                  "acceptance": {"kind": "meta-synthesis",
                                 "gatePhrases": list(PHRASES),
                                 "positions": list(POS)},
@@ -1924,7 +1924,7 @@ def part9_meta_and_aha(rep: Report, tmp: str) -> None:
                     "answerSpace": space})
         pages.append({"puzzleId": "meta-001", "gate": "last-question",
                       "title": "Son Soru"})
-        charts = {"son-soru-adaylari": {
+        charts = {"last-question-candidates": {
             "printed": False,
             "entries": sorted({META, "ZZZZZ", "YYYYY", "XXXXX"})}}
         book = {"puzzles": pages, "warmUp": [],
@@ -1992,7 +1992,7 @@ def part9_meta_and_aha(rep: Report, tmp: str) -> None:
         joined = "".join(c for p in PHRASES for c in p.upper() if c.isalpha())
         fake = joined[3:3 + len(META)]
         sol[-1]["finalAnswer"] = fake
-        charts["son-soru-adaylari"]["entries"] = sorted({fake, "ZZZZZ"})
+        charts["last-question-candidates"]["entries"] = sorted({fake, "ZZZZZ"})
     code, out = meta_gate(_concat)
     rep.check(code != 0,
               "⭑ CEVAP BİRLEŞTİRİLMİŞ SÖZLERİN İÇİNDEN OKUNUYORSA KIRMIZI ⭑ "
@@ -2020,7 +2020,7 @@ def part9_meta_and_aha(rep: Report, tmp: str) -> None:
               "⭑ CEVAP ISINMA ÖRNEĞİNDE GEÇİYORSA KIRMIZI ⭑", out)
 
     def _printed_list(idx, sol, dsg, book, charts, gates):
-        charts["son-soru-adaylari"]["printed"] = True
+        charts["last-question-candidates"]["printed"] = True
     code, out = meta_gate(_printed_list)
     rep.check(code != 0,
               "⭑ ADAY LİSTESİ KİTAPTA BASILIYSA KIRMIZI ⭑ "
@@ -2040,7 +2040,7 @@ def part9_meta_and_aha(rep: Report, tmp: str) -> None:
         for rec in (sol[-1], dsg[-1]):
             rec["answerSpace"]["acceptance"]["positions"] = flat
         sol[-1]["finalAnswer"] = ans
-        charts["son-soru-adaylari"]["entries"] = sorted({ans, "ZZZZZ"})
+        charts["last-question-candidates"]["entries"] = sorted({ans, "ZZZZZ"})
     code, out = meta_gate(_flat_positions)
     rep.check(code != 0,
               "⭑ BÜTÜN KONUMLAR AYNI SAYIYSA KIRMIZI ⭑ "
@@ -2330,22 +2330,23 @@ def part11_crossref(rep: Report, tmp: str) -> None:
                 "alternativeSolutionAnalysisDone": True,
                 "confirmedAlternativeSolutions": 0}]
         charts = {
-            "esik-alfabesi": {"id": "A", "title": "Çizelge A · Eşik Alfabesi",
+            "threshold-alphabet": {"id": "A", "title": "Chart A · The Threshold Alphabet",
                               "table": [{"letter": "A"}]},
-            "esik-sozlugu": {"id": "B", "title": "Çizelge B · Eşik Sözlüğü",
+            "threshold-lexicon": {"id": "B", "title": "Chart B · The Threshold Lexicon",
                              "entries": [{"no": 1, "word": "ZURNA"}]},
         }
         page = {"puzzleId": "fixture-001", "gate": "threshold",
-                "title": "kurgu", "plateId": "pl-fixture-01",
-                "objective": "Çizelge A'yı kullanın.",
-                "readerAction": "Levha pl-fixture-01'e bakın.",
-                "clues": ["Harfler Çizelge A'da basılıdır."],
-                "constraints": ["Cevap Eşik Sözlüğü'nün bir üyesidir."]}
+                "title": "fixture", "plateId": "pl-fixture-01",
+                "objective": "Use Chart A.",
+                "readerAction": "Look at plate pl-fixture-01.",
+                "clues": ["The letters are printed in Chart A."],
+                "constraints":
+                    ["The answer is a member of the Threshold Lexicon."]}
         # ⭑ Açılış, kapının YENİ çizelgelerini adıyla anmak zorundadır
         # (`qa_crossref § ⑤`) — fikstürün temiz hâli de anmalıdır.
         book = {"puzzles": [page], "toolsPlate": charts, "matter": {},
                 "frame": {"opening": [
-                    "Bu kapıda ilk kez Çizelge A ve Çizelge B gerekecek."]}}
+                    "This gate is the first to need Chart A and Chart B."]}}
         if mut:
             mut(idx, book, charts, page)
         write(os.path.join(d, "01_SOURCE/puzzle_index.json"),
@@ -2361,7 +2362,7 @@ def part11_crossref(rep: Report, tmp: str) -> None:
     rep.check(code == 0, "çapraz referans temiz kurguda GEÇER", out)
 
     def _ghost_chart(idx, book, charts, page):
-        page["clues"] = ["Harfler Çizelge Z'de basılıdır."]
+        page["clues"] = ["The letters are printed in Chart Z."]
     code, out = gate(_ghost_chart)
     rep.check(code != 0,
               "⭑ ① OLMAYAN BİR ÇİZELGEYE GÖNDERME KIRMIZI ⭑ "
@@ -2396,7 +2397,7 @@ def part11_crossref(rep: Report, tmp: str) -> None:
               "bir söz ölçülmedikçe yalnızca bir sözdür)", out)
 
     def _dead_chart(idx, book, charts, page):
-        charts["kapi-sozleri"] = {"id": "C", "title": "Çizelge C · Kapı Sözleri",
+        charts["gate-sayings"] = {"id": "C", "title": "Chart C · The Gate Sayings",
                                   "entries": ["ZURNA SESİ"]}
     code, out = gate(_dead_chart)
     rep.check(code != 0,
@@ -2580,7 +2581,7 @@ def part12_editorial(rep: Report, tmp: str) -> None:
               "(ipucu ve çözüm bölümleri başlıkla dizinlenir)", out)
 
     for mut, label in (
-        (lambda p: p[0].__setitem__("flavour", "Çizelge A'ya bakın."),
+        (lambda p: p[0].__setitem__("flavour", "See Chart A."),
          "çizelge adı"),
         (lambda p: p[0].__setitem__("flavour", "Bu oymacı soldan sağa "
                                     "yazmıyor."), "yön"),

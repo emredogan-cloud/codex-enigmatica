@@ -2,8 +2,23 @@
 
 > **Projeye yeni giren her ajanın ve her insanın okuyacağı ilk belgedir.**
 >
-> Son güncelleme: **24 Ağustos 2026** · Faz: **5 · YAKINSAMA + LEVHA**
-> Kapı: `phase5` · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
+> Son güncelleme: **26 Ağustos 2026** · Faz: **6 · İNGİLİZCE TİCARİ SÜRÜM**
+> Kapı: `phase5` (release seviyesinde de yeşil) · Giriş: ⚑ **KURUCU GEÇERSİZ KILMASI**
+>
+> ## ✅ KİTAP ARTIK İNGİLİZCEDİR — ve bu bir çeviri değildi
+>
+> | | |
+> |---|---|
+> | Ticari yüzeyde Türkçe sözcük | **0** (önce 9 533) |
+> | Alfabe | **26 harf** · 6 işaret grubu (5·5·4·4·4·4) |
+> | Yeniden atanan cevap | **101 / 101** |
+> | Yeniden üretilen şifreli dize | **hepsi** |
+> | Yeniden çizilen levha | **31 / 103** (sözleşmesi değişenlerin tamamı) |
+> | Üç format | ciltsiz **274** · ciltli **274** · Kindle **46,0 MB** |
+> | Kalite kapıları | **hepsi yeşil** — `phase5` ve `release` |
+>
+> → Rapor: [`06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md`](06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md)
+> → Sert denetim: [`06_REPORTS/FINAL_BRUTAL_AUDIT.md`](06_REPORTS/FINAL_BRUTAL_AUDIT.md)
 >
 > ## ⚠ HARİCİ İNSAN DOĞRULAMASI HÂLÂ BEKLİYOR
 >
@@ -11,24 +26,24 @@
 >
 > | | |
 > |---|---|
-> | Ölçülen öldürme kapısı | ⛔ **HARD-STOP** (1/5) — **değişmedi** |
+> | Ölçülen öldürme kapısı | ⛔ **HARD-STOP** (0/5 oturum) — **değişmedi** |
 > | Yapılan harici oturum | **0** |
 > | İnsan doğrulaması geçti mi | **HAYIR** |
-> | Faz 3–5 girişi | ⚑ **kurucu geçersiz kılması** (A13 · 24 Ağustos 2026) |
-> | Yazılmış bulmaca | **101** (beş kapı + son soru) · durum `drafted` |
+> | Faz 3–6 girişi | ⚑ **kurucu geçersiz kılması** (A13 · A14) |
+> | Yazılmış bulmaca | **101** · durum `drafted` |
 > | Doğrulanmış bulmaca | **0** — hiçbiri `tested` DEĞİL |
 >
+> ⭑ **YENİDEN İNŞA BİR DOĞRULAMA DEĞİLDİR.** Türkçe pilot doğrulanmamıştı;
+> İngilizce yeniden inşa da doğrulanmadı — ve inşa, ölçülecek şeyi
+> DEĞİŞTİRDİĞİ için doğrulamayı devralamaz. Sıfırdan gerektirir.
+>
 > ⭑ **ÜÇ ŞEY BİRBİRİNİN YERİNE GEÇMEZ:**
-> **ÖLÇÜLEN** (HARD-STOP) · **GEÇERSİZ KILINAN** (Faz 3 girişi) ·
+> **ÖLÇÜLEN** (HARD-STOP) · **GEÇERSİZ KILINAN** (Faz 3–6 girişi) ·
 > **HENÜZ DOĞRULANMAMIŞ** (harici insan testi).
 >
-> Faz 3, 4 ve 5 **"harici olarak doğrulanmış" diye anılamaz.** Geçersiz
-> kılma ölçümü ezmez; `kill_gate.py` kararı her koşuda HARD-STOP olarak
-> yazdırmaya devam eder ve yalnızca çıkış kodu değişir.
->
-> → Karar kaydı: `DECISIONS.md § A13` · Rapor:
-> [`06_REPORTS/PHASE_5_REPORT.md`](06_REPORTS/PHASE_5_REPORT.md)
-> → Bloklayıcı: **A12/A12b** — harici çözücü oturumları
+> → Karar kaydı: `DECISIONS.md § A13 · A14`
+> → Bloklayıcı: **A12b** (harici çözücü) · **A4** (doğrulama sayfası) ·
+>   **A9** (POD prova)
 
 ---
 
@@ -84,37 +99,37 @@ soruya bağlayan bir meta-mister. Gravür levhaların **içine gömülmüş**
 
 | | |
 |---|---|
-| Faz | **5 · yakınsama · line editor · levha kapısı** (kurucu geçersiz kılmasıyla) |
-| Kapı (`.gate`) | `phase5` |
+| Faz | **6 · İngilizce ticari sürüm** (kurucu geçersiz kılmasıyla) |
+| Kapı (`.gate`) | `phase5` — `release` seviyesinde de yeşil |
+| Manuscript dili | **`en`** · kaynak: `01_SOURCE/design/_generator_en/` |
 | Aday bulmaca | **151** / ≥130 ✅ |
 | Yazılmış (`drafted`) | **101** / 100 — beş kapı + son soru |
 | **Doğrulanmış (`validated`)** | **0** / 100 — ⚠ harici kanıt YOK |
-| Elle iş (kitap) | **686 işlem** · beş kapıda da **6–8 EU** bandında sabit |
+| Elle iş (kitap) | **719 işlem** · hiçbiri çaba tavanını aşmıyor |
 | aha (kapı bazında) | **4,0 / 4,0 / 3,0 / 3,0 / 3,0** — K36 |
-| **Çıkarım oranı** | **1,00 → 1,27 → 2,32 → 3,43 → 4,42** (yükseliyor) |
+| **Çıkarım oranı** | **1,00 → 1,25 → 2,42 → 3,17 → 4,08** (yükseliyor) |
 | Isınma | **17 örnek · 17/17 mekanizma** öğretiliyor |
-| Kalite kapısı | **24 betik · selftest 242 denetim · CI yeşil** |
-| Sayfa modeli | **238** · levha **103** · kelime **17.612** (ölçülen) |
-| **Sonraki adım** | **A12/A12b** — harici çözücü oturumları (kurucu) |
+| Kalite kapısı | **24 betik · selftest 242 denetim · hepsi yeşil** |
+| Sayfa (ÖLÇÜLEN) | **274** ciltsiz · **274** ciltli · levha **103** · kelime **26.062** |
+| **Sonraki adım** | **A12b** — harici çözücü oturumları (kurucu) |
 
-⚠ **FAZ 5'İN AJAN İŞİ BİTTİ; DÖRT MADDESİ KURUCUYA AİT.** 103 gravür
-**üretilmedi**, POD prova **alınmadı**, dizgi **dondurulmadı**,
-doğrulama sayfası **canlı değil**. Hiçbiri uydurulmadı.
+⚠ **FAZ 6'NIN AJAN İŞİ BİTTİ; ÜÇ MADDESİ KURUCUYA AİT.** POD prova
+**alınmadı**, doğrulama sayfası **canlı değil**, ISBN **yok**. Hiçbiri
+uydurulmadı.
 
 ### Ne ölçüldü, ne ölçülmedi
 
 | | |
 |---|---|
-| ✅ ÖLÇÜLDÜ | 101/101 tekil cevap · çaba · aha tavanı · çıkarım oranı · levha verisi |
+| ✅ ÖLÇÜLDÜ | 101/101 tekil cevap · 5 086 aday dize elendi |
+| ✅ ÖLÇÜLDÜ | çaba · aha tavanı · çıkarım oranı · levha verisi |
 | ✅ ÖLÇÜLDÜ | DAG döngüsüz · yayılma yarıçapı ≤1 · sızıntı yok |
 | ✅ ÖLÇÜLDÜ | meta-mister: beş kapı katkısı · cevap kitapta **YOK** |
-| ✅ ÖLÇÜLDÜ | levha okunabilirliği · çapraz referans · editoryal bütünlük |
+| ✅ ÖLÇÜLDÜ | ticari yüzeyde **0** Türkçe sözcük (beş dosya) |
 | ⛔ **ÖLÇÜLMEDİ** | **mürekkebin kâğıt üzerindeki davranışı** (A9) |
 | ⛔ **ÖLÇÜLMEDİ** | **hiçbir insanın bu bulmacaları çözüp çözemediği** |
 
 `06_REPORTS/solver/` **boştur** ve gerçek oturumlar gelene kadar boş kalır.
-
----
 
 ## 5 · Bu projenin iki varoluşsal kuralı
 
@@ -267,29 +282,32 @@ temizlemek gerekir ve bu, geçmişi yeniden yazmak demektir.
 
 ## 12 · Sonraki izinli eylem
 
-> ### ⚑ FAZ 5'İN AJAN İŞİ BİTTİ — DÖRT MADDE KURUCUYA AİT
+> ### ⚑ FAZ 6'NIN AJAN İŞİ BİTTİ — ÜÇ MADDE KURUCUYA AİT
 >
-> Yazıldı: ön madde · sözleşme sayfası · arka madde · çerçeve anlatının
-> kapanışı. Üretildi: dört yeni kalite kapısı, KDP metadata paketi ve
-> **103 gravür promptu**. Üç bağımsız **line editor** alt-ajanı 17.877
-> kelimeyi taradı; **23 bloklayıcı sınıf** doğrulandı ve onarıldı.
+> Yapıldı: **kaynak düzeyinde İngilizce yeniden inşa.** Alfabe 26 harfe
+> indi, altı işaret grubu yeniden kuruldu, **101 cevabın hepsi çözücüyle
+> yeniden atandı**, bütün şifreli dizeler yeniden üretildi, beş katalog
+> sıfırdan yazıldı, **31 levha** yeniden çizildi ve üç formatın üçü de
+> yeniden üretildi. Ticari yüzeyde **0** Türkçe sözcük.
 >
-> **Ama Definition of Done'ın dört maddesi ajan tarafından yapılamaz:**
+> Yeniden inşa **kapı katmanında dört, dizgi katmanında on bir kusur**
+> açığa çıkardı; on beşi de Türkçe baskıda da vardı ve onarıldı. İkisi
+> ürünü bitiren cinstendi: biri son sorunun cevabını kitaba basıyordu.
 >
-> 1. **103 gravürün üretilmesi** — `07_ASSETS/raw/` BOŞ
->    → prompt kütüphanesi hazır: `07_ASSETS/IMAGE_PROMPT_LIBRARY.html`
-> 2. **A9** — POD prova kopya ve levha okunabilirliğinin KÂĞITTA ölçümü
-> 3. **dizgi dondurma** — gerçek levhalar gelmeden yapılamaz (K12:
->    Kapı V sayfa numaralarına bağlıdır ve kırılacak bir şey kilitlenmez)
-> 4. **A4** — doğrulama sayfasının barındırılması
+> **Ama Definition of Done'ın üç maddesi ajan tarafından yapılamaz:**
 >
-> Ve hepsinin üstünde duran tek bloklayıcı değişmedi:
-> **A12b — harici çözücü oturumları.** Harici oturum: **0 / 5** ·
-> ölçülen öldürme kapısı: **HARD-STOP**.
+> 1. **A12b** — harici çözücü oturumları · **0 / 5**
+>    → `00_CONTEXT/EXTERNAL_SOLVER_PACKAGE.md`
+> 2. **A4** — doğrulama sayfasının barındırılması ve adresi
+>    (son sorunun cevabı başka hiçbir yere yazılamaz)
+> 3. **A9** — POD prova kopyası · mürekkebin kâğıt üzerindeki davranışı
 >
-> Ayrıca açık: **A2** · **A5** · **A6** · **A7** · **A10**
+> Ayrıca açık: **ISBN** · **AI açıklaması** · ciltli hesaplayıcının 274
+> sayfayla yenilenmesi · kapak sanatının doğal çözünürlüğü (92,5 / 82,0 dpi)
+>
+> Ve hepsinin üstünde duran gerçek değişmedi:
+> ölçülen öldürme kapısı **HARD-STOP** · harici oturum **0 / 5**.
 >
 > Ayrıntı: `DECISIONS.md § AÇIK KARARLAR` ·
-> [`06_REPORTS/PHASE_5_REPORT.md`](06_REPORTS/PHASE_5_REPORT.md) ·
-> [`06_REPORTS/LINE_EDITOR_REPORT.md`](06_REPORTS/LINE_EDITOR_REPORT.md) ·
-> [`06_REPORTS/IMAGE_PROMPT_LIBRARY_FINALIZATION_REPORT.md`](06_REPORTS/IMAGE_PROMPT_LIBRARY_FINALIZATION_REPORT.md)
+> [`06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md`](06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md) ·
+> [`06_REPORTS/FINAL_BRUTAL_AUDIT.md`](06_REPORTS/FINAL_BRUTAL_AUDIT.md)

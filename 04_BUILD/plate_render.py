@@ -124,12 +124,61 @@ def _mark(dr, cx, cy, r, glyph):
                      fill=INK)
         dr.rectangle([cx - w // 2, cy - r * 0.55, cx + w // 2, cy + r],
                      fill=INK)
-    elif glyph == "/":
-        dr.line([(cx - r * 0.7, cy + r), (cx + r * 0.7, cy - r)],
-                fill=INK, width=int(max(2, r // 3)))
+    elif glyph in TALLY:
+        _tally(dr, cx, cy, r, glyph)
+    elif glyph in NUMERAL:
+        _numeral(dr, cx, cy, r, glyph)
     else:                                   # · ve tanınmayanlar
         rr = max(2, r // 2)
         dr.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=INK)
+
+
+# ⭑⭑ ÇİZELGE A'NIN ALTI İŞARETİ BİRBİRİNDEN AYIRT EDİLEBİLİR OLMALIDIR ⭑⭑
+#
+# ⚠ ÖLÇÜLDÜ VE KUSURDU. `_mark` yalnızca dokuz karakteri tanıyordu; geri
+# kalan her şey aynı DOLU NOKTAYA düşüyordu. Yazı çözme levhaları tam da
+# bu altı işaretten kuruludur ve ikisi ayırt edilemezse levha bir HARF
+# değil, bir nokta dizisi basar — okunamaz bir bulmaca.
+#
+# Altı işaret ÇİZGİYE GÖRE tanımlıdır (`plate.py § MARK_NAMES`):
+#     '  çizginin ÜSTÜNDE dik        /  çizginin ÜSTÜNDE eğik
+#     ,  çizginin ALTINDA dik        \\  çizginin ALTINDA eğik
+#     +  çizgiyi KESEN dik           x  çizgiyi KESEN eğik
+# Bu yüzden çizgi de çizilir: işaretin anlamı ona göredir.
+TALLY = "',+/\\x"
+NUMERAL = "•▵◇▽◻"
+
+
+def _tally(dr, cx, cy, r, glyph):
+    w = int(max(2, r // 3))
+    slant = glyph in "/\\x"
+    if glyph in "',/":                       # üstte
+        y0, y1 = cy - r * 1.5, cy
+    elif glyph in ",\\":                     # altta
+        y0, y1 = cy, cy + r * 1.5
+    else:                                    # kesen
+        y0, y1 = cy - r * 1.1, cy + r * 1.1
+    dx = r * 0.45 if slant else 0
+    dr.line([(cx - dx, y1), (cx + dx, y0)], fill=INK, width=w)
+
+
+def _numeral(dr, cx, cy, r, glyph):
+    w = int(max(2, r // 3))
+    if glyph == "•":
+        rr = max(2, r // 2)
+        dr.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=INK)
+    elif glyph == "▵":
+        dr.polygon([(cx, cy - r), (cx + r, cy + r * 0.8),
+                    (cx - r, cy + r * 0.8)], outline=INK, width=w)
+    elif glyph == "▽":
+        dr.polygon([(cx, cy + r), (cx + r, cy - r * 0.8),
+                    (cx - r, cy - r * 0.8)], outline=INK, width=w)
+    elif glyph == "◇":
+        dr.polygon([(cx, cy - r), (cx + r, cy), (cx, cy + r), (cx - r, cy)],
+                   outline=INK, width=w)
+    else:                                    # ◻
+        dr.rectangle([cx - r * 0.85, cy - r * 0.85,
+                      cx + r * 0.85, cy + r * 0.85], outline=INK, width=w)
 
 
 def draw_ring(spec: dict, size: int = SIZE):
@@ -254,6 +303,133 @@ def draw_row(spec: dict, size: int = SIZE):
     return im.resize((size, size), Image.LANCZOS)
 
 
+def draw_tablet(spec: dict, size: int = SIZE, seed: int = 0):
+    """⭑ RULED TABLET ⭑ — N bands, and EXACTLY the counted marks.
+
+    ⭑ WHY THIS EXISTS, AND WHY IT IS NOT A SHORTCUT ⭑
+
+    The English rebuild changed the immutable data contract of twenty-nine
+    plates: different answer lengths mean different glyph counts, different
+    numerals, different band heights. Twenty-five of them belong to
+    families the ring and row drawers do not cover.
+
+    The obvious move was to re-commission them from the image model. The
+    cost report for the last batch settles that: the same plate was asked
+    for THREE times with a contract of seven stations and came back with
+    eight, twelve and twelve. The prompt was strengthened each time; the
+    style improved and THE NUMBER DID NOT. An engraving in this book is
+    data, not decoration — a plate that contradicts the printed figure
+    beside it is a puzzle that cannot be solved.
+
+    So the same conclusion applies a second time, and for the same reason:
+    if the generative model cannot count, the counting is not given to it.
+    This costs nothing, and the result is not open to argument.
+
+    The style is the delivered plates': cream ground, pure black line, fine
+    parallel hatching, thin ruled frame. The border treatment varies with
+    the plate id so that twenty-five tablets are not twenty-five copies —
+    and it varies DETERMINISTICALLY, so the same plate always redraws the
+    same way.
+    """
+    from PIL import Image, ImageDraw
+    S = size * SS
+    im = Image.new("RGB", (S, S), CREAM)
+    dr = ImageDraw.Draw(im)
+    lw = max(2, int(S * 0.0022))
+
+    bands = max(2, min(int(spec.get("bands") or 4), 20))
+    seq = []
+    for g, cnt in spec["marks"]:
+        seq += [g] * cnt
+
+    # ── ruled frame + hatched border band · three treatments ───────────
+    # ⚠ THE BORDER IS NOT DECORATION FOR ITS OWN SAKE. These tablets sit in
+    # the same book as seventy-four commissioned engravings; a bare ruled
+    # box beside them reads as a printing error rather than as a plate. The
+    # band carries the engraver's own texture — close parallel burin lines
+    # between two rules — which is the one thing the delivered plates all
+    # share. The treatment varies with the plate id so the tablets are not
+    # copies of one another, and it varies deterministically.
+    for pad, w in ((S * 0.030, lw * 2), (S * 0.066, lw)):
+        dr.rectangle([pad, pad, S - pad, S - pad], outline=INK, width=w)
+    o0, o1 = S * 0.030, S * 0.066
+    style = seed % 3
+    hs = max(3, int(S * 0.010)) + style          # hatch pitch varies
+    x = o0 + hs
+    while x < S - o0:
+        dr.line([(x, o0), (x, o1)], fill=INK, width=max(1, lw // 2))
+        dr.line([(x, S - o1), (x, S - o0)], fill=INK, width=max(1, lw // 2))
+        x += hs
+    y = o0 + hs
+    while y < S - o0:
+        dr.line([(o0, y), (o1, y)], fill=INK, width=max(1, lw // 2))
+        dr.line([(S - o1, y), (S - o0, y)], fill=INK, width=max(1, lw // 2))
+        y += hs
+    dr.rectangle([o0, o0, o1, o1], fill=CREAM, outline=INK, width=lw)
+    dr.rectangle([S - o1, o0, S - o0, o1], fill=CREAM, outline=INK, width=lw)
+    dr.rectangle([o0, S - o1, o1, S - o0], fill=CREAM, outline=INK, width=lw)
+    dr.rectangle([S - o1, S - o1, S - o0, S - o0], fill=CREAM, outline=INK,
+                 width=lw)
+    if style == 1:
+        d = S * 0.086
+        dr.rectangle([d, d, S - d, S - d], outline=INK, width=max(1, lw // 2))
+    elif style == 2:
+        d, t = S * 0.086, S * 0.020
+        for (x, y) in ((d, d), (S - d, d), (d, S - d), (S - d, S - d)):
+            dr.line([(x - t, y), (x + t, y)], fill=INK, width=lw)
+            dr.line([(x, y - t), (x, y + t)], fill=INK, width=lw)
+
+    # ── the tablet body ────────────────────────────────────────────────
+    left, right = S * 0.155, S * 0.845
+    top, base = S * 0.185, S * 0.815
+    dr.rectangle([left, top, right, base], outline=INK, width=lw * 2)
+
+    band_h = (base - top) / bands
+    for i in range(1, bands):
+        y = top + band_h * i
+        dr.line([(left, y), (right, y)], fill=INK, width=lw)
+
+    # ── fine parallel hatching inside every band ───────────────────────
+    step = max(3, int(band_h * 0.20))
+    for i in range(bands):
+        y0 = top + band_h * i + lw * 2
+        y1 = top + band_h * (i + 1) - lw * 2
+        y = y0 + step
+        while y < y1:
+            dr.line([(left + lw * 3, y), (right - lw * 3, y)],
+                    fill=INK, width=max(1, lw // 3))
+            y += step
+
+    # ── ⭑ THE MARKS · EXACTLY AS MANY AS THE CONTRACT SAYS ⭑ ───────────
+    # They are laid along the middle band, evenly spaced and never
+    # overlapping, and the hatching beneath each one is cleared so that it
+    # stays countable on paper.
+    if seq:
+        mid = top + band_h * (bands // 2) + band_h / 2
+        span = (right - left) * 0.78
+        x0 = (left + right) / 2 - span / 2
+        gapx = span / max(1, len(seq))
+        mr = min(band_h * 0.30, gapx * 0.28)
+        tally = any(g in TALLY for g in seq)
+        # ⭑ THE TALLY MARKS ARE DEFINED AGAINST A LINE ⭑ — above it, below
+        # it, or crossing it. Without the line drawn, three of the six
+        # marks are the same stroke and the plate is unreadable.
+        clear_h = mr * 3.4 if tally else mr * 1.9
+        dr.rectangle([x0 - mr, mid - clear_h, x0 + span + mr,
+                      mid + clear_h], fill=CREAM)
+        if tally:
+            dr.line([(x0 - mr, mid), (x0 + span + mr, mid)],
+                    fill=INK, width=lw)
+        for i, g in enumerate(seq):
+            cx = x0 + gapx * (i + 0.5)
+            if not tally:
+                dr.rectangle([cx - mr * 1.9, mid - mr * 1.9,
+                              cx + mr * 1.9, mid + mr * 1.9], fill=CREAM)
+            _mark(dr, cx, mid, mr, g)
+
+    return im.resize((size, size), Image.LANCZOS)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -283,19 +459,24 @@ def main() -> int:
             continue
         mech, items = data[pid]
         spec = parse(items)
-        if mech == "plate-embedded-cipher":
-            im = draw_ring(spec)
-        elif mech == "plate-observation":
-            im = draw_row(spec)
-        else:
-            rep.check(False, "%s: '%s' ailesi çizilemiyor" % (pid, mech))
-            continue
+        seed = sum(ord(c) for c in pid)
+
+        def _draw(px):
+            if mech == "plate-embedded-cipher":
+                return draw_ring(spec, px)
+            if mech == "plate-observation":
+                return draw_row(spec, px)
+            # ⭑ EVERY OTHER FAMILY GETS THE RULED TABLET ⭑ — its contract
+            # is only ever (counted marks, band count), and a tablet holds
+            # both exactly. Previously these families were refused here and
+            # the work went to the image model, which cannot count.
+            return draw_tablet(spec, px, seed)
+
+        im = _draw(SIZE)
         path = os.path.join(RAW, pid + ".png")
         im.save(path, "PNG", optimize=True)
         if args.do_print:
-            big = (draw_ring(spec, PRINT_PX)
-                   if mech == "plate-embedded-cipher"
-                   else draw_row(spec, PRINT_PX))
+            big = _draw(PRINT_PX)
             os.makedirs(PLATES, exist_ok=True)
             big.save(os.path.join(PLATES, pid + ".png"), "PNG",
                      dpi=(PRINT_DPI, PRINT_DPI), optimize=True)

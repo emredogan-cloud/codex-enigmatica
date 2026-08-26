@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -180,8 +181,16 @@ def build(book: dict, sols: dict, gutter: float, path: str,
         PageTemplate(id="even", frames=[frame(False)], onPage=paint),
     ])
 
-    e = lambda s: (str(s).replace("&", "&amp;").replace("<", "&lt;")
-                   .replace(">", "&gt;"))
+    def e(s):
+        """Escape for reportlab, then render the source's own emphasis.
+
+        ⚠ THE WARM-UP WRITES ITS ANSWERS IN BOLD and the book printed the
+        asterisks. The source marks emphasis the way the rest of this
+        project writes it; the typesetter speaks reportlab. Shared with the
+        Kindle builder — see _protected_layer § TYPESETTING.
+        """
+        return pl.emphasis(str(s).replace("&", "&amp;")
+                           .replace("<", "&lt;").replace(">", "&gt;"))
     S = []
     A = S.append
 
@@ -189,13 +198,28 @@ def build(book: dict, sols: dict, gutter: float, path: str,
         if txt:
             A(Paragraph(e(txt), st[sty]))
 
-    def block(txt):
-        """Şekil / çizelge — tek aralıklı, olduğu gibi."""
+    def block(txt, keep=True):
+        """Figure / chart — monospaced, exactly as generated.
+
+        ⭑⭑ A PLATE'S DATA MAY NOT BREAK ACROSS A PAGE ⭑⭑
+        ⚠ Each line was appended on its own, so reportlab was free to break
+        a figure wherever the page ended — and it did: the ring plate of
+        g2-015 put four of its seven stations on page 88 and the other
+        three on page 89. The reader has to count stations on a ring; half
+        a ring is not a harder puzzle, it is a broken one.
+
+        ⚠ Charts longer than a page are the exception and must stay
+        breakable — the Lexicon and the Cycle Table cannot fit on one page
+        and keeping them together would overflow the frame."""
         if not txt:
             return
+        lines = [Preformatted(x.rstrip() or " ", mono)
+                 for x in str(txt).splitlines()]
         A(Spacer(1, 4))
-        for line in str(txt).splitlines():
-            A(Preformatted(line.rstrip() or " ", mono))
+        if keep and len(lines) <= 40:
+            A(KeepTogether(lines))
+        else:
+            S.extend(lines)
         A(Spacer(1, 5))
 
     def plate(pid):
@@ -234,25 +258,11 @@ def build(book: dict, sols: dict, gutter: float, path: str,
         sc = min(maxw / iw, maxh / ih)
         return Image(p, width=iw * sc, height=ih * sc)
 
-    def flow(val):
-        """⭑ ÖN/ARKA MADDE DÜZ METİN DEĞİL ⭑ — sözlük ya da liste olabilir.
+    # ⚠ ONE IMPLEMENTATION FOR BOTH BUILDERS —
+    # see _protected_layer § TYPESETTING.
+    flow = pl.paragraphs
 
-        ⚠ İlk yapıda `matter.titlePage` bir SÖZLÜKTÜ ve olduğu gibi
-        basıldı: başlık sayfasına ham Python sözlüğü çıktı. Şekli
-        varsaymak, kitabın ilk sayfasına hata basmaktır.
-        """
-        if val is None:
-            return []
-        if isinstance(val, str):
-            return [x for x in val.split("\n\n") if x.strip()]
-        if isinstance(val, list):
-            return [str(x) for x in val if str(x).strip()]
-        if isinstance(val, dict):
-            out = []
-            for v in val.values():
-                out += flow(v)
-            return out
-        return [str(val)]
+    chart_body = pl.chart_body
 
     m = book.get("matter") or {}
     # ── ① BAŞLIK ───────────────────────────────────────────────────────
@@ -280,43 +290,102 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     A(PageBreak())
 
     # ── ③ ÇERÇEVE + SÖZLEŞME ───────────────────────────────────────────
-    for key, title in (("frameOpening", None), ("contract", "SÖZLEŞME")):
-        rows = flow(m.get(key))
-        if not rows:
-            continue
-        if title:
-            A(Paragraph(title, st["h1"]))
-        for pgraph in rows:
+    for pgraph in flow(m.get("frameOpening")):
+        para(pgraph, "lead")
+    A(PageBreak())
+
+    # ⭑⭑ THE CONTRACT IS THE ONE PAGE THAT MAY NOT BE GUESSED AT ⭑⭑
+    # ⚠ It was: `flow()` walked the contract dictionary and printed every
+    # value it found, so the four promises — a list of (promise,
+    # explanation) PAIRS — came out as Python tuples, brackets and quotes
+    # included, on the page that tells the reader what this book guarantees.
+    # And the last field in that dictionary is `verificationPending`, an
+    # internal note to the Founder, which was printed to the buyer as if it
+    # were the verification address.
+    ct = m.get("contract") or {}
+    if ct:
+        A(Paragraph("THE CONTRACT", st["h1"]))
+        for pgraph in flow(ct.get("lead")):
             para(pgraph, "lead")
+        A(Spacer(1, 0.12 * IN))
+        for i, pr in enumerate(ct.get("promises") or [], 1):
+            if isinstance(pr, (list, tuple)) and len(pr) == 2:
+                head, body = pr
+            else:
+                head, body = str(pr), ""
+            A(Paragraph("%d · %s" % (i, e(head)), st["h3"]))
+            if body:
+                para(body)
+        for key in ("answerFormat", "verification"):
+            rows = flow(ct.get(key))
+            if not rows:
+                continue
+            A(Spacer(1, 0.10 * IN))
+            for j, pgraph in enumerate(rows):
+                para(pgraph, "h3" if j == 0 and pgraph.isupper() else "body")
+        # ⚠ `verificationPending` IS NOT PRINTED. It is the Founder's open
+        # item (A4), not a sentence for the reader — and a placeholder in
+        # place of a real address is worse than no address at all. The
+        # page-count gate and the production report both carry it as a
+        # blocker instead.
         A(PageBreak())
 
     # ── ④ ARAÇ LEVHALARI (basılı katalog) ──────────────────────────────
     tp = book.get("toolsPlate") or {}
     if tp:
-        A(Paragraph("ARAÇLAR", st["h1"]))
+        A(Paragraph("THE TOOLS", st["h1"]))
         [para(x, "lead") for x in flow(m.get("toolsLead"))]
         for name, val in tp.items():
-            A(Paragraph(e(name.replace("-", " ").upper()), st["h2"]))
-            if isinstance(val, str):
-                block(val)
-            elif isinstance(val, list):
-                block("\n".join(str(x) for x in val))
-            elif isinstance(val, dict):
-                block("\n".join("%-22s %s" % (k, v) for k, v in val.items()))
+            if not isinstance(val, dict):
+                continue
+            # ⭑⭑ A CHART MARKED `printed: false` IS NOT PRINTED ⭑⭑
+            # ⚠ THIS LINE CLOSES A LEAK THAT WOULD HAVE ENDED THE BOOK.
+            # The last question's answer space is a chart like any other —
+            # it exists so the uniqueness proof has a domain to count — and
+            # it CONTAINS THE FINAL ANSWER. It carries `printed: false` and
+            # every gate honours that. The interior did not: it walked the
+            # whole tools plate and dumped each chart's raw dictionary, so
+            # the candidate list, the final answer inside it, went onto a
+            # page of the book. The contract's own words are "the last
+            # question's answer is printed nowhere in this book."
+            if not pl.chart_is_printed(val):
+                continue
+            A(Paragraph(e(val.get("title") or
+                          name.replace("-", " ").title()), st["h2"]))
+            if val.get("note"):
+                para(val["note"], "small")
+            A(Spacer(1, 4))
+            block(chart_body(val), keep=False)
+            A(Spacer(1, 8))
         A(PageBreak())
 
     # ── ⑤ ISINMA ───────────────────────────────────────────────────────
     wu = book.get("warmUp") or []
     if wu:
-        A(Paragraph("ISINMA", st["h1"]))
+        A(Paragraph("WARM-UP", st["h1"]))
         [para(x, "lead") for x in flow(m.get("warmUpLead"))]
+        # ⭑⭑ A SOLVED EXAMPLE THAT SHOWS NEITHER ITS FIGURE NOR ITS
+        # WORKING IS NOT A SOLVED EXAMPLE ⭑⭑
+        # ⚠ The first build printed only `lead` and `note` — the two fields
+        # that TALK ABOUT the mechanism — and dropped `figure` and
+        # `solved`, the two that SHOW it. Seventeen worked examples went
+        # into the book as seventeen paragraphs of description, and the
+        # front matter's promise ("they stand already solved — answers and
+        # all") was not kept on a single page.
         for i, w in enumerate(wu, 1):
-            bits = [Paragraph("%d · %s" % (i, e(w.get("title") or "")),
-                              st["h3"])]
-            for k in ("lead", "note", "text", "body"):
-                if w.get(k):
-                    bits.append(Paragraph(e(w[k]), st["body"]))
-            A(KeepTogether(bits))
+            A(Paragraph("%d · %s" % (i, e(w.get("title") or "")), st["h3"]))
+            if w.get("lead"):
+                para(w["lead"])
+            if w.get("figure"):
+                A(Spacer(1, 4))
+                block(w["figure"])
+                A(Spacer(1, 4))
+            for j, line in enumerate(w.get("solved") or [], 1):
+                para("%d. %s" % (j, line))
+            if w.get("note"):
+                A(Spacer(1, 3))
+                para(w["note"], "small")
+            A(Spacer(1, 10))
         A(PageBreak())
 
     # ── ⑥ KAPILAR VE BULMACALAR ────────────────────────────────────────
@@ -331,16 +400,30 @@ def build(book: dict, sols: dict, gutter: float, path: str,
 
     frames = [book.get("frame"), book.get("frame2"), book.get("frame3"),
               book.get("frame4"), book.get("frame5")]
+    # ⚠ THE SIXTH "GATE" IS NOT A GATE. `order` is built from the pages
+    # themselves and the last question carries its own gate id, so the loop
+    # asked for a sixth Roman numeral and fell over. It is not numbered —
+    # it is named, and it opens with its own plate.
+    ROMAN = {"threshold": "I", "menagerie": "II", "calendar": "III",
+             "labyrinth": "IV", "mirror": "V"}
+    NAME = {"threshold": "THE THRESHOLD", "menagerie": "THE MENAGERIE",
+            "calendar": "THE CALENDAR", "labyrinth": "THE LABYRINTH",
+            "mirror": "THE MIRROR", "last-question": "THE LAST QUESTION"}
     for gi, g in enumerate(order):
+        last = g == "last-question"
         fr = frames[gi] if gi < len(frames) and frames[gi] else {}
-        A(Paragraph("KAPI %s" % (gi + 1), st["h1"]))
-        A(Paragraph(e(g.upper()), st["centre"]))
+        if last:
+            A(Paragraph("THE LAST QUESTION", st["h1"]))
+            fr = {}
+        else:
+            A(Paragraph("GATE %s" % ROMAN.get(g, str(gi + 1)), st["h1"]))
+            A(Paragraph(e(NAME.get(g, g.upper())), st["centre"]))
         A(Spacer(1, 0.2 * IN))
-        im = plate("dc-gate-%d" % (gi + 1))
+        im = plate("dc-meta-01" if last else "dc-gate-%d" % (gi + 1))
         if im:
             A(im)
         A(Spacer(1, 0.15 * IN))
-        for pgraph in str(fr.get("opening") or "").split("\n\n"):
+        for pgraph in flow(fr.get("opening")):
             para(pgraph, "lead")
         A(PageBreak())
 
@@ -355,44 +438,50 @@ def build(book: dict, sols: dict, gutter: float, path: str,
                 A(Spacer(1, 3))
                 A(im)
                 A(Spacer(1, 5))
-            for lab, key in (("AMAÇ", "objective"), ("GİRDİ", "input"),
-                             ("NE YAPILIR", "readerAction")):
+            for lab, key in (("OBJECTIVE", "objective"), ("WHAT YOU SEE", "input"),
+                             ("WHAT TO DO", "readerAction")):
                 if p.get(key):
                     A(Paragraph(lab, st["label"]))
                     para(p[key])
-            if p.get("figure"):
-                A(Paragraph("ŞEKİL", st["label"]))
-                block(p["figure"])
-            if p.get("printedTable"):
-                A(Paragraph("ÇİZELGE", st["label"]))
-                block(p["printedTable"])
+            # ⚠ THE LABEL TRAVELS WITH THE FIGURE. Keeping only the figure
+            # together left "FIGURE" alone at the foot of one page and the
+            # plate itself at the head of the next — the reader is told to
+            # look at something that is not there.
+            for lab, key in (("FIGURE", "figure"), ("CHART", "printedTable")):
+                if not p.get(key):
+                    continue
+                lines = [Preformatted(x.rstrip() or " ", mono)
+                         for x in str(p[key]).splitlines()]
+                A(Spacer(1, 4))
+                grp = [Paragraph(lab, st["label"])] + lines
+                if len(lines) <= 38:
+                    A(KeepTogether(grp))
+                else:
+                    S.extend(grp)
+                A(Spacer(1, 5))
             if p.get("clues"):
-                A(Paragraph("İPUÇLARI", st["label"]))
+                A(Paragraph("CLUES", st["label"]))
                 for c in p["clues"]:
                     para("· " + str(c))
             if p.get("constraints"):
-                A(Paragraph("KISITLAR", st["label"]))
+                A(Paragraph("CONSTRAINTS", st["label"]))
                 for c in p["constraints"]:
                     para("· " + str(c))
             if p.get("answerFormat"):
-                A(Paragraph("CEVAP BİÇİMİ", st["label"]))
+                A(Paragraph("ANSWER FORM", st["label"]))
                 para(p["answerFormat"])
             A(PageBreak())
 
-    # ── ⑦ SON SORU ─────────────────────────────────────────────────────
-    A(Paragraph("SON SORU", st["h1"]))
-    im = plate("dc-meta-02")
-    if im:
-        A(im)
-    for pgraph in str((book.get("frame5") or {}).get("opening") or
-                      (book.get("frame3") or {}).get("opening") or
-                      "").split("\n\n"):
-        para(pgraph, "lead")
-    A(PageBreak())
+    # ⚠ THE STANDALONE LAST-QUESTION SECTION WAS REMOVED. It printed the
+    # heading a second time and then RE-PRINTED GATE V's opening under it,
+    # so the book's most important page opened with a paragraph belonging
+    # to the section before it. The last question is now rendered in the
+    # loop above, in its own place, with its own plate.
 
     # ── ⑧ İPUÇLARI (üç kademe) ─────────────────────────────────────────
-    A(Paragraph("İPUÇLARI", st["h1"]))
-    for x in flow(m.get("hintsLead")) or ["Bir ipucu almak kaybetmek değildir."]:
+    A(Paragraph("HINTS", st["h1"]))
+    for x in pl.drop_heading(flow(m.get("hintsLead")), "HINTS") \
+            or ["Taking a hint is not losing."]:
         para(x, "lead")
     A(Spacer(1, 0.2 * IN))
     nh = 0
@@ -411,8 +500,9 @@ def build(book: dict, sols: dict, gutter: float, path: str,
 
     # ── ⑨ ÇÖZÜMLER ─────────────────────────────────────────────────────
     skipped_meta = []
-    A(Paragraph("ÇÖZÜMLER", st["h1"]))
-    for x in flow(m.get("solutionsLead")) or ["Buradan sonrası cevapları taşır."]:
+    A(Paragraph("SOLUTIONS", st["h1"]))
+    for x in pl.drop_heading(flow(m.get("solutionsLead")), "SOLUTIONS") \
+            or ["Everything past this point carries answers."]:
         para(x, "lead")
     A(Spacer(1, 0.2 * IN))
     ns = 0
@@ -446,10 +536,10 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     # kaynaklar, kolofon ve kapanış `matter` içinde LİSTE olarak duruyor
     # ve düz metin sanıldığı için hiç basılmadı. Yol haritası § 9 onları
     # açıkça istiyor.
-    for key, head in (("cipherReference", "ŞİFRE REFERANSI"),
-                      ("sourcesLead", "KAYNAKLAR"),
-                      ("closing", "KAPANIŞ")):
-        rows = flow(m.get(key))
+    for key, head in (("cipherReference", "CIPHERS AND NOTATIONS"),
+                      ("sourcesLead", "SOURCES"),
+                      ("closing", "THE CLOSE")):
+        rows = pl.drop_heading(flow(m.get(key)), head)
         if not rows:
             continue
         A(Paragraph(head, st["h1"]))
@@ -461,8 +551,8 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     # ⚠ `colophon` listesinin ilk satırı zaten "KOLOFON" — ikinci bir
     # başlık basmak sayfada aynı kelimeyi iki kez gösteriyordu.
     _col = flow(m.get("colophon"))
-    if not (_col and _col[0].strip().upper().startswith("KOLOFON")):
-        A(Paragraph("KOLOFON", st["h2"]))
+    if not (_col and _col[0].strip().upper().startswith("COLOPHON")):
+        A(Paragraph("COLOPHON", st["h2"]))
     for x in _col:
         A(Paragraph(e(x), st["small"]))
     A(Paragraph(e("%s · %s" % (meta.get("title") or "",

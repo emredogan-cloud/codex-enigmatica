@@ -22,7 +22,7 @@
 | **Onaylanmış alternatif çözüm** | **0** | **0** |
 | Belirsizlik puanı > 2 | **0** | **0** |
 | **Cevap uzayı bağımsız doğrulanmış** | **101 / 101** | tamamı |
-| **Elenen aday dize** (cevap uzayı toplamı) | **4762** | — |
+| **Elenen aday dize** (cevap uzayı toplamı) | **5086** | — |
 | İpucu (3 kademe) | **303** | 300 |
 
 ## 2. Öldürme kapısı (Faz 2)

@@ -101,17 +101,51 @@ GLYPH_ACCEPTANCE = {"reachable-by-glyph-reading"}
 MIN_CANDIDATE_PEERS = 4
 
 
-def printed_words(plate) -> list:
-    """Kitapta BASILI bütün sözcük listeleri — hangi kapıdan olursa olsun."""
-    out = list(plate.lexicon) + list(plate.bestiary)
+def word_catalogues(plate) -> dict:
+    """Every PRINTED word list in the book — keyed by chart name.
+
+    ⚠ THIS USED TO MATCH ON THE CHART'S NAME (`endswith("katalogu")`) and
+    that made the gate depend on the language of an internal identifier.
+    Renaming the charts for the English edition would have silently emptied
+    it — and an empty peer list reports "the answer stands free on its own
+    page" for every catalogue puzzle in three gates. A word catalogue is
+    now recognised by its SHAPE: entries of {no, word}."""
+    out = {}
     for name, ch in (plate.charts or {}).items():
-        if not name.endswith("katalogu"):
+        if not ch.get("printed", True):
             continue
-        for e in ch.get("entries") or []:
-            w = e.get("word") if isinstance(e, dict) else e
-            if w:
-                out.append(w)
+        words = [e.get("word") for e in (ch.get("entries") or [])
+                 if isinstance(e, dict) and e.get("word")]
+        if words:
+            out[name] = words
+    return out
+
+
+def printed_words(plate) -> list:
+    """Every printed word list flattened — whichever gate it belongs to."""
+    out = list(plate.lexicon) + list(plate.bestiary)
+    for words in word_catalogues(plate).values():
+        out.extend(words)
     return list(dict.fromkeys(out))
+
+
+def catalogue_row(plate) -> dict:
+    """word → its row number in whichever catalogue prints it.
+
+    ⚠ The blind-figure check used to look every label up in the THRESHOLD
+    LEXICON only. A Gate II label is not in that list, so its number came
+    back 0 and the check passed only when some other number on the plate
+    happened to contain the digit 0. It was accidental, and the English
+    rebuild broke the accident."""
+    out = {}
+    for words in word_catalogues(plate).values():
+        for i, w in enumerate(words, 1):
+            out.setdefault(w, i)
+    for i, w in enumerate(plate.lexicon, 1):
+        out.setdefault(w, i)
+    for i, w in enumerate(plate.bestiary, 1):
+        out.setdefault(w, i)
+    return out
 
 # ⚠ FAZ 2 BULGUSU — VAR OLMAYAN BİR ÇİZELGEYE GÖNDERME.
 # Çizelgeler bir kez yeniden adlandırıldı; başlıklar güncellendi ama üç
@@ -121,7 +155,7 @@ def printed_words(plate) -> list:
 # Bu, sözleşmenin DÖRDÜNCÜ sözünün doğrudan ihlalidir ("kitap size bir
 # çizelge veriyorsa, o çizelge tek yetkedir") ve en zararlı hata
 # cinsindendir: okur bunu KENDİ hatası sanır.
-CHART_REF = re.compile(r"Çizelge\s+([A-Z])")
+CHART_REF = re.compile(r"Chart\s+([A-Z])")
 
 
 def main() -> int:
@@ -159,7 +193,7 @@ def main() -> int:
 
     plate = Plate(pl.load_json(TOOLS) or {})
     pages = {p["puzzleId"]: p for p in book.get("puzzles", [])}
-    lex_no = {w: i + 1 for i, w in enumerate(plate.lexicon)}
+    lex_no = catalogue_row(plate)
 
     no_page, no_figure, blind_figure, no_table = [], [], [], []
     no_cipher, no_glyph, answer_on_page, gate_rows = [], [], [], []
@@ -345,7 +379,7 @@ def main() -> int:
         # ⑧ ⭑ var olmayan bir çizelgeye gönderme ⭑
         for letter in set(CHART_REF.findall(visible)):
             if letter not in chart_letters:
-                dangling_chart.append("%s → Çizelge %s" % (pid, letter))
+                dangling_chart.append("%s → Chart %s" % (pid, letter))
 
         # ⑦ kapı levhası
         if p.get("type") == "gate":

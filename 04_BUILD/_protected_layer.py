@@ -250,3 +250,173 @@ def words(text: str) -> list[str]:
 
 def content_words(text: str, minlen: int = 4) -> set[str]:
     return {w for w in words(text) if len(w) >= minlen}
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  TYPESETTING HELPERS — SHARED BY THE PRINT AND THE KINDLE BUILDERS
+# ═══════════════════════════════════════════════════════════════════════
+# ⚠ THEY LIVE HERE BECAUSE THEY DRIFTED. `interior.py` and `kindle.py`
+# each carried their own copy of `flow()`, each rendered the tools plate
+# their own way, and each independently printed the front matter as raw
+# Python: a list of hard-wrapped lines set as one paragraph per line, the
+# contract's (promise, explanation) pairs shown as tuples with their
+# brackets, and — in both — the chart marked `printed: false`, which is the
+# domain of the last question's uniqueness proof and CONTAINS ITS ANSWER.
+#
+# Two builders, one book. What the reader sees has one implementation.
+
+def paragraphs(val) -> list[str]:
+    """Front/back matter → paragraphs. NOT one paragraph per line.
+
+    The narrative blocks are written as hard-wrapped lines. Lines join into
+    a paragraph; a blank line ends it; a line beginning with whitespace is a
+    laid-out line (a hint-ladder rung, a signature) and stands on its own.
+    """
+    if val is None:
+        return []
+    if isinstance(val, str):
+        return [x.strip() for x in val.split("\n\n") if x.strip()]
+    if isinstance(val, dict):
+        out = []
+        for v in val.values():
+            out += paragraphs(v)
+        return out
+    if not isinstance(val, (list, tuple)):
+        return [str(val)]
+    out, buf = [], []
+    for raw in val:
+        if isinstance(raw, (list, tuple)):
+            # ⭑ A TWO-PART ENTRY IS A DEFINITION, NOT TWO PARAGRAPHS ⭑
+            # ⚠ The cipher reference is written as (TERM, explanation) pairs
+            # and the print builder set each pair down with `str()`: eleven
+            # Python tuples, brackets and quotes included, on the reference
+            # page of a book whose fourth promise is that its own charts are
+            # the authority. The pair is rendered as one definition line and
+            # the term is emphasised — which both builders can typeset.
+            if buf:
+                out.append(" ".join(buf))
+                buf = []
+            parts = [str(x).strip() for x in raw if str(x).strip()]
+            if len(parts) == 2:
+                out.append("**%s** — %s" % (parts[0], parts[1]))
+            else:
+                out += parts
+            continue
+        ln = str(raw)
+        if not ln.strip():
+            if buf:
+                out.append(" ".join(buf))
+                buf = []
+        elif ln[:1].isspace():
+            if buf:
+                out.append(" ".join(buf))
+                buf = []
+            out.append(ln.strip())
+        else:
+            buf.append(ln.strip())
+    if buf:
+        out.append(" ".join(buf))
+    return out
+
+
+def emphasis(escaped: str) -> str:
+    """`**bold**` and `*italic*` → tags. Applied AFTER escaping.
+
+    ⚠ The source marks emphasis the way the rest of this project writes it,
+    and both targets accept the same two tags — reportlab's Paragraph and
+    XHTML. Before this existed the book printed the asterisks: seventeen
+    worked examples showed their answer wrapped in stars."""
+    import re as _re
+    t = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", escaped)
+    return _re.sub(r"(?<![\w*])\*([^*\n]+?)\*(?![\w*])", r"<i>\1</i>", t)
+
+
+def chart_is_printed(ch) -> bool:
+    """⭑ A CHART MARKED `printed: false` IS NOT PRINTED ⭑
+
+    The last question's candidate list is a chart like any other so that
+    the uniqueness proof has a domain to count — and it contains the final
+    answer. The contract's own words are "printed nowhere in this book"."""
+    return isinstance(ch, dict) and bool(ch.get("printed", True))
+
+
+def chart_body(ch: dict) -> str:
+    """A printed chart, laid out by the SHAPE of its entries, not its name.
+
+    ⚠ Before this, both builders dumped the chart's raw dictionary: `id`,
+    `title`, `note` and the entry list ran together as one line of Python
+    repr on the page. A chart is the book's fourth promise made visible; it
+    cannot be printed as a debug dump."""
+    if ch.get("rows"):                            # a coordinate grid
+        rows = ch["rows"]
+        out = ["     " + " ".join("%3d" % (c + 1) for c in range(len(rows[0]))),
+               ""]
+        for r, row in enumerate(rows, 1):
+            out.append("%3d  " % r + " ".join("%3s" % c for c in row))
+        return "\n".join(out)
+    entries = ch.get("entries") or ch.get("table") or []
+    if not entries:
+        return ""
+    first = entries[0]
+    if isinstance(first, str):                    # a list of sayings
+        return "\n".join("%3d  %s" % (i, x) for i, x in enumerate(entries, 1))
+    if isinstance(first, dict) and "letter" in first:
+        out = []
+        for i in range(0, len(entries), 2):
+            out.append("   ".join(
+                "%s  %-14s gp %d" % (x["letter"], x.get("glyph", ""),
+                                     x.get("group", 0))
+                for x in entries[i:i + 2]))
+        return "\n".join(out)
+    if isinstance(first, dict) and "word" in first:
+        cols = 3
+        rows_n = (len(entries) + cols - 1) // cols
+        out = []
+        for r in range(rows_n):
+            cells = []
+            for c in range(cols):
+                k = r + c * rows_n
+                if k < len(entries):
+                    cells.append("%3d %-12s" % (entries[k].get("no", k + 1),
+                                                entries[k]["word"]))
+            out.append("  ".join(cells).rstrip())
+        return "\n".join(out)
+    if isinstance(first, dict) and "symbol" in first:
+        return "\n".join("  %s   = %d" % (x["symbol"], x["value"])
+                         for x in entries)
+    keys = list(first.keys())
+    out = ["  ".join("%-8s" % k for k in keys),
+           "  ".join("-" * 8 for _ in keys)]
+    for x in entries:
+        out.append("  ".join("%-8s" % x.get(k, "") for k in keys))
+    return "\n".join(out)
+
+
+GATE_ROMAN = {"threshold": "I", "menagerie": "II", "calendar": "III",
+              "labyrinth": "IV", "mirror": "V"}
+GATE_NAME = {"threshold": "The Threshold", "menagerie": "The Menagerie",
+             "calendar": "The Calendar", "labyrinth": "The Labyrinth",
+             "mirror": "The Mirror", "last-question": "The Last Question"}
+
+
+def gate_heading(gid: str, index: int) -> str:
+    """⚠ THE SIXTH "GATE" IS NOT A GATE. The last question carries its own
+    gate id, so a loop numbering the gates asked for a sixth Roman numeral
+    — and in the print builder it fell over on that line."""
+    if gid == "last-question":
+        return "The Last Question"
+    return "Gate %s — %s" % (GATE_ROMAN.get(gid, str(index + 1)),
+                             GATE_NAME.get(gid, gid.title()))
+
+
+def drop_heading(rows, head: str) -> list:
+    """⭑ THE SAME HEADING TWICE IS A TYPESETTING ERROR, NOT A STYLE ⭑
+
+    ⚠ Several back-matter blocks open with their own heading line — the
+    source is written to be readable on its own. The builders print a
+    heading too, so the book showed "SOURCES SOURCES", "HINTS HINTS" and
+    "CIPHERS AND NOTATIONS" twice over, on four separate pages."""
+    out = list(rows)
+    if out and norm(out[0]) == norm(head):
+        out = out[1:]
+    return out

@@ -1,85 +1,35 @@
 {
-  "pilotLanguage": "tr",
-  "productionLanguage": "en",
-  "conversionAllowed": false,
-  "blockedBy": "A12",
-  "requiresFullRetest": true,
-  "forbidMachineTranslation": true,
-  "retestGates": [
-    "validate_spec",
-    "qa_answerspace",
-    "qa_solvability",
-    "qa_uniqueness",
-    "qa_hints",
-    "qa_dependency",
-    "qa_handoff",
-    "qa_solution_leak"
+  "status": "pass",
+  "checks": 8,
+  "errors": [],
+  "warnings": [
+    "harici insan doğrulaması 0 — yeniden inşa bunu değiştirmez"
   ],
-  "portability": {
-    "mechanical": [
-      "g1-001",
-      "g1-002",
-      "g1-003",
-      "g1-005",
-      "g1-006",
-      "g1-008",
-      "g1-009",
-      "g1-010",
-      "g1-012",
-      "g1-013",
-      "g1-014",
-      "g1-015",
-      "g1-017",
-      "g1-018",
-      "g1-019"
-    ],
-    "lexical": [
-      "g1-004",
-      "g1-007",
-      "g1-011",
-      "g1-016"
-    ],
-    "phonetic": [
-      "g1-020"
-    ]
-  },
-  "workPerClass": {
-    "mechanical": [
-      "şifreli dize İngiliz alfabesiyle YENİDEN ÜRETİLİR (26 harf)",
-      "cevap yeni İngilizce Sözlük'ten seçilir",
-      "qa_answerspace ile tekillik YENİDEN ölçülür"
-    ],
-    "lexical": [
-      "harf grubu yapısı 26 harfe göre YENİDEN KURULUR (5·5+1)",
-      "kısıt kümesi yeni sözlükte TEK cevap bırakacak şekilde yeniden seçilir",
-      "eleme adımlarının sırası ve ipucu merdiveni yeniden türetilir"
-    ],
-    "phonetic": [
-      "ifade İngilizce olarak YENİDEN SEÇİLİR",
-      "on dokuz cevabın harf/konum ataması BAŞTAN çözülür",
-      "hata tespit listesi yeni ifadelerle yeniden kurulur ve",
-      "asgari Hamming mesafesi YENİDEN ölçülür"
-    ]
-  },
-  "alphabet": {
-    "tr": 29,
-    "en": 26,
-    "groupStructureChanges": true,
-    "shiftSpace": {
-      "tr": 28,
-      "en": 25
+  "facts": {
+    "manuscriptLanguage": "en",
+    "productionLanguage": "en",
+    "rebuildComplete": true,
+    "alphabet": {
+      "letters": 26,
+      "groupSizes": [
+        5,
+        5,
+        4,
+        4,
+        4,
+        4
+      ],
+      "shiftSpace": 25,
+      "reflectionAxes": 26
     },
-    "reflectionAxes": {
-      "tr": 29,
-      "en": 26
-    }
-  },
-  "invariantsToPreserve": [
-    "bulmaca mantığı ve ipucu ilişkileri",
-    "cevap tekilliği — YENİDEN ÖLÇÜLEREK",
-    "zorluk bandı (★)",
-    "atmosfer ve anlatı tonu",
-    "kapı bulmacasının hata tespiti ve teşhis mekaniği"
-  ],
-  "note": "Hiçbir bulmaca 'çevrilebilir' değildir; mekanizma taşınır, veri yeniden üretilir. Türkçe başarı İngilizce çözülebilirliğin kanıtı DEĞİLDİR."
+    "cipherStringsChecked": 27,
+    "wordCatalogues": 5,
+    "portability": {
+      "mechanical": 57,
+      "lexical": 38,
+      "phonetic": 6
+    },
+    "externalSolverSessions": 0,
+    "humanValidationPassed": false
+  }
 }

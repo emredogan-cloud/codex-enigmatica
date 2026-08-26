@@ -59,7 +59,8 @@ PLATE_Q = 82
 
 
 def esc(s) -> str:
-    return html.escape(str(s), quote=False)
+    """Escape, then render the source's own emphasis (shared with print)."""
+    return pl.emphasis(html.escape(str(s), quote=False))
 
 
 def load_solutions() -> dict:
@@ -73,19 +74,8 @@ def load_solutions() -> dict:
     return out
 
 
-def flow(val) -> list:
-    if val is None:
-        return []
-    if isinstance(val, str):
-        return [x for x in val.split("\n\n") if x.strip()]
-    if isinstance(val, list):
-        return [str(x) for x in val if str(x).strip()]
-    if isinstance(val, dict):
-        out = []
-        for v in val.values():
-            out += flow(v)
-        return out
-    return [str(val)]
+# ⚠ ONE IMPLEMENTATION FOR BOTH BUILDERS — see _protected_layer § TYPESETTING.
+flow = pl.paragraphs
 
 
 CSS = """
@@ -302,11 +292,33 @@ def build_epub(book, sols, meta, out_dir):
     add("copyright", "Copyright", body, in_nav=False)
 
     # ③ çerçeve + sözleşme
-    for key, head in (("frameOpening", "Opening"), ("contract", "The Contract")):
-        rows = flow(m.get(key))
-        if rows:
-            add(key, head, "<h1>%s</h1>" % esc(head)
-                + "".join('<p class="lead">%s</p>' % esc(x) for x in rows))
+    rows = flow(m.get("frameOpening"))
+    if rows:
+        add("frameOpening", "Opening", "<h1>Opening</h1>"
+            + "".join('<p class="lead">%s</p>' % esc(x) for x in rows))
+
+    # ⭑⭑ THE CONTRACT IS THE ONE PAGE THAT MAY NOT BE GUESSED AT ⭑⭑
+    # Its promises are (promise, explanation) PAIRS and its last field is
+    # an internal note to the Founder. Flattened, the buyer was shown
+    # Python tuples and an open to-do in place of the verification address.
+    ct = m.get("contract") or {}
+    if ct:
+        b = "<h1>The Contract</h1>"
+        b += "".join('<p class="lead">%s</p>' % esc(x)
+                     for x in flow(ct.get("lead")))
+        for i, pr in enumerate(ct.get("promises") or [], 1):
+            if isinstance(pr, (list, tuple)) and len(pr) == 2:
+                head_, body_ = pr
+            else:
+                head_, body_ = str(pr), ""
+            b += "<h3>%d · %s</h3>" % (i, esc(head_))
+            if body_:
+                b += "<p>%s</p>" % esc(body_)
+        for key in ("answerFormat", "verification"):
+            for x in flow(ct.get(key)):
+                b += ("<h3>%s</h3>" % esc(x) if x.isupper()
+                      else "<p>%s</p>" % esc(x))
+        add("contract", "The Contract", b)
 
     # ④ araçlar
     tp = book.get("toolsPlate") or {}
@@ -315,14 +327,13 @@ def build_epub(book, sols, meta, out_dir):
         b += "".join('<p class="lead">%s</p>' % esc(x)
                      for x in flow(m.get("toolsLead")))
         for name, val in tp.items():
-            b += "<h2>%s</h2>" % esc(name.replace("-", " ").title())
-            if isinstance(val, dict):
-                txt = "\n".join("%-22s %s" % (k, v) for k, v in val.items())
-            elif isinstance(val, list):
-                txt = "\n".join(str(x) for x in val)
-            else:
-                txt = str(val)
-            b += "<pre>%s</pre>" % esc(txt)
+            if not pl.chart_is_printed(val):
+                continue
+            b += "<h2>%s</h2>" % esc(val.get("title")
+                                     or name.replace("-", " ").title())
+            if val.get("note"):
+                b += '<p class="lead">%s</p>' % esc(val["note"])
+            b += "<pre>%s</pre>" % esc(pl.chart_body(val))
         add("tools", "Tools", b)
 
     # ⑤ ısınma
@@ -331,11 +342,20 @@ def build_epub(book, sols, meta, out_dir):
         b = "<h1>Warm-up</h1>"
         b += "".join('<p class="lead">%s</p>' % esc(x)
                      for x in flow(m.get("warmUpLead")))
+        # ⭑ A SOLVED EXAMPLE THAT SHOWS NEITHER ITS FIGURE NOR ITS WORKING
+        # IS NOT A SOLVED EXAMPLE ⭑ Only `lead` and `note` were printed —
+        # the two fields that TALK ABOUT the mechanism — and `figure` and
+        # `solved`, the two that SHOW it, were dropped.
         for i, w in enumerate(wu, 1):
             b += "<h3>%d · %s</h3>" % (i, esc(w.get("title") or ""))
-            for k in ("lead", "note", "text", "body"):
-                if w.get(k):
-                    b += "<p>%s</p>" % esc(w[k])
+            if w.get("lead"):
+                b += "<p>%s</p>" % esc(w["lead"])
+            if w.get("figure"):
+                b += "<pre>%s</pre>" % esc(w["figure"])
+            for j, line in enumerate(w.get("solved") or [], 1):
+                b += "<p>%d. %s</p>" % (j, esc(line))
+            if w.get("note"):
+                b += '<p class="note">%s</p>' % esc(w["note"])
         add("warmup", "Warm-up", b)
 
     # ⑥ kapılar
@@ -350,13 +370,17 @@ def build_epub(book, sols, meta, out_dir):
               book.get("frame4"), book.get("frame5")]
 
     for gi, g in enumerate(order):
-        fr = frames[gi] if gi < len(frames) and frames[gi] else {}
-        b = "<h1>Gate %d — %s</h1>" % (gi + 1, esc(g.title()))
-        ip = plate_img("dc-gate-%d" % (gi + 1), cache)
+        last = g == "last-question"
+        fr = {} if last else (frames[gi] if gi < len(frames) and frames[gi]
+                              else {})
+        head_ = pl.gate_heading(g, gi)
+        b = "<h1>%s</h1>" % esc(head_)
+        ip = plate_img("dc-meta-01" if last else "dc-gate-%d" % (gi + 1),
+                       cache)
         if ip:
             images[os.path.basename(ip)] = ip
-            b += '<div class="plate"><img src="img/%s" alt="Gate %d"/></div>' \
-                 % (os.path.basename(ip), gi + 1)
+            b += '<div class="plate"><img src="img/%s" alt="%s"/></div>' \
+                 % (os.path.basename(ip), esc(head_))
         b += "".join('<p class="lead">%s</p>' % esc(x)
                      for x in flow(fr.get("opening")))
         for p in gates[g]:
@@ -384,12 +408,13 @@ def build_epub(book, sols, meta, out_dir):
             if p.get("answerFormat"):
                 b += '<p class="label">Answer format</p><p>%s</p>' \
                      % esc(p["answerFormat"])
-        add("gate%d" % (gi + 1), "Gate %d" % (gi + 1), b)
+        add("gate%d" % (gi + 1), head_, b)
 
     # ⑦ ipuçları
     b = "<h1>Hints</h1>"
     b += "".join('<p class="lead">%s</p>' % esc(x)
-                 for x in flow(m.get("hintsLead")))
+                 for x in pl.drop_heading(flow(m.get("hintsLead")),
+                                          "Hints"))
     nh = 0
     for p in puzzles:
         s = sols.get(p["puzzleId"])
@@ -406,7 +431,8 @@ def build_epub(book, sols, meta, out_dir):
     # ⑧ çözümler — META HARİÇ
     b = "<h1>Solutions</h1>"
     b += "".join('<p class="lead">%s</p>' % esc(x)
-                 for x in flow(m.get("solutionsLead")))
+                 for x in pl.drop_heading(
+                     flow(m.get("solutionsLead")), "Solutions"))
     ns, withheld = 0, []
     for p in puzzles:
         s = sols.get(p["puzzleId"])
@@ -432,7 +458,8 @@ def build_epub(book, sols, meta, out_dir):
         rows = flow(m.get(key))
         if rows:
             add(key, head, "<h1>%s</h1>" % esc(head)
-                + "".join("<p>%s</p>" % esc(x) for x in rows))
+                + "".join("<p>%s</p>" % esc(x)
+                          for x in pl.drop_heading(rows, head)))
 
     # ── kapak ──────────────────────────────────────────────────────────
     art = os.path.join(RAW, "codex-enigmatica-wrap-cover-option-01.png")

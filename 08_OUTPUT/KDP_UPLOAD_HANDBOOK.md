@@ -9,7 +9,7 @@
 
 | | |
 |---|---|
-| Ölçülen sayfa | 264 |
+| Ölçülen sayfa | 274 |
 | Bulmaca · kapı · ipucu | 101 · 5 · 303 |
 | İşlenmiş levha | 103 / 103 |
 | İşlenmiş ön kapak | 2 / 2 |
@@ -36,11 +36,11 @@ bir rapor yanlıştır.
 
 | | |
 |---|---|
-| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 264 sayfa ölçtü. |
+| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 274 sayfa ölçtü. |
 | KDP'DE NEREYE | Bookshelf → Create → Paperback → Manuscript → Upload paperback manuscript |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/PAPERBACK/interior.pdf` |
-| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 264 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
+| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 274 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
 | BAŞARILI OLURSA | KDP 'Manuscript uploaded successfully' der ve Previewer açılır. |
 | DURUM | **HAZIR** |
 
@@ -64,7 +64,7 @@ bir rapor yanlıştır.
 | KDP'DE NEREYE | Paperback Rights & Pricing |
 | NE GİRECEĞİM | 19.99 USD |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 264 sayfa değişirse telif de değişir. |
+| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 274 sayfa değişirse telif de değişir. |
 | BAŞARILI OLURSA | KDP net telif tutarını gösterir. |
 | DURUM | **BEKLIYOR** |
 
@@ -170,7 +170,7 @@ bir rapor yanlıştır.
 | KDP'DE NEREYE | Rights & Pricing |
 | NE GİRECEĞİM | Yukarıdaki tutarlar |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 264 sayfaya göre kuruldu. |
+| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 274 sayfaya göre kuruldu. |
 | BAŞARILI OLURSA | KDP her pazar için telif tutarını gösterir. |
 | DURUM | **BEKLIYOR** |
 

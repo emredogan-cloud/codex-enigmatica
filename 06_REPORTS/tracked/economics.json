@@ -1,0 +1,40 @@
+{
+  "status": "pass",
+  "checks": 4,
+  "errors": [],
+  "warnings": [
+    "⚑ %70 PLANI BU DOSYADA DAHA AZ KAZANDIRIR (0.09 $ < 3.50 $): teslimat ücreti 46.0 MB × 0.15 $ = 6.90 $. %35 planı seçilmeli YA DA EPUB küçültülmeli — %70'in kârlı olduğu sınır ~23.3 MB.",
+    "paperback baskı maliyeti BRIEF'teki hipotezden 0.52 $ farklı (264 sayfa ölçüldü, model 208 varsaymıştı)",
+    "hardcover baskı maliyeti BRIEF'teki hipotezden 0.67 $ farklı (264 sayfa ölçüldü, model 208 varsaymıştı)"
+  ],
+  "facts": {
+    "print": [
+      {
+        "edition": "paperback",
+        "pages": 264,
+        "list": 19.99,
+        "printCost": 4.018,
+        "royalty": 7.976,
+        "marginPct": 39.9
+      },
+      {
+        "edition": "hardcover",
+        "pages": 264,
+        "list": 29.99,
+        "printCost": 8.818,
+        "royalty": 9.176,
+        "marginPct": 30.6
+      }
+    ],
+    "kindle": {
+      "list": 9.99,
+      "fileMB": 46.0,
+      "deliveryFee": 6.9043,
+      "royalty70": 0.0887,
+      "royalty35": 3.4965,
+      "bestPlan": "35%"
+    },
+    "royaltyRate": 0.6,
+    "source": "KDP ABD · siyah mürekkep · normal trim"
+  }
+}

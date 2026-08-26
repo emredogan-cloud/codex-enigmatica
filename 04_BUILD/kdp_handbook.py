@@ -77,6 +77,8 @@ def collect(meta: dict) -> dict:
         "aplusPkg": probe("08_OUTPUT/APLUS", "dir", 6),
         "interiorHc": probe("08_OUTPUT/HARDCOVER/interior.pdf"),
         "wrapHc": probe("08_OUTPUT/HARDCOVER/cover.pdf"),
+        "kindleEpub": probe("08_OUTPUT/KINDLE/codex-enigmatica.epub"),
+        "kindleCover": probe("08_OUTPUT/KINDLE/cover.jpg"),
         "wrapRaw1": probe("07_ASSETS/raw/%s" % CAT.WRAPS[0]["file"]),
         "wrapRaw2": probe("07_ASSETS/raw/%s" % CAT.WRAPS[1]["file"]),
     }
@@ -173,35 +175,38 @@ def steps(meta: dict, files: dict) -> list:
                 "state": files["interiorHc"]["state"],
             },
             {
-                "id": "hc-2", "flag": "🔴",
+                "id": "hc-2", "flag": "🔵",
                 "adim": "Kapak (hardcover)",
-                "ne": "Hardcover sarmal — sırt ve menteşe payı paperback'ten "
-                      "FARKLIDIR.",
+                "ne": "Hardcover sarmal — ÜRETİLDİ. Sırt 0,7833 in, menteşe "
+                      "0,394 in, tam kapak 14,359 × 10,417 in. Değerler "
+                      "hardcover-calculator.png'den OKUNDU.",
                 "nere": "Hardcover Content → Book Cover",
                 "gir": "—",
                 "dosya": files["wrapHc"]["path"],
-                "kontrol": "Hardcover sarmalı ayrı şablondur. Paperback "
-                           "kapağı buraya yüklenmez.",
-                "basari": "Sarmal sanat gelmeden bu adım açılmaz.",
+                "kontrol": "Hardcover sarmalı ayrı şablondur (14,359 in — "
+                           "ciltsizin 12,910'u DEĞİL). Previewer'da menteşe "
+                           "ve sırtı doğrulayın.",
+                "basari": "KDP kapağı kabul eder ve Previewer açılır.",
                 "state": files["wrapHc"]["state"],
             },
         ]),
         ("C", "KINDLE", "📱", [
             {
-                "id": "kd-1", "flag": "🔴",
-                "adim": "Kindle sürümü — BU PROJEDE KAPALI",
-                "ne": "`metadata.json → editions.kindle.enabled = false`. "
-                      "Kindle bu kitabın mimarisinde açık DEĞİLDİR ve "
-                      "burada açılmaz.",
-                "nere": "—",
+                "id": "kd-1", "flag": "🔵",
+                "adim": "Kindle EPUB'ını yükle",
+                "ne": "Akışkan EPUB 3 · 18 bölüm · 99 gravür · kapak "
+                      "YALNIZCA ÖN (1600 × 2560).",
+                "nere": "Bookshelf → Create → Kindle eBook → "
+                        "Content → Upload eBook manuscript",
                 "gir": "—",
-                "dosya": "—",
-                "kontrol": "Bu kitap basılı levha okumaya dayanır: "
-                           "gravür VERİ taşır ve ekranda yeniden "
-                           "ölçeklenirse sayılabilirliği bozulur. "
-                           "Kindle açılacaksa bu ayrı bir karardır.",
-                "basari": "—",
-                "state": BLOCKED,
+                "dosya": "08_OUTPUT/KINDLE/codex-enigmatica.epub",
+                "kontrol": "⭑ TELİF PLANI: dosya 46 MB. %70 planı "
+                           "teslimat ücreti keser ve kitap başına "
+                           "0,09 $ bırakır; %35 planı 3,50 $ bırakır. "
+                           "%35 SEÇİN (ya da EPUB 23 MB altına indirilsin). "
+                           "Previewer'da levhaların yakınlaştığını doğrulayın.",
+                "basari": "Önizleyici bölümleri ve levhaları gösterir.",
+                "state": files["kindleEpub"]["state"],
             },
         ]),
         ("D", "A+ İÇERİK", "🖼", [
@@ -522,7 +527,7 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
     navs = [("durum", "Durum"), ("kurucu", "Kurucu işi")]
     navs += [(c.lower(), "%s · %s" % (c, n)) for c, n, _i, _x in secs]
     navs += [("alan", "Alanlar"), ("aplus", "A+ metni"),
-             ("liste", "Kontrol listesi")]
+             ("kindlenote", "Kindle notu"), ("liste", "Kontrol listesi")]
     A('<nav>%s</nav>' % "".join(
         '<a href="#%s">%s</a>' % (a, e(b)) for a, b in navs))
 
@@ -622,16 +627,34 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
              m["id"], e(t), m["id"], e(b)))
     A('</table></div>')
 
+    # ── KINDLE ALICI BİLGİLENDİRMESİ ───────────────────────────────────
+    try:
+        import kindle as KN
+        A('<h2 id="kindlenote">Kindle alıcı bilgilendirmesi</h2>')
+        A('<div class="note"><b>Bu metin ürün açıklamasının sonuna '
+          'eklenir.</b> Özür değildir: ne aldığını söyler, olmayan bir '
+          'şey vaat etmez ve satın almaktan caydırmaz.</div>')
+        A('<div class="scroll"><table><tr>'
+          '<th>Kindle notu<button class="c" data-t="knote">kopyala</button>'
+          '</th><td><span class="val" id="knote">%s</span></td></tr>'
+          '</table></div>' % e(KN.KINDLE_NOTE_EN))
+    except Exception:                                          # noqa: BLE001
+        pass
+
     # ── SON KONTROL LİSTESİ ────────────────────────────────────────────
     A('<h2 id="liste">Son önizleme kontrol listesi</h2>')
     checks = [
         ("PAPERBACK", ["iç blok yüklendi", "kapak yüklendi",
                        "gutter payı sayfa sayısına uygun",
                        "bleed doğru", "sayfa sayısı KDP ile aynı"]),
-        ("HARDCOVER", ["iç blok yüklendi", "kapak yüklendi",
-                       "sırt genişliği doğru", "menteşe (hinge) payı doğru",
-                       "bleed doğru"]),
-        ("KINDLE", ["bu projede ÜRETİLMİYOR — atlanır"]),
+        ("HARDCOVER", ["iç blok yüklendi (264 s · iç pay 0,625 in)",
+                       "kapak yüklendi (14,359 × 10,417 in)",
+                       "sırt 0,7833 in doğru", "menteşe 0,394 in doğru",
+                       "sarma (wrap) 0,591 in doğru"]),
+        ("KINDLE", ["EPUB yüklendi", "kapak YALNIZCA ÖN (sırt/barkod yok)",
+                    "⭑ %35 telif planı seçildi (46 MB dosya)",
+                    "önizleyicide levhalar yakınlaşıyor",
+                    "alıcı bilgilendirmesi açıklamaya eklendi"]),
         ("A+", ["6 görsel yüklendi", "başlıklar girildi",
                 "gövde metni girildi", "önizleme kontrol edildi",
                 "moderasyona gönderildi"]),

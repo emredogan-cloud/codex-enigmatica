@@ -120,11 +120,30 @@ def build(cfg: dict, pages: int, puzzles: int, gates: int, hints: int,
         "founderPending": {
             "isbn": None,
             "isbnStrategy": (fnd.get("isbn") or {}).get("strategy"),
-            "authorBio": fnd.get("authorBio"),
+            "authorBio": fnd.get("authorBio") or canonical_bio(),
             "aiDisclosureConfirmed": (fnd.get("aiDisclosure") or {})
             .get("founderConfirmed", False),
         },
     }
+
+
+# ⭑ KANONİK YAZAR BİYOGRAFİSİ ⭑
+# ⚠ UYDURULMAZ, KOPYALANIR. Portföyün diğer cildinde onaylanmış metin
+# künyesiyle birlikte kayıtlıdır (THE-GREAT-BOOK-OF-WORLD-GAMES ·
+# 06_REPORTS/AUTHOR_BIO_PROVENANCE.md). Buraya elle yazmak, iki yerde
+# yaşayan ve sessizce ayrışan bir biyografi üretir; bu yüzden metin
+# SHA-256 ile doğrulanır ve tutmazsa boş döner — yanlış bir biyografi
+# basmaktansa boş bırakmak yeğdir.
+CANON_BIO = ("Emre is a puzzle designer, mythologist, and game archivist "
+             "dedicated to preserving ancient cultures, codes, and stories "
+             "for the next generation.")
+CANON_BIO_SHA16 = "5e56de5a7221b811"
+
+
+def canonical_bio() -> str | None:
+    import hashlib
+    h = hashlib.sha256(CANON_BIO.encode("utf-8")).hexdigest()[:16]
+    return CANON_BIO if h == CANON_BIO_SHA16 else None
 
 
 def main() -> int:
@@ -213,10 +232,17 @@ def main() -> int:
     rep.check(meta["pageCount"] >= 110,
               "sayfa sayısı KDP alt sınırının üstünde (%d ≥ 110)"
               % meta["pageCount"])
-    rep.check(not any(e.get("enabled") and e.get("id") == "kindle"
-                      for e in meta["editions"]),
-              "⭑ KINDLE ÜRETİLMİYOR ⭑ (K9 · görsel şifreler e-okuyucuda "
-              "bozulur; bu bir gelir kaybı değil İTİBAR KORUMASIDIR)")
+    # ⚠ K9 ("Kindle üretilmez") KURUCU KARARIYLA GEÇERSİZ KILINDI.
+    # Eski gerekçe: görsel şifreler e-okuyucuda bozulur. Karşılığı:
+    # akışkan EPUB + tam genişlik levha + ekranda yakınlaştırma
+    # (04_BUILD/kindle.py, mimari gerekçesi orada ölçülerek yazılı).
+    # Kapı artık Kindle'ın AÇIK ve ÜRETİLMİŞ olmasını arar.
+    kindle = [e for e in meta["editions"] if e.get("id") == "kindle"]
+    rep.check(bool(kindle) and kindle[0].get("enabled"),
+              "⭑ KINDLE AÇIK ⭑ (kurucu kararı · K9 geçersiz kılındı)")
+    epub = os.path.join(pl.ROOT, "08_OUTPUT", "KINDLE",
+                        "codex-enigmatica.epub")
+    rep.check(os.path.isfile(epub), "Kindle EPUB üretilmiş")
 
     pending = [k for k, v in meta["founderPending"].items()
                if v in (None, False)]

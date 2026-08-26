@@ -5,6 +5,67 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [0.10.0] — 2026-08-26 · CİLTLİ + KINDLE + KAPAK TİPOGRAFİSİ
+
+# ⛔ TEK BLOKLAYICI: DİL
+
+Üç formatın dosyaları üretildi ve geçerlidir. Ama ticari kitabın
+**içeriği hâlâ TÜRKÇEDİR** (ölçülen 9.533 sözcük) ve kurucu kararı
+İngilizce olmasını gerektiriyor. Dönüşüm bir çeviri işi DEĞİLDİR:
+alfabe 29→26, bütün şifreli dizeler ve 101 cevap ataması yeniden
+üretilir, ~94 gravür geçersizleşir. Ölçü:
+`06_REPORTS/FINAL_LANGUAGE_AND_FORMAT_REPORT.md § 2`.
+
+### Eklendi — CİLTLİ üretildi (hesaplayıcıdan OKUNARAK)
+
+`hardcover-calculator.png` doğrudan okundu →
+`03_COVER/HARDCOVER_CALCULATOR_VALUES.md`. Sırt **0,7833 in**, tam
+kapak **14,359 × 10,417 in**, menteşe **0,394 in**, iç kenar payı
+**0,625 in** (ciltsizin 0,5'i DEĞİL).
+
+⚠ Ciltli sırt hesaplanamaz: 263 × 0,002252 = 0,592 ama hesaplayıcı
+0,781 diyor — aradaki 0,189 in tahta payıdır. Formülle üretilseydi
+sırt %24 dar çıkardı.
+
+### Eklendi — KINDLE üretildi (K9 geçersiz kılındı)
+
+Akışkan EPUB 3, 18 bölüm, 99 gravür, kapak **yalnızca ön** (1600×2560,
+sarmal geometrisinden hesaplanarak kesildi). Baskı PDF'i çevirme ve
+sabit düzen seçenekleri ölçülerek elendi.
+
+⭑ **%70 telif planı bu dosyada 0,09 \$ bırakıyor, %35 planı 3,50 \$** —
+46 MB'lık teslimat ücreti yüzünden. %35 seçilmeli; sınır ~23,3 MB.
+
+### Düzeltildi — kapak tipografisi ölçülerek
+
+Şikâyet doğrulandı: en zayıf satır **1,47:1** karşıtlıktaydı. Raster
+perde denendi, karşıtlığı düzeltti ama **dikdörtgen bant** olarak
+okundu (§ B yasağı). Vektör hâleye geçildi: harfin şeklini izler,
+kutusu yok, sanat tamamen görünür, kenar karşıtlığı **17,69:1**.
+Mürekkep artık harfin ALTINDAKİ piksellerden seçiliyor.
+
+### ⭑ Onarıldı — Kapı 3-4-5 üreteci ⭑
+
+`structure_pair()` üç terimli aramada `a+b+c`yi hiç denemiyordu;
+`g5-013` hedef 46 istiyor ve 29+12+5 tam olarak bunu veriyor. Tek eksik
+kural yüzünden `build_all()` hiç koşmuyordu. Onarımdan sonra üreteç 60
+cevabın 56'sını birebir yeniden üretiyor — farklı çıkan dörtten biri
+`g3-017`, yani **cevap sızıntısı dil dönüşümünde kendiliğinden kapanır**.
+
+### Eklendi — dil kapısı · ekonomi · sayfa çiftleme
+
+`qa_language.py` ticari yüzeyi tarar, kurucuya bakan Türkçeyi muaf
+tutar. `economics.py` telifi ölçülen sayfadan hesaplar. İç bloklar
+artık **çift sayfaya** tamamlanıyor (yaprak tam, sırt şaşmaz) —
+264 / 264.
+
+Yazar biyografisi portföyden **künyesiyle doğrulanarak** alındı.
+
+- Rapor: `FINAL_LANGUAGE_AND_FORMAT_REPORT` · `HARDCOVER_PRODUCTION_REPORT`
+  · `KINDLE_PRODUCTION_REPORT` · `COVER_ARTWORK_GENERATION_GUIDE`
+
+---
+
 ## [0.9.0] — 2026-08-25 · ÜRETİM PASI · İÇ BLOK + KAPAK + KDP PAKETİ
 
 # ⛔ YÜKLEMEYİ ENGELLEYEN İKİ ŞEY

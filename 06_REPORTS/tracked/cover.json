@@ -2,24 +2,44 @@
   "status": "pass",
   "checks": 7,
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "⚑ SANAT DOĞAL 92 dpi — 300'e yükseltildi ama kazanılan detay TAHMİNDİR; baskıda YUMUŞAK görünebilir. Gereken: 3873 × 2775 px (bkz. COVER_ARTWORK_GENERATION_GUIDE)"
+  ],
   "facts": {
-    "spineIn": 0.6575,
-    "widthIn": 12.9075,
+    "binding": "paperback",
+    "spineIn": 0.66,
+    "widthIn": 12.91,
     "heightIn": 9.25,
-    "pages": 263,
+    "pages": 264,
     "paper": "cream",
     "artCropPx": [
       1193,
       855
     ],
+    "nativeDpi": 92.4,
+    "renderedPx": [
+      3873,
+      2775
+    ],
+    "hingeIn": 0.0,
+    "wrapIn": 0.125,
+    "spineSafeIn": [
+      0.535,
+      8.5
+    ],
     "barcodeBoxIn": [
-      3.875,
-      0.375,
       2.0,
       1.2
     ],
     "spineTextPrinted": true,
-    "art": "codex-enigmatica-wrap-cover-option-01.png"
+    "staleCalculator": false,
+    "spineDeltaIn": 0,
+    "deltaPages": 0,
+    "worstContrast": 1.05,
+    "haloUsed": 18,
+    "typeRowsTotal": 19,
+    "edgeContrastMin": 17.69,
+    "art": "codex-enigmatica-wrap-cover-option-01.png",
+    "typeRows": 19
   }
 }

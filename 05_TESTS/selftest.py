@@ -392,8 +392,14 @@ def part2_flaws_caught(rep: Report, tmp: str) -> None:
               cfg_mut=lambda c: [ed.__setitem__("list", 2.99)
                                  for ed in c["production"]["editionsHypothesis"]
                                  if ed["id"] == "paperback"])
-    spec_case("KINDLE AÇILMASI YAKALANIR (görsel şifre koruması)",
-              cfg_mut=lambda c: [ed.update({"enabled": True, "list": 9.99})
+    # ⚠ ESKİ FİKSTÜR "Kindle AÇILMASI yakalanır" diyordu ve kural
+    # kurucu kararıyla DEĞİŞTİ: Kindle artık açık olabilir. Yakalanması
+    # gereken yeni kusur, AÇIK AMA ÜRETİLMEMİŞ Kindle'dır — çünkü ürün
+    # sayfasında var görünüp dosyası olmayan bir sürüm, kapalı olandan
+    # kötüdür. Fikstür silinmedi, KURALA GÖRE YENİDEN YAZILDI.
+    spec_case("⭑ AÇIK AMA MİMARİSİ BEYAN EDİLMEMİŞ KINDLE YAKALANIR ⭑",
+              cfg_mut=lambda c: [ed.update({"enabled": True, "list": 9.99}) or
+                                 ed.pop("format", None)
                                  for ed in c["production"]["editionsHypothesis"]
                                  if ed["id"] == "kindle"])
     spec_case("gate_index'te EKSİK kapı YAKALANIR",

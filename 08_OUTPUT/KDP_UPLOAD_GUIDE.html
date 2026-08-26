@@ -64,8 +64,8 @@ color:var(--mut);font-size:.82rem}
 </style>
 <div class="wrap">
 <h1>KDP Yükleme Kılavuzu</h1>
-<p class="sub"><b>Codex Enigmatica</b> · Emre Doğan · ölçülen 263 sayfa · bu dosya <code>04_BUILD/kdp_handbook.py</code> tarafından üretildi — elle düzenlemeyin.</p>
-<nav><a href="#durum">Durum</a><a href="#kurucu">Kurucu işi</a><a href="#a">A · PAPERBACK</a><a href="#b">B · HARDCOVER</a><a href="#c">C · KINDLE</a><a href="#d">D · A+ İÇERİK</a><a href="#e">E · SON ÖNİZLEME</a><a href="#f">F · FİYAT</a><a href="#g">G · YAYIMLAMA</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#liste">Kontrol listesi</a></nav>
+<p class="sub"><b>Codex Enigmatica</b> · Emre Doğan · ölçülen 264 sayfa · bu dosya <code>04_BUILD/kdp_handbook.py</code> tarafından üretildi — elle düzenlemeyin.</p>
+<nav><a href="#durum">Durum</a><a href="#kurucu">Kurucu işi</a><a href="#a">A · PAPERBACK</a><a href="#b">B · HARDCOVER</a><a href="#c">C · KINDLE</a><a href="#d">D · A+ İÇERİK</a><a href="#e">E · SON ÖNİZLEME</a><a href="#f">F · FİYAT</a><a href="#g">G · YAYIMLAMA</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
 <div class="bar"><span class="cnt" id="cnt">0 / 0</span><span class="track"><span class="fill" id="fill"></span></span><span class="pill p-wait" id="ready">EKSİK ADIM VAR</span></div>
 <h2 id="durum">Durum — ölçüm, iddia değil</h2>
 <div class="scroll"><table>
@@ -73,9 +73,9 @@ color:var(--mut);font-size:.82rem}
 <tr><th>İşlenmiş ön kapak</th><td>2 / 2 <span class="pill p-ok">AJAN HAZIRLADI</span></td></tr>
 <tr><th>İşlenmiş A+ modülü</th><td>6 / 6 <span class="pill p-ok">AJAN HAZIRLADI</span></td></tr>
 <tr><th>Paperback iç blok</th><td><code>08_OUTPUT/PAPERBACK/interior.pdf</code> <span class="pill p-ok">AJAN HAZIRLADI</span></td></tr>
-<tr><th>Hardcover iç blok</th><td><code>08_OUTPUT/HARDCOVER/interior.pdf</code> <span class="pill p-wait">BEKLİYOR</span></td></tr>
+<tr><th>Hardcover iç blok</th><td><code>08_OUTPUT/HARDCOVER/interior.pdf</code> <span class="pill p-ok">AJAN HAZIRLADI</span></td></tr>
 <tr><th>Paperback sarmal kapak</th><td><code>08_OUTPUT/PAPERBACK/cover.pdf</code> <span class="pill p-ok">AJAN HAZIRLADI</span></td></tr>
-<tr><th>Hardcover sarmal kapak</th><td><code>08_OUTPUT/HARDCOVER/cover.pdf</code> <span class="pill p-wait">BEKLİYOR</span></td></tr>
+<tr><th>Hardcover sarmal kapak</th><td><code>08_OUTPUT/HARDCOVER/cover.pdf</code> <span class="pill p-ok">AJAN HAZIRLADI</span></td></tr>
 </table></div>
 <div class="note stop"><b>⚠ ÜÇ ŞEY HENÜZ YOK VE BU BİLEREK BÖYLEDİR.</b><br>① <b>İç blok PDF'i</b> — dizgi <b>dondurulmadı</b> (K12) ve gerçek levhalar yeni geldi. Sayfa sayısı değişebilir, sırt genişliği ona bağlıdır.<br>② <b>Sarmal kapak</b> — elimizdeki kapak sanatı <b>yalnızca ön kapaktır</b>. Gerilerek sarmal yapılamaz; iki yeni sarmal promptu kütüphaneye eklendi ve <b>sizin üretmenizi bekliyor</b>.<br>③ <b>Fiziksel prova</b> — hiç alınmadı (A9).</div>
 <div class="note stop"><b>⭑ VE EN ÖNEMLİSİ ⭑</b><br>Bu kitap <b>hiçbir insanın elinde çözülmedi</b>. Harici çözücü oturumu <b>0 / 5</b> (A12b). Ölçülen öldürme kapısı kararı <b>HARD-STOP</b>. Yayımlama kararı bu gerçeği bilerek verilmelidir.</div>
@@ -93,11 +93,11 @@ color:var(--mut);font-size:.82rem}
 <h2 id="a">📕 A · PAPERBACK</h2>
 <div class="card"><div class="hd"><input type="checkbox" id="pb-1"><h3><label for="pb-1">🔵 İç blok dosyasını hazırla</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF&#x27;i. Sayfa modeli 263 sayfa ölçtü.</td></tr>
+<tr><th>Ne yapacağım</th><td>6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF&#x27;i. Sayfa modeli 264 sayfa ölçtü.</td></tr>
 <tr><th>KDP panelinde nereye gideceğim</th><td>Bookshelf → Create → Paperback → Manuscript → Upload paperback manuscript</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/PAPERBACK/interior.pdf</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 263 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 264 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı.</td></tr>
 <tr><th>Başarılı olursa ne göreceğim</th><td>KDP &#x27;Manuscript uploaded successfully&#x27; der ve Previewer açılır.</td></tr>
 </table></div></div>
 <div class="card"><div class="hd"><input type="checkbox" id="pb-2"><h3><label for="pb-2">🔵 Kapak dosyasını hazırla</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
@@ -115,11 +115,11 @@ color:var(--mut);font-size:.82rem}
 <tr><th>KDP panelinde nereye gideceğim</th><td>Paperback Rights &amp; Pricing</td></tr>
 <tr><th>Ne gireceğim</th><td>19.99 USD</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Basım maliyeti sayfa sayısıyla değişir; 263 sayfa değişirse telif de değişir.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Basım maliyeti sayfa sayısıyla değişir; 264 sayfa değişirse telif de değişir.</td></tr>
 <tr><th>Başarılı olursa ne göreceğim</th><td>KDP net telif tutarını gösterir.</td></tr>
 </table></div></div>
 <h2 id="b">📗 B · HARDCOVER</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="hc-1"><h3><label for="hc-1">🔵 İç blok (hardcover)</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="hc-1"><h3><label for="hc-1">🔵 İç blok (hardcover)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
 <tr><th>Ne yapacağım</th><td>Aynı iç blok, hardcover trim ve pay kurallarıyla.</td></tr>
 <tr><th>KDP panelinde nereye gideceğim</th><td>Create → Hardcover → Manuscript</td></tr>
@@ -128,24 +128,24 @@ color:var(--mut);font-size:.82rem}
 <tr><th>Neleri kontrol edeceğim</th><td>Hardcover&#x27;da KDP daha geniş iç pay ve menteşe (hinge) payı ister; paperback dosyası olduğu gibi KULLANILAMAZ.</td></tr>
 <tr><th>Başarılı olursa ne göreceğim</th><td>Yükleme kabul edilir ve Previewer açılır.</td></tr>
 </table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="hc-2"><h3><label for="hc-2">🔴 Kapak (hardcover)</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="hc-2"><h3><label for="hc-2">🔵 Kapak (hardcover)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Hardcover sarmal — sırt ve menteşe payı paperback&#x27;ten FARKLIDIR.</td></tr>
+<tr><th>Ne yapacağım</th><td>Hardcover sarmal — ÜRETİLDİ. Sırt 0,7833 in, menteşe 0,394 in, tam kapak 14,359 × 10,417 in. Değerler hardcover-calculator.png&#x27;den OKUNDU.</td></tr>
 <tr><th>KDP panelinde nereye gideceğim</th><td>Hardcover Content → Book Cover</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/HARDCOVER/cover.pdf</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Hardcover sarmalı ayrı şablondur. Paperback kapağı buraya yüklenmez.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Sarmal sanat gelmeden bu adım açılmaz.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Hardcover sarmalı ayrı şablondur (14,359 in — ciltsizin 12,910&#x27;u DEĞİL). Previewer&#x27;da menteşe ve sırtı doğrulayın.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>KDP kapağı kabul eder ve Previewer açılır.</td></tr>
 </table></div></div>
 <h2 id="c">📱 C · KINDLE</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="kd-1"><h3><label for="kd-1">🔴 Kindle sürümü — BU PROJEDE KAPALI</label></h3><span style="margin-left:auto"><span class="pill p-no">ÜRETİLMEYECEK</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="kd-1"><h3><label for="kd-1">🔵 Kindle EPUB&#x27;ını yükle</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>`metadata.json → editions.kindle.enabled = false`. Kindle bu kitabın mimarisinde açık DEĞİLDİR ve burada açılmaz.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>—</td></tr>
+<tr><th>Ne yapacağım</th><td>Akışkan EPUB 3 · 18 bölüm · 99 gravür · kapak YALNIZCA ÖN (1600 × 2560).</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Bookshelf → Create → Kindle eBook → Content → Upload eBook manuscript</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
-<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Bu kitap basılı levha okumaya dayanır: gravür VERİ taşır ve ekranda yeniden ölçeklenirse sayılabilirliği bozulur. Kindle açılacaksa bu ayrı bir karardır.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>—</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/KINDLE/codex-enigmatica.epub</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>⭑ TELİF PLANI: dosya 46 MB. %70 planı teslimat ücreti keser ve kitap başına 0,09 $ bırakır; %35 planı 3,50 $ bırakır. %35 SEÇİN (ya da EPUB 23 MB altına indirilsin). Previewer&#x27;da levhaların yakınlaştığını doğrulayın.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Önizleyici bölümleri ve levhaları gösterir.</td></tr>
 </table></div></div>
 <h2 id="d">🖼 D · A+ İÇERİK</h2>
 <div class="card"><div class="hd"><input type="checkbox" id="ap-1"><h3><label for="ap-1">🔵 Altı A+ modül görselini yükle</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
@@ -192,7 +192,7 @@ color:var(--mut);font-size:.82rem}
 <tr><th>KDP panelinde nereye gideceğim</th><td>Rights &amp; Pricing</td></tr>
 <tr><th>Ne gireceğim</th><td>Yukarıdaki tutarlar</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 263 sayfaya göre kuruldu.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 264 sayfaya göre kuruldu.</td></tr>
 <tr><th>Başarılı olursa ne göreceğim</th><td>KDP her pazar için telif tutarını gösterir.</td></tr>
 </table></div></div>
 <h2 id="g">🚀 G · YAYIMLAMA</h2>
@@ -232,7 +232,7 @@ Every puzzle has exactly one answer and a three-tier hint ladder that never give
 
 And when the five gates are open, they give you five phrases that say nothing on their own. The answer to the last question is not printed anywhere in this book.
 
-101 puzzles · 5 gates · 303 hints · 103 engraved plates · 263 pages</span></td></tr>
+101 puzzles · 5 gates · 303 hints · 103 engraved plates · 264 pages</span></td></tr>
 <tr><th>Anahtar kelime 1<button class="c" data-t="f6">kopyala</button></th><td><span class="val" id="f6">puzzle book for adults</span></td></tr>
 <tr><th>Anahtar kelime 2<button class="c" data-t="f7">kopyala</button></th><td><span class="val" id="f7">cipher puzzle book</span></td></tr>
 <tr><th>Anahtar kelime 3<button class="c" data-t="f8">kopyala</button></th><td><span class="val" id="f8">codebreaking puzzles</span></td></tr>
@@ -243,7 +243,7 @@ And when the five gates are open, they give you five phrases that say nothing on
 <tr><th>Kategori 1<button class="c" data-t="f13">kopyala</button></th><td><span class="val" id="f13">GAM011000 — GAMES &amp; ACTIVITIES / Puzzles</span></td></tr>
 <tr><th>Kategori 2<button class="c" data-t="f14">kopyala</button></th><td><span class="val" id="f14">GAM001000 — GAMES &amp; ACTIVITIES / Reference</span></td></tr>
 <tr><th>Kategori 3<button class="c" data-t="f15">kopyala</button></th><td><span class="val" id="f15">GAM002000 — GAMES &amp; ACTIVITIES / Logic &amp; Brain Teasers</span></td></tr>
-<tr><th>Yazar biyografisi<button class="c" data-t="f16">kopyala</button></th><td><span class="val" id="f16">⛔ KURUCU YAZMADI — boş bırakılamaz</span></td></tr>
+<tr><th>Yazar biyografisi<button class="c" data-t="f16">kopyala</button></th><td><span class="val" id="f16">Emre is a puzzle designer, mythologist, and game archivist dedicated to preserving ancient cultures, codes, and stories for the next generation.</span></td></tr>
 <tr><th>ISBN<button class="c" data-t="f17">kopyala</button></th><td><span class="val" id="f17">⛔ KARAR VERİLMEDİ (strateji: kdp-free)</span></td></tr>
 </table></div>
 <h2 id="aplus">A+ metni — İngilizce</h2>
@@ -256,6 +256,9 @@ And when the five gates are open, they give you five phrases that say nothing on
 <tr><th><code>aplus-05</code><br>MODÜL 05 — KAPILARDAN GEÇEN YOLCULUK<br><button class="c" data-t="aplus-05-t">başlık</button><button class="c" data-t="aplus-05-b">gövde</button></th><td><b class="val" id="aplus-05-t">Five gates. One passage.</b><br><br><span class="val" id="aplus-05-b">The gates open in order, and each one changes what the next one asks of you. What you learn in the first is the tool you need in the last.</span></td></tr>
 <tr><th><code>aplus-06</code><br>MODÜL 06 — SON AÇILIŞ<br><button class="c" data-t="aplus-06-t">başlık</button><button class="c" data-t="aplus-06-b">gövde</button></th><td><b class="val" id="aplus-06-t">The last question.</b><br><br><span class="val" id="aplus-06-b">When the five gates are open they give you five phrases that say nothing on their own. The answer to the last question is not printed anywhere in this book — it is verified online.</span></td></tr>
 </table></div>
+<h2 id="kindlenote">Kindle alıcı bilgilendirmesi</h2>
+<div class="note"><b>Bu metin ürün açıklamasının sonuna eklenir.</b> Özür değildir: ne aldığını söyler, olmayan bir şey vaat etmez ve satın almaktan caydırmaz.</div>
+<div class="scroll"><table><tr><th>Kindle notu<button class="c" data-t="knote">kopyala</button></th><td><span class="val" id="knote">About this digital edition — This is the complete Codex Enigmatica: all 101 puzzles, all 303 hints and the full solution section. Every engraved plate is reproduced digitally and can be enlarged on screen to examine the fine detail each puzzle depends on. The puzzles are solved by observation and inference, so nothing here requires you to write in the book. If you prefer to annotate the plates by hand, or want the engravings at their printed size, the paperback and hardcover editions are made for that.</span></td></tr></table></div>
 <h2 id="liste">Son önizleme kontrol listesi</h2>
 <div class="card"><h3>PAPERBACK</h3><div>
 <div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-paperback-0"><label for="chk-paperback-0">iç blok yüklendi</label></div>
@@ -265,14 +268,18 @@ And when the five gates are open, they give you five phrases that say nothing on
 <div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-paperback-4"><label for="chk-paperback-4">sayfa sayısı KDP ile aynı</label></div>
 </div></div>
 <div class="card"><h3>HARDCOVER</h3><div>
-<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-0"><label for="chk-hardcover-0">iç blok yüklendi</label></div>
-<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-1"><label for="chk-hardcover-1">kapak yüklendi</label></div>
-<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-2"><label for="chk-hardcover-2">sırt genişliği doğru</label></div>
-<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-3"><label for="chk-hardcover-3">menteşe (hinge) payı doğru</label></div>
-<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-4"><label for="chk-hardcover-4">bleed doğru</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-0"><label for="chk-hardcover-0">iç blok yüklendi (264 s · iç pay 0,625 in)</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-1"><label for="chk-hardcover-1">kapak yüklendi (14,359 × 10,417 in)</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-2"><label for="chk-hardcover-2">sırt 0,7833 in doğru</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-3"><label for="chk-hardcover-3">menteşe 0,394 in doğru</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-hardcover-4"><label for="chk-hardcover-4">sarma (wrap) 0,591 in doğru</label></div>
 </div></div>
 <div class="card"><h3>KINDLE</h3><div>
-<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-kindle-0"><label for="chk-kindle-0">bu projede ÜRETİLMİYOR — atlanır</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-kindle-0"><label for="chk-kindle-0">EPUB yüklendi</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-kindle-1"><label for="chk-kindle-1">kapak YALNIZCA ÖN (sırt/barkod yok)</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-kindle-2"><label for="chk-kindle-2">⭑ %35 telif planı seçildi (46 MB dosya)</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-kindle-3"><label for="chk-kindle-3">önizleyicide levhalar yakınlaşıyor</label></div>
+<div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-kindle-4"><label for="chk-kindle-4">alıcı bilgilendirmesi açıklamaya eklendi</label></div>
 </div></div>
 <div class="card"><h3>A+</h3><div>
 <div class="hd" style="margin-top:7px"><input type="checkbox" id="chk-a+-0"><label for="chk-a+-0">6 görsel yüklendi</label></div>

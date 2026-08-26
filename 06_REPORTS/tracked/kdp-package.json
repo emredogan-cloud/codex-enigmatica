@@ -1,14 +1,14 @@
 {
   "status": "pass",
-  "checks": 16,
+  "checks": 30,
   "errors": [],
   "warnings": [],
   "facts": {
     "interior": {
       "exists": true,
-      "bytes": 71665790,
+      "bytes": 71666276,
       "header": "%PDF-1.4",
-      "pages": 263,
+      "pages": 264,
       "embeddedFontStreams": 4,
       "fonts": [
         "AAAAAA+DejaVuSansMono",
@@ -24,8 +24,8 @@
     },
     "cover": {
       "exists": true,
-      "bytes": 34583268,
-      "header": "%PDF-1.4",
+      "bytes": 34594529,
+      "header": "%PDF-1.3",
       "pages": 1,
       "embeddedFontStreams": 2,
       "fonts": [
@@ -34,13 +34,92 @@
         "Helvetica"
       ],
       "mediaBoxIn": [
-        12.9075,
+        12.91,
         9.25
       ]
     },
     "aplusModules": 6,
-    "pageCount": 263,
-    "paperbackFiles": 3,
-    "aplusFiles": 7
+    "pageCount": 264,
+    "files": {
+      "PAPERBACK": 3,
+      "APLUS": 7,
+      "HARDCOVER": 3,
+      "KINDLE": 3
+    },
+    "hardcover": {
+      "interior": {
+        "exists": true,
+        "bytes": 68554193,
+        "header": "%PDF-1.4",
+        "pages": 264,
+        "embeddedFontStreams": 4,
+        "fonts": [
+          "AAAAAA+DejaVuSansMono",
+          "AAAAAA+DejaVuSerif",
+          "AAAAAA+DejaVuSerif-Bold",
+          "AAAAAA+DejaVuSerif-Italic",
+          "Helvetica"
+        ],
+        "mediaBoxIn": [
+          6.0,
+          9.0
+        ]
+      },
+      "cover": {
+        "exists": true,
+        "bytes": 42426470,
+        "header": "%PDF-1.3",
+        "pages": 1,
+        "embeddedFontStreams": 2,
+        "fonts": [
+          "AAAAAA+DejaVuSerif",
+          "AAAAAA+DejaVuSerif-Bold",
+          "Helvetica"
+        ],
+        "mediaBoxIn": [
+          14.3593,
+          10.417
+        ]
+      }
+    },
+    "kindle": {
+      "cover": "/home/emre/Downloads/MY-DİGİTAL-BOOK/CODEX-ENIGMATICA/08_OUTPUT/KINDLE/cover.jpg",
+      "coverPx": [
+        1600,
+        2560
+      ],
+      "coverType": [
+        {
+          "text": "CODEX ENIGMATICA",
+          "contrast": 1.11,
+          "halo": true
+        },
+        {
+          "text": "One Hundred Engraved Enigmas and",
+          "contrast": 1.69,
+          "halo": true
+        },
+        {
+          "text": "a Single Unbroken Mystery",
+          "contrast": 1.4,
+          "halo": true
+        },
+        {
+          "text": "EMRE DOĞAN",
+          "contrast": 1.24,
+          "halo": true
+        }
+      ],
+      "docs": 18,
+      "images": 99,
+      "hintsTypeset": 303,
+      "solutionsTypeset": 100,
+      "metaWithheld": [
+        "meta-001"
+      ],
+      "bytes": 46028809,
+      "epub": "08_OUTPUT/KINDLE/codex-enigmatica.epub",
+      "buyerNote": "About this digital edition — This is the complete Codex Enigmatica: all 101 puzzles, all 303 hints and the full solution section. Every engraved plate is reproduced digitally and can be enlarged on screen to examine the fine detail each puzzle depends on. The puzzles are solved by observation and inference, so nothing here requires you to write in the book. If you prefer to annotate the plates by hand, or want the engravings at their printed size, the paperback and hardcover editions are made for that."
+    }
   }
 }

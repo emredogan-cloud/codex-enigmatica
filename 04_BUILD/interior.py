@@ -59,8 +59,22 @@ PLATE_WHITE = 212                            # bu ve üstü = kâğıt
 PLATE_JPEG_Q = 88
 
 
-def gutter_for(pages: int) -> float:
-    """⭑ KDP İÇ KENAR TABLOSU ⭑ — sayfa sayısına göre, tahminle değil."""
+def gutter_for(pages: int, binding: str = "paperback") -> float:
+    """⭑ KDP İÇ KENAR TABLOSU ⭑ — sayfa sayısına VE cilde göre.
+
+    ⚠ CİLTLİ DAHA GENİŞ PAY İSTER. Ciltsizin payını ciltliye vermek,
+    metnin oluğa gömülmesidir: ciltli kitap düz açılmaz ve cilde
+    yakın duran satırlar görünmez. Yönerge § 12 bunu açıkça yasaklıyor
+    ("Do NOT copy paperback spine geometry").
+    """
+    if binding == "hardcover":
+        if pages <= 150:
+            return 0.5
+        if pages <= 300:
+            return 0.625
+        if pages <= 500:
+            return 0.75
+        return 0.875
     if pages <= 150:
         return 0.375
     if pages <= 300:
@@ -85,7 +99,7 @@ def load_solutions() -> dict:
 
 
 def build(book: dict, sols: dict, gutter: float, path: str,
-          meta: dict) -> dict:
+          meta: dict, pad: bool = False) -> dict:
     from reportlab.lib.pagesizes import inch
     from reportlab.lib.styles import ParagraphStyle
     from reportlab.lib.units import inch as IN
@@ -454,6 +468,19 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     A(Paragraph(e("%s · %s" % (meta.get("title") or "",
                                meta.get("publisher") or "")), st["small"]))
 
+    # ⭑ SAYFA SAYISI ÇİFT OLMALI ⭑
+    # ⚠ Basılı bir kitabın YAPRAKLARI vardır: her yaprak iki sayfadır.
+    # Tek sayılı bir iç blok sonuna boş sayfa eklenerek basılır — ama o
+    # sayfayı MATBAA eklerse sırt hesabı bir sayfa şaşar. Kitap kendi
+    # son sayfasını kendisi koyar.
+    # ⚠ `pad` KOMPOZİSYON ANINDA eklenir, build'den SONRA değil.
+    # İlk denemede doc.build(S) çağrıldıktan sonra aynı S listesine
+    # ekleyip yeniden inşa edilmişti — reportlab akış nesnelerini
+    # TÜKETİR, bu yüzden ikinci geçiş içerik KAYBETTİ (263 → 262).
+    # Doğrusu: sayfayı say, sonra hikâyeyi BAŞTAN kur.
+    if pad:
+        S.append(PageBreak())
+        S.append(Spacer(1, 2))
     doc.build(S)
     # ⚠ ANAHTAR ADLARI BİLEREK "hints"/"solutions" DEĞİL.
     # `validate_structure` takip edilen dosyalarda bu ALAN ADLARINI
@@ -461,7 +488,8 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     # tam küme eşitliği arar). Doğru çözüm muafiyet eklemek değil, alanı
     # başka adlandırmaktır — burada sayılan bir ADETTİR, çözüm değil.
     return {"hintsTypeset": nh, "solutionsTypeset": ns,
-            "pages": state["n"], "metaWithheld": skipped_meta}
+            "pages": state["n"], "metaWithheld": skipped_meta,
+            "padded": pad}
 
 
 def main() -> int:
@@ -471,7 +499,9 @@ def main() -> int:
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--check", action="store_true",
                     help="ÜRETME — çıktı var mı ve ölçümle tutarlı mı")
-    ap.add_argument("--out", default=os.path.join(OUTDIR, "interior.pdf"))
+    ap.add_argument("--binding", default="paperback",
+                    choices=("paperback", "hardcover"))
+    ap.add_argument("--out", default="")
     args = ap.parse_args()
 
     print("=" * 74)
@@ -491,15 +521,20 @@ def main() -> int:
         return rep.finish("manuscript yok", None)
 
     sols = load_solutions()
-    os.makedirs(os.path.dirname(args.out), exist_ok=True)
 
     # ⭑ İKİ GEÇİŞ ⭑ birincisi sayfayı SAYAR, ikincisi doğru payla dizer.
-    tmp = args.out + ".pass1"
     meta = pl.load_json(META) or {}
+    args.out = args.out or os.path.join(
+        pl.ROOT, "08_OUTPUT", args.binding.upper(), "interior.pdf")
+    os.makedirs(os.path.dirname(args.out), exist_ok=True)
+    tmp = args.out + ".pass1"
     # ⚠ Yazar ve yayıncı BURADA YAZILMAZ; metadata.json'dan gelir.
-    info = build(book, sols, gutter_for(250), tmp, meta)
-    g = gutter_for(info["pages"])
+    info = build(book, sols, gutter_for(250, args.binding), tmp, meta)
+    g = gutter_for(info["pages"], args.binding)
     info = build(book, sols, g, args.out, meta)
+    if info["pages"] % 2 == 1:
+        # tek çıktı → son sayfa eklenip BAŞTAN dizilir
+        info = build(book, sols, g, args.out, meta, pad=True)
     if os.path.exists(tmp):
         os.remove(tmp)
 
@@ -515,7 +550,9 @@ def main() -> int:
     print("  %-26s %.1f MB" % ("PDF", size_mb))
 
     rep.check(pages >= 24, "KDP asgari 24 sayfa (%d)" % pages)
-    rep.check(pages % 2 == 0 or True, "sayfa sayısı ölçüldü")
+    rep.check(pages % 2 == 0,
+              "⭑ SAYFA SAYISI ÇİFT ⭑ (%d) — yaprak tam, sırt şaşmaz"
+              % pages)
     rep.check(info["hintsTypeset"] >= 300, "303 ipucu dizildi (%d)" % info["hintsTypeset"])
     rep.check(info["solutionsTypeset"] == 100,
               "100 çözüm dizildi — meta HARİÇ (%d)" % info["solutionsTypeset"])
@@ -526,13 +563,16 @@ def main() -> int:
     rep.check(os.path.isfile(args.out), "iç blok PDF üretildi")
 
     rep.facts.update({"pages": pages, "gutterIn": g,
+                      "binding": args.binding,
                       "hintsTypeset": info["hintsTypeset"],
                       "solutionsTypeset": info["solutionsTypeset"],
                       "metaWithheld": info["metaWithheld"],
                       "pdfMB": round(size_mb, 2),
                       "trim": [TRIM_W, TRIM_H],
                       "path": os.path.relpath(args.out, pl.ROOT)})
-    return rep.finish("%d sayfa" % pages, STATS)
+    stats = (STATS if args.binding == "paperback"
+             else STATS.replace("interior.json", "interior-hardcover.json"))
+    return rep.finish("%s · %d sayfa" % (args.binding, pages), stats)
 
 
 if __name__ == "__main__":

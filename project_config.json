@@ -880,10 +880,11 @@
       },
       {
         "id": "kindle",
-        "list": null,
-        "enabled": false,
+        "list": 9.99,
+        "enabled": true,
+        "format": "epub3-reflowable",
         "priority": 9,
-        "$comment": "ÖNERİLMEZ — görsel şifreler e-okuyucuda bozulur, iade ve kötü yorum üretir. İTİBAR KORUMASI."
+        "$comment": "KURUCU KARARIYLA AÇILDI (26 Ağu 2026). Eski gerekçe — görsel şifreler e-okuyucuda bozulur — akışkan EPUB 3 + tam genişlik levha + ekranda yakınlaştırma ile karşılandı; mimari gerekçe 04_BUILD/kindle.py içinde ölçülerek yazılıdır. Alıcı bilgilendirmesi ürün açıklamasındadır: baskı sürümü elle not almak isteyenler için önerilir."
       }
     ],
     "kdpSelect": false,

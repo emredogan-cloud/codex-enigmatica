@@ -266,8 +266,24 @@ def check_config(cfg: dict, rep: Report) -> None:
 
     kindle = [e for e in prod.get("editionsHypothesis", [])
               if e.get("id") == "kindle"]
-    rep.check(not kindle or not kindle[0].get("enabled"),
-              "Kindle devre dışı (görsel şifre koruması)")
+    # ⚠ ESKİ KAPI "Kindle KAPALI olmalı" diyordu (görsel şifre koruması).
+    # 26 Ağustos 2026 kurucu kararıyla Kindle AÇILDI ve karşılığı
+    # üretildi: akışkan EPUB 3 + tam genişlik levha + ekranda
+    # yakınlaştırma (04_BUILD/kindle.py). Kapı artık yasağı değil,
+    # KARŞILIĞIN VAR OLDUĞUNU arar — açık ama üretilmemiş bir Kindle,
+    # kapalı olandan kötüdür.
+    # ⚠ BU KAPI DOSYA SİSTEMİNE BAKMAZ, KONFİGE BAKAR — çünkü fikstür,
+    # taze klon ve CI'da üretim ağacı yoktur ve orada "dosya yok" bir
+    # kusur değildir. Üretilmiş DOSYAYI `kdp_package.py` doğrular.
+    # Buradaki kural: Kindle açıksa MİMARİSİ BEYAN EDİLMİŞ olmalı.
+    # Beyansız açık bir sürüm, "nasıl üretileceği kararlaştırılmadan
+    # satışa konmuş" demektir.
+    if kindle and kindle[0].get("enabled"):
+        rep.check(bool(kindle[0].get("format")),
+                  "⭑ KINDLE AÇIK VE MİMARİSİ BEYAN EDİLMİŞ ⭑ (%s)"
+                  % (kindle[0].get("format") or "⛔ BEYAN YOK"))
+    else:
+        rep.check(True, "Kindle kapalı (üretim beklenmiyor)")
 
     fnd = cfg.get("founder", {})
     rep.check(fnd.get("isbn", {}).get("strategy") in ("kdp-free", "own"),

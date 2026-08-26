@@ -9,12 +9,12 @@
 
 | | |
 |---|---|
-| Ölçülen sayfa | 263 |
+| Ölçülen sayfa | 264 |
 | Bulmaca · kapı · ipucu | 101 · 5 · 303 |
 | İşlenmiş levha | 103 / 103 |
 | İşlenmiş ön kapak | 2 / 2 |
 | İşlenmiş A+ | 6 / 6 |
-| Ajan tarafından hazır adım | 3 / 13 |
+| Ajan tarafından hazır adım | 6 / 13 |
 
 ## 1 · ⭑ YALNIZCA KURUCUNUN YAPABİLECEĞİ İŞLER ⭑
 
@@ -36,11 +36,11 @@ bir rapor yanlıştır.
 
 | | |
 |---|---|
-| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 263 sayfa ölçtü. |
+| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 264 sayfa ölçtü. |
 | KDP'DE NEREYE | Bookshelf → Create → Paperback → Manuscript → Upload paperback manuscript |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/PAPERBACK/interior.pdf` |
-| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 263 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
+| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 264 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
 | BAŞARILI OLURSA | KDP 'Manuscript uploaded successfully' der ve Previewer açılır. |
 | DURUM | **HAZIR** |
 
@@ -64,7 +64,7 @@ bir rapor yanlıştır.
 | KDP'DE NEREYE | Paperback Rights & Pricing |
 | NE GİRECEĞİM | 19.99 USD |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 263 sayfa değişirse telif de değişir. |
+| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 264 sayfa değişirse telif de değişir. |
 | BAŞARILI OLURSA | KDP net telif tutarını gösterir. |
 | DURUM | **BEKLIYOR** |
 
@@ -80,33 +80,33 @@ bir rapor yanlıştır.
 | HANGİ DOSYA | `08_OUTPUT/HARDCOVER/interior.pdf` |
 | NE KONTROL EDECEĞİM | Hardcover'da KDP daha geniş iç pay ve menteşe (hinge) payı ister; paperback dosyası olduğu gibi KULLANILAMAZ. |
 | BAŞARILI OLURSA | Yükleme kabul edilir ve Previewer açılır. |
-| DURUM | **BEKLIYOR** |
+| DURUM | **HAZIR** |
 
-### 🔴 Kapak (hardcover)
+### 🔵 Kapak (hardcover)
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Hardcover sarmal — sırt ve menteşe payı paperback'ten FARKLIDIR. |
+| NE YAPACAĞIM | Hardcover sarmal — ÜRETİLDİ. Sırt 0,7833 in, menteşe 0,394 in, tam kapak 14,359 × 10,417 in. Değerler hardcover-calculator.png'den OKUNDU. |
 | KDP'DE NEREYE | Hardcover Content → Book Cover |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/HARDCOVER/cover.pdf` |
-| NE KONTROL EDECEĞİM | Hardcover sarmalı ayrı şablondur. Paperback kapağı buraya yüklenmez. |
-| BAŞARILI OLURSA | Sarmal sanat gelmeden bu adım açılmaz. |
-| DURUM | **BEKLIYOR** |
+| NE KONTROL EDECEĞİM | Hardcover sarmalı ayrı şablondur (14,359 in — ciltsizin 12,910'u DEĞİL). Previewer'da menteşe ve sırtı doğrulayın. |
+| BAŞARILI OLURSA | KDP kapağı kabul eder ve Previewer açılır. |
+| DURUM | **HAZIR** |
 
 ## C · KINDLE
 
-### 🔴 Kindle sürümü — BU PROJEDE KAPALI
+### 🔵 Kindle EPUB'ını yükle
 
 | | |
 |---|---|
-| NE YAPACAĞIM | `metadata.json → editions.kindle.enabled = false`. Kindle bu kitabın mimarisinde açık DEĞİLDİR ve burada açılmaz. |
-| KDP'DE NEREYE | — |
+| NE YAPACAĞIM | Akışkan EPUB 3 · 18 bölüm · 99 gravür · kapak YALNIZCA ÖN (1600 × 2560). |
+| KDP'DE NEREYE | Bookshelf → Create → Kindle eBook → Content → Upload eBook manuscript |
 | NE GİRECEĞİM | — |
-| HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Bu kitap basılı levha okumaya dayanır: gravür VERİ taşır ve ekranda yeniden ölçeklenirse sayılabilirliği bozulur. Kindle açılacaksa bu ayrı bir karardır. |
-| BAŞARILI OLURSA | — |
-| DURUM | **YOK** |
+| HANGİ DOSYA | `08_OUTPUT/KINDLE/codex-enigmatica.epub` |
+| NE KONTROL EDECEĞİM | ⭑ TELİF PLANI: dosya 46 MB. %70 planı teslimat ücreti keser ve kitap başına 0,09 $ bırakır; %35 planı 3,50 $ bırakır. %35 SEÇİN (ya da EPUB 23 MB altına indirilsin). Previewer'da levhaların yakınlaştığını doğrulayın. |
+| BAŞARILI OLURSA | Önizleyici bölümleri ve levhaları gösterir. |
+| DURUM | **HAZIR** |
 
 ## D · A+ İÇERİK
 
@@ -170,7 +170,7 @@ bir rapor yanlıştır.
 | KDP'DE NEREYE | Rights & Pricing |
 | NE GİRECEĞİM | Yukarıdaki tutarlar |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 263 sayfaya göre kuruldu. |
+| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 264 sayfaya göre kuruldu. |
 | BAŞARILI OLURSA | KDP her pazar için telif tutarını gösterir. |
 | DURUM | **BEKLIYOR** |
 
@@ -220,7 +220,7 @@ bir rapor yanlıştır.
 | Kategori 1 | GAM011000 — GAMES & ACTIVITIES / Puzzles |
 | Kategori 2 | GAM001000 — GAMES & ACTIVITIES / Reference |
 | Kategori 3 | GAM002000 — GAMES & ACTIVITIES / Logic & Brain Teasers |
-| Yazar biyografisi | ⛔ KURUCU YAZMADI — boş bırakılamaz |
+| Yazar biyografisi | Emre is a puzzle designer, mythologist, and game archivist dedicated to preserving ancient cultures, codes, and stories for the next generation. |
 | ISBN | ⛔ KARAR VERİLMEDİ (strateji: kdp-free) |
 
 ## I · A+ metni (İngilizce — ürün sayfası dili)

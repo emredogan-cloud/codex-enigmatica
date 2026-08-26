@@ -74,4 +74,4 @@ Pilot kohort **20** bulmaca · modellenen oturum **150 dk**
 |---|---|---:|---:|---|
 | Hardcover | hipotez | 29.99 $ | **9.49 $** | baskı 8.51 $ · başabaş ACOS %31.6 |
 | Paperback | hipotez | 19.99 $ | **8.14 $** | baskı 3.86 $ · başabaş ACOS %40.7 |
-| Kindle | **üretilmez** | — | — | Görsel şifreler e-okuyucuda bozulur |
+| Kindle | hipotez | 9.99 $ | **-2.51 $** | baskı 8.51 $ · başabaş ACOS %-25.1 |

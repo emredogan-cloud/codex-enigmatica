@@ -39,11 +39,18 @@ import _protected_layer as pl                                  # noqa: E402
 
 OUT = os.path.join(pl.ROOT, "08_OUTPUT")
 PB = os.path.join(OUT, "PAPERBACK")
+HC = os.path.join(OUT, "HARDCOVER")
+KD = os.path.join(OUT, "KINDLE")
 AP = os.path.join(OUT, "APLUS")
 WEB = os.path.join(pl.ROOT, "07_ASSETS", "web")
 META = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "metadata.json")
 INTERIOR = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "interior.json")
 COVER = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "cover.json")
+COVER_HC = os.path.join(pl.ROOT, "06_REPORTS", "tracked",
+                        "cover-hardcover.json")
+INTERIOR_HC = os.path.join(pl.ROOT, "06_REPORTS", "tracked",
+                           "interior-hardcover.json")
+KINDLE = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "kindle.json")
 STATS = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "kdp-package.json")
 
 # ⚠ Pakete ASLA girmemesi gerekenler: kaynak veri, tasarım, çözüm
@@ -187,6 +194,50 @@ def main() -> int:
     rep.check(not tr, "A+ metni İngilizce (ürün sayfası dili)"
               + ("" if not tr else " — ⛔ %s" % tr))
 
+    # ── ③b HARDCOVER ───────────────────────────────────────────────────
+    ihc = pdf_facts(os.path.join(HC, "interior.pdf"))
+    chc = pdf_facts(os.path.join(HC, "cover.pdf"))
+    hcov = (pl.load_json(COVER_HC) or {}).get("facts") or {}
+    hint = (pl.load_json(INTERIOR_HC) or {}).get("facts") or {}
+    rep.check(ihc.get("exists"), "hardcover iç blok var")
+    rep.check(chc.get("exists"), "hardcover kapak var")
+    if ihc.get("exists"):
+        rep.check((ihc.get("embeddedFontStreams") or 0) > 0,
+                  "hardcover yazı tipleri gömülü")
+        rep.check(hint.get("gutterIn") == 0.625,
+                  "⭑ HARDCOVER İÇ KENAR PAYI CİLTLİYE GÖRE ⭑ (%s in — "
+                  "ciltsizin 0,5'i DEĞİL)" % hint.get("gutterIn"))
+    if chc.get("exists") and hcov:
+        mb = chc.get("mediaBoxIn") or [0, 0]
+        rep.check(abs(mb[0] - hcov["widthIn"]) < 0.03
+                  and abs(mb[1] - hcov["heightIn"]) < 0.03,
+                  "⭑ HARDCOVER KAPAK HESAPLAYICI ÖLÇÜSÜNDE ⭑ (%s ↔ "
+                  "%.3f×%.3f)" % (mb, hcov["widthIn"], hcov["heightIn"]))
+        # ⚠ Ciltsizle AYNI OLMAMALI — aynıysa biri kopyalanmıştır.
+        rep.check(abs(hcov["widthIn"] - (cov.get("widthIn") or 0)) > 1.0,
+                  "⭑ HARDCOVER GEOMETRİSİ CİLTSİZDEN AYRI ⭑ (%.3f ↔ %.3f in)"
+                  % (hcov["widthIn"], cov.get("widthIn") or 0))
+        rep.check(hcov.get("hingeIn", 0) > 0,
+                  "hardcover menteşe payı var (%.3f in)"
+                  % hcov.get("hingeIn", 0))
+
+    # ── ③c KINDLE ──────────────────────────────────────────────────────
+    kin = (pl.load_json(KINDLE) or {}).get("facts") or {}
+    epub = os.path.join(KD, "codex-enigmatica.epub")
+    rep.check(os.path.isfile(epub), "Kindle EPUB var")
+    if os.path.isfile(epub):
+        import zipfile as _z
+        zz = _z.ZipFile(epub)
+        rep.check(zz.namelist()[0] == "mimetype", "EPUB mimetype ilk girdi")
+        rep.check("OEBPS/cover.jpg" in zz.namelist(), "Kindle kapağı pakette")
+        cpx = kin.get("coverPx") or [0, 0]
+        rep.check(cpx[1] >= 1000 and abs(cpx[1] / max(1, cpx[0]) - 1.6) < 0.02,
+                  "⭑ KINDLE KAPAĞI 1,6:1 VE YALNIZCA ÖN ⭑ (%dx%d)"
+                  % tuple(cpx))
+        # ⚠ Baskı sarmalı Kindle'a KONULMAZ.
+        rep.check(cpx[0] < 2000,
+                  "Kindle kapağı sarmal DEĞİL (genişlik %d px)" % cpx[0])
+
     # ── ④ METADATA ─────────────────────────────────────────────────────
     mp = os.path.join(PB, "metadata.json")
     meta_out = dict(meta)
@@ -199,7 +250,9 @@ def main() -> int:
 
     # ── ⑤ PAKETE KAYNAK SIZDI MI ───────────────────────────────────────
     leak = []
-    for d in (PB, AP):
+    for d in (PB, HC, KD, AP):
+        if not os.path.isdir(d):
+            continue
         for f in os.listdir(d):
             if (f.lower().endswith(FORBIDDEN_EXT)
                     and f not in ALLOWED_JSON and f != "SHA256SUMS"):
@@ -208,21 +261,40 @@ def main() -> int:
               + ("" if not leak else " — ⛔ %s" % leak))
 
     # ── ⑥ SAĞLAMA TOPLAMLARI ───────────────────────────────────────────
-    n1, n2 = write_sums(PB), write_sums(AP)
+    for d, tag in ((HC, "hardcover"), (KD, "kindle")):
+        if os.path.isdir(d):
+            mo = dict(meta_out)
+            mo["edition"] = tag
+            if tag == "hardcover":
+                mo["pageCount"] = hint.get("pages") or mo["pageCount"]
+            json.dump(mo, open(os.path.join(d, "metadata.json"), "w",
+                               encoding="utf-8"), ensure_ascii=False, indent=1)
+    counts = {"PAPERBACK": write_sums(PB), "APLUS": write_sums(AP)}
+    for d, k in ((HC, "HARDCOVER"), (KD, "KINDLE")):
+        if os.path.isdir(d):
+            counts[k] = write_sums(d)
+    n1, n2 = counts["PAPERBACK"], counts["APLUS"]
     rep.check(n1 >= 3, "paperback paketinde %d dosya" % n1)
     rep.check(n2 >= 7, "A+ paketinde %d dosya" % n2)
+    rep.check(counts.get("HARDCOVER", 0) >= 3,
+              "hardcover paketinde %d dosya" % counts.get("HARDCOVER", 0))
+    rep.check(counts.get("KINDLE", 0) >= 3,
+              "kindle paketinde %d dosya" % counts.get("KINDLE", 0))
 
     print("\n── paket ──")
     print("  %-26s %s" % ("PAPERBACK", os.path.relpath(PB, pl.ROOT)))
     for f in sorted(os.listdir(PB)):
         print("     %-26s %8.1f MB"
               % (f, os.path.getsize(os.path.join(PB, f)) / 1e6))
-    print("  %-26s %s · %d dosya" % ("APLUS", os.path.relpath(AP, pl.ROOT), n2))
+    for k, v in counts.items():
+        print("  %-26s %d dosya" % (k, v))
 
     rep.facts.update({"interior": ipdf, "cover": cpdf,
                       "aplusModules": n_ap,
                       "pageCount": meta_out.get("pageCount"),
-                      "paperbackFiles": n1, "aplusFiles": n2})
+                      "files": counts,
+                      "hardcover": {"interior": ihc, "cover": chc},
+                      "kindle": kin})
     return rep.finish("%d + %d dosya" % (n1, n2), STATS)
 
 

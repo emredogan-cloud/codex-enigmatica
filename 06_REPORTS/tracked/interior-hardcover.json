@@ -5,18 +5,18 @@
   "warnings": [],
   "facts": {
     "pages": 264,
-    "gutterIn": 0.5,
-    "binding": "paperback",
+    "gutterIn": 0.625,
+    "binding": "hardcover",
     "hintsTypeset": 303,
     "solutionsTypeset": 100,
     "metaWithheld": [
       "meta-001"
     ],
-    "pdfMB": 71.67,
+    "pdfMB": 68.55,
     "trim": [
       6.0,
       9.0
     ],
-    "path": "08_OUTPUT/PAPERBACK/interior.pdf"
+    "path": "08_OUTPUT/HARDCOVER/interior.pdf"
   }
 }

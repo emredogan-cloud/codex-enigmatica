@@ -126,6 +126,14 @@
 # olduğunu görmesinin tek yoludur. İkisi de kanaryayla taranır.
 !06_REPORTS/OPENAI_14_ENGRAVINGS_COST_REPORT.md
 !06_REPORTS/FINAL_KDP_PRODUCTION_REPORT.md
+# ⭑ DİL + FORMAT PASI RAPORLARI ⭑ Karar taşırlar: dil bloklayıcısı,
+# ciltli geometrisi, Kindle telif planı ve kapak sanatı iş akışı.
+# Gitignore'da kalmaları, bir sonraki oturumun bunları görmemesi demek.
+# Hiçbiri cevap taşımaz ve hepsi kanaryayla taranır.
+!06_REPORTS/FINAL_LANGUAGE_AND_FORMAT_REPORT.md
+!06_REPORTS/HARDCOVER_PRODUCTION_REPORT.md
+!06_REPORTS/KINDLE_PRODUCTION_REPORT.md
+!06_REPORTS/COVER_ARTWORK_GENERATION_GUIDE.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:

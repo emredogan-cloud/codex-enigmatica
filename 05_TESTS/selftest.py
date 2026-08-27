@@ -2907,12 +2907,11 @@ def part16_print_margins(rep: Report, tmp: str) -> None:
     spec = _ilu.spec_from_file_location(
         "_qm", os.path.join(BUILD, "qa_print_margins.py"))
     qm = _ilu.module_from_spec(spec)
-    try:
-        spec.loader.exec_module(qm)
-    except ImportError:
-        rep.check(True, "baskı payı kapısı atlandı (Pillow yok)")
-        return
-    IN = sys.modules.get("interior") or None
+    # ⚠ `qa_print_margins` Pillow'u MODÜL DÜZEYİNDE import ETMEZ (ölçüm
+    # fonksiyonunun içinde eder), bu yüzden burada yükleme HER ZAMAN
+    # başarılıdır. Aşağıdaki mantık denetimleri Pillow İSTEMEZ ve CI'da
+    # da koşmalıdır; yalnızca raster sondası ister.
+    spec.loader.exec_module(qm)
     spec2 = _ilu.spec_from_file_location(
         "_int", os.path.join(BUILD, "interior.py"))
     IN = _ilu.module_from_spec(spec2)
@@ -2951,7 +2950,16 @@ def part16_print_margins(rep: Report, tmp: str) -> None:
 
     # ── ⭑ ÖLÇÜM ÇEKİRDEĞİ GERÇEKTEN ÖLÇÜYOR MU ⭑ ──────────────────────
     # Bilinen konuma mürekkep koy, kapı onu bulsun.
-    from PIL import Image
+    # ⚠ YALNIZCA BU BÖLÜM Pillow ister. CI'da Pillow yoktur ve bu bir
+    # kalite düşüşü DEĞİLDİR: yukarıdaki eşik/gövde/pay denetimleri saf
+    # mantıktır ve CI'da da koştu. Sondayı koşamadığımızda bunu SÖYLERİZ
+    # — sessizce geçmeyiz.
+    try:
+        from PIL import Image
+    except ImportError:
+        rep.check(True, "⊘ raster sondası atlandı (Pillow yok) — eşik ve "
+                        "geometri denetimleri KOŞTU")
+        return
     d = os.path.join(tmp, "margins")
     os.makedirs(d, exist_ok=True)
     W = H = qm.DPI * 2                       # 2 × 2 inç sahte sayfa

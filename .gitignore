@@ -154,6 +154,8 @@
 # ⭑ NİHAİ SÜRÜM HAZIRLIK RAPORU — yedinci kez aynı ders ⭑
 # PROJECT_CONTEXT ve CHANGELOG ona bağ verir; gitignore'da kalması
 # klonda kırık bağ demektir. Cevap TAŞIMAZ ve kanarya her koşuda tarar.
+# ⭑ PROJE KAPANIŞ RAPORU ⭑ — projenin son sözü; klonda bulunmalı.
+!06_REPORTS/FINAL_PROJECT_CLOSURE_REPORT.md
 !06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md
 !06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md
 !06_REPORTS/WEBSITE_KDP_BUSINESS_STRATEGY.md

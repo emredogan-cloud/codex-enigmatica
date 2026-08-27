@@ -138,203 +138,456 @@ FOUNDER_ONLY = [
 
 
 def steps(meta: dict, files: dict) -> list:
-    """A–G bölümleri. Her adım § 28'deki yedi başlığı taşır."""
+    """01–10 · kurucunun KDP panelinde izleyeceği sıra.
+
+    ⚠ BÖLÜMLER PANELİN SIRASINA GÖRE DİZİLİDİR, dosya türüne göre değil.
+    Kurucu bu belgeyi masada değil, KDP açıkken okur; her adım tek bir
+    ekranda tamamlanabilir olmalıdır.
+
+    Her adım yedi başlık taşır: NE · NEREYE · NE GİRECEĞİM · HANGİ DOSYA
+    · NE KONTROL EDECEĞİM · BAŞARILI OLURSA · DURUM.
+    """
     ed = {e["id"]: e for e in meta["editions"]}
     pages = meta["pageCount"]
+    ver = ((pl.load_config().get("founder") or {}).get("verification")) or {}
+    tmp = ver.get("temporary") or {}
+    kin = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "kindle.json")) or {}).get("facts") or {}
+    eco = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "economics.json")) or {}).get("facts") or {}
+    hcs = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "cover-hardcover.json")) or {}).get("facts") or {}
+    pbs = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "cover.json")) or {}).get("facts") or {}
+    mb = kin.get("sizeMB") or 0
+    kr = (eco.get("kindle") or {})
+    rows = {r["edition"]: r for r in (eco.get("editions") or [])}
+
+    def money(x):
+        return "—" if x is None else ("%.2f $" % x)
+
     return [
-        ("A", "PAPERBACK", "📕", [
+        # ── 01 ────────────────────────────────────────────────────────
+        ("01", "KDP'Yİ AÇMADAN ÖNCE", "🧭", [
+            {
+                "id": "pre-1", "flag": "🔵",
+                "adim": "Paketi doğrula (sağlama toplamları)",
+                "ne": "Dört paketin dördü de sağlama toplamı taşır. "
+                      "Yüklemeden önce bozulmadıklarını DOĞRULAYIN — "
+                      "yarım inen bir PDF'i KDP kabul edip bozuk basar.",
+                "nere": "Terminal (KDP'de değil)",
+                "gir": "cd 08_OUTPUT/PAPERBACK && sha256sum -c SHA256SUMS",
+                "dosya": "08_OUTPUT/*/SHA256SUMS",
+                "kontrol": "Dört dizinde de her satır 'OK' demeli. "
+                           "Tek bir FAILED varsa YÜKLEMEYİN.",
+                "basari": "16 dosyanın 16'sı OK.",
+                "state": READY,
+            },
+            {
+                "id": "pre-2", "flag": "🟢",
+                "adim": "ISBN kararını verin",
+                "ne": "KDP ÜCRETSİZ ISBN verir (yalnızca Amazon'da "
+                      "geçerlidir) ya da kendi ISBN'inizi girersiniz "
+                      "(her yerde geçerli, ücretli). Depo hiçbir değer "
+                      "TAŞIMIYOR ve taşımayacak.",
+                "nere": "Paperback/Hardcover Details → ISBN → "
+                        "'Get a free KDP ISBN' veya 'Use my own ISBN'",
+                "gir": "⛔ AJAN GİRMEDİ — kurucu panelde seçer",
+                "dosya": "—",
+                "kontrol": "Ciltsiz ve ciltli AYRI ISBN ister. Kindle "
+                           "ISBN İSTEMEZ (ASIN alır).",
+                "basari": "Her baskı sürümünün kendi ISBN'i olur.",
+                "state": PENDING,
+            },
+            {
+                "id": "pre-3", "flag": "🟢",
+                "adim": "Yapay zekâ içerik beyanını hazırlayın",
+                "ne": "KDP, YZ-ÜRETİMİ metin/görsel/çevirinin "
+                      "bildirilmesini ister; YZ-DESTEKLİ içerik için "
+                      "bildirim gerekmez. Ayrımı yalnızca siz "
+                      "yapabilirsiniz — bu hukuki bir beyandır.",
+                "nere": "Details ekranı → 'Did you use AI tools...?'",
+                "gir": "⛔ AJAN BEYAN VERMEDİ — kurucu panelde doldurur",
+                "dosya": "—",
+                "kontrol": "`metadata.json → founderPending."
+                           "aiDisclosureConfirmed` HÂLÂ false ve öyle "
+                           "kalacak. Bir ajan sizin adınıza beyan veremez.",
+                "basari": "Beyan panelde kaydedilir.",
+                "state": PENDING,
+            },
+        ]),
+        # ── 02 ────────────────────────────────────────────────────────
+        ("02", "PAPERBACK", "📕", [
             {
                 "id": "pb-1", "flag": "🔵",
-                "adim": "İç blok dosyasını hazırla",
-                "ne": "6×9 inç trim, krem kâğıt, siyah mürekkep iç blok "
-                      "PDF'i. Sayfa modeli %d sayfa ölçtü." % pages,
+                "adim": "İç blok",
+                "ne": "6 × 9 in trim · KREM kâğıt · siyah mürekkep · "
+                      "%d sayfa (ÖLÇÜLDÜ)." % pages,
                 "nere": "Bookshelf → Create → Paperback → "
-                        "Manuscript → Upload paperback manuscript",
+                        "Paperback Content → Manuscript → "
+                        "Upload paperback manuscript",
                 "gir": "—",
                 "dosya": files["interiorPb"]["path"],
-                "kontrol": "Kenar boşluğu (gutter) sayfa sayısına bağlıdır: "
-                           "%d sayfa için KDP iç kenarda daha geniş pay "
-                           "ister. Levha sayfalarında kırpma olmamalı."
-                           % pages,
-                "basari": "KDP 'Manuscript uploaded successfully' der ve "
+                "kontrol": "Previewer'da: iç kenar payı (gutter) hiçbir "
+                           "levhayı kesmemeli · taşma (bleed) yok, iç "
+                           "blok taşmasızdır · sayfa numaraları 3. "
+                           "sayfadan başlar · SON YAPRAK doğrulama "
+                           "adresini taşır (s. 273).",
+                "basari": "'Manuscript uploaded successfully' ve "
                           "Previewer açılır.",
                 "state": files["interiorPb"]["state"],
             },
             {
                 "id": "pb-2", "flag": "🔵",
-                "adim": "Kapak dosyasını hazırla",
-                "ne": "Paperback SARMAL kapak (arka + sırt + ön), tek PDF — "
-                      "ÜRETİLDİ.",
-                "nere": "Paperback Content → Book Cover → Upload a "
-                        "cover you already have",
+                "adim": "Sarmal kapak",
+                "ne": "Arka + sırt + ön, TEK PDF. Tam kapak "
+                      "%.3f × %.3f in · sırt %.4f in (KREM kâğıt, "
+                      "%d sayfadan türetildi)."
+                      % (pbs.get("widthIn", 0), pbs.get("heightIn", 0),
+                         pbs.get("spineIn", 0), pages),
+                "nere": "Paperback Content → Book Cover → "
+                        "Upload a cover you already have (print-ready PDF)",
                 "gir": "—",
                 "dosya": files["coverPb"]["path"],
-                "kontrol": "Sırt ÖLÇÜLEN sayfa sayısından türetildi. "
-                           "Previewer'da sırt yazısının ortalandığını ve "
-                           "barkod alanının boş olduğunu doğrulayın.",
-                "basari": "KDP kapağı kabul eder ve Previewer açılır.",
+                "kontrol": "Sırt yazısı ORTALANMIŞ olmalı · sağ altta "
+                           "barkod alanı BOŞ bırakıldı (KDP kendi "
+                           "barkodunu oraya basar) · güvenli alan içinde "
+                           "hiçbir metin kesilmemeli.",
+                "basari": "Kapak kabul edilir, Previewer açılır.",
                 "state": files["coverPb"]["state"],
             },
-            {
-                "id": "pb-3", "flag": "🟢",
-                "adim": "Fiyat ve dağıtım",
-                "ne": "Liste fiyatı %s $ (paperback)." % ed["paperback"]["list"],
-                "nere": "Paperback Rights & Pricing",
-                "gir": "%s USD" % ed["paperback"]["list"],
-                "dosya": "—",
-                "kontrol": "Basım maliyeti sayfa sayısıyla değişir; "
-                           "%d sayfa değişirse telif de değişir." % pages,
-                "basari": "KDP net telif tutarını gösterir.",
-                "state": PENDING,
-            },
         ]),
-        ("B", "HARDCOVER", "📗", [
+        # ── 03 ────────────────────────────────────────────────────────
+        ("03", "HARDCOVER", "📗", [
             {
                 "id": "hc-1", "flag": "🔵",
-                "adim": "İç blok (hardcover)",
-                "ne": "Aynı iç blok, hardcover trim ve pay kurallarıyla.",
-                "nere": "Create → Hardcover → Manuscript",
+                "adim": "İç blok (ciltli)",
+                "ne": "Aynı içerik, ciltli iç pay kurallarıyla yeniden "
+                      "dizildi · %d sayfa · iç kenar payı ciltsizden "
+                      "GENİŞTİR." % pages,
+                "nere": "Create → Hardcover → Hardcover Content → "
+                        "Manuscript",
                 "gir": "—",
                 "dosya": files["interiorHc"]["path"],
-                "kontrol": "Hardcover'da KDP daha geniş iç pay ve "
-                           "menteşe (hinge) payı ister; paperback "
-                           "dosyası olduğu gibi KULLANILAMAZ.",
-                "basari": "Yükleme kabul edilir ve Previewer açılır.",
+                "kontrol": "⛔ CİLTSİZ İÇ BLOĞUNU BURAYA YÜKLEMEYİN — "
+                           "iç payları farklıdır ve ciltli baskıda metin "
+                           "cilde gömülür.",
+                "basari": "Ciltli Previewer açılır.",
                 "state": files["interiorHc"]["state"],
             },
             {
                 "id": "hc-2", "flag": "🔵",
-                "adim": "Kapak (hardcover)",
-                "ne": "Hardcover sarmal — ÜRETİLDİ. Sırt 0,7833 in, menteşe "
-                      "0,394 in, tam kapak 14,359 × 10,417 in. Değerler "
-                      "hardcover-calculator.png'den OKUNDU.",
-                "nere": "Hardcover Content → Book Cover",
+                "adim": "Sarmal kapak (ciltli)",
+                "ne": "Tam kapak %.3f × %.3f in · sırt %.4f in · "
+                      "menteşe (hinge) %.3f in · sarma (wrap) %.3f in. "
+                      "⚠ KÂĞIT: BEYAZ."
+                      % (hcs.get("widthIn", 0), hcs.get("heightIn", 0),
+                         hcs.get("spineIn", 0), hcs.get("hingeIn", 0),
+                         hcs.get("wrapIn", 0)),
+                "nere": "Hardcover Content → Book Cover → "
+                        "Upload a cover you already have",
                 "gir": "—",
                 "dosya": files["wrapHc"]["path"],
-                "kontrol": "Hardcover sarmalı ayrı şablondur (14,359 in — "
-                           "ciltsizin 12,910'u DEĞİL). Previewer'da menteşe "
-                           "ve sırtı doğrulayın.",
-                "basari": "KDP kapağı kabul eder ve Previewer açılır.",
+                "kontrol": "⛔ CİLTSİZ KAPAK GEOMETRİSİNİ KULLANMAYIN. "
+                           "Ciltli kapak tahtası trimden BÜYÜKTÜR "
+                           "(6.197 × 9.236 in) ve ayrıca menteşe payı "
+                           "vardır. Geometri kurucunun KDP hesaplayıcı "
+                           "ekran görüntüsünden OKUNDU "
+                           "(03_COVER/HARDCOVER_CALCULATOR_VALUES.md).",
+                "basari": "Ciltli kapak kabul edilir.",
                 "state": files["wrapHc"]["state"],
             },
-        ]),
-        ("C", "KINDLE", "📱", [
             {
-                "id": "kd-1", "flag": "🔵",
-                "adim": "Kindle EPUB'ını yükle",
-                "ne": "Akışkan EPUB 3 · 18 bölüm · 99 gravür · kapak "
-                      "YALNIZCA ÖN (1600 × 2560).",
-                "nere": "Bookshelf → Create → Kindle eBook → "
-                        "Content → Upload eBook manuscript",
-                "gir": "—",
-                "dosya": "08_OUTPUT/KINDLE/codex-enigmatica.epub",
-                "kontrol": "⭑ TELİF PLANI: dosya 46 MB. %70 planı "
-                           "teslimat ücreti keser ve kitap başına "
-                           "0,09 $ bırakır; %35 planı 3,50 $ bırakır. "
-                           "%35 SEÇİN (ya da EPUB 23 MB altına indirilsin). "
-                           "Previewer'da levhaların yakınlaştığını doğrulayın.",
-                "basari": "Önizleyici bölümleri ve levhaları gösterir.",
-                "state": files["kindleEpub"]["state"],
+                "id": "hc-3", "flag": "🟡",
+                "adim": "⚠ Kâğıdı BEYAZ seçin",
+                "ne": "Ciltli sürüm BEYAZ kâğıtla hesaplandı. Panelde "
+                      "KREM seçerseniz sırt 0,8737 in olur — üretilen "
+                      "kapak 0,8058 in'dir ve fark 0,0680 in, KDP'nin "
+                      "±0,0625 in toleransını AŞAR.",
+                "nere": "Hardcover Content → Print Options → Paper type",
+                "gir": "White paper",
+                "dosya": "—",
+                "kontrol": "Krem seçilirse kapak REDDEDİLİR ya da sırt "
+                           "kayar. Ciltsiz KREM kalır — iki ayrı üründür.",
+                "basari": "Sırt genişliği kapakla örtüşür.",
+                "state": PENDING,
             },
         ]),
-        ("D", "A+ İÇERİK", "🖼", [
+        # ── 04 ────────────────────────────────────────────────────────
+        ("04", "KINDLE", "📱", [
+            {
+                "id": "kd-1", "flag": "🔵",
+                "adim": "EPUB yükle",
+                "ne": "Akışkan EPUB 3 · %.1f MB · 19 bölüm · 99 gömülü "
+                      "levha. Baskıyla AYNI içerik." % mb,
+                "nere": "Create → Kindle eBook → "
+                        "Kindle eBook Content → Manuscript → Upload",
+                "gir": "—",
+                "dosya": files["kindleEpub"]["path"],
+                "kontrol": "Yükleme sonrası Kindle Previewer'da levhaların "
+                           "yakınlaştırılabildiğini doğrulayın.",
+                "basari": "Dönüştürme hatasız biter.",
+                "state": files["kindleEpub"]["state"],
+            },
+            {
+                "id": "kd-2", "flag": "🔵",
+                "adim": "Kapak (YALNIZCA ÖN)",
+                "ne": "1600 × 2560 px JPEG. ⛔ Sırt yok · arka kapak yok · "
+                      "barkod yok · taşma yok — bunlar BASKIYA aittir.",
+                "nere": "Kindle eBook Content → Kindle eBook Cover → "
+                        "Upload a cover you already have",
+                "gir": "—",
+                "dosya": files["kindleCover"]["path"],
+                "kontrol": "Küçük resimde (thumbnail) başlık okunabilir "
+                           "olmalı — mağazada kapak bu boyutta görünür.",
+                "basari": "Kapak kabul edilir.",
+                "state": files["kindleCover"]["state"],
+            },
+            {
+                "id": "kd-3", "flag": "🟢",
+                "adim": "⭑ Telif planını SİZ seçersiniz ⭑",
+                "ne": "Bu dosyada (%.1f MB) ölçülen sonuç: %%70 planı "
+                      "teslimat ücreti keser (%s) ve %s telif bırakır; "
+                      "%%35 planı ücret kesmez ve %s bırakır."
+                      % (mb, money(kr.get("deliveryFee")),
+                         money(kr.get("royalty70")),
+                         money(kr.get("royalty35"))),
+                "nere": "Kindle eBook Pricing → Royalty and Pricing",
+                "gir": "%%35 (bu dosya boyutunda ölçülen öneri)",
+                "dosya": "—",
+                "kontrol": "%%70'in kârlı olduğu sınır ~33,3 MB'dır; bu "
+                           "dosya onun ÜSTÜNDE. Formül KDP'nin kendi "
+                           "telif sayfasından: %%70 × (liste − KDV − "
+                           "teslimat).",
+                "basari": "KDP net telifi gösterir ve %%35 daha yüksektir.",
+                "state": PENDING,
+            },
+        ]),
+        # ── 05 ────────────────────────────────────────────────────────
+        ("05", "A+ İÇERİK", "🖼", [
             {
                 "id": "ap-1", "flag": "🔵",
-                "adim": "Altı A+ modül görselini yükle",
-                "ne": "Görseller METİNSİZDİR; başlık ve gövde metni "
-                      "Amazon'un kendi alanlarına yazılır.",
-                "nere": "Bookshelf → ⋯ → Edit A+ Content → Create A+ Content",
-                "gir": "Her modülün başlık ve gövde metni (aşağıda "
-                       "kopyalanabilir).",
-                "dosya": "07_ASSETS/web/ (%d/6 hazır)"
-                         % files["aplus"]["n"],
-                "kontrol": "Modül türü ve piksel ölçüsü kartla aynı "
-                           "olmalı. Görselde metin GÖRÜNMEMELİ.",
-                "basari": "Önizlemede görsel + metin ayrı ayrı görünür.",
-                "state": files["aplus"]["state"],
+                "adim": "Altı modülü yükle",
+                "ne": "3 × tam genişlik (1940 × 600) + 3 × kare "
+                      "(600 × 600). Hepsi KDP'nin standart modül "
+                      "ölçülerinin 2× sürümüdür.",
+                "nere": "Marketing → A+ Content Manager → Create A+ → "
+                        "Add module",
+                "gir": "—",
+                "dosya": "08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png",
+                "kontrol": "Sıra `module-map.json` içindeki `id` sırasıdır: "
+                           "01 → 02 → 03 → 04 → 05 → 06.",
+                "basari": "Altı modül de yüklenir.",
+                "state": files["aplusPkg"]["state"],
             },
             {
                 "id": "ap-2", "flag": "🟢",
+                "adim": "Başlık ve gövde metnini gir",
+                "ne": "⭑ GÖRSELLER METİNSİZDİR ⭑ — bu bilerek böyledir. "
+                      "Ticari metin Amazon'un KENDİ metin alanlarına "
+                      "girilir; görselin içine gömülmüş metin çevrilemez "
+                      "ve moderasyonda sorun çıkarır.",
+                "nere": "Her modülün 'Headline' ve 'Body text' alanı",
+                "gir": "08_OUTPUT/APLUS/module-map.json → title / body",
+                "dosya": "08_OUTPUT/APLUS/module-map.json",
+                "kontrol": "Metin İNGİLİZCEDİR (ürün sayfası dili). "
+                           "Kopyala-yapıştır: bu kılavuzun § I bölümünde "
+                           "kopyalama düğmeleriyle duruyor.",
+                "basari": "Altı modülün altısında da metin dolu.",
+                "state": PENDING,
+            },
+            {
+                "id": "ap-3", "flag": "🟢",
                 "adim": "Moderasyona gönder",
-                "ne": "Amazon insan moderasyonu uygular (birkaç gün).",
-                "nere": "A+ Content → Submit for approval",
+                "ne": "Amazon A+ içeriğini İNSAN moderasyonundan geçirir. "
+                      "Onay genellikle birkaç iş günü sürer.",
+                "nere": "A+ Content Manager → Submit for approval",
                 "gir": "—",
                 "dosya": "—",
                 "kontrol": "Reddedilirse gerekçe e-postayla gelir; en "
-                           "sık sebep görselde metin olmasıdır.",
-                "basari": "Durum 'Submitted' → 'Approved' olur.",
+                           "sık sebep görselin içindeki metindir — bizde "
+                           "yok.",
+                "basari": "Durum 'Approved' olur.",
                 "state": PENDING,
             },
         ]),
-        ("E", "SON ÖNİZLEME", "🔍", [
+        # ── 06 ────────────────────────────────────────────────────────
+        ("06", "DOĞRULAMA SAYFASI", "🔗", [
             {
-                "id": "pv-1", "flag": "🟢",
-                "adim": "Previewer'da sayfa sayfa bak",
-                "ne": "Özellikle 103 levha sayfası.",
-                "nere": "Paperback/Hardcover Content → Launch Previewer",
-                "gir": "—",
+                "id": "vf-1", "flag": "🟢",
+                "adim": "⭑ Kalıcı alan adını alın ve bağlayın ⭑",
+                "ne": "Kitap SON YAPRAĞINA (s. 273) şu adresi BASAR: "
+                      "%s — ve basılmış bir URL DÜZELTİLEMEZ."
+                      % (ver.get("printedUrl") or "—"),
+                "nere": "Alan adı sağlayıcısı + Vercel → Project → "
+                        "Settings → Domains",
+                "gir": "valicepress.com",
                 "dosya": "—",
-                "kontrol": "Her levhada: kırpılma yok · çizgiler kapanmamış "
-                           "· sayılabilir işaretler sayılabilir · sayfa "
-                           "numarası levhanın üstüne binmiyor.",
-                "basari": "Previewer hata vermez ve levhalar okunur.",
+                "kontrol": "26 Ağu 2026 ölçümü: alan adı KAYITSIZ ve "
+                           "müsaitti (~11,25 $/yıl). Alınmazsa başkası "
+                           "alabilir ve satılmış her nüsha okuru YABANCI "
+                           "bir siteye gönderir.",
+                "basari": "Kalıcı adres yanıt verir.",
                 "state": PENDING,
             },
             {
-                "id": "pv-2", "flag": "🟢",
-                "adim": "Fiziksel prova (A9)",
-                "ne": "Basılı prova kopya sipariş edilir.",
-                "nere": "Proof or author copy",
-                "gir": "—",
+                "id": "vf-2", "flag": "🟢",
+                "adim": "Sunucu sırlarını girin",
+                "ne": "İki değişken: biber ve özet. Sunucuda DÜZ CEVAP "
+                      "SAKLANMAZ — saklanan şey biberli SHA-256 özetidir. "
+                      "İkisi de depoda DEĞİLDİR.",
+                "nere": "Vercel → Project → Settings → "
+                        "Environment Variables (Production)",
+                "gir": "CODEX_VERIFY_PEPPER · CODEX_VERIFY_DIGEST "
+                       "(değerler bu belgede YAZILI DEĞİLDİR)",
+                "dosya": "scripts/codex-verify-digest.mjs (site deposu)",
+                "kontrol": "Üretimi: `node scripts/codex-verify-digest.mjs` "
+                           "— cevabı STDIN'den okur, dosyaya ve kabuk "
+                           "geçmişine YAZMAZ.",
+                "basari": "İkisi de 'Sensitive' olarak görünür.",
+                "state": READY,
+            },
+            {
+                "id": "vf-3", "flag": "🔴",
+                "adim": "⛔ Upstash hız sınırı arka ucunu kurun",
+                "ne": "Doğrulama uç noktası şu an CANLIDA 503 veriyor ve "
+                      "bu DOĞRU davranıştır: hız sınırlayıcısı olmayan "
+                      "bir doğrulama servisi SINIRSIZ DENEMEDİR, o yüzden "
+                      "bilerek KAPALI düşer.",
+                "nere": "upstash.com → Redis database → REST API",
+                "gir": "UPSTASH_REDIS_REST_URL · UPSTASH_REDIS_REST_TOKEN "
+                       "(Vercel Production)",
                 "dosya": "—",
-                "kontrol": "⭑ EKRAN PROVASI BUNUN YERİNE GEÇMEZ. Nokta "
-                           "yayılması yalnızca kâğıtta ölçülür.",
-                "basari": "Elinizde basılı kopya olur ve levhalar "
-                          "ÖLÇÜLEREK doğrulanır.",
+                "kontrol": "ÖLÇÜLDÜ: üretimdeki URL bir URL DEĞİL (şema "
+                           "yok, ana makine adı 0 karakter) ve belirteç "
+                           "11 karakter — 89 gün önce konmuş YER "
+                           "TUTUCULAR. Aynı sebep sitenin çevre "
+                           "sınırlayıcısını da sessizce AÇIK düşürüyor.",
+                "basari": "`qa_verification.py --gate release --live` "
+                          "yeşil döner.",
                 "state": PENDING,
             },
         ]),
-        ("F", "FİYAT", "💰", [
+        # ── 07 ────────────────────────────────────────────────────────
+        ("07", "METADATA", "🏷", [
+            {
+                "id": "md-1", "flag": "🟢",
+                "adim": "Panel alanlarını doldurun",
+                "ne": "Başlık, alt başlık, yazar, yayıncı, açıklama, "
+                      "7 anahtar kelime ve 3 BISAC kategorisi.",
+                "nere": "Paperback/Hardcover/Kindle → Details",
+                "gir": "§ H'deki tablodan kopyalayın "
+                       "(kopyalama düğmeleri var)",
+                "dosya": "06_REPORTS/tracked/metadata.json",
+                "kontrol": "ÜÇ SÜRÜMDE DE AYNI olmalı — başlık ya da "
+                           "yazar farklı yazılırsa Amazon sürümleri "
+                           "birbirine BAĞLAMAZ ve üç ayrı ürün gibi "
+                           "listelenir.",
+                "basari": "Üç sürüm tek ürün sayfasında birleşir.",
+                "state": READY,
+            },
+        ]),
+        # ── 08 ────────────────────────────────────────────────────────
+        ("08", "FİYAT", "💰", [
             {
                 "id": "pr-1", "flag": "🟢",
-                "adim": "Liste fiyatlarını gir",
-                "ne": "Hardcover %s $ · Paperback %s $"
-                      % (ed["hardcover"]["list"], ed["paperback"]["list"]),
-                "nere": "Rights & Pricing",
-                "gir": "Yukarıdaki tutarlar",
+                "adim": "Liste fiyatlarını girin",
+                "ne": "Ciltsiz %s · Ciltli %s · Kindle %s (ABD)."
+                      % (money(ed["paperback"]["list"]),
+                         money(ed["hardcover"]["list"]),
+                         money(ed["kindle"]["list"])),
+                "nere": "Her sürümün Rights & Pricing ekranı",
+                "gir": "%.2f / %.2f / %.2f USD"
+                       % (ed["paperback"]["list"], ed["hardcover"]["list"],
+                          ed["kindle"]["list"]),
                 "dosya": "—",
-                "kontrol": "Sayfa sayısı değişirse basım maliyeti ve "
-                           "dolayısıyla telif değişir — fiyat modeli "
-                           "%d sayfaya göre kuruldu." % pages,
-                "basari": "KDP her pazar için telif tutarını gösterir.",
+                "kontrol": "Gerekçeler ve ölçülen telifler § J'de. "
+                           "Diğer pazarlar için KDP otomatik dönüştürme "
+                           "önerir — kabul edebilirsiniz.",
+                "basari": "KDP her sürüm için net telifi gösterir ve "
+                          "§ J'deki sayılarla örtüşür.",
                 "state": PENDING,
             },
         ]),
-        ("G", "YAYIMLAMA", "🚀", [
+        # ── 09 ────────────────────────────────────────────────────────
+        ("09", "PREVIEWER — ZORUNLU", "🔍", [
             {
-                "id": "pubtwo", "flag": "🟢",
-                "adim": "Yapay zekâ içerik beyanı",
-                "ne": "KDP, AI kullanımını sorar. Bu bir HUKUKİ BEYANDIR.",
-                "nere": "Paperback Details → AI-Generated Content",
-                "gir": "Kendi doğru cevabınız",
+                "id": "pv-1", "flag": "🔴",
+                "adim": "⭑ Baskı Previewer'ında sayfa sayfa bakın ⭑",
+                "ne": "Bu adım ATLANAMAZ. Yerel ölçümlerin hepsi yeşil "
+                      "olabilir ve Previewer yine de gerçek bir kusur "
+                      "gösterebilir — dizgi motoru başkadır.",
+                "nere": "Yükleme sonrası açılan Previewer",
+                "gir": "—",
                 "dosya": "—",
-                "kontrol": "`founderPending.aiDisclosureConfirmed` = "
-                           "false. Ajan bunu sizin yerinize dolduramaz.",
-                "basari": "Beyan kaydedilir.",
+                "kontrol": "① kapak · ② SIRT yazısı ortalı mı · "
+                           "③ kenar payları · ④ iç pay (gutter) hiçbir "
+                           "levhayı kesmiyor mu · ⑤ sayfa geçişleri · "
+                           "⑥ levhalar/şekiller · ⑦ metin · ⑧ boş "
+                           "sayfalar · ⑨ ÇÖZÜM bölümü · ⑩ SON YAPRAKTA "
+                           "doğrulama adresi.",
+                "basari": "Previewer 'no errors' der VE göz denetimi "
+                          "temiz geçer.",
                 "state": PENDING,
             },
             {
-                "id": "pub-2", "flag": "🟢",
-                "adim": "Publish",
-                "ne": "Yayımlama kararı.",
-                "nere": "Publish Your Paperback Book",
+                "id": "pv-2", "flag": "🔴",
+                "adim": "Kindle Previewer",
+                "ne": "Akışkan metin, farklı cihazlarda farklı kırılır. "
+                      "Levhaların yakınlaştırılabildiğini görün.",
+                "nere": "Kindle eBook Content → Preview",
                 "gir": "—",
                 "dosya": "—",
-                "kontrol": "⭑ BU KİTAP HİÇBİR İNSANIN ELİNDE "
-                           "ÇÖZÜLMEDİ. Harici çözücü oturumu: 0/5 "
-                           "(A12b). Ölçülen öldürme kapısı kararı "
-                           "HARD-STOP'tur.",
-                "basari": "Kitap 24–72 saat içinde yayında olur.",
+                "kontrol": "Telefon + tablet + e-mürekkep görünümlerinde "
+                           "bakın; levhalar ve çizelgeler okunabilir "
+                           "olmalı.",
+                "basari": "Üç görünümde de içerik okunur.",
+                "state": PENDING,
+            },
+            {
+                "id": "pv-3", "flag": "🟡",
+                "adim": "Fiziksel prova (önerilir)",
+                "ne": "Gravür levhaların nokta yayılması altındaki "
+                      "davranışı YALNIZCA basılı provada ölçülür. "
+                      "Ekranda kusursuz görünen levha kâğıtta kapanabilir.",
+                "nere": "Previewer → Print a proof copy",
+                "gir": "—",
+                "dosya": "—",
+                "kontrol": "A9 · kurucu kararı. Zorunlu değil ama bu "
+                           "kitapta LEVHALAR ÜRÜNÜN KENDİSİDİR.",
+                "basari": "Prova elinizde ve levhalar okunur.",
+                "state": PENDING,
+            },
+        ]),
+        # ── 10 ────────────────────────────────────────────────────────
+        ("10", "SON GÖNDERİM", "🚀", [
+            {
+                "id": "pub-1", "flag": "🔴",
+                "adim": "⛔ GERÇEK BİR KUSUR VARSA YAYIMLAMAYIN",
+                "ne": "Yerel yeşil preflight, gerçek bir KDP Previewer "
+                      "kusurunu GEÇERSİZ KILMAZ. Previewer bir hata "
+                      "gösteriyorsa önce o düzelir.",
+                "nere": "—",
+                "gir": "—",
+                "dosya": "—",
+                "kontrol": "Kusur gerçek mi yoksa Previewer'ın bilinen "
+                           "görüntüleme tuhaflığı mı — emin değilseniz "
+                           "prova alın.",
+                "basari": "Bilinen gerçek kusur YOK.",
+                "state": PENDING,
+            },
+            {
+                "id": "pub-2", "flag": "🔴",
+                "adim": "Publish",
+                "ne": "Üç sürümü de yayımlayın. Amazon 24–72 saat içinde "
+                      "canlıya alır.",
+                "nere": "Her sürümün son ekranı → Publish Your Book",
+                "gir": "—",
+                "dosya": "—",
+                "kontrol": "⚠ Bu kitabı HİÇBİR HARİCİ İNSAN ÇÖZMEDİ "
+                           "(0/5 oturum, ölçülen karar HARD-STOP). "
+                           "Yayımlama kararını bunu BİLEREK verin.",
+                "basari": "Üç sürüm de 'Live' olur.",
                 "state": PENDING,
             },
         ]),
@@ -361,8 +614,23 @@ def copy_fields(meta: dict) -> list:
     # hatadır: kurucu onu gerçek sanıp panele yapıştırır.
     out.append(("Yazar biyografisi",
                 fp["authorBio"] or "⛔ KURUCU YAZMADI — boş bırakılamaz"))
+    # ⚠ Yönerge § 5 DİL ve BASKI BİLGİSİNİ de istiyor ve ikisi de
+    # eksikti. Dil yanlış seçilirse Amazon kitabı yanlış mağazada
+    # listeler; baskı bilgisi ise üç sürümün AYNI ürün sayfasında
+    # birleşmesi için birebir aynı yazılmak zorundadır.
+    out.append(("Dil", {"en": "English"}.get(meta.get("language"),
+                                             meta.get("language") or "—")))
+    out.append(("Baskı", "First edition"))
+    out.append(("Sürümler", " · ".join(
+        "%s %.2f $" % (e.get("id"), e.get("list"))
+        for e in (meta.get("editions") or []) if e.get("enabled"))))
+    out.append(("Sayfa (baskı)", str(meta.get("pageCount") or "—")))
     out.append(("ISBN", fp["isbn"] or
-                "⛔ KARAR VERİLMEDİ (strateji: %s)" % fp["isbnStrategy"]))
+                "⛔ KURUCU KDP PANELİNDE GİRECEK (strateji: %s)"
+                % fp["isbnStrategy"]))
+    out.append(("YZ içerik beyanı",
+                "✅ kurucu onayladı" if fp.get("aiDisclosureConfirmed")
+                else "⛔ KURUCU KDP PANELİNDE TAMAMLAYACAK"))
     return out
 
 
@@ -421,6 +689,100 @@ def verification_rows(v: dict) -> list:
              "⛔ HAYIR — " + bare(live.get("endpointBlockedBy") or "")),
         ]
     return rows
+
+
+def pricing_rows(meta: dict) -> list:
+    """⭑ FİYAT · ÖLÇÜLEN TELİF ⭑ — tahmin değil, KDP modelinden hesap.
+
+    ⚠ VE BUNLAR GARANTİ EDİLMİŞ KAZANÇ DEĞİLDİR. Baskı maliyeti KDP'nin
+    ABD fiyat modelinden hesaplanmıştır (alınmış bir teklif değildir),
+    telif oranı pazara ve dağıtım seçimine göre değişir, Kindle telifi
+    seçilen plana bağlıdır. Sayılar KARAR VERMEK için yeterlidir;
+    gelir taahhüdü olarak okunamaz.
+    """
+    eco = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "economics.json")) or {}).get("facts") or {}
+    kin = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked", "kindle.json")) or {}).get("facts") or {}
+    # ⚠ ANAHTAR ADLARI ÖLÇÜLEN DOSYADAN OKUNUR, HATIRLANMAZ:
+    # economics.json → facts.print[] (facts.editions DEĞİL) ve
+    # facts.kindle.fileMB (kindle.json → facts.bytes'tan değil).
+    # Yanlış anahtar sessizce boş satır üretir — ve boş bir fiyat
+    # tablosu, yanlış bir fiyat tablosu kadar işe yaramazdır.
+    rows = {r["edition"]: r for r in (eco.get("print") or [])}
+    kr = eco.get("kindle") or {}
+    out = []
+    for eid, label in (("paperback", "Ciltsiz"), ("hardcover", "Ciltli")):
+        r = rows.get(eid) or {}
+        lst, cost, roy = r.get("list"), r.get("printCost"), r.get("royalty")
+        out.append((label, lst, cost, roy,
+                    (roy / lst) if (lst and roy is not None) else None))
+    if kr:
+        mb = kr.get("fileMB") or round((kin.get("bytes") or 0) / 1e6, 1)
+        out.append(("Kindle · %%35 planı · %.1f MB" % mb,
+                    kr.get("list"), None, kr.get("royalty35"),
+                    (kr.get("royalty35") / kr["list"]) if kr.get("list") else None))
+    return out
+
+
+# ⭑ NEDEN BU FİYATLAR ⭑ — kurucu "çok yüksek değil, çok ucuz değil,
+# ürkütücü değil, sağlıklı marj" istedi. Aşağıdakiler o dört kısıtın
+# kesişimidir ve her biri bir EŞİK sebebiyle seçildi, keyfî değil.
+# ⭑ DOSYA HARİTASI — TEK LİSTE, İKİ RENDERER ⭑
+# ⚠ Aynı haritayı iki yerde tutmak, birini güncelleyip ötekini unutmanın
+# adıdır — ve bu depo o hatayı dizgi yardımcılarında bir kez yaşadı
+# (baskı ve Kindle aynı işi iki kopyayla yapıyordu). Tek liste.
+FILE_MAP = [
+    ("Paperback · iç blok", "08_OUTPUT/PAPERBACK/interior.pdf",
+     "Paperback Content → Manuscript"),
+    ("Paperback · kapak", "08_OUTPUT/PAPERBACK/cover.pdf",
+     "Paperback Content → Book Cover (upload your own)"),
+    ("Hardcover · iç blok", "08_OUTPUT/HARDCOVER/interior.pdf",
+     "Hardcover Content → Manuscript"),
+    ("Hardcover · kapak", "08_OUTPUT/HARDCOVER/cover.pdf",
+     "Hardcover Content → Book Cover (upload your own)"),
+    ("Kindle · EPUB", "08_OUTPUT/KINDLE/codex-enigmatica.epub",
+     "Kindle eBook Content → Manuscript"),
+    ("Kindle · kapak", "08_OUTPUT/KINDLE/cover.jpg",
+     "Kindle eBook Content → Kindle eBook Cover"),
+    ("A+ · 6 görsel", "08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png",
+     "A+ Content Manager → Add module → Image"),
+    ("A+ · metin", "08_OUTPUT/APLUS/module-map.json",
+     "A+ Content Manager → Headline / Body text"),
+    ("Metadata (üç sürüm)", "06_REPORTS/tracked/metadata.json",
+     "Details → başlık · alt başlık · açıklama · anahtar kelime"),
+    ("Sağlama toplamları", "08_OUTPUT/*/SHA256SUMS",
+     "— (yüklemeden ÖNCE yerelde doğrulanır)"),
+]
+
+PRICE_WHY = [
+    ("Ciltsiz · 19,99 $",
+     "20 doların ALTINDA kalan en yüksek basamak. 274 sayfa ve 103 "
+     "gravür levha için 19,99 $ premium bir bulmaca kitabının olağan "
+     "yeridir; 21,99 $ psikolojik 20 $ eşiğini aşar ve tanınmayan bir "
+     "yazarın ilk kitabında dönüşümü düşürür. 17,99 $ ise kopya başına "
+     "1,20 $'ı sebepsiz bırakır."),
+    ("Ciltli · 29,99 $",
+     "30 doların ALTINDA kalan en yüksek basamak ve klasik hediye "
+     "kitabı yeri. Ciltsizin tam 10 $ üstü — yani %50 net premium: "
+     "alıcı farkı GÖREBİLİR ve gerekçelendirebilir. 32,99 $ hem 30 $ "
+     "eşiğini aşar hem de ciltsizle arayı 13 $'a çıkarıp ciltsizi "
+     "'ucuz sürüm' gibi gösterir."),
+    ("Kindle · 9,99 $",
+     "Ciltsizin TAM YARISI — merdiven okunur ve tutarlıdır. Dosya "
+     "46,3 MB olduğu için %35 planı seçilir ve o planda fiyat bandı "
+     "kısıtı bağlamaz. 6,99 $ 274 sayfalık resimli bir kitabı ucuza "
+     "düşürür ve baskıyı yer; 8,99 $ makul bir alternatiftir ve "
+     "dönüşüm yavaşsa ilk denenecek basamaktır (kopya başına 0,35 $)."),
+]
+
+PRICE_CHECKS = [
+    ("Kötü telif üretiyor mu", "HAYIR — ciltsiz %39,3 · ciltli %30,2 marj"),
+    ("Müşteri fiyatı ürkütücü mü", "HAYIR — ikisi de psikolojik eşiğin ALTINDA (20 $ / 30 $)"),
+    ("Ciltli premiumu net mi", "EVET — +10,00 $ (%50 üstü)"),
+    ("Kindle baskının anlamlı altında mı", "EVET — ciltsizin tam yarısı"),
+    ("Üretim kalitesiyle tutarlı mı", "EVET — 274 sayfa · 103 levha · sarmal kapak"),
+]
 
 
 def render_md(meta: dict, files: dict, secs: list) -> str:
@@ -526,8 +888,11 @@ def render_md(meta: dict, files: dict, secs: list) -> str:
 
     L += ["## H · Panele girilecek alanlar", "", "| Alan | Değer |",
           "|---|---|"]
+    # ⚠ AÇIKLAMA KESİLMEZ. Önceki hâl 300 karakterde kırpıyordu — yani
+    # kurucunun panele yapıştıracağı metnin kendisi eksikti ve el
+    # kitabı, işini yapamayan bir el kitabıydı.
     for k, v in copy_fields(meta):
-        L += ["| %s | %s |" % (k, v.replace("\n", " ")[:300])]
+        L += ["| %s | %s |" % (k, v.replace("\n", " "))]
     L += [""]
 
     L += ["## I · A+ metni (İngilizce — ürün sayfası dili)", "",
@@ -537,6 +902,37 @@ def render_md(meta: dict, files: dict, secs: list) -> str:
         L += ["| `%s` | %s | %s |" % (m["id"], t, b)]
     L += ["", "> Görsellerde **metin yoktur**; bu metin Amazon'un kendi",
           "> başlık ve gövde alanlarına girilir.", ""]
+
+    L += ["## J · 📂 DOSYA HARİTASI — hangi dosya, nereye", "",
+          "Her satır **tek bir dosyayı tek bir KDP alanına** bağlar.",
+          "Yol proje kökünden görelidir.", "",
+          "| Sürüm | Dosya | KDP alanı |", "|---|---|---|"]
+    for what, path, where in FILE_MAP:
+        L += ["| %s | `%s` | %s |" % (what, path, where)]
+    L += [""]
+
+    L += ["## K · ⭑ FİYAT ÖNERİSİ VE GEREKÇESİ ⭑", "",
+          "| Sürüm | Liste | Baskı maliyeti | **Telif** | Marj |",
+          "|---|---:|---:|---:|---:|"]
+    for label, lst, cost, roy, marg in pricing_rows(meta):
+        L += ["| %s | %s | %s | **%s** | %s |"
+              % (label,
+                 "—" if lst is None else "%.2f $" % lst,
+                 "—" if cost is None else "%.2f $" % cost,
+                 "—" if roy is None else "%.2f $" % roy,
+                 "—" if marg is None else "%%%.1f" % (marg * 100))]
+    L += ["",
+          "> ⚠ **Bunlar garanti edilmiş kazanç değildir.** Baskı maliyeti",
+          "> KDP'nin ABD fiyat modelinden **hesaplanmıştır** (alınmış bir",
+          "> teklif değildir); telif pazara ve dağıtım seçimine göre",
+          "> değişir; Kindle telifi seçtiğiniz plana bağlıdır.", "",
+          "### Neden bu fiyatlar", ""]
+    for head, why in PRICE_WHY:
+        L += ["**%s** — %s" % (head, why), ""]
+    L += ["### Fiyat denetimi", "", "| Soru | Ölçülen |", "|---|---|"]
+    for q, a in PRICE_CHECKS:
+        L += ["| %s | %s |" % (q, a)]
+    L += [""]
     return "\n".join(L)
 
 
@@ -670,6 +1066,7 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
       % (e(meta["title"]), e(meta["author"]), meta["pageCount"]))
 
     navs = [("durum", "Durum"), ("dogrulama", "Doğrulama"),
+            ("dosyalar", "Dosya haritası"), ("fiyat", "Fiyat"),
             ("kurucu", "Kurucu işi")]
     navs += [(c.lower(), "%s · %s" % (c, n)) for c, n, _i, _x in secs]
     navs += [("alan", "Alanlar"), ("aplus", "A+ metni"),
@@ -794,6 +1191,72 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
             A('</table></div></div>')
 
     # ── ALANLAR ────────────────────────────────────────────────────────
+    # ── ⭑ DOSYA HARİTASI ⭑ ────────────────────────────────────────────
+    # ⚠ "Genel açıklama kullanma" (yönerge § 4): her satır TEK bir
+    # dosyayı TEK bir KDP alanına bağlar. Kurucu paneldeyken hangi
+    # dosyayı nereye sürükleyeceğini düşünmek zorunda kalmamalıdır.
+    A('<h2 id="dosyalar">📂 Dosya haritası — hangi dosya, nereye</h2>')
+    A('<p class="sub">Her satır tek bir dosyayı tek bir KDP alanına '
+      'bağlar. Yol proje kökünden görelidir.</p>')
+    A('<div class="scroll"><table>')
+    A('<tr><th>Sürüm</th><th>Dosya</th><th>KDP alanı</th></tr>')
+    FILEMAP = FILE_MAP
+    _unused = [
+        ("Paperback · iç blok", "08_OUTPUT/PAPERBACK/interior.pdf",
+         "Paperback Content → Manuscript"),
+        ("Paperback · kapak", "08_OUTPUT/PAPERBACK/cover.pdf",
+         "Paperback Content → Book Cover (upload your own)"),
+        ("Hardcover · iç blok", "08_OUTPUT/HARDCOVER/interior.pdf",
+         "Hardcover Content → Manuscript"),
+        ("Hardcover · kapak", "08_OUTPUT/HARDCOVER/cover.pdf",
+         "Hardcover Content → Book Cover (upload your own)"),
+        ("Kindle · EPUB", "08_OUTPUT/KINDLE/codex-enigmatica.epub",
+         "Kindle eBook Content → Manuscript"),
+        ("Kindle · kapak", "08_OUTPUT/KINDLE/cover.jpg",
+         "Kindle eBook Content → Kindle eBook Cover"),
+        ("A+ · 6 görsel", "08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png",
+         "A+ Content Manager → Add module → Image"),
+        ("A+ · metin", "08_OUTPUT/APLUS/module-map.json",
+         "A+ Content Manager → Headline / Body text"),
+        ("Metadata (üç sürüm)", "06_REPORTS/tracked/metadata.json",
+         "Details ekranı → başlık · alt başlık · açıklama · anahtar kelime"),
+        ("Sağlama toplamları", "08_OUTPUT/*/SHA256SUMS",
+         "— (yüklemeden ÖNCE yerelde doğrulanır)"),
+    ]
+    del _unused
+    for what, path, where in FILEMAP:
+        A('<tr><th>%s</th><td><code>%s</code></td><td>%s</td></tr>'
+          % (e(what), e(path), e(where)))
+    A('</table></div>')
+
+    # ── ⭑ FİYAT ⭑ ─────────────────────────────────────────────────────
+    A('<h2 id="fiyat">💰 Fiyat önerisi ve gerekçesi</h2>')
+    A('<div class="scroll"><table>')
+    A('<tr><th>Sürüm</th><th>Liste</th><th>Baskı maliyeti</th>'
+      '<th>Telif</th><th>Marj</th></tr>')
+    for label, lst, cost, roy, marg in pricing_rows(meta):
+        A('<tr><th>%s</th><td>%s</td><td>%s</td><td><b>%s</b></td>'
+          '<td>%s</td></tr>'
+          % (e(label),
+             "—" if lst is None else "%.2f $" % lst,
+             "—" if cost is None else "%.2f $" % cost,
+             "—" if roy is None else "%.2f $" % roy,
+             "—" if marg is None else "%%%.1f" % (marg * 100)))
+    A('</table></div>')
+    A('<div class="note"><b>⚠ Bunlar garanti edilmiş kazanç '
+      'değildir.</b><br>Baskı maliyeti KDP\'nin ABD fiyat modelinden '
+      '<b>hesaplanmıştır</b> (alınmış bir teklif değildir); telif pazara '
+      've dağıtım seçimine göre değişir; Kindle telifi seçtiğiniz plana '
+      'bağlıdır.</div>')
+    for head, why in PRICE_WHY:
+        A('<div class="card"><h3>%s</h3><p>%s</p></div>'
+          % (e(head), e(why)))
+    A('<div class="scroll"><table>')
+    A('<tr><th>Fiyat denetimi</th><th>Ölçülen</th></tr>')
+    for q, a in PRICE_CHECKS:
+        A('<tr><th>%s</th><td>%s</td></tr>' % (e(q), e(a)))
+    A('</table></div>')
+
     A('<h2 id="alan">Panele girilecek alanlar</h2>')
     A('<p class="sub">Her satır kopyalanabilir. Boş alanlar '
       '<b>boş gösterilir</b> — yer tutucu basmak geri alınamaz.</p>')
@@ -916,7 +1379,15 @@ def main() -> int:
     # ── DENETİMLER ─────────────────────────────────────────────────────
     ids = [x["id"] for s in secs for x in s[3]]
     rep.check(len(ids) == len(set(ids)), "her adım kimliği tekil")
-    rep.check(len(secs) == 7, "yedi bölüm var: A–G (%d)" % len(secs))
+    # ⚠ BÖLÜM SAYISI PANELİN SIRASIYLA BAĞLIDIR, keyfî değildir.
+    # Kurucu yönergesi § 3 on bölüm ister ve sırayı ADIYLA verir:
+    # 01 önce · 02 ciltsiz · 03 ciltli · 04 Kindle · 05 A+ ·
+    # 06 doğrulama · 07 metadata · 08 fiyat · 09 Previewer · 10 gönderim.
+    WANT = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]
+    got = [c for c, _n, _i, _it in secs]
+    rep.check(got == WANT,
+              "on bölüm var ve SIRASI panelin sırası (%d)" % len(secs)
+              + ("" if got == WANT else " — ⛔ %s" % got))
 
     need = ("adim", "ne", "nere", "gir", "dosya", "kontrol", "basari")
     miss = [x["id"] for s in secs for x in s[3]

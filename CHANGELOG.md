@@ -5,6 +5,65 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [1.3.0] — 2026-08-27 · ⭑ PROJE KAPANIŞI ⭑
+
+# PROJECT: TECHNICALLY COMPLETE · KDP UPLOAD PACKAGE COMPLETE · AWAITING FOUNDER KDP ACTION
+
+> ⛔ **HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.**
+
+→ [`06_REPORTS/FINAL_PROJECT_CLOSURE_REPORT.md`](06_REPORTS/FINAL_PROJECT_CLOSURE_REPORT.md)
+
+### Değişti — EL KİTABI PANELİN SIRASINA GÖRE YENİDEN KURULDU
+
+A–G yerine **01–10**, ve sıra artık dosya türüne göre değil **KDP
+panelinin kendi sırasına** göre: 01 önce · 02 ciltsiz · 03 ciltli ·
+04 Kindle · 05 A+ · 06 doğrulama · 07 metadata · 08 fiyat ·
+09 Previewer · 10 gönderim. **24 adım**, her biri yedi başlıkla.
+
+Gerekçe: kurucu bu belgeyi masada değil **KDP açıkken** okur; her adım
+tek bir ekranda tamamlanabilir olmalıdır.
+
+### Eklendi — DOSYA HARİTASI (§ J) ve FİYAT (§ K)
+
+Dosya haritası **tek bir listeden** (`FILE_MAP`) iki renderer'a birden
+beslenir — aynı haritayı iki yerde tutmak, birini güncelleyip ötekini
+unutmanın adıdır ve bu depo o hatayı dizgi yardımcılarında bir kez
+yaşadı. Her satır **tek dosyayı tek KDP alanına** bağlar.
+
+### Onarıldı — EL KİTABI KENDİ İŞİNİ YAPAMIYORDU
+
+* **Açıklama 300 karakterde kırpılıyordu** — yani kurucunun panele
+  yapıştıracağı metnin kendisi eksikti.
+* **Dil ve baskı bilgisi hiç yoktu** (§ 5 ikisini de istiyor). Dil yanlış
+  seçilirse Amazon kitabı yanlış mağazada listeler; baskı bilgisi üç
+  sürümün AYNI ürün sayfasında birleşmesi için birebir aynı yazılmalıdır.
+* Fiyat tablosu ilk yazımda **boş** çıkıyordu: anahtar adları
+  `facts.editions` sanılmıştı, gerçeği `facts.print`. Boş bir fiyat
+  tablosu, yanlış bir fiyat tablosu kadar işe yaramazdır.
+
+### Fiyat — mevcut hipotez ÖLÇÜLDÜ ve KORUNDU
+
+| | Liste | Telif | Marj |
+|---|---:|---:|---:|
+| Ciltsiz | **19,99 $** | 7,86 $ | %39,3 |
+| Ciltli | **29,99 $** | 9,06 $ | %30,2 |
+| Kindle (%35) | **9,99 $** | 3,50 $ | %35,0 |
+
+Fiyatlar **değiştirilmedi** — çünkü ölçüm onları doğruladı: ikisi de
+psikolojik eşiğin (20 $ / 30 $) **altında**, ciltli premiumu **+10 $
+(%50)**, Kindle ciltsizin **tam yarısı**. İş yapıyormuş görünmek için
+fiyat oynatmak, fiyat oynatmamaktan kötüdür.
+
+### Kapanış
+
+`qa_all` **38 kapı yeşil** · selftest **279** · kanarya **151 dosya** ·
+sağlama **16/16** · cevap sızıntısı **0** · çalışma ağacı **temiz**.
+
+⛔ Yüklenmedi · yayımlanmadı · prova alınmadı · alan adı alınmadı ·
+ISBN girilmedi · YZ beyanı verilmedi · insan doğrulaması uydurulmadı.
+
+---
+
 ## [1.2.0] — 2026-08-27 · ⭑ NİHAİ SÜRÜM PAKETİ · KURUCU GEÇERSİZ KILMASI ⭑
 
 # ⛔ HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.

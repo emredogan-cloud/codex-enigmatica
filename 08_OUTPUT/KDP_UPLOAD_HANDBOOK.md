@@ -14,7 +14,7 @@
 | İşlenmiş levha | 103 / 103 |
 | İşlenmiş ön kapak | 2 / 2 |
 | İşlenmiş A+ | 6 / 6 |
-| Ajan tarafından hazır adım | 6 / 13 |
+| Ajan tarafından hazır adım | 10 / 24 |
 
 ## 0.0 · ⛔ İNSAN DOĞRULAMASI YAPILMADI
 
@@ -89,174 +89,312 @@ bir rapor yanlıştır.
 - **Publish düğmesi** — Yayımlama kararı kurucuya aittir.
 - **A+ içeriğinin moderasyona gönderilmesi** — Amazon insan moderasyonu uygular; ajan gönderemez.
 
-## A · PAPERBACK
+## 01 · KDP'Yİ AÇMADAN ÖNCE
 
-### 🔵 İç blok dosyasını hazırla
+### 🔵 Paketi doğrula (sağlama toplamları)
 
 | | |
 |---|---|
-| NE YAPACAĞIM | 6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF'i. Sayfa modeli 274 sayfa ölçtü. |
-| KDP'DE NEREYE | Bookshelf → Create → Paperback → Manuscript → Upload paperback manuscript |
-| NE GİRECEĞİM | — |
-| HANGİ DOSYA | `08_OUTPUT/PAPERBACK/interior.pdf` |
-| NE KONTROL EDECEĞİM | Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 274 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı. |
-| BAŞARILI OLURSA | KDP 'Manuscript uploaded successfully' der ve Previewer açılır. |
+| NE YAPACAĞIM | Dört paketin dördü de sağlama toplamı taşır. Yüklemeden önce bozulmadıklarını DOĞRULAYIN — yarım inen bir PDF'i KDP kabul edip bozuk basar. |
+| KDP'DE NEREYE | Terminal (KDP'de değil) |
+| NE GİRECEĞİM | cd 08_OUTPUT/PAPERBACK && sha256sum -c SHA256SUMS |
+| HANGİ DOSYA | `08_OUTPUT/*/SHA256SUMS` |
+| NE KONTROL EDECEĞİM | Dört dizinde de her satır 'OK' demeli. Tek bir FAILED varsa YÜKLEMEYİN. |
+| BAŞARILI OLURSA | 16 dosyanın 16'sı OK. |
 | DURUM | **HAZIR** |
 
-### 🔵 Kapak dosyasını hazırla
+### 🟢 ISBN kararını verin
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Paperback SARMAL kapak (arka + sırt + ön), tek PDF — ÜRETİLDİ. |
-| KDP'DE NEREYE | Paperback Content → Book Cover → Upload a cover you already have |
-| NE GİRECEĞİM | — |
-| HANGİ DOSYA | `08_OUTPUT/PAPERBACK/cover.pdf` |
-| NE KONTROL EDECEĞİM | Sırt ÖLÇÜLEN sayfa sayısından türetildi. Previewer'da sırt yazısının ortalandığını ve barkod alanının boş olduğunu doğrulayın. |
-| BAŞARILI OLURSA | KDP kapağı kabul eder ve Previewer açılır. |
-| DURUM | **HAZIR** |
-
-### 🟢 Fiyat ve dağıtım
-
-| | |
-|---|---|
-| NE YAPACAĞIM | Liste fiyatı 19.99 $ (paperback). |
-| KDP'DE NEREYE | Paperback Rights & Pricing |
-| NE GİRECEĞİM | 19.99 USD |
+| NE YAPACAĞIM | KDP ÜCRETSİZ ISBN verir (yalnızca Amazon'da geçerlidir) ya da kendi ISBN'inizi girersiniz (her yerde geçerli, ücretli). Depo hiçbir değer TAŞIMIYOR ve taşımayacak. |
+| KDP'DE NEREYE | Paperback/Hardcover Details → ISBN → 'Get a free KDP ISBN' veya 'Use my own ISBN' |
+| NE GİRECEĞİM | ⛔ AJAN GİRMEDİ — kurucu panelde seçer |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Basım maliyeti sayfa sayısıyla değişir; 274 sayfa değişirse telif de değişir. |
-| BAŞARILI OLURSA | KDP net telif tutarını gösterir. |
+| NE KONTROL EDECEĞİM | Ciltsiz ve ciltli AYRI ISBN ister. Kindle ISBN İSTEMEZ (ASIN alır). |
+| BAŞARILI OLURSA | Her baskı sürümünün kendi ISBN'i olur. |
 | DURUM | **BEKLIYOR** |
 
-## B · HARDCOVER
-
-### 🔵 İç blok (hardcover)
+### 🟢 Yapay zekâ içerik beyanını hazırlayın
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Aynı iç blok, hardcover trim ve pay kurallarıyla. |
-| KDP'DE NEREYE | Create → Hardcover → Manuscript |
+| NE YAPACAĞIM | KDP, YZ-ÜRETİMİ metin/görsel/çevirinin bildirilmesini ister; YZ-DESTEKLİ içerik için bildirim gerekmez. Ayrımı yalnızca siz yapabilirsiniz — bu hukuki bir beyandır. |
+| KDP'DE NEREYE | Details ekranı → 'Did you use AI tools...?' |
+| NE GİRECEĞİM | ⛔ AJAN BEYAN VERMEDİ — kurucu panelde doldurur |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | `metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false ve öyle kalacak. Bir ajan sizin adınıza beyan veremez. |
+| BAŞARILI OLURSA | Beyan panelde kaydedilir. |
+| DURUM | **BEKLIYOR** |
+
+## 02 · PAPERBACK
+
+### 🔵 İç blok
+
+| | |
+|---|---|
+| NE YAPACAĞIM | 6 × 9 in trim · KREM kâğıt · siyah mürekkep · 274 sayfa (ÖLÇÜLDÜ). |
+| KDP'DE NEREYE | Bookshelf → Create → Paperback → Paperback Content → Manuscript → Upload paperback manuscript |
+| NE GİRECEĞİM | — |
+| HANGİ DOSYA | `08_OUTPUT/PAPERBACK/interior.pdf` |
+| NE KONTROL EDECEĞİM | Previewer'da: iç kenar payı (gutter) hiçbir levhayı kesmemeli · taşma (bleed) yok, iç blok taşmasızdır · sayfa numaraları 3. sayfadan başlar · SON YAPRAK doğrulama adresini taşır (s. 273). |
+| BAŞARILI OLURSA | 'Manuscript uploaded successfully' ve Previewer açılır. |
+| DURUM | **HAZIR** |
+
+### 🔵 Sarmal kapak
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Arka + sırt + ön, TEK PDF. Tam kapak 12.935 × 9.250 in · sırt 0.6850 in (KREM kâğıt, 274 sayfadan türetildi). |
+| KDP'DE NEREYE | Paperback Content → Book Cover → Upload a cover you already have (print-ready PDF) |
+| NE GİRECEĞİM | — |
+| HANGİ DOSYA | `08_OUTPUT/PAPERBACK/cover.pdf` |
+| NE KONTROL EDECEĞİM | Sırt yazısı ORTALANMIŞ olmalı · sağ altta barkod alanı BOŞ bırakıldı (KDP kendi barkodunu oraya basar) · güvenli alan içinde hiçbir metin kesilmemeli. |
+| BAŞARILI OLURSA | Kapak kabul edilir, Previewer açılır. |
+| DURUM | **HAZIR** |
+
+## 03 · HARDCOVER
+
+### 🔵 İç blok (ciltli)
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Aynı içerik, ciltli iç pay kurallarıyla yeniden dizildi · 274 sayfa · iç kenar payı ciltsizden GENİŞTİR. |
+| KDP'DE NEREYE | Create → Hardcover → Hardcover Content → Manuscript |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/HARDCOVER/interior.pdf` |
-| NE KONTROL EDECEĞİM | Hardcover'da KDP daha geniş iç pay ve menteşe (hinge) payı ister; paperback dosyası olduğu gibi KULLANILAMAZ. |
-| BAŞARILI OLURSA | Yükleme kabul edilir ve Previewer açılır. |
+| NE KONTROL EDECEĞİM | ⛔ CİLTSİZ İÇ BLOĞUNU BURAYA YÜKLEMEYİN — iç payları farklıdır ve ciltli baskıda metin cilde gömülür. |
+| BAŞARILI OLURSA | Ciltli Previewer açılır. |
 | DURUM | **HAZIR** |
 
-### 🔵 Kapak (hardcover)
+### 🔵 Sarmal kapak (ciltli)
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Hardcover sarmal — ÜRETİLDİ. Sırt 0,7833 in, menteşe 0,394 in, tam kapak 14,359 × 10,417 in. Değerler hardcover-calculator.png'den OKUNDU. |
-| KDP'DE NEREYE | Hardcover Content → Book Cover |
+| NE YAPACAĞIM | Tam kapak 14.382 × 10.417 in · sırt 0.8058 in · menteşe (hinge) 0.394 in · sarma (wrap) 0.591 in. ⚠ KÂĞIT: BEYAZ. |
+| KDP'DE NEREYE | Hardcover Content → Book Cover → Upload a cover you already have |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/HARDCOVER/cover.pdf` |
-| NE KONTROL EDECEĞİM | Hardcover sarmalı ayrı şablondur (14,359 in — ciltsizin 12,910'u DEĞİL). Previewer'da menteşe ve sırtı doğrulayın. |
-| BAŞARILI OLURSA | KDP kapağı kabul eder ve Previewer açılır. |
+| NE KONTROL EDECEĞİM | ⛔ CİLTSİZ KAPAK GEOMETRİSİNİ KULLANMAYIN. Ciltli kapak tahtası trimden BÜYÜKTÜR (6.197 × 9.236 in) ve ayrıca menteşe payı vardır. Geometri kurucunun KDP hesaplayıcı ekran görüntüsünden OKUNDU (03_COVER/HARDCOVER_CALCULATOR_VALUES.md). |
+| BAŞARILI OLURSA | Ciltli kapak kabul edilir. |
 | DURUM | **HAZIR** |
 
-## C · KINDLE
-
-### 🔵 Kindle EPUB'ını yükle
+### 🟡 ⚠ Kâğıdı BEYAZ seçin
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Akışkan EPUB 3 · 18 bölüm · 99 gravür · kapak YALNIZCA ÖN (1600 × 2560). |
-| KDP'DE NEREYE | Bookshelf → Create → Kindle eBook → Content → Upload eBook manuscript |
+| NE YAPACAĞIM | Ciltli sürüm BEYAZ kâğıtla hesaplandı. Panelde KREM seçerseniz sırt 0,8737 in olur — üretilen kapak 0,8058 in'dir ve fark 0,0680 in, KDP'nin ±0,0625 in toleransını AŞAR. |
+| KDP'DE NEREYE | Hardcover Content → Print Options → Paper type |
+| NE GİRECEĞİM | White paper |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | Krem seçilirse kapak REDDEDİLİR ya da sırt kayar. Ciltsiz KREM kalır — iki ayrı üründür. |
+| BAŞARILI OLURSA | Sırt genişliği kapakla örtüşür. |
+| DURUM | **BEKLIYOR** |
+
+## 04 · KINDLE
+
+### 🔵 EPUB yükle
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Akışkan EPUB 3 · 0.0 MB · 19 bölüm · 99 gömülü levha. Baskıyla AYNI içerik. |
+| KDP'DE NEREYE | Create → Kindle eBook → Kindle eBook Content → Manuscript → Upload |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/KINDLE/codex-enigmatica.epub` |
-| NE KONTROL EDECEĞİM | ⭑ TELİF PLANI: dosya 46 MB. %70 planı teslimat ücreti keser ve kitap başına 0,09 $ bırakır; %35 planı 3,50 $ bırakır. %35 SEÇİN (ya da EPUB 23 MB altına indirilsin). Previewer'da levhaların yakınlaştığını doğrulayın. |
-| BAŞARILI OLURSA | Önizleyici bölümleri ve levhaları gösterir. |
+| NE KONTROL EDECEĞİM | Yükleme sonrası Kindle Previewer'da levhaların yakınlaştırılabildiğini doğrulayın. |
+| BAŞARILI OLURSA | Dönüştürme hatasız biter. |
 | DURUM | **HAZIR** |
 
-## D · A+ İÇERİK
-
-### 🔵 Altı A+ modül görselini yükle
+### 🔵 Kapak (YALNIZCA ÖN)
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Görseller METİNSİZDİR; başlık ve gövde metni Amazon'un kendi alanlarına yazılır. |
-| KDP'DE NEREYE | Bookshelf → ⋯ → Edit A+ Content → Create A+ Content |
-| NE GİRECEĞİM | Her modülün başlık ve gövde metni (aşağıda kopyalanabilir). |
-| HANGİ DOSYA | `07_ASSETS/web/ (6/6 hazır)` |
-| NE KONTROL EDECEĞİM | Modül türü ve piksel ölçüsü kartla aynı olmalı. Görselde metin GÖRÜNMEMELİ. |
-| BAŞARILI OLURSA | Önizlemede görsel + metin ayrı ayrı görünür. |
+| NE YAPACAĞIM | 1600 × 2560 px JPEG. ⛔ Sırt yok · arka kapak yok · barkod yok · taşma yok — bunlar BASKIYA aittir. |
+| KDP'DE NEREYE | Kindle eBook Content → Kindle eBook Cover → Upload a cover you already have |
+| NE GİRECEĞİM | — |
+| HANGİ DOSYA | `08_OUTPUT/KINDLE/cover.jpg` |
+| NE KONTROL EDECEĞİM | Küçük resimde (thumbnail) başlık okunabilir olmalı — mağazada kapak bu boyutta görünür. |
+| BAŞARILI OLURSA | Kapak kabul edilir. |
 | DURUM | **HAZIR** |
+
+### 🟢 ⭑ Telif planını SİZ seçersiniz ⭑
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Bu dosyada (0.0 MB) ölçülen sonuç: %70 planı teslimat ücreti keser (6.95 $) ve 2.13 $ telif bırakır; %35 planı ücret kesmez ve 3.50 $ bırakır. |
+| KDP'DE NEREYE | Kindle eBook Pricing → Royalty and Pricing |
+| NE GİRECEĞİM | %%35 (bu dosya boyutunda ölçülen öneri) |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | %%70'in kârlı olduğu sınır ~33,3 MB'dır; bu dosya onun ÜSTÜNDE. Formül KDP'nin kendi telif sayfasından: %%70 × (liste − KDV − teslimat). |
+| BAŞARILI OLURSA | KDP net telifi gösterir ve %%35 daha yüksektir. |
+| DURUM | **BEKLIYOR** |
+
+## 05 · A+ İÇERİK
+
+### 🔵 Altı modülü yükle
+
+| | |
+|---|---|
+| NE YAPACAĞIM | 3 × tam genişlik (1940 × 600) + 3 × kare (600 × 600). Hepsi KDP'nin standart modül ölçülerinin 2× sürümüdür. |
+| KDP'DE NEREYE | Marketing → A+ Content Manager → Create A+ → Add module |
+| NE GİRECEĞİM | — |
+| HANGİ DOSYA | `08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png` |
+| NE KONTROL EDECEĞİM | Sıra `module-map.json` içindeki `id` sırasıdır: 01 → 02 → 03 → 04 → 05 → 06. |
+| BAŞARILI OLURSA | Altı modül de yüklenir. |
+| DURUM | **HAZIR** |
+
+### 🟢 Başlık ve gövde metnini gir
+
+| | |
+|---|---|
+| NE YAPACAĞIM | ⭑ GÖRSELLER METİNSİZDİR ⭑ — bu bilerek böyledir. Ticari metin Amazon'un KENDİ metin alanlarına girilir; görselin içine gömülmüş metin çevrilemez ve moderasyonda sorun çıkarır. |
+| KDP'DE NEREYE | Her modülün 'Headline' ve 'Body text' alanı |
+| NE GİRECEĞİM | 08_OUTPUT/APLUS/module-map.json → title / body |
+| HANGİ DOSYA | `08_OUTPUT/APLUS/module-map.json` |
+| NE KONTROL EDECEĞİM | Metin İNGİLİZCEDİR (ürün sayfası dili). Kopyala-yapıştır: bu kılavuzun § I bölümünde kopyalama düğmeleriyle duruyor. |
+| BAŞARILI OLURSA | Altı modülün altısında da metin dolu. |
+| DURUM | **BEKLIYOR** |
 
 ### 🟢 Moderasyona gönder
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Amazon insan moderasyonu uygular (birkaç gün). |
-| KDP'DE NEREYE | A+ Content → Submit for approval |
+| NE YAPACAĞIM | Amazon A+ içeriğini İNSAN moderasyonundan geçirir. Onay genellikle birkaç iş günü sürer. |
+| KDP'DE NEREYE | A+ Content Manager → Submit for approval |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Reddedilirse gerekçe e-postayla gelir; en sık sebep görselde metin olmasıdır. |
-| BAŞARILI OLURSA | Durum 'Submitted' → 'Approved' olur. |
+| NE KONTROL EDECEĞİM | Reddedilirse gerekçe e-postayla gelir; en sık sebep görselin içindeki metindir — bizde yok. |
+| BAŞARILI OLURSA | Durum 'Approved' olur. |
 | DURUM | **BEKLIYOR** |
 
-## E · SON ÖNİZLEME
+## 06 · DOĞRULAMA SAYFASI
 
-### 🟢 Previewer'da sayfa sayfa bak
+### 🟢 ⭑ Kalıcı alan adını alın ve bağlayın ⭑
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Özellikle 103 levha sayfası. |
-| KDP'DE NEREYE | Paperback/Hardcover Content → Launch Previewer |
+| NE YAPACAĞIM | Kitap SON YAPRAĞINA (s. 273) şu adresi BASAR: valicepress.com/codex-enigmatica/verify — ve basılmış bir URL DÜZELTİLEMEZ. |
+| KDP'DE NEREYE | Alan adı sağlayıcısı + Vercel → Project → Settings → Domains |
+| NE GİRECEĞİM | valicepress.com |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | 26 Ağu 2026 ölçümü: alan adı KAYITSIZ ve müsaitti (~11,25 $/yıl). Alınmazsa başkası alabilir ve satılmış her nüsha okuru YABANCI bir siteye gönderir. |
+| BAŞARILI OLURSA | Kalıcı adres yanıt verir. |
+| DURUM | **BEKLIYOR** |
+
+### 🟢 Sunucu sırlarını girin
+
+| | |
+|---|---|
+| NE YAPACAĞIM | İki değişken: biber ve özet. Sunucuda DÜZ CEVAP SAKLANMAZ — saklanan şey biberli SHA-256 özetidir. İkisi de depoda DEĞİLDİR. |
+| KDP'DE NEREYE | Vercel → Project → Settings → Environment Variables (Production) |
+| NE GİRECEĞİM | CODEX_VERIFY_PEPPER · CODEX_VERIFY_DIGEST (değerler bu belgede YAZILI DEĞİLDİR) |
+| HANGİ DOSYA | `scripts/codex-verify-digest.mjs (site deposu)` |
+| NE KONTROL EDECEĞİM | Üretimi: `node scripts/codex-verify-digest.mjs` — cevabı STDIN'den okur, dosyaya ve kabuk geçmişine YAZMAZ. |
+| BAŞARILI OLURSA | İkisi de 'Sensitive' olarak görünür. |
+| DURUM | **HAZIR** |
+
+### 🔴 ⛔ Upstash hız sınırı arka ucunu kurun
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Doğrulama uç noktası şu an CANLIDA 503 veriyor ve bu DOĞRU davranıştır: hız sınırlayıcısı olmayan bir doğrulama servisi SINIRSIZ DENEMEDİR, o yüzden bilerek KAPALI düşer. |
+| KDP'DE NEREYE | upstash.com → Redis database → REST API |
+| NE GİRECEĞİM | UPSTASH_REDIS_REST_URL · UPSTASH_REDIS_REST_TOKEN (Vercel Production) |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | ÖLÇÜLDÜ: üretimdeki URL bir URL DEĞİL (şema yok, ana makine adı 0 karakter) ve belirteç 11 karakter — 89 gün önce konmuş YER TUTUCULAR. Aynı sebep sitenin çevre sınırlayıcısını da sessizce AÇIK düşürüyor. |
+| BAŞARILI OLURSA | `qa_verification.py --gate release --live` yeşil döner. |
+| DURUM | **BEKLIYOR** |
+
+## 07 · METADATA
+
+### 🟢 Panel alanlarını doldurun
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Başlık, alt başlık, yazar, yayıncı, açıklama, 7 anahtar kelime ve 3 BISAC kategorisi. |
+| KDP'DE NEREYE | Paperback/Hardcover/Kindle → Details |
+| NE GİRECEĞİM | § H'deki tablodan kopyalayın (kopyalama düğmeleri var) |
+| HANGİ DOSYA | `06_REPORTS/tracked/metadata.json` |
+| NE KONTROL EDECEĞİM | ÜÇ SÜRÜMDE DE AYNI olmalı — başlık ya da yazar farklı yazılırsa Amazon sürümleri birbirine BAĞLAMAZ ve üç ayrı ürün gibi listelenir. |
+| BAŞARILI OLURSA | Üç sürüm tek ürün sayfasında birleşir. |
+| DURUM | **HAZIR** |
+
+## 08 · FİYAT
+
+### 🟢 Liste fiyatlarını girin
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Ciltsiz 19.99 $ · Ciltli 29.99 $ · Kindle 9.99 $ (ABD). |
+| KDP'DE NEREYE | Her sürümün Rights & Pricing ekranı |
+| NE GİRECEĞİM | 19.99 / 29.99 / 9.99 USD |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | Gerekçeler ve ölçülen telifler § J'de. Diğer pazarlar için KDP otomatik dönüştürme önerir — kabul edebilirsiniz. |
+| BAŞARILI OLURSA | KDP her sürüm için net telifi gösterir ve § J'deki sayılarla örtüşür. |
+| DURUM | **BEKLIYOR** |
+
+## 09 · PREVIEWER — ZORUNLU
+
+### 🔴 ⭑ Baskı Previewer'ında sayfa sayfa bakın ⭑
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Bu adım ATLANAMAZ. Yerel ölçümlerin hepsi yeşil olabilir ve Previewer yine de gerçek bir kusur gösterebilir — dizgi motoru başkadır. |
+| KDP'DE NEREYE | Yükleme sonrası açılan Previewer |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Her levhada: kırpılma yok · çizgiler kapanmamış · sayılabilir işaretler sayılabilir · sayfa numarası levhanın üstüne binmiyor. |
-| BAŞARILI OLURSA | Previewer hata vermez ve levhalar okunur. |
+| NE KONTROL EDECEĞİM | ① kapak · ② SIRT yazısı ortalı mı · ③ kenar payları · ④ iç pay (gutter) hiçbir levhayı kesmiyor mu · ⑤ sayfa geçişleri · ⑥ levhalar/şekiller · ⑦ metin · ⑧ boş sayfalar · ⑨ ÇÖZÜM bölümü · ⑩ SON YAPRAKTA doğrulama adresi. |
+| BAŞARILI OLURSA | Previewer 'no errors' der VE göz denetimi temiz geçer. |
 | DURUM | **BEKLIYOR** |
 
-### 🟢 Fiziksel prova (A9)
+### 🔴 Kindle Previewer
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Basılı prova kopya sipariş edilir. |
-| KDP'DE NEREYE | Proof or author copy |
+| NE YAPACAĞIM | Akışkan metin, farklı cihazlarda farklı kırılır. Levhaların yakınlaştırılabildiğini görün. |
+| KDP'DE NEREYE | Kindle eBook Content → Preview |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | ⭑ EKRAN PROVASI BUNUN YERİNE GEÇMEZ. Nokta yayılması yalnızca kâğıtta ölçülür. |
-| BAŞARILI OLURSA | Elinizde basılı kopya olur ve levhalar ÖLÇÜLEREK doğrulanır. |
+| NE KONTROL EDECEĞİM | Telefon + tablet + e-mürekkep görünümlerinde bakın; levhalar ve çizelgeler okunabilir olmalı. |
+| BAŞARILI OLURSA | Üç görünümde de içerik okunur. |
 | DURUM | **BEKLIYOR** |
 
-## F · FİYAT
-
-### 🟢 Liste fiyatlarını gir
+### 🟡 Fiziksel prova (önerilir)
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Hardcover 29.99 $ · Paperback 19.99 $ |
-| KDP'DE NEREYE | Rights & Pricing |
-| NE GİRECEĞİM | Yukarıdaki tutarlar |
-| HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 274 sayfaya göre kuruldu. |
-| BAŞARILI OLURSA | KDP her pazar için telif tutarını gösterir. |
-| DURUM | **BEKLIYOR** |
-
-## G · YAYIMLAMA
-
-### 🟢 Yapay zekâ içerik beyanı
-
-| | |
-|---|---|
-| NE YAPACAĞIM | KDP, AI kullanımını sorar. Bu bir HUKUKİ BEYANDIR. |
-| KDP'DE NEREYE | Paperback Details → AI-Generated Content |
-| NE GİRECEĞİM | Kendi doğru cevabınız |
-| HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | `founderPending.aiDisclosureConfirmed` = false. Ajan bunu sizin yerinize dolduramaz. |
-| BAŞARILI OLURSA | Beyan kaydedilir. |
-| DURUM | **BEKLIYOR** |
-
-### 🟢 Publish
-
-| | |
-|---|---|
-| NE YAPACAĞIM | Yayımlama kararı. |
-| KDP'DE NEREYE | Publish Your Paperback Book |
+| NE YAPACAĞIM | Gravür levhaların nokta yayılması altındaki davranışı YALNIZCA basılı provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir. |
+| KDP'DE NEREYE | Previewer → Print a proof copy |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `—` |
-| NE KONTROL EDECEĞİM | ⭑ BU KİTAP HİÇBİR İNSANIN ELİNDE ÇÖZÜLMEDİ. Harici çözücü oturumu: 0/5 (A12b). Ölçülen öldürme kapısı kararı HARD-STOP'tur. |
-| BAŞARILI OLURSA | Kitap 24–72 saat içinde yayında olur. |
+| NE KONTROL EDECEĞİM | A9 · kurucu kararı. Zorunlu değil ama bu kitapta LEVHALAR ÜRÜNÜN KENDİSİDİR. |
+| BAŞARILI OLURSA | Prova elinizde ve levhalar okunur. |
+| DURUM | **BEKLIYOR** |
+
+## 10 · SON GÖNDERİM
+
+### 🔴 ⛔ GERÇEK BİR KUSUR VARSA YAYIMLAMAYIN
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Yerel yeşil preflight, gerçek bir KDP Previewer kusurunu GEÇERSİZ KILMAZ. Previewer bir hata gösteriyorsa önce o düzelir. |
+| KDP'DE NEREYE | — |
+| NE GİRECEĞİM | — |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | Kusur gerçek mi yoksa Previewer'ın bilinen görüntüleme tuhaflığı mı — emin değilseniz prova alın. |
+| BAŞARILI OLURSA | Bilinen gerçek kusur YOK. |
+| DURUM | **BEKLIYOR** |
+
+### 🔴 Publish
+
+| | |
+|---|---|
+| NE YAPACAĞIM | Üç sürümü de yayımlayın. Amazon 24–72 saat içinde canlıya alır. |
+| KDP'DE NEREYE | Her sürümün son ekranı → Publish Your Book |
+| NE GİRECEĞİM | — |
+| HANGİ DOSYA | `—` |
+| NE KONTROL EDECEĞİM | ⚠ Bu kitabı HİÇBİR HARİCİ İNSAN ÇÖZMEDİ (0/5 oturum, ölçülen karar HARD-STOP). Yayımlama kararını bunu BİLEREK verin. |
+| BAŞARILI OLURSA | Üç sürüm de 'Live' olur. |
 | DURUM | **BEKLIYOR** |
 
 ## H · Panele girilecek alanlar
@@ -268,7 +406,7 @@ bir rapor yanlıştır.
 | Yazar | Emre Doğan |
 | Yayıncı | Vâliçe Press |
 | Seri | Codex · cilt 3 |
-| Açıklama | One hundred engraved enigmas and a single unbroken mystery.  Five gates. Twenty puzzles each. Every answer is a member of a catalogue printed inside this book — nothing here asks you to leave it.  The ciphers are not printed beside the plates; they are printed INSIDE them. A keystone that is missing |
+| Açıklama | One hundred engraved enigmas and a single unbroken mystery.  Five gates. Twenty puzzles each. Every answer is a member of a catalogue printed inside this book — nothing here asks you to leave it.  The ciphers are not printed beside the plates; they are printed INSIDE them. A keystone that is missing, a ring whose anchor is not marked, a chart whose own length is the number you need.  Every puzzle has exactly one answer and a three-tier hint ladder that never gives it away. Taking a hint is not losing.  And when the five gates are open, they give you five phrases that say nothing on their own. The answer to the last question is not printed anywhere in this book.  101 puzzles · 5 gates · 303 hints · 103 engraved plates · 274 pages |
 | Anahtar kelime 1 | puzzle book for adults |
 | Anahtar kelime 2 | cipher puzzle book |
 | Anahtar kelime 3 | codebreaking puzzles |
@@ -280,7 +418,12 @@ bir rapor yanlıştır.
 | Kategori 2 | GAM001000 — GAMES & ACTIVITIES / Reference |
 | Kategori 3 | GAM002000 — GAMES & ACTIVITIES / Logic & Brain Teasers |
 | Yazar biyografisi | Emre is a puzzle designer, mythologist, and game archivist dedicated to preserving ancient cultures, codes, and stories for the next generation. |
-| ISBN | ⛔ KARAR VERİLMEDİ (strateji: kdp-free) |
+| Dil | English |
+| Baskı | First edition |
+| Sürümler | hardcover 29.99 $ · paperback 19.99 $ · kindle 9.99 $ |
+| Sayfa (baskı) | 274 |
+| ISBN | ⛔ KURUCU KDP PANELİNDE GİRECEK (strateji: kdp-free) |
+| YZ içerik beyanı | ⛔ KURUCU KDP PANELİNDE TAMAMLAYACAK |
 
 ## I · A+ metni (İngilizce — ürün sayfası dili)
 
@@ -295,3 +438,52 @@ bir rapor yanlıştır.
 
 > Görsellerde **metin yoktur**; bu metin Amazon'un kendi
 > başlık ve gövde alanlarına girilir.
+
+## J · 📂 DOSYA HARİTASI — hangi dosya, nereye
+
+Her satır **tek bir dosyayı tek bir KDP alanına** bağlar.
+Yol proje kökünden görelidir.
+
+| Sürüm | Dosya | KDP alanı |
+|---|---|---|
+| Paperback · iç blok | `08_OUTPUT/PAPERBACK/interior.pdf` | Paperback Content → Manuscript |
+| Paperback · kapak | `08_OUTPUT/PAPERBACK/cover.pdf` | Paperback Content → Book Cover (upload your own) |
+| Hardcover · iç blok | `08_OUTPUT/HARDCOVER/interior.pdf` | Hardcover Content → Manuscript |
+| Hardcover · kapak | `08_OUTPUT/HARDCOVER/cover.pdf` | Hardcover Content → Book Cover (upload your own) |
+| Kindle · EPUB | `08_OUTPUT/KINDLE/codex-enigmatica.epub` | Kindle eBook Content → Manuscript |
+| Kindle · kapak | `08_OUTPUT/KINDLE/cover.jpg` | Kindle eBook Content → Kindle eBook Cover |
+| A+ · 6 görsel | `08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png` | A+ Content Manager → Add module → Image |
+| A+ · metin | `08_OUTPUT/APLUS/module-map.json` | A+ Content Manager → Headline / Body text |
+| Metadata (üç sürüm) | `06_REPORTS/tracked/metadata.json` | Details → başlık · alt başlık · açıklama · anahtar kelime |
+| Sağlama toplamları | `08_OUTPUT/*/SHA256SUMS` | — (yüklemeden ÖNCE yerelde doğrulanır) |
+
+## K · ⭑ FİYAT ÖNERİSİ VE GEREKÇESİ ⭑
+
+| Sürüm | Liste | Baskı maliyeti | **Telif** | Marj |
+|---|---:|---:|---:|---:|
+| Ciltsiz | 19.99 $ | 4.14 $ | **7.86 $** | %39.3 |
+| Ciltli | 29.99 $ | 8.94 $ | **9.06 $** | %30.2 |
+| Kindle · %35 planı · 46.3 MB | 9.99 $ | — | **3.50 $** | %35.0 |
+
+> ⚠ **Bunlar garanti edilmiş kazanç değildir.** Baskı maliyeti
+> KDP'nin ABD fiyat modelinden **hesaplanmıştır** (alınmış bir
+> teklif değildir); telif pazara ve dağıtım seçimine göre
+> değişir; Kindle telifi seçtiğiniz plana bağlıdır.
+
+### Neden bu fiyatlar
+
+**Ciltsiz · 19,99 $** — 20 doların ALTINDA kalan en yüksek basamak. 274 sayfa ve 103 gravür levha için 19,99 $ premium bir bulmaca kitabının olağan yeridir; 21,99 $ psikolojik 20 $ eşiğini aşar ve tanınmayan bir yazarın ilk kitabında dönüşümü düşürür. 17,99 $ ise kopya başına 1,20 $'ı sebepsiz bırakır.
+
+**Ciltli · 29,99 $** — 30 doların ALTINDA kalan en yüksek basamak ve klasik hediye kitabı yeri. Ciltsizin tam 10 $ üstü — yani %50 net premium: alıcı farkı GÖREBİLİR ve gerekçelendirebilir. 32,99 $ hem 30 $ eşiğini aşar hem de ciltsizle arayı 13 $'a çıkarıp ciltsizi 'ucuz sürüm' gibi gösterir.
+
+**Kindle · 9,99 $** — Ciltsizin TAM YARISI — merdiven okunur ve tutarlıdır. Dosya 46,3 MB olduğu için %35 planı seçilir ve o planda fiyat bandı kısıtı bağlamaz. 6,99 $ 274 sayfalık resimli bir kitabı ucuza düşürür ve baskıyı yer; 8,99 $ makul bir alternatiftir ve dönüşüm yavaşsa ilk denenecek basamaktır (kopya başına 0,35 $).
+
+### Fiyat denetimi
+
+| Soru | Ölçülen |
+|---|---|
+| Kötü telif üretiyor mu | HAYIR — ciltsiz %39,3 · ciltli %30,2 marj |
+| Müşteri fiyatı ürkütücü mü | HAYIR — ikisi de psikolojik eşiğin ALTINDA (20 $ / 30 $) |
+| Ciltli premiumu net mi | EVET — +10,00 $ (%50 üstü) |
+| Kindle baskının anlamlı altında mı | EVET — ciltsizin tam yarısı |
+| Üretim kalitesiyle tutarlı mı | EVET — 274 sayfa · 103 levha · sarmal kapak |

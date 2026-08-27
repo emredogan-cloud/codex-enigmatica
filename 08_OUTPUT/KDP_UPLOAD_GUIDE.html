@@ -65,7 +65,7 @@ color:var(--mut);font-size:.82rem}
 <div class="wrap">
 <h1>KDP Yükleme Kılavuzu</h1>
 <p class="sub"><b>Codex Enigmatica</b> · Emre Doğan · ölçülen 274 sayfa · bu dosya <code>04_BUILD/kdp_handbook.py</code> tarafından üretildi — elle düzenlemeyin.</p>
-<nav><a href="#durum">Durum</a><a href="#dogrulama">Doğrulama</a><a href="#kurucu">Kurucu işi</a><a href="#a">A · PAPERBACK</a><a href="#b">B · HARDCOVER</a><a href="#c">C · KINDLE</a><a href="#d">D · A+ İÇERİK</a><a href="#e">E · SON ÖNİZLEME</a><a href="#f">F · FİYAT</a><a href="#g">G · YAYIMLAMA</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
+<nav><a href="#durum">Durum</a><a href="#dogrulama">Doğrulama</a><a href="#dosyalar">Dosya haritası</a><a href="#fiyat">Fiyat</a><a href="#kurucu">Kurucu işi</a><a href="#01">01 · KDP&#x27;Yİ AÇMADAN ÖNCE</a><a href="#02">02 · PAPERBACK</a><a href="#03">03 · HARDCOVER</a><a href="#04">04 · KINDLE</a><a href="#05">05 · A+ İÇERİK</a><a href="#06">06 · DOĞRULAMA SAYFASI</a><a href="#07">07 · METADATA</a><a href="#08">08 · FİYAT</a><a href="#09">09 · PREVIEWER — ZORUNLU</a><a href="#10">10 · SON GÖNDERİM</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
 <div class="bar"><span class="cnt" id="cnt">0 / 0</span><span class="track"><span class="fill" id="fill"></span></span><span class="pill p-wait" id="ready">EKSİK ADIM VAR</span></div>
 <h2 id="durum">Durum — ölçüm, iddia değil</h2>
 <div class="scroll"><table>
@@ -110,130 +110,266 @@ color:var(--mut);font-size:.82rem}
 <tr><th>Publish düğmesi</th><td>Yayımlama kararı kurucuya aittir.</td></tr>
 <tr><th>A+ içeriğinin moderasyona gönderilmesi</th><td>Amazon insan moderasyonu uygular; ajan gönderemez.</td></tr>
 </table></div>
-<h2 id="a">📕 A · PAPERBACK</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="pb-1"><h3><label for="pb-1">🔵 İç blok dosyasını hazırla</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<h2 id="01">🧭 01 · KDP&#x27;Yİ AÇMADAN ÖNCE</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="pre-1"><h3><label for="pre-1">🔵 Paketi doğrula (sağlama toplamları)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>6×9 inç trim, krem kâğıt, siyah mürekkep iç blok PDF&#x27;i. Sayfa modeli 274 sayfa ölçtü.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Bookshelf → Create → Paperback → Manuscript → Upload paperback manuscript</td></tr>
+<tr><th>Ne yapacağım</th><td>Dört paketin dördü de sağlama toplamı taşır. Yüklemeden önce bozulmadıklarını DOĞRULAYIN — yarım inen bir PDF&#x27;i KDP kabul edip bozuk basar.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Terminal (KDP&#x27;de değil)</td></tr>
+<tr><th>Ne gireceğim</th><td>cd 08_OUTPUT/PAPERBACK &amp;&amp; sha256sum -c SHA256SUMS</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/*/SHA256SUMS</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Dört dizinde de her satır &#x27;OK&#x27; demeli. Tek bir FAILED varsa YÜKLEMEYİN.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>16 dosyanın 16&#x27;sı OK.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="pre-2"><h3><label for="pre-2">🟢 ISBN kararını verin</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>KDP ÜCRETSİZ ISBN verir (yalnızca Amazon&#x27;da geçerlidir) ya da kendi ISBN&#x27;inizi girersiniz (her yerde geçerli, ücretli). Depo hiçbir değer TAŞIMIYOR ve taşımayacak.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback/Hardcover Details → ISBN → &#x27;Get a free KDP ISBN&#x27; veya &#x27;Use my own ISBN&#x27;</td></tr>
+<tr><th>Ne gireceğim</th><td>⛔ AJAN GİRMEDİ — kurucu panelde seçer</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Ciltsiz ve ciltli AYRI ISBN ister. Kindle ISBN İSTEMEZ (ASIN alır).</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Her baskı sürümünün kendi ISBN&#x27;i olur.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="pre-3"><h3><label for="pre-3">🟢 Yapay zekâ içerik beyanını hazırlayın</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>KDP, YZ-ÜRETİMİ metin/görsel/çevirinin bildirilmesini ister; YZ-DESTEKLİ içerik için bildirim gerekmez. Ayrımı yalnızca siz yapabilirsiniz — bu hukuki bir beyandır.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Details ekranı → &#x27;Did you use AI tools...?&#x27;</td></tr>
+<tr><th>Ne gireceğim</th><td>⛔ AJAN BEYAN VERMEDİ — kurucu panelde doldurur</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>`metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false ve öyle kalacak. Bir ajan sizin adınıza beyan veremez.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Beyan panelde kaydedilir.</td></tr>
+</table></div></div>
+<h2 id="02">📕 02 · PAPERBACK</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="pb-1"><h3><label for="pb-1">🔵 İç blok</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>6 × 9 in trim · KREM kâğıt · siyah mürekkep · 274 sayfa (ÖLÇÜLDÜ).</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Bookshelf → Create → Paperback → Paperback Content → Manuscript → Upload paperback manuscript</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/PAPERBACK/interior.pdf</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Kenar boşluğu (gutter) sayfa sayısına bağlıdır: 274 sayfa için KDP iç kenarda daha geniş pay ister. Levha sayfalarında kırpma olmamalı.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>KDP &#x27;Manuscript uploaded successfully&#x27; der ve Previewer açılır.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Previewer&#x27;da: iç kenar payı (gutter) hiçbir levhayı kesmemeli · taşma (bleed) yok, iç blok taşmasızdır · sayfa numaraları 3. sayfadan başlar · SON YAPRAK doğrulama adresini taşır (s. 273).</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>&#x27;Manuscript uploaded successfully&#x27; ve Previewer açılır.</td></tr>
 </table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="pb-2"><h3><label for="pb-2">🔵 Kapak dosyasını hazırla</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="pb-2"><h3><label for="pb-2">🔵 Sarmal kapak</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Paperback SARMAL kapak (arka + sırt + ön), tek PDF — ÜRETİLDİ.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback Content → Book Cover → Upload a cover you already have</td></tr>
+<tr><th>Ne yapacağım</th><td>Arka + sırt + ön, TEK PDF. Tam kapak 12.935 × 9.250 in · sırt 0.6850 in (KREM kâğıt, 274 sayfadan türetildi).</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback Content → Book Cover → Upload a cover you already have (print-ready PDF)</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/PAPERBACK/cover.pdf</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Sırt ÖLÇÜLEN sayfa sayısından türetildi. Previewer&#x27;da sırt yazısının ortalandığını ve barkod alanının boş olduğunu doğrulayın.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>KDP kapağı kabul eder ve Previewer açılır.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Sırt yazısı ORTALANMIŞ olmalı · sağ altta barkod alanı BOŞ bırakıldı (KDP kendi barkodunu oraya basar) · güvenli alan içinde hiçbir metin kesilmemeli.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Kapak kabul edilir, Previewer açılır.</td></tr>
 </table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="pb-3"><h3><label for="pb-3">🟢 Fiyat ve dağıtım</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<h2 id="03">📗 03 · HARDCOVER</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="hc-1"><h3><label for="hc-1">🔵 İç blok (ciltli)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Liste fiyatı 19.99 $ (paperback).</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback Rights &amp; Pricing</td></tr>
-<tr><th>Ne gireceğim</th><td>19.99 USD</td></tr>
-<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Basım maliyeti sayfa sayısıyla değişir; 274 sayfa değişirse telif de değişir.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>KDP net telif tutarını gösterir.</td></tr>
-</table></div></div>
-<h2 id="b">📗 B · HARDCOVER</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="hc-1"><h3><label for="hc-1">🔵 İç blok (hardcover)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
-<div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Aynı iç blok, hardcover trim ve pay kurallarıyla.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Create → Hardcover → Manuscript</td></tr>
+<tr><th>Ne yapacağım</th><td>Aynı içerik, ciltli iç pay kurallarıyla yeniden dizildi · 274 sayfa · iç kenar payı ciltsizden GENİŞTİR.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Create → Hardcover → Hardcover Content → Manuscript</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/HARDCOVER/interior.pdf</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Hardcover&#x27;da KDP daha geniş iç pay ve menteşe (hinge) payı ister; paperback dosyası olduğu gibi KULLANILAMAZ.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Yükleme kabul edilir ve Previewer açılır.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>⛔ CİLTSİZ İÇ BLOĞUNU BURAYA YÜKLEMEYİN — iç payları farklıdır ve ciltli baskıda metin cilde gömülür.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Ciltli Previewer açılır.</td></tr>
 </table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="hc-2"><h3><label for="hc-2">🔵 Kapak (hardcover)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="hc-2"><h3><label for="hc-2">🔵 Sarmal kapak (ciltli)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Hardcover sarmal — ÜRETİLDİ. Sırt 0,7833 in, menteşe 0,394 in, tam kapak 14,359 × 10,417 in. Değerler hardcover-calculator.png&#x27;den OKUNDU.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Hardcover Content → Book Cover</td></tr>
+<tr><th>Ne yapacağım</th><td>Tam kapak 14.382 × 10.417 in · sırt 0.8058 in · menteşe (hinge) 0.394 in · sarma (wrap) 0.591 in. ⚠ KÂĞIT: BEYAZ.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Hardcover Content → Book Cover → Upload a cover you already have</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/HARDCOVER/cover.pdf</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Hardcover sarmalı ayrı şablondur (14,359 in — ciltsizin 12,910&#x27;u DEĞİL). Previewer&#x27;da menteşe ve sırtı doğrulayın.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>KDP kapağı kabul eder ve Previewer açılır.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>⛔ CİLTSİZ KAPAK GEOMETRİSİNİ KULLANMAYIN. Ciltli kapak tahtası trimden BÜYÜKTÜR (6.197 × 9.236 in) ve ayrıca menteşe payı vardır. Geometri kurucunun KDP hesaplayıcı ekran görüntüsünden OKUNDU (03_COVER/HARDCOVER_CALCULATOR_VALUES.md).</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Ciltli kapak kabul edilir.</td></tr>
 </table></div></div>
-<h2 id="c">📱 C · KINDLE</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="kd-1"><h3><label for="kd-1">🔵 Kindle EPUB&#x27;ını yükle</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="hc-3"><h3><label for="hc-3">🟡 ⚠ Kâğıdı BEYAZ seçin</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Akışkan EPUB 3 · 18 bölüm · 99 gravür · kapak YALNIZCA ÖN (1600 × 2560).</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Bookshelf → Create → Kindle eBook → Content → Upload eBook manuscript</td></tr>
+<tr><th>Ne yapacağım</th><td>Ciltli sürüm BEYAZ kâğıtla hesaplandı. Panelde KREM seçerseniz sırt 0,8737 in olur — üretilen kapak 0,8058 in&#x27;dir ve fark 0,0680 in, KDP&#x27;nin ±0,0625 in toleransını AŞAR.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Hardcover Content → Print Options → Paper type</td></tr>
+<tr><th>Ne gireceğim</th><td>White paper</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Krem seçilirse kapak REDDEDİLİR ya da sırt kayar. Ciltsiz KREM kalır — iki ayrı üründür.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Sırt genişliği kapakla örtüşür.</td></tr>
+</table></div></div>
+<h2 id="04">📱 04 · KINDLE</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="kd-1"><h3><label for="kd-1">🔵 EPUB yükle</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Akışkan EPUB 3 · 0.0 MB · 19 bölüm · 99 gömülü levha. Baskıyla AYNI içerik.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Create → Kindle eBook → Kindle eBook Content → Manuscript → Upload</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/KINDLE/codex-enigmatica.epub</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>⭑ TELİF PLANI: dosya 46 MB. %70 planı teslimat ücreti keser ve kitap başına 0,09 $ bırakır; %35 planı 3,50 $ bırakır. %35 SEÇİN (ya da EPUB 23 MB altına indirilsin). Previewer&#x27;da levhaların yakınlaştığını doğrulayın.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Önizleyici bölümleri ve levhaları gösterir.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Yükleme sonrası Kindle Previewer&#x27;da levhaların yakınlaştırılabildiğini doğrulayın.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Dönüştürme hatasız biter.</td></tr>
 </table></div></div>
-<h2 id="d">🖼 D · A+ İÇERİK</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="ap-1"><h3><label for="ap-1">🔵 Altı A+ modül görselini yükle</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="kd-2"><h3><label for="kd-2">🔵 Kapak (YALNIZCA ÖN)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Görseller METİNSİZDİR; başlık ve gövde metni Amazon&#x27;un kendi alanlarına yazılır.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Bookshelf → ⋯ → Edit A+ Content → Create A+ Content</td></tr>
-<tr><th>Ne gireceğim</th><td>Her modülün başlık ve gövde metni (aşağıda kopyalanabilir).</td></tr>
-<tr><th>Hangi dosyayı seçeceğim</th><td>07_ASSETS/web/ (6/6 hazır)</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Modül türü ve piksel ölçüsü kartla aynı olmalı. Görselde metin GÖRÜNMEMELİ.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Önizlemede görsel + metin ayrı ayrı görünür.</td></tr>
+<tr><th>Ne yapacağım</th><td>1600 × 2560 px JPEG. ⛔ Sırt yok · arka kapak yok · barkod yok · taşma yok — bunlar BASKIYA aittir.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Kindle eBook Content → Kindle eBook Cover → Upload a cover you already have</td></tr>
+<tr><th>Ne gireceğim</th><td>—</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/KINDLE/cover.jpg</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Küçük resimde (thumbnail) başlık okunabilir olmalı — mağazada kapak bu boyutta görünür.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Kapak kabul edilir.</td></tr>
 </table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="ap-2"><h3><label for="ap-2">🟢 Moderasyona gönder</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="kd-3"><h3><label for="kd-3">🟢 ⭑ Telif planını SİZ seçersiniz ⭑</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Amazon insan moderasyonu uygular (birkaç gün).</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>A+ Content → Submit for approval</td></tr>
+<tr><th>Ne yapacağım</th><td>Bu dosyada (0.0 MB) ölçülen sonuç: %70 planı teslimat ücreti keser (6.95 $) ve 2.13 $ telif bırakır; %35 planı ücret kesmez ve 3.50 $ bırakır.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Kindle eBook Pricing → Royalty and Pricing</td></tr>
+<tr><th>Ne gireceğim</th><td>%%35 (bu dosya boyutunda ölçülen öneri)</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>%%70&#x27;in kârlı olduğu sınır ~33,3 MB&#x27;dır; bu dosya onun ÜSTÜNDE. Formül KDP&#x27;nin kendi telif sayfasından: %%70 × (liste − KDV − teslimat).</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>KDP net telifi gösterir ve %%35 daha yüksektir.</td></tr>
+</table></div></div>
+<h2 id="05">🖼 05 · A+ İÇERİK</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="ap-1"><h3><label for="ap-1">🔵 Altı modülü yükle</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>3 × tam genişlik (1940 × 600) + 3 × kare (600 × 600). Hepsi KDP&#x27;nin standart modül ölçülerinin 2× sürümüdür.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Marketing → A+ Content Manager → Create A+ → Add module</td></tr>
+<tr><th>Ne gireceğim</th><td>—</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Sıra `module-map.json` içindeki `id` sırasıdır: 01 → 02 → 03 → 04 → 05 → 06.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Altı modül de yüklenir.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="ap-2"><h3><label for="ap-2">🟢 Başlık ve gövde metnini gir</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>⭑ GÖRSELLER METİNSİZDİR ⭑ — bu bilerek böyledir. Ticari metin Amazon&#x27;un KENDİ metin alanlarına girilir; görselin içine gömülmüş metin çevrilemez ve moderasyonda sorun çıkarır.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Her modülün &#x27;Headline&#x27; ve &#x27;Body text&#x27; alanı</td></tr>
+<tr><th>Ne gireceğim</th><td>08_OUTPUT/APLUS/module-map.json → title / body</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/APLUS/module-map.json</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Metin İNGİLİZCEDİR (ürün sayfası dili). Kopyala-yapıştır: bu kılavuzun § I bölümünde kopyalama düğmeleriyle duruyor.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Altı modülün altısında da metin dolu.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="ap-3"><h3><label for="ap-3">🟢 Moderasyona gönder</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Amazon A+ içeriğini İNSAN moderasyonundan geçirir. Onay genellikle birkaç iş günü sürer.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>A+ Content Manager → Submit for approval</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Reddedilirse gerekçe e-postayla gelir; en sık sebep görselde metin olmasıdır.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Durum &#x27;Submitted&#x27; → &#x27;Approved&#x27; olur.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Reddedilirse gerekçe e-postayla gelir; en sık sebep görselin içindeki metindir — bizde yok.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Durum &#x27;Approved&#x27; olur.</td></tr>
 </table></div></div>
-<h2 id="e">🔍 E · SON ÖNİZLEME</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="pv-1"><h3><label for="pv-1">🟢 Previewer&#x27;da sayfa sayfa bak</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<h2 id="06">🔗 06 · DOĞRULAMA SAYFASI</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="vf-1"><h3><label for="vf-1">🟢 ⭑ Kalıcı alan adını alın ve bağlayın ⭑</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Özellikle 103 levha sayfası.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback/Hardcover Content → Launch Previewer</td></tr>
+<tr><th>Ne yapacağım</th><td>Kitap SON YAPRAĞINA (s. 273) şu adresi BASAR: valicepress.com/codex-enigmatica/verify — ve basılmış bir URL DÜZELTİLEMEZ.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Alan adı sağlayıcısı + Vercel → Project → Settings → Domains</td></tr>
+<tr><th>Ne gireceğim</th><td>valicepress.com</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>26 Ağu 2026 ölçümü: alan adı KAYITSIZ ve müsaitti (~11,25 $/yıl). Alınmazsa başkası alabilir ve satılmış her nüsha okuru YABANCI bir siteye gönderir.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Kalıcı adres yanıt verir.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="vf-2"><h3><label for="vf-2">🟢 Sunucu sırlarını girin</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>İki değişken: biber ve özet. Sunucuda DÜZ CEVAP SAKLANMAZ — saklanan şey biberli SHA-256 özetidir. İkisi de depoda DEĞİLDİR.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Vercel → Project → Settings → Environment Variables (Production)</td></tr>
+<tr><th>Ne gireceğim</th><td>CODEX_VERIFY_PEPPER · CODEX_VERIFY_DIGEST (değerler bu belgede YAZILI DEĞİLDİR)</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>scripts/codex-verify-digest.mjs (site deposu)</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Üretimi: `node scripts/codex-verify-digest.mjs` — cevabı STDIN&#x27;den okur, dosyaya ve kabuk geçmişine YAZMAZ.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>İkisi de &#x27;Sensitive&#x27; olarak görünür.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="vf-3"><h3><label for="vf-3">🔴 ⛔ Upstash hız sınırı arka ucunu kurun</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Doğrulama uç noktası şu an CANLIDA 503 veriyor ve bu DOĞRU davranıştır: hız sınırlayıcısı olmayan bir doğrulama servisi SINIRSIZ DENEMEDİR, o yüzden bilerek KAPALI düşer.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>upstash.com → Redis database → REST API</td></tr>
+<tr><th>Ne gireceğim</th><td>UPSTASH_REDIS_REST_URL · UPSTASH_REDIS_REST_TOKEN (Vercel Production)</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>ÖLÇÜLDÜ: üretimdeki URL bir URL DEĞİL (şema yok, ana makine adı 0 karakter) ve belirteç 11 karakter — 89 gün önce konmuş YER TUTUCULAR. Aynı sebep sitenin çevre sınırlayıcısını da sessizce AÇIK düşürüyor.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>`qa_verification.py --gate release --live` yeşil döner.</td></tr>
+</table></div></div>
+<h2 id="07">🏷 07 · METADATA</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="md-1"><h3><label for="md-1">🟢 Panel alanlarını doldurun</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Başlık, alt başlık, yazar, yayıncı, açıklama, 7 anahtar kelime ve 3 BISAC kategorisi.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback/Hardcover/Kindle → Details</td></tr>
+<tr><th>Ne gireceğim</th><td>§ H&#x27;deki tablodan kopyalayın (kopyalama düğmeleri var)</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>06_REPORTS/tracked/metadata.json</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>ÜÇ SÜRÜMDE DE AYNI olmalı — başlık ya da yazar farklı yazılırsa Amazon sürümleri birbirine BAĞLAMAZ ve üç ayrı ürün gibi listelenir.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Üç sürüm tek ürün sayfasında birleşir.</td></tr>
+</table></div></div>
+<h2 id="08">💰 08 · FİYAT</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="pr-1"><h3><label for="pr-1">🟢 Liste fiyatlarını girin</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Ciltsiz 19.99 $ · Ciltli 29.99 $ · Kindle 9.99 $ (ABD).</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Her sürümün Rights &amp; Pricing ekranı</td></tr>
+<tr><th>Ne gireceğim</th><td>19.99 / 29.99 / 9.99 USD</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Gerekçeler ve ölçülen telifler § J&#x27;de. Diğer pazarlar için KDP otomatik dönüştürme önerir — kabul edebilirsiniz.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>KDP her sürüm için net telifi gösterir ve § J&#x27;deki sayılarla örtüşür.</td></tr>
+</table></div></div>
+<h2 id="09">🔍 09 · PREVIEWER — ZORUNLU</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="pv-1"><h3><label for="pv-1">🔴 ⭑ Baskı Previewer&#x27;ında sayfa sayfa bakın ⭑</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Bu adım ATLANAMAZ. Yerel ölçümlerin hepsi yeşil olabilir ve Previewer yine de gerçek bir kusur gösterebilir — dizgi motoru başkadır.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Yükleme sonrası açılan Previewer</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Her levhada: kırpılma yok · çizgiler kapanmamış · sayılabilir işaretler sayılabilir · sayfa numarası levhanın üstüne binmiyor.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Previewer hata vermez ve levhalar okunur.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>① kapak · ② SIRT yazısı ortalı mı · ③ kenar payları · ④ iç pay (gutter) hiçbir levhayı kesmiyor mu · ⑤ sayfa geçişleri · ⑥ levhalar/şekiller · ⑦ metin · ⑧ boş sayfalar · ⑨ ÇÖZÜM bölümü · ⑩ SON YAPRAKTA doğrulama adresi.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Previewer &#x27;no errors&#x27; der VE göz denetimi temiz geçer.</td></tr>
 </table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="pv-2"><h3><label for="pv-2">🟢 Fiziksel prova (A9)</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="pv-2"><h3><label for="pv-2">🔴 Kindle Previewer</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Basılı prova kopya sipariş edilir.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Proof or author copy</td></tr>
+<tr><th>Ne yapacağım</th><td>Akışkan metin, farklı cihazlarda farklı kırılır. Levhaların yakınlaştırılabildiğini görün.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Kindle eBook Content → Preview</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>⭑ EKRAN PROVASI BUNUN YERİNE GEÇMEZ. Nokta yayılması yalnızca kâğıtta ölçülür.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Elinizde basılı kopya olur ve levhalar ÖLÇÜLEREK doğrulanır.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Telefon + tablet + e-mürekkep görünümlerinde bakın; levhalar ve çizelgeler okunabilir olmalı.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Üç görünümde de içerik okunur.</td></tr>
 </table></div></div>
-<h2 id="f">💰 F · FİYAT</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="pr-1"><h3><label for="pr-1">🟢 Liste fiyatlarını gir</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="card"><div class="hd"><input type="checkbox" id="pv-3"><h3><label for="pv-3">🟡 Fiziksel prova (önerilir)</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Hardcover 29.99 $ · Paperback 19.99 $</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Rights &amp; Pricing</td></tr>
-<tr><th>Ne gireceğim</th><td>Yukarıdaki tutarlar</td></tr>
-<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>Sayfa sayısı değişirse basım maliyeti ve dolayısıyla telif değişir — fiyat modeli 274 sayfaya göre kuruldu.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>KDP her pazar için telif tutarını gösterir.</td></tr>
-</table></div></div>
-<h2 id="g">🚀 G · YAYIMLAMA</h2>
-<div class="card"><div class="hd"><input type="checkbox" id="pubtwo"><h3><label for="pubtwo">🟢 Yapay zekâ içerik beyanı</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
-<div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>KDP, AI kullanımını sorar. Bu bir HUKUKİ BEYANDIR.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Paperback Details → AI-Generated Content</td></tr>
-<tr><th>Ne gireceğim</th><td>Kendi doğru cevabınız</td></tr>
-<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>`founderPending.aiDisclosureConfirmed` = false. Ajan bunu sizin yerinize dolduramaz.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Beyan kaydedilir.</td></tr>
-</table></div></div>
-<div class="card"><div class="hd"><input type="checkbox" id="pub-2"><h3><label for="pub-2">🟢 Publish</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
-<div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Yayımlama kararı.</td></tr>
-<tr><th>KDP panelinde nereye gideceğim</th><td>Publish Your Paperback Book</td></tr>
+<tr><th>Ne yapacağım</th><td>Gravür levhaların nokta yayılması altındaki davranışı YALNIZCA basılı provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Previewer → Print a proof copy</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
-<tr><th>Neleri kontrol edeceğim</th><td>⭑ BU KİTAP HİÇBİR İNSANIN ELİNDE ÇÖZÜLMEDİ. Harici çözücü oturumu: 0/5 (A12b). Ölçülen öldürme kapısı kararı HARD-STOP&#x27;tur.</td></tr>
-<tr><th>Başarılı olursa ne göreceğim</th><td>Kitap 24–72 saat içinde yayında olur.</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>A9 · kurucu kararı. Zorunlu değil ama bu kitapta LEVHALAR ÜRÜNÜN KENDİSİDİR.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Prova elinizde ve levhalar okunur.</td></tr>
 </table></div></div>
+<h2 id="10">🚀 10 · SON GÖNDERİM</h2>
+<div class="card"><div class="hd"><input type="checkbox" id="pub-1"><h3><label for="pub-1">🔴 ⛔ GERÇEK BİR KUSUR VARSA YAYIMLAMAYIN</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Yerel yeşil preflight, gerçek bir KDP Previewer kusurunu GEÇERSİZ KILMAZ. Previewer bir hata gösteriyorsa önce o düzelir.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>—</td></tr>
+<tr><th>Ne gireceğim</th><td>—</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>Kusur gerçek mi yoksa Previewer&#x27;ın bilinen görüntüleme tuhaflığı mı — emin değilseniz prova alın.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Bilinen gerçek kusur YOK.</td></tr>
+</table></div></div>
+<div class="card"><div class="hd"><input type="checkbox" id="pub-2"><h3><label for="pub-2">🔴 Publish</label></h3><span style="margin-left:auto"><span class="pill p-wait">BEKLİYOR</span></span></div>
+<div class="scroll"><table>
+<tr><th>Ne yapacağım</th><td>Üç sürümü de yayımlayın. Amazon 24–72 saat içinde canlıya alır.</td></tr>
+<tr><th>KDP panelinde nereye gideceğim</th><td>Her sürümün son ekranı → Publish Your Book</td></tr>
+<tr><th>Ne gireceğim</th><td>—</td></tr>
+<tr><th>Hangi dosyayı seçeceğim</th><td>—</td></tr>
+<tr><th>Neleri kontrol edeceğim</th><td>⚠ Bu kitabı HİÇBİR HARİCİ İNSAN ÇÖZMEDİ (0/5 oturum, ölçülen karar HARD-STOP). Yayımlama kararını bunu BİLEREK verin.</td></tr>
+<tr><th>Başarılı olursa ne göreceğim</th><td>Üç sürüm de &#x27;Live&#x27; olur.</td></tr>
+</table></div></div>
+<h2 id="dosyalar">📂 Dosya haritası — hangi dosya, nereye</h2>
+<p class="sub">Her satır tek bir dosyayı tek bir KDP alanına bağlar. Yol proje kökünden görelidir.</p>
+<div class="scroll"><table>
+<tr><th>Sürüm</th><th>Dosya</th><th>KDP alanı</th></tr>
+<tr><th>Paperback · iç blok</th><td><code>08_OUTPUT/PAPERBACK/interior.pdf</code></td><td>Paperback Content → Manuscript</td></tr>
+<tr><th>Paperback · kapak</th><td><code>08_OUTPUT/PAPERBACK/cover.pdf</code></td><td>Paperback Content → Book Cover (upload your own)</td></tr>
+<tr><th>Hardcover · iç blok</th><td><code>08_OUTPUT/HARDCOVER/interior.pdf</code></td><td>Hardcover Content → Manuscript</td></tr>
+<tr><th>Hardcover · kapak</th><td><code>08_OUTPUT/HARDCOVER/cover.pdf</code></td><td>Hardcover Content → Book Cover (upload your own)</td></tr>
+<tr><th>Kindle · EPUB</th><td><code>08_OUTPUT/KINDLE/codex-enigmatica.epub</code></td><td>Kindle eBook Content → Manuscript</td></tr>
+<tr><th>Kindle · kapak</th><td><code>08_OUTPUT/KINDLE/cover.jpg</code></td><td>Kindle eBook Content → Kindle eBook Cover</td></tr>
+<tr><th>A+ · 6 görsel</th><td><code>08_OUTPUT/APLUS/codex-enigmatica-aplus-01..06.png</code></td><td>A+ Content Manager → Add module → Image</td></tr>
+<tr><th>A+ · metin</th><td><code>08_OUTPUT/APLUS/module-map.json</code></td><td>A+ Content Manager → Headline / Body text</td></tr>
+<tr><th>Metadata (üç sürüm)</th><td><code>06_REPORTS/tracked/metadata.json</code></td><td>Details → başlık · alt başlık · açıklama · anahtar kelime</td></tr>
+<tr><th>Sağlama toplamları</th><td><code>08_OUTPUT/*/SHA256SUMS</code></td><td>— (yüklemeden ÖNCE yerelde doğrulanır)</td></tr>
+</table></div>
+<h2 id="fiyat">💰 Fiyat önerisi ve gerekçesi</h2>
+<div class="scroll"><table>
+<tr><th>Sürüm</th><th>Liste</th><th>Baskı maliyeti</th><th>Telif</th><th>Marj</th></tr>
+<tr><th>Ciltsiz</th><td>19.99 $</td><td>4.14 $</td><td><b>7.86 $</b></td><td>%39.3</td></tr>
+<tr><th>Ciltli</th><td>29.99 $</td><td>8.94 $</td><td><b>9.06 $</b></td><td>%30.2</td></tr>
+<tr><th>Kindle · %35 planı · 46.3 MB</th><td>9.99 $</td><td>—</td><td><b>3.50 $</b></td><td>%35.0</td></tr>
+</table></div>
+<div class="note"><b>⚠ Bunlar garanti edilmiş kazanç değildir.</b><br>Baskı maliyeti KDP'nin ABD fiyat modelinden <b>hesaplanmıştır</b> (alınmış bir teklif değildir); telif pazara ve dağıtım seçimine göre değişir; Kindle telifi seçtiğiniz plana bağlıdır.</div>
+<div class="card"><h3>Ciltsiz · 19,99 $</h3><p>20 doların ALTINDA kalan en yüksek basamak. 274 sayfa ve 103 gravür levha için 19,99 $ premium bir bulmaca kitabının olağan yeridir; 21,99 $ psikolojik 20 $ eşiğini aşar ve tanınmayan bir yazarın ilk kitabında dönüşümü düşürür. 17,99 $ ise kopya başına 1,20 $&#x27;ı sebepsiz bırakır.</p></div>
+<div class="card"><h3>Ciltli · 29,99 $</h3><p>30 doların ALTINDA kalan en yüksek basamak ve klasik hediye kitabı yeri. Ciltsizin tam 10 $ üstü — yani %50 net premium: alıcı farkı GÖREBİLİR ve gerekçelendirebilir. 32,99 $ hem 30 $ eşiğini aşar hem de ciltsizle arayı 13 $&#x27;a çıkarıp ciltsizi &#x27;ucuz sürüm&#x27; gibi gösterir.</p></div>
+<div class="card"><h3>Kindle · 9,99 $</h3><p>Ciltsizin TAM YARISI — merdiven okunur ve tutarlıdır. Dosya 46,3 MB olduğu için %35 planı seçilir ve o planda fiyat bandı kısıtı bağlamaz. 6,99 $ 274 sayfalık resimli bir kitabı ucuza düşürür ve baskıyı yer; 8,99 $ makul bir alternatiftir ve dönüşüm yavaşsa ilk denenecek basamaktır (kopya başına 0,35 $).</p></div>
+<div class="scroll"><table>
+<tr><th>Fiyat denetimi</th><th>Ölçülen</th></tr>
+<tr><th>Kötü telif üretiyor mu</th><td>HAYIR — ciltsiz %39,3 · ciltli %30,2 marj</td></tr>
+<tr><th>Müşteri fiyatı ürkütücü mü</th><td>HAYIR — ikisi de psikolojik eşiğin ALTINDA (20 $ / 30 $)</td></tr>
+<tr><th>Ciltli premiumu net mi</th><td>EVET — +10,00 $ (%50 üstü)</td></tr>
+<tr><th>Kindle baskının anlamlı altında mı</th><td>EVET — ciltsizin tam yarısı</td></tr>
+<tr><th>Üretim kalitesiyle tutarlı mı</th><td>EVET — 274 sayfa · 103 levha · sarmal kapak</td></tr>
+</table></div>
 <h2 id="alan">Panele girilecek alanlar</h2>
 <p class="sub">Her satır kopyalanabilir. Boş alanlar <b>boş gösterilir</b> — yer tutucu basmak geri alınamaz.</p>
 <div class="scroll"><table>
@@ -264,7 +400,12 @@ And when the five gates are open, they give you five phrases that say nothing on
 <tr><th>Kategori 2<button class="c" data-t="f14">kopyala</button></th><td><span class="val" id="f14">GAM001000 — GAMES &amp; ACTIVITIES / Reference</span></td></tr>
 <tr><th>Kategori 3<button class="c" data-t="f15">kopyala</button></th><td><span class="val" id="f15">GAM002000 — GAMES &amp; ACTIVITIES / Logic &amp; Brain Teasers</span></td></tr>
 <tr><th>Yazar biyografisi<button class="c" data-t="f16">kopyala</button></th><td><span class="val" id="f16">Emre is a puzzle designer, mythologist, and game archivist dedicated to preserving ancient cultures, codes, and stories for the next generation.</span></td></tr>
-<tr><th>ISBN<button class="c" data-t="f17">kopyala</button></th><td><span class="val" id="f17">⛔ KARAR VERİLMEDİ (strateji: kdp-free)</span></td></tr>
+<tr><th>Dil<button class="c" data-t="f17">kopyala</button></th><td><span class="val" id="f17">English</span></td></tr>
+<tr><th>Baskı<button class="c" data-t="f18">kopyala</button></th><td><span class="val" id="f18">First edition</span></td></tr>
+<tr><th>Sürümler<button class="c" data-t="f19">kopyala</button></th><td><span class="val" id="f19">hardcover 29.99 $ · paperback 19.99 $ · kindle 9.99 $</span></td></tr>
+<tr><th>Sayfa (baskı)<button class="c" data-t="f20">kopyala</button></th><td><span class="val" id="f20">274</span></td></tr>
+<tr><th>ISBN<button class="c" data-t="f21">kopyala</button></th><td><span class="val" id="f21">⛔ KURUCU KDP PANELİNDE GİRECEK (strateji: kdp-free)</span></td></tr>
+<tr><th>YZ içerik beyanı<button class="c" data-t="f22">kopyala</button></th><td><span class="val" id="f22">⛔ KURUCU KDP PANELİNDE TAMAMLAYACAK</span></td></tr>
 </table></div>
 <h2 id="aplus">A+ metni — İngilizce</h2>
 <div class="note"><b>Görsellerde metin YOKTUR.</b> Aşağıdaki başlık ve gövde Amazon'un <b>kendi</b> alanlarına girilir; görsele çizilmez. Ürün sayfası İngilizcedir, bu yüzden bu metin de İngilizcedir.</div>

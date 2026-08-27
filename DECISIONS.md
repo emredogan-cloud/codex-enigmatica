@@ -35,6 +35,65 @@
 | **A18** | Geçici Vercel doğrulama ortamı | ORTA | kalıcı alan adına kadar | ⚑ **KURUCU GEÇERSİZ KILMASI** · § aşağı |
 | **A19** | Nihai sürüm üretimi (insan testi yokken) | **KRİTİK** | — | ⚑ **KURUCU GEÇERSİZ KILMASI** · § aşağı |
 | **A20** | **Upstash** üretim kimlik bilgisi (yer tutucu) | **YÜKSEK** | doğrulama canlı olmadan önce | ⛔ **AÇIK** — uç nokta kapalı düşüyor |
+| **K43** | ⛔ **KDP REDDİ** — baskı payı ve aynalama | **KRİTİK** | — | ✅ **ONARILDI** · § aşağı |
+
+---
+
+### K43 · ⛔ KDP REDDİ — ve bildirilenden çok daha büyüktü
+
+**27 Ağustos 2026.** KDP Print Previewer ciltsiz iç bloğu
+**"Insufficient gutter"** diyerek reddetti ve beş sayfa saydı:
+60, 94, 96, 122, 224.
+
+**Ölçüm beş demedi:**
+
+| | İhlal |
+|---|---:|
+| Ciltsiz | **140 / 274** |
+| **Ciltli** (hiç bildirilmemişti) | **245 / 274** |
+
+#### Asıl sebep: aynalama hiç olmuyordu
+
+`interior.py` tek ve çift sayfa için iki şablon kuruyor, ikisini de
+kaydediyor — ama **aralarında geçiş yapmıyordu**. reportlab
+`NextPageTemplate` görmedikçe **ilk** şablonu kullanır; oluk payı 274
+sayfanın 274'ünde de **solda** kaldı.
+
+Tek satırlık kanıt — tek ve çift sayfaların sol kenarı **aynıydı**:
+
+```
+ciltli   tek 0,620"   çift 0,620"      ← aynalama YOK
+```
+
+⚠ Ve kodun kendi yorumu *"⭑ İÇ KENAR AYNALANIR ⭑"* diyordu.
+**Yorum bir kapı değildir.**
+
+#### İkinci kusur: asgariye dayanmak
+
+reportlab akışı **kırpmaz**; yaslanmış satırın son glifi 0,007–0,020"
+taşar. Çerçeve 0,500"de bitse bile mürekkep **0,480"e** geliyordu.
+
+#### Onarım — sayfa sayısı korunarak
+
+Oluğa **+0,125"**, dış paydan **−0,125"** → **gövde genişliği aynı**
+(ciltsiz 5,000" · ciltli 4,875") → dizgi birebir aynı akar →
+**274 sayfa korundu**, sırt ve kapak **değişmedi**.
+
+| | Önce | Sonra |
+|---|---|---|
+| Ciltsiz ihlal | 140 | **0** |
+| Ciltli ihlal | 245 | **0** |
+| En dar pay | −0,145" | **+0,102"** |
+
+#### Ve bir kapı doğdu: `qa_print_margins.py`
+
+⭑ Bu kusur **hiçbir kapı mürekkebe bakmadığı için** gemiye bindi.
+Yeni kapı sayfaları raster'a çevirip **gerçek mürekkep kutusunu**
+ölçer ve aynalamanın **olduğunu** ölçer, varsaymaz. Eşiği **KDP'nin
+eşiğidir**, bizim payımız değil — aksi hâlde payı büyütmek kapıyı da
+büyütür ve kapı kendini yeşil yakardı.
+
+`selftest § ⑯` · 279 → **289 denetim**.
 
 ---
 

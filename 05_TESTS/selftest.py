@@ -2882,6 +2882,101 @@ def part15_verification(rep: Report, tmp: str) -> None:
 
 
 
+def part16_print_margins(rep: Report, tmp: str) -> None:
+    """⑯ ⭑ BASKI PAYI — MÜREKKEBİN GERÇEK YERİ ⭑
+
+    Bu bölüm bir **KDP reddinden** doğdu. Previewer ciltsiz iç bloğu
+    "Insufficient gutter" diyerek reddetti ve beş sayfa saydı. Beş
+    değildi: ciltsizde **140**, ciltlide **245** sayfa ihlaldeydi.
+
+    İki ayrı kusur vardı ve buradaki fikstürler ikisini de kurar:
+
+      ① AYNALAMA HİÇ OLMUYORDU — iki sayfa şablonu kayıtlıydı ama
+        aralarında geçiş yapılmıyordu, yani oluk payı her sayfada aynı
+        kenarda kaldı. Kodun kendi yorumu "aynalanır" diyordu.
+      ② PAYLAR ASGARİYE DAYANMIŞTI — reportlab akışı kırpmaz ve
+        yaslanmış satırın son glifi 0,02" taşar; asgaride tolerans yok.
+
+    ⚠ VE EN ÖNEMLİ ÖZELLİK: kapı KDP'nin eşiğini denetler, BİZİM
+    payımızı değil. Aksi hâlde payı büyütmek kapıyı da büyütürdü ve
+    kapı kendi kendini yeşil yakardı — ölçmeyen bir kapı, kapı değildir.
+    """
+    print("\n⑯ ⭑ BASKI PAYI ⭑")
+
+    import importlib.util as _ilu
+    spec = _ilu.spec_from_file_location(
+        "_qm", os.path.join(BUILD, "qa_print_margins.py"))
+    qm = _ilu.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(qm)
+    except ImportError:
+        rep.check(True, "baskı payı kapısı atlandı (Pillow yok)")
+        return
+    IN = sys.modules.get("interior") or None
+    spec2 = _ilu.spec_from_file_location(
+        "_int", os.path.join(BUILD, "interior.py"))
+    IN = _ilu.module_from_spec(spec2)
+    spec2.loader.exec_module(IN)
+
+    # ── ⭑ KAPI KENDİ KENDİNİ YEŞİL YAKAMAZ ⭑ ──────────────────────────
+    # Payı büyütmek KDP'nin eşiğini büyütmemeli.
+    for binding, kdp_min in (("paperback", 0.5), ("hardcover", 0.625)):
+        used = IN.gutter_for(274, binding)
+        gate = IN.kdp_min_gutter(274, binding)
+        rep.check(abs(gate - kdp_min) < 1e-9,
+                  "⭑ %s · KAPI KDP EŞİĞİNİ DENETLİYOR (%.3f), BİZİM "
+                  "PAYIMIZI (%.3f) DEĞİL ⭑" % (binding.upper(), gate, used))
+        rep.check(used > gate,
+                  "%s · kullanılan pay KDP eşiğinin ÜSTÜNDE "
+                  "(%.3f > %.3f · fark %.3f\")"
+                  % (binding, used, gate, used - gate))
+
+    # ── gövde genişliği KORUNDU → sayfa sayısı korunur ────────────────
+    for binding, want in (("paperback", 5.000), ("hardcover", 4.875)):
+        body = 6.0 - IN.gutter_for(274, binding) - IN.OUT_M
+        rep.check(abs(body - want) < 1e-6,
+                  "⭑ %s · GÖVDE GENİŞLİĞİ DEĞİŞMEDİ (%.3f\") ⭑ — dizgi "
+                  "birebir aynı akar, 274 sayfa korunur"
+                  % (binding.upper(), body))
+
+    # ── dış pay hâlâ KDP asgarisinin üstünde ──────────────────────────
+    rep.check(IN.OUT_M > qm.KDP_MIN_OUTER,
+              "dış pay KDP asgarisinin üstünde (%.3f > %.3f)"
+              % (IN.OUT_M, qm.KDP_MIN_OUTER))
+    # ── sayfa numarası kesim kenarından güvenli uzaklıkta ─────────────
+    rep.check(IN.FOLIO_Y > qm.KDP_MIN_OUTER + 0.05,
+              "⭑ SAYFA NUMARASI KESİMDEN GÜVENLİ UZAKLIKTA ⭑ "
+              "(%.3f\" · asgari %.3f\") — eskiden 0,270\" idi ve "
+              "asgariye 0,020\" kalıyordu" % (IN.FOLIO_Y, qm.KDP_MIN_OUTER))
+
+    # ── ⭑ ÖLÇÜM ÇEKİRDEĞİ GERÇEKTEN ÖLÇÜYOR MU ⭑ ──────────────────────
+    # Bilinen konuma mürekkep koy, kapı onu bulsun.
+    from PIL import Image
+    d = os.path.join(tmp, "margins")
+    os.makedirs(d, exist_ok=True)
+    W = H = qm.DPI * 2                       # 2 × 2 inç sahte sayfa
+    im = Image.new("L", (W, H), 255)
+    # 0,50" soldan · 0,25" üstten başlayan 1,0" × 0,5" siyah kutu
+    for y in range(int(0.25 * qm.DPI), int(0.75 * qm.DPI)):
+        for x in range(int(0.50 * qm.DPI), int(1.50 * qm.DPI)):
+            im.putpixel((x, y), 0)
+    f = os.path.join(d, "probe.png")
+    im.save(f)
+    box = qm.ink_box(f)
+    ok = (box and abs(box[0] - 0.50) < 0.01 and abs(box[1] - 0.25) < 0.01
+          and abs(box[2] - 0.50) < 0.01 and abs(box[3] - 1.25) < 0.01)
+    rep.check(ok, "⭑ ÖLÇÜM ÇEKİRDEĞİ BİLİNEN MÜREKKEBİ DOĞRU BULUYOR ⭑ "
+              "(sol/üst/sağ/alt = %s)"
+              % (["%.3f" % v for v in box] if box else "YOK"))
+
+    # boş sayfa ihlal üretemez
+    blank = os.path.join(d, "blank.png")
+    Image.new("L", (W, H), 255).save(blank)
+    rep.check(qm.ink_box(blank) is None,
+              "boş sayfa mürekkepsiz sayılır (ihlal üretemez)")
+
+
+
 def part14_check_is_read_only(rep) -> None:
     """⭑⭑ `--check` KİPİ ÜRETMEZ — VE BU ÖLÇÜLÜR ⭑⭑
 
@@ -3000,6 +3095,7 @@ def main() -> int:
         part11_crossref(rep, tmp)
         part12_editorial(rep, tmp)
         part15_verification(rep, tmp)
+        part16_print_margins(rep, tmp)
     part13_ci_signatures(rep)
     part14_check_is_read_only(rep)
 

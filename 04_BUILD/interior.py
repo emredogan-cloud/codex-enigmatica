@@ -46,9 +46,35 @@ STATS = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "interior.json")
 CACHE = os.path.join(pl.ROOT, "07_ASSETS", "processed", "pdf-cache")
 
 TRIM_W, TRIM_H = 6.0, 9.0                    # inç
-# ⚠ KDP asgarileri: dış/üst/alt ≥ 0,375". Burada 0,5" kullanılıyor —
-# asgari, "güvenli" demek değildir; kırpma toleransı asgaride yenir.
-OUT_M, TOP_M, BOT_M = 0.5, 0.6, 0.6
+
+# ⭑ KDP BASKI GÜVENLİ ALANI — ÖLÇÜLEN ASGARİLER ⭑
+# İç (oluk) payı sayfa sayısına göre değişir (§ gutter_for); dış/üst/alt
+# için KDP asgarisi 0,25"dir.
+KDP_MIN_OUTER = 0.25
+
+# ⭑ VE ASGARİYE DAYAMAK, ASGARİYİ AŞMAKTIR ⭑
+# ⚠ BU SAYI BİR KDP REDDİNDEN DOĞDU. İç blok tam 0,5" oluk payıyla
+# diziliyordu ve KDP Previewer "Insufficient gutter" dedi. Ölçüm sebebi
+# gösterdi: DİZGİ ÇERÇEVEYİ TAŞIRIYOR. reportlab akış nesnelerini
+# KIRPMAZ; yaslanmış (justify) bir satırın son glifi kendi ilerleme
+# genişliğinin 0,007–0,020" ötesine taşar (italik ve tırnak en kötüsü).
+# Çerçeve 0,500"de bitse bile MÜREKKEP 0,480"e kadar geliyordu.
+#
+# 274 sayfalık ciltsizde 274 sayfanın 140'ı bu yüzden ihlaldeydi.
+# Asgariye dayanmak, toleransı sıfıra indirmektir; pay eklenir.
+SAFETY_IN = 0.125
+
+# ⚠ DIŞ PAY DARALTILIR — VE BU BİLEREK BÖYLEDİR.
+# Oluk payına 0,125" eklenirken dış paydan aynı miktar alınır: gövde
+# genişliği DEĞİŞMEZ (ciltsiz 5,000" · ciltli 4,875"), yani dizgi
+# birebir aynı akar ve SAYFA SAYISI KORUNUR (274). Sayfa sayısı
+# değişseydi sırt genişliği değişir, kapak yeniden üretilirdi.
+# 0,375" hâlâ KDP asgarisinin (0,25") 0,125" üstündedir.
+OUT_M, TOP_M, BOT_M = 0.375, 0.6, 0.6
+
+# Sayfa numarasının taban çizgisi (kesim kenarından). Eskiden
+# BOT_M*0,45 = 0,270" idi — KDP'nin 0,25" asgarisine 0,020" kalıyordu.
+FOLIO_Y = 0.38
 PLATE_DPI = 300                              # PDF'e gömülen çözünürlük
 
 # ⚠ LEVHALAR GRİ TONA ÇEVRİLİR VE ZEMİN BEYAZA ÇEKİLİR.
@@ -70,21 +96,35 @@ def gutter_for(pages: int, binding: str = "paperback") -> float:
     """
     if binding == "hardcover":
         if pages <= 150:
-            return 0.5
-        if pages <= 300:
-            return 0.625
-        if pages <= 500:
-            return 0.75
-        return 0.875
-    if pages <= 150:
-        return 0.375
-    if pages <= 300:
-        return 0.5
-    if pages <= 500:
-        return 0.625
-    if pages <= 700:
-        return 0.75
-    return 0.875
+            base = 0.5
+        elif pages <= 300:
+            base = 0.625
+        elif pages <= 500:
+            base = 0.75
+        else:
+            base = 0.875
+    elif pages <= 150:
+        base = 0.375
+    elif pages <= 300:
+        base = 0.5
+    elif pages <= 500:
+        base = 0.625
+    elif pages <= 700:
+        base = 0.75
+    else:
+        base = 0.875
+    # ⭑ KDP TABLOSU BİR ASGARİDİR, BİR HEDEF DEĞİL ⭑ (§ SAFETY_IN)
+    return base + SAFETY_IN
+
+
+def kdp_min_gutter(pages: int, binding: str = "paperback") -> float:
+    """KDP'nin DENETLEDİĞİ asgari — payımız değil, onun eşiği.
+
+    ⚠ `gutter_for` bunun ÜSTÜNE pay ekler. İkisi ayrı tutulur çünkü
+    kapı, kullandığımız payı değil KDP'nin eşiğini denetlemelidir:
+    payı büyütüp kapıyı da büyütmek, kapıyı kendi kendine yeşil yakar.
+    """
+    return gutter_for(pages, binding) - SAFETY_IN
 
 
 def load_solutions() -> dict:
@@ -169,13 +209,36 @@ def build(book: dict, sols: dict, gutter: float, path: str,
             return
         cv.setFont("Body", 8)
         cv.setFillColorRGB(0.35, 0.32, 0.28)
-        cv.drawCentredString(W / 2, BOT_M * inch * 0.45, str(doc.page))
+        cv.drawCentredString(W / 2, FOLIO_Y * inch, str(doc.page))
 
-    doc = BaseDocTemplate(path, pagesize=(W, H),
-                          title=meta.get("title") or "",
-                          author=meta.get("author") or "",
-                          leftMargin=0, rightMargin=0,
-                          topMargin=0, bottomMargin=0)
+    # ⭑ AYNALAMA GERÇEKTEN OLMALI — VE OLMUYORDU ⭑
+    # ⚠ BU, KDP REDDİNİN ASIL SEBEBİYDİ. Yukarıdaki `frame()` iki ayrı
+    # şablon üretiyor ve iki şablon da KAYITLIYDI — ama hiçbir yerde
+    # ARALARINDA GEÇİŞ YAPILMIYORDU. reportlab, `NextPageTemplate`
+    # görmedikçe listedeki İLK şablonu bütün kitap boyunca kullanır:
+    # yani oluk payı 274 sayfanın 274'ünde de SOLDA kaldı.
+    #
+    # Ölçüm: tek ve çift sayfaların sol kenarı BİREBİR AYNI çıkıyordu
+    # (ciltli 0,620 / 0,620). Ciltside bu, çift sayfalarda oluk yerine
+    # 0,5" dış pay bırakıyordu — KDP 0,625" istiyor, 245 sayfa ihlal.
+    # Ciltsizde görünmüyordu, çünkü orada oluk ve dış pay eşitti (0,5).
+    #
+    # ⚠ Ve yorum satırı "İÇ KENAR AYNALANIR" diyordu. Kod demiyordu.
+    class MirroredDoc(BaseDocTemplate):
+        """Recto tek, verso çift — oluk payı her yaprakta cilde bakar."""
+
+        def handle_pageBegin(self):
+            self._handle_pageBegin()
+            # Şu an başlayan sayfa `self.page`; BİR SONRAKİ sayfanın
+            # şablonu şimdi seçilir.
+            self._handle_nextPageTemplate(
+                "odd" if (self.page + 1) % 2 == 1 else "even")
+
+    doc = MirroredDoc(path, pagesize=(W, H),
+                      title=meta.get("title") or "",
+                      author=meta.get("author") or "",
+                      leftMargin=0, rightMargin=0,
+                      topMargin=0, bottomMargin=0)
     doc.addPageTemplates([
         PageTemplate(id="odd", frames=[frame(True)], onPage=paint),
         PageTemplate(id="even", frames=[frame(False)], onPage=paint),

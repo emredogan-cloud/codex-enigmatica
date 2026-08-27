@@ -204,9 +204,23 @@ def main() -> int:
     if ihc.get("exists"):
         rep.check((ihc.get("embeddedFontStreams") or 0) > 0,
                   "hardcover yazı tipleri gömülü")
-        rep.check(hint.get("gutterIn") == 0.625,
-                  "⭑ HARDCOVER İÇ KENAR PAYI CİLTLİYE GÖRE ⭑ (%s in — "
-                  "ciltsizin 0,5'i DEĞİL)" % hint.get("gutterIn"))
+        # ⭑ EŞİK SABİT YAZILMAZ, KAYNAĞINDAN OKUNUR ⭑
+        # ⚠ Burada `== 0.625` yazılıydı ve pay meşru bir sebeple
+        # değişince (KDP reddi → güvenlik payı) kapı KIRMIZI yandı —
+        # kusur yüzünden değil, SAYI ELLE YAZILDIĞI için. Bir kapının
+        # eşiği, denetlediği şeyin tek yetkesinden gelmelidir.
+        import interior as _IN
+        _pg = hint.get("pages") or 274
+        _want_hc = _IN.gutter_for(_pg, "hardcover")
+        _want_pb = _IN.gutter_for(_pg, "paperback")
+        rep.check(hint.get("gutterIn") == _want_hc,
+                  "⭑ HARDCOVER İÇ KENAR PAYI CİLTLİ TABLOSUNDAN ⭑ "
+                  "(%s in · beklenen %.3f)"
+                  % (hint.get("gutterIn"), _want_hc))
+        rep.check((hint.get("gutterIn") or 0) > _want_pb,
+                  "⭑ VE CİLTSİZİNKİNDEN GENİŞ ⭑ (%s > %.3f) — ciltli "
+                  "kitap düz açılmaz, cilde yakın satırlar görünmez"
+                  % (hint.get("gutterIn"), _want_pb))
     if chc.get("exists") and hcov:
         mb = chc.get("mediaBoxIn") or [0, 0]
         rep.check(abs(mb[0] - hcov["widthIn"]) < 0.03

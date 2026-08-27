@@ -258,6 +258,17 @@ fi
   run_optional "Kindle EPUB güncel"     $VENV_PY 04_BUILD/epub.py --check
 [ -f 04_BUILD/covers.py ] && \
   run_optional "kapak üretimi güncel"   $VENV_PY 04_BUILD/covers.py --check
+# ⭑ BASKI PAYI: MÜREKKEBİN GERÇEK YERİ ⭑
+# ⚠ BU KAPI BİR KDP REDDİNDEN DOĞDU. `interior.py` çerçeveyi doğru
+# kuruyor ve "yeşil" diyordu; çerçevenin DIŞINA taşan mürekkebi hiçbir
+# kapı ölçmüyordu. Ölçünce ciltsizde 140, ciltlide 245 sayfa ihlaldeydi
+# — ve oluk payı hiç aynalanmıyordu. Dizgi kapısı niyeti değil ÇIKTIYI
+# denetlemelidir.
+# ⚠ Pillow + poppler ister; yoksa ATLANIR (çıkış 2). CI'da 08_OUTPUT
+# yoktur ve kapı "taranamadı" der — yerelde koşması ZORUNLUDUR.
+[ -f 04_BUILD/qa_print_margins.py ] && \
+  run_optional "⭑ BASKI PAYI ⭑"  $VENV_PY 04_BUILD/qa_print_margins.py \
+                                   --json 06_REPORTS/tracked/qa-print-margins.json
 [ -f 04_BUILD/metadata.py ] && \
   run "KDP metadata paketi"     $PY 04_BUILD/metadata.py --check
 

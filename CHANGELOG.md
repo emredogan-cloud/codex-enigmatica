@@ -5,6 +5,102 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [1.3.1] — 2026-08-27 · ⛔ KDP REDDİ · BASKI PAYI ONARILDI
+
+# KDP Previewer haklıydı — ve bildirdiğinden çok daha fazlası vardı
+
+KDP ciltsiz iç bloğu **"Insufficient gutter"** diyerek reddetti ve beş
+sayfa saydı: **60, 94, 96, 122, 224**.
+
+Ölçünce beş değildi:
+
+| | İhlal eden sayfa |
+|---|---:|
+| Ciltsiz | **140 / 274** |
+| **Ciltli** | **245 / 274** |
+
+KDP yalnızca bir **örnek** göstermişti, ve ciltli hiç bildirilmemişti.
+
+### ⭑ ASIL SEBEP: AYNALAMA HİÇ OLMUYORDU ⭑
+
+`interior.py` iki sayfa şablonu (tek/çift) kuruyor ve **ikisini de
+kaydediyordu** — ama aralarında **hiç geçiş yapmıyordu**. reportlab,
+`NextPageTemplate` görmedikçe listedeki **ilk** şablonu bütün kitap
+boyunca kullanır. Yani oluk payı 274 sayfanın **274'ünde de SOLDA**
+kaldı.
+
+Ölçüm bunu tek satırda gösterdi — tek ve çift sayfaların sol kenarı
+**birebir aynıydı**:
+
+```
+ciltli   tek sayfa sol 0,620"   çift sayfa sol 0,620"   ← aynalama YOK
+```
+
+Ciltside bu, çift sayfalarda oluk yerine **dış pay** bırakıyordu: KDP
+0,625" istiyor, 0,480" buluyordu. Ciltsizde **görünmüyordu**, çünkü orada
+oluk ve dış pay eşitti (0,5").
+
+⚠ Ve kodun kendi yorumu **"⭑ İÇ KENAR AYNALANIR ⭑"** diyordu. Kod
+demiyordu.
+
+### İkinci kusur: paylar asgariye dayanmıştı
+
+reportlab akış nesnelerini **kırpmaz**. Yaslanmış bir satırın son glifi
+kendi ilerleme genişliğinin **0,007–0,020"** ötesine taşar. Çerçeve tam
+0,500"de bitse bile **mürekkep 0,480"e** geliyordu. Asgariye dayanmak,
+toleransı sıfırlamaktır.
+
+### Onarım — ve sayfa sayısı KORUNDU
+
+Oluk payına **+0,125"** eklendi, dış paydan **aynı miktar** alındı:
+
+| | Oluk | Dış | **Gövde** |
+|---|---:|---:|---:|
+| Ciltsiz | 0,500 → **0,625** | 0,500 → **0,375** | **5,000" (aynı)** |
+| Ciltli | 0,625 → **0,750** | 0,500 → **0,375** | **4,875" (aynı)** |
+
+Gövde genişliği değişmediği için dizgi **birebir aynı akar**:
+**274 sayfa korundu**, sırt genişliği değişmedi, kapaklar yeniden
+üretilmedi. 0,375" hâlâ KDP'nin 0,25" asgarisinin üstündedir.
+
+Sayfa numarası da 0,270"den **0,380"e** alındı (asgariye 0,020" kalıyordu).
+
+### Ölçülen sonuç
+
+| | Önce | **Sonra** |
+|---|---|---|
+| Ciltsiz ihlal | 140 sayfa | **0** |
+| Ciltli ihlal | 245 sayfa | **0** |
+| En dar pay (ciltsiz) | −0,020" | **+0,103"** |
+| En dar pay (ciltli) | −0,145" | **+0,102"** |
+| Aynalama | ⛔ yok | ✅ **etkin** |
+
+KDP'nin saydığı beş sayfa: hepsi **0,607"** iç pay (asgari 0,500").
+
+### Eklendi — `04_BUILD/qa_print_margins.py`
+
+⭑ **Bu kusur, hiçbir kapı MÜREKKEBE bakmadığı için gemiye bindi.**
+`interior.py` çerçeveyi doğru kuruyor ve "yeşil" diyordu; çerçevenin
+**dışına** taşan mürekkebi kimse ölçmüyordu.
+
+Yeni kapı sayfaları raster'a çevirip **her sayfanın gerçek mürekkep
+sınırlayıcı kutusunu** ölçer — metin, görsel, çizgi, sayfa numarası.
+Ve aynalamanın **gerçekten olduğunu** ölçer, varsaymaz.
+
+⚠ Eşik **bizim payımız değil, KDP'nin eşiğidir** (`kdp_min_gutter`):
+payı büyütüp kapıyı da büyütmek, kapıyı kendi kendine yeşil yakardı.
+
+`selftest § ⑯` · **10 yeni denetim** · **279 → 289**.
+
+### Onarıldı — bir kapı daha sabit sayı tutuyordu
+
+`kdp_package.py` ciltli oluk payını `== 0.625` diye **elle yazılmış**
+bir sayıyla denetliyordu ve pay meşru sebeple değişince kırmızı yandı —
+kusur yüzünden değil, sayı elle yazıldığı için. Eşik artık tek
+yetkesinden (`interior.gutter_for`) okunuyor.
+
+---
+
 ## [1.3.0] — 2026-08-27 · ⭑ PROJE KAPANIŞI ⭑
 
 # PROJECT: TECHNICALLY COMPLETE · KDP UPLOAD PACKAGE COMPLETE · AWAITING FOUNDER KDP ACTION

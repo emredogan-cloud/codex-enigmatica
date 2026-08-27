@@ -1,12 +1,12 @@
 {
   "status": "pass",
-  "checks": 30,
+  "checks": 31,
   "errors": [],
   "warnings": [],
   "facts": {
     "interior": {
       "exists": true,
-      "bytes": 70396333,
+      "bytes": 70396374,
       "header": "%PDF-1.4",
       "pages": 274,
       "embeddedFontStreams": 4,
@@ -49,7 +49,7 @@
     "hardcover": {
       "interior": {
         "exists": true,
-        "bytes": 67345255,
+        "bytes": 67345319,
         "header": "%PDF-1.4",
         "pages": 274,
         "embeddedFontStreams": 4,

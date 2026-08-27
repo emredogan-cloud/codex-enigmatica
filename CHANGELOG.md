@@ -5,6 +5,85 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [1.2.0] — 2026-08-27 · ⭑ NİHAİ SÜRÜM PAKETİ · KURUCU GEÇERSİZ KILMASI ⭑
+
+# ⛔ HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.
+
+Nihai KDP paketi üretildi. **İzin verilen şey ÜRETİMDİR** — yayımlama
+değil, ve kesinlikle "kitap doğrulandı" değil. Üç alan değişmedi:
+`sessionsPerformed 0` · `humanValidationPassed false` ·
+`measuredVerdict HARD-STOP`.
+
+→ [`06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md`](06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md)
+
+### Onarıldı — ⭑ CİLTLİ KÂĞIT ÇELİŞKİSİ · ürünü bitirebilirdi ⭑
+
+Yönerge "bayat 263 sayfa değerlerini kullanma" diyordu. Ölçünce asıl
+tehlikenin **başka yerde** olduğu çıktı:
+
+| | Sırta etkisi | ±0,0625 in toleransı |
+|---|---:|---|
+| Sayfa farkı (263 → 274) | +0,0248 in | %39,7 — **içinde** |
+| **Kâğıt farkı (beyaz → krem)** | **+0,0680 in** | **%109 — AŞIYOR** |
+
+`metadata` ciltliyi **krem** listeliyordu; kurucunun KDP hesaplayıcısı
+**beyaz** ile koşmuştu. Kapak beyaz matematiğiyle üretilip krem diye
+listeleniyordu — yanlış kâğıtla basılan ciltli kapak **reddedilir**.
+
+Kâğıt artık **sürüm başınadır**; sırt hesaplayıcının kendi çıktısından
+ölçülen **tahta payından** (0,18872 in) türetilir, "delta yaması" ile
+değil; ve kâğıt hesaplayıcıdan farklıysa kapı **KIRMIZI** yanar.
+
+### Onarıldı — ⭑ KDP TELİF FORMÜLÜ YANLIŞTI ⭑
+
+`economics.py` %70 telifini `0,70 × liste − teslimat` diye hesaplıyordu.
+KDP'nin kendi telif sayfası **teslimatın orandan ÖNCE** düşüldüğünü
+söyler: *"70% Royalty Rate x (List Price – applicable VAT - Delivery
+Costs)"*. Fark küçük değildi — **0,05 $ yerine 2,13 $**, başabaş
+**23,3 MB yerine 33,3 MB**. Öneri (%35) değişmedi; ama yanlış bir sayı,
+doğru bir karara götürse bile yanlıştır.
+
+### Değişti — A16 KAPANDI · kapak 300 ppi'ın ÜSTÜNE çıktı
+
+Ham sarmal sanat **1840 × 855** pikseldi: PDF 300 ppi'lık *piksel*
+taşıyor ama arkasında o kadar *bilgi* taşımıyordu. Deponun **zaten
+kurulu** Real-ESRGAN hattı (`ASSET_UPSCALING_REPORT.md`) — portföydeki
+diğer üç kitapta kullanılmış, buraya hiç uygulanmamıştı — uygulandı:
+
+```
+1840 × 855  →  7360 × 3420      ciltsiz 92,4 → 369,7 ppi
+                                 ciltli  82,1 → 328,3 ppi
+```
+
+⚠ Real-ESRGAN **makul detay üretir**, kaybolmuş detayı **geri getirmez**.
+
+### Eklendi — ⚑ GEÇİCİ VERCEL DOĞRULAMA ORTAMI (A18)
+
+Site üretime alındı ve doğrulama sayfası **canlı**:
+`enterprise-web-site.vercel.app/codex-enigmatica/verify` — 200, HTTPS
+zorunlu, `GET` 405, ve **901.852 bayt canlı HTML + 16 JS parçasında sıfır
+cevap/biber/özet izi**.
+
+⛔ **Geçici adres kitaba BASILMADI.** Basılan adres değişmedi:
+`valicepress.com/codex-enigmatica/verify`. Kalıcı kural da
+zayıflatılmadı — `qa_verification.py` hâlâ `*.vercel.app`'i basım adresi
+olarak reddeder ve `selftest § ⑮` bunu geçici blok **varken bile**
+ispatlar. **selftest 273 → 279.**
+
+### ⛔ Bulundu — UPSTASH ÜRETİMDE YER TUTUCU (A20)
+
+Doğrulama uç noktası canlıda **503** döndürüyor ve bu **doğru
+davranıştır**. Sebep ölçüldü: üretimdeki `UPSTASH_REDIS_REST_URL` bir URL
+**değil** (şema yok, ana makine adı **0 karakter**), belirteç **11
+karakter**. 89 gün önce konmuş yer tutucular.
+
+⚠ Kusur yeni değil: sitenin **çevre** hız sınırlayıcısı da aynı sebeple
+üretimde **sessizce açık düşüyor**. Doğrulama uç noktası ise **kapalı**
+düşer — sınırlayıcısız bir kâhin sınırsız denemedir. Yeşil bir test için
+**zayıflatılmadı**.
+
+---
+
 ## [1.1.0] — 2026-08-27 · ⭑ B2 · DOĞRULAMA SAYFASI ⭑
 
 # ✅ KİTAP ARTIK VAAT ETTİĞİ ADRESİ BASIYOR

@@ -92,11 +92,23 @@ FOUNDER_ONLY = [
      "Ajan tarayıcıda hesabınıza giremez, giremeyecektir."),
     ("Previewer'da sayfa sayfa görsel onay",
      "Bir insanın bakması gerekir; ölçüm bunu değiştirmez."),
-    ("Yapay zekâ içerik beyanı",
-     "Hukuki bir beyandır ve yalnızca siz verebilirsiniz. "
-     "`metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false."),
-    ("ISBN ve yayın hakkı kararı",
-     "`founderPending.isbn` boş. KDP ücretsiz ISBN mi, kendi ISBN'iniz mi?"),
+    ("⭑ YAPAY ZEKÂ İÇERİK BEYANINI KDP PANELİNDE SİZ TAMAMLARSINIZ ⭑",
+     "Hukuki bir beyandır ve yalnızca siz verebilirsiniz. Ajan bir değer "
+     "UYDURMADI ve uydurmayacak: `metadata.json → "
+     "founderPending.aiDisclosureConfirmed` HÂLÂ false ve öyle kalacak. "
+     "KDP, YZ-ÜRETİMİ metin/görsel/çevirinin bildirilmesini ister; "
+     "YZ-DESTEKLİ içerik için bildirim gerekmez — ayrımı siz yaparsınız."),
+    ("⭑ ISBN'İ KDP PANELİNDE SİZ GİRERSİNİZ ⭑",
+     "`founderPending.isbn` BOŞ ve bilerek boş. Ajan ISBN üretmedi, "
+     "tahmin etmedi, yeniden kullanmadı ve YER TUTUCU BASMADI — basılmış "
+     "yanlış bir ISBN geri alınamaz. KDP ücretsiz ISBN mi, kendi "
+     "ISBN'iniz mi: karar sizin ve panelde girilir."),
+    ("⭑ KINDLE TELİF PLANINI SİZ SEÇERSİNİZ ⭑",
+     "Ölçüm: EPUB 46,3 MB → %70 planında teslimat ücreti 6,95 $ "
+     "(46,3 × 0,15 $) ve telif 2,13 $; %35 planında telif 3,50 $. "
+     "Yani BU DOSYADA %35 daha çok kazandırır ve başabaş nokta "
+     "~33,3 MB'dır. Formül KDP'nin kendi telif sayfasından alındı: "
+     "%70 × (liste − KDV − teslimat). Seçim panelde sizindir."),
     ("Yazar biyografisi",
      "`founderPending.authorBio` boş. Yer tutucu basmak geri alınamaz."),
     ("Fiziksel POD provası (A9)",
@@ -369,18 +381,46 @@ def verification_state() -> dict:
         "registered": bool(ver.get("domainRegistered")),
         "deployed": bool(ver.get("deployed")),
         "live": ver.get("liveVerifiedAt"),
+        "temporary": ver.get("temporary") or {},
     }
+
+
+def bare(u: str) -> str:
+    """Şemasız gösterim.
+
+    ⚠ El kitabının HTML kılavuzu ÇEVRİMDIŞI çalışmak zorundadır ve bunu
+    bir kapı tutar: belgede `http://` ya da `https://` GEÇEMEZ. Kural
+    blunt ama haklı — bir `<img src="https://…">` kılavuzu internete
+    bağımlı kılardı. Adresi şemasız basmak kuralı zayıflatmadan aynı
+    bilgiyi verir, ve zaten kitaba basılan adres de şemasızdır.
+    """
+    return (u or "").replace("https://", "").replace("http://", "")
 
 
 def verification_rows(v: dict) -> list:
     ok = "✅ EVET"
     no = "⛔ HAYIR"
-    return [
-        ("Kitaba basılan adres", v["url"] or "⛔ SEÇİLMEDİ"),
+    rows = [
+        ("Kitaba BASILAN adres (kalıcı)", v["url"] or "⛔ SEÇİLMEDİ"),
         ("Alan adı kurucunun elinde", ok if v["registered"] else no),
-        ("Site yayında", ok if v["deployed"] else no),
-        ("Adres canlı doğrulandı", v["live"] or "⛔ HİÇ"),
+        ("Kalıcı alan adı yayında", ok if v["deployed"] else no),
+        ("Kalıcı adres canlı doğrulandı", v["live"] or "⛔ HİÇ"),
     ]
+    t = v.get("temporary") or {}
+    if t:
+        live = t.get("liveState") or {}
+        rows += [
+            ("— — —", "— — —"),
+            ("GEÇİCİ doğrulama adresi",
+             bare(t.get("temporaryVerificationBaseUrl")) or "—"),
+            ("Geçici adres KİTABA BASILIYOR mu",
+             no if not t.get("printedInBook") else "⛔ EVET — HATA"),
+            ("Geçici sayfa canlı", ok if live.get("pageLive") else no),
+            ("Geçici uç nokta çalışıyor",
+             ok if live.get("endpointOperational") else
+             "⛔ HAYIR — " + bare(live.get("endpointBlockedBy") or "")),
+        ]
+    return rows
 
 
 def render_md(meta: dict, files: dict, secs: list) -> str:
@@ -404,9 +444,49 @@ def render_md(meta: dict, files: dict, secs: list) -> str:
           "| İşlenmiş A+ | %d / 6 |" % files["aplus"]["n"],
           "| Ajan tarafından hazır adım | %d / %d |" % (ready, total), ""]
 
+    # ⭑ ZORUNLU CÜMLE ⭑ — project_config § killGate.externalValidation
+    # .releaseBuildOverride.mandatoryReportLine. Kurucu nihai paketin
+    # üretilmesine izin verdi; İZİN VERİLEN ŞEY ÜRETİMDİR ve bu blok
+    # onun bir doğrulama SANILMASINI engellemek için vardır.
+    ev = ((pl.load_config().get("killGate") or {})
+          .get("externalValidation") or {})
+    if ev.get("founderOverride") and not ev.get("humanValidationPassed"):
+        L += ["## 0.0 · ⛔ İNSAN DOĞRULAMASI YAPILMADI", "",
+              "> **HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.**",
+              ">",
+              "> Bu kitabı **hiçbir harici insan çözmedi.** Yapılan çözücü",
+              "> oturumu: **%d**. Ölçülen öldürme kapısı kararı:"
+              % ev.get("sessionsPerformed", 0),
+              "> **HARD-STOP**. İnsan doğrulaması geçti mi: **HAYIR**.",
+              ">",
+              "> Nihai paket, kurucunun **bunu bilerek** verdiği izinle",
+              "> üretildi (%s). Bu bir **risk kabulüdür**, bir doğrulama"
+              % (ev.get("releaseBuildOverride", {}).get("authorisedAt")
+                 or "—"),
+              "> değildir — ve hiçbir rapor onu doğrulama diye yazmaz.", ""]
+
     v = verification_state()
     blocked = not (v["url"] and v["registered"] and v["deployed"] and v["live"])
     L += ["## 0.1 · ⭑ DOĞRULAMA SAYFASI ⭑", ""]
+    t = v.get("temporary") or {}
+    if t:
+        L += ["> ⚠ **ALAN ADI HENÜZ KALICI DEĞİL.**",
+              ">",
+              "> Kalıcı adres — ve **kitaba basılan** adres — şudur:",
+              "> `%s`" % v["url"],
+              ">",
+              "> Bu adres **henüz yayında değildir**: alan adı alınmadı.",
+              "> O güne kadar doğrulama sistemi **geçici olarak** şurada",
+              "> canlı test edilir: `%s`"
+              % (bare(t.get("temporaryVerificationBaseUrl")) or "—"),
+              ">",
+              "> ⛔ **Geçici adres kitaba BASILMAZ** ve basılmadı. Bir",
+              "> önizleme alan adı kiracıdır; proje adı değişince ölür,",
+              "> kitap ise basılmıştır.",
+              ">",
+              "> ⭑ **Üretim kalıcı olarak yayına alınmış SAYILMAZ**",
+              "> ta ki kurucu `valicepress.com` alan adını alıp bağlayana",
+              "> kadar.", ""]
     if blocked:
         L += ["> ⛔ **BASKIYA HAZIR DEĞİL — VE BU BİR BİÇİM SORUNU DEĞİL.**",
               ">",
@@ -641,9 +721,33 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
     # alan adı BİZDE mi · site YAYINDA mı · adres YANIT VERDİ mi.
     # Hiçbiri ötekinin yerine geçmez, ve üçü de yeşil olmadan bu kutu
     # kırmızıdır.
+    ev = ((pl.load_config().get("killGate") or {})
+          .get("externalValidation") or {})
+    if ev.get("founderOverride") and not ev.get("humanValidationPassed"):
+        A('<div class="note stop"><b>⛔ HUMAN VALIDATION: NOT PERFORMED '
+          '— FOUNDER OVERRIDE.</b><br>'
+          'Bu kitabı <b>hiçbir harici insan çözmedi</b>. Yapılan çözücü '
+          'oturumu <b>%d</b>. Ölçülen öldürme kapısı kararı '
+          '<b>HARD-STOP</b>. Nihai paket kurucunun <b>bunu bilerek</b> '
+          'verdiği izinle üretildi — bu bir <b>risk kabulüdür</b>, bir '
+          'doğrulama değildir.</div>' % ev.get("sessionsPerformed", 0))
+
     v = verification_state()
     blocked = not (v["url"] and v["registered"] and v["deployed"] and v["live"])
     A('<h2 id="dogrulama">⭑ Doğrulama sayfası — basılan adres</h2>')
+    _t = v.get("temporary") or {}
+    if _t:
+        A('<div class="note stop"><b>⚠ ALAN ADI HENÜZ KALICI DEĞİL.</b><br>'
+          'Kitaba <b>basılan</b> kalıcı adres: <code>%s</code><br>'
+          'Bu adres <b>henüz yayında değil</b> — alan adı alınmadı. O güne '
+          'kadar doğrulama <b>geçici olarak</b> şurada canlı test edilir: '
+          '<code>%s</code><br>'
+          '⛔ <b>Geçici adres kitaba BASILMAZ</b> ve basılmadı: bir '
+          'önizleme alan adı <b>kiracıdır</b>, kitap ise basılmıştır.<br>'
+          '⭑ Üretim, kurucu <code>valicepress.com</code> alan adını alıp '
+          'bağlayana kadar <b>kalıcı olarak yayına alınmış sayılmaz</b>.'
+          '</div>' % (e(v["url"]),
+                      e(bare(_t.get("temporaryVerificationBaseUrl")) or "—")))
     if blocked:
         A('<div class="note stop"><b>⛔ BASKIYA HAZIR DEĞİL.</b><br>'
           'Kitap son yaprağına bir adres <b>basar</b>. O adres canlı '

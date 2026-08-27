@@ -151,6 +151,10 @@
 # ⚠ Cevabın UZUNLUĞU bir sır değildir: kitabın kendisi son sorunun
 #   kısıtları arasında *"The answer has five letters."* diye BASAR.
 #   Raporda geçmesi bir sızıntı değil, basılı bir olgunun tekrarıdır.
+# ⭑ NİHAİ SÜRÜM HAZIRLIK RAPORU — yedinci kez aynı ders ⭑
+# PROJECT_CONTEXT ve CHANGELOG ona bağ verir; gitignore'da kalması
+# klonda kırık bağ demektir. Cevap TAŞIMAZ ve kanarya her koşuda tarar.
+!06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md
 !06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md
 !06_REPORTS/WEBSITE_KDP_BUSINESS_STRATEGY.md
 !06_REPORTS/WEBSITE_CURRENT_STATE_AUDIT.md

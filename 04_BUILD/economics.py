@@ -103,7 +103,17 @@ def main() -> int:
         mb = (kin.get("bytes") or 0) / 1e6
         lst = float(ked.get("list") or 0)
         deliver = mb * DELIVERY_PER_MB
-        r70 = (0.70 * lst - deliver) if KDP_70_MIN <= lst <= KDP_70_MAX else None
+        # ⭑ TESLİMAT ÜCRETİ ORANDAN ÖNCE DÜŞÜLÜR ⭑
+        # ⚠ Bu satır önce `0.70 * lst - deliver` diyordu — yani ücreti
+        # oranı UYGULADIKTAN sonra düşüyordu. KDP'nin kendi telif
+        # sayfası tersini söyler ve birebir şöyledir:
+        #   "70% Royalty Rate x (List Price – applicable VAT -
+        #    Delivery Costs) = Royalty"
+        #   → kdp.amazon.com/en_US/help/topic/G200634500
+        # 46,3 MB'lık bu dosyada fark küçük değildi: 0,05 $ yerine
+        # 2,13 $. Öneri (%35) değişmiyor ama SAYI yanlıştı, ve yanlış
+        # bir sayı doğru bir karara götürse bile yanlıştır.
+        r70 = (0.70 * (lst - deliver)) if KDP_70_MIN <= lst <= KDP_70_MAX else None
         r35 = 0.35 * lst
         best = "35%" if (r70 is None or r35 > r70) else "70%"
         kindle_row = {"list": lst, "fileMB": round(mb, 1),
@@ -127,7 +137,9 @@ def main() -> int:
                      "%.2f $. %%35 planı seçilmeli YA DA EPUB küçültülmeli — "
                      "%%70'in kârlı olduğu sınır ~%.1f MB."
                      % (r70, r35, mb, DELIVERY_PER_MB, deliver,
-                        (0.70 * lst - r35) / DELIVERY_PER_MB))
+                        # başabaş: 0,70·(L − 0,15·M) = 0,35·L
+                        #        → M = (0,35·L) / (0,70 · 0,15)
+                        (0.35 * lst) / (0.70 * DELIVERY_PER_MB)))
         rep.check(max(r35, r70 or 0) > 0, "Kindle telifi pozitif")
 
     # ── BRIEF ile karşılaştır ─────────────────────────────────────────

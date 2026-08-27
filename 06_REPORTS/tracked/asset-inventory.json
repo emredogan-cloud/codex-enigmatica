@@ -8,7 +8,7 @@
     "4 levha sütun genişliğine SIĞMIYOR, yükseklikten sınırlanıyor ve dar basılacak: pl-g1-16.png 4.12 in (%92), pl-g2-20.png 3.33 in (%74), pl-g3-20.png 3.30 in (%73), pl-g5-20.png 3.30 in (%73) — en küçük detay aynı oranda küçülür (POD provasında ölçülmeli · A9)"
   ],
   "facts": {
-    "delivered": 113,
+    "delivered": 114,
     "expected": 113,
     "gravure": 103,
     "cover": 2,
@@ -266,6 +266,23 @@
         "printH_in": 9.0,
         "effectiveDpi": 170.7,
         "target": "6 × 9 in"
+      },
+      {
+        "file": "codex-enigmatica-wrap-cover-option-01-4x-300dpi.png",
+        "class": "KAPAK SARMAL",
+        "expected": false,
+        "w": 7360,
+        "h": 3420,
+        "format": "PNG",
+        "colorspace": "sRGB",
+        "alpha": false,
+        "dpiMeta": 118.1,
+        "bitDepth": 8,
+        "bytes": 37344117,
+        "megapixel": 25.17,
+        "aspect": 2.152,
+        "effectiveDpi": null,
+        "target": "sırt dondurulunca hesaplanır (K12)"
       },
       {
         "file": "codex-enigmatica-wrap-cover-option-01.png",

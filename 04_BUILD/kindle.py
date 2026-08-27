@@ -494,7 +494,13 @@ def build_epub(book, sols, meta, out_dir):
         add("verification", "The Verification Page", _b)
 
     # ── kapak ──────────────────────────────────────────────────────────
-    art = os.path.join(RAW, "codex-enigmatica-wrap-cover-option-01.png")
+    # ⭑ Baskıyla AYNI sanat, aynı 4× yükseltilmiş sürüm ⭑
+    # ⚠ Kindle kapağı SARMALIN ÖN üçte birinden kırpılır. Ham sanat
+    # 1840 × 855 iken o kırpım küçük kalıyordu; yükseltilmiş sürümde
+    # aynı kırpım 4 kat piksel taşır ve KDP'nin 1600 × 2560 hedefi
+    # BÜYÜTMEDEN karşılanır. (`covers.py § DEFAULT_ART` ile tek kaynak.)
+    import covers as _CV
+    art = os.path.join(RAW, _CV.DEFAULT_ART)
     cover_jpg = os.path.join(out_dir, "cover.jpg")
     cstats = (pl.load_json(os.path.join(
         pl.ROOT, "06_REPORTS", "tracked", "cover.json")) or {}).get("facts") or {}

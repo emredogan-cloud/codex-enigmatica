@@ -51,7 +51,25 @@ PAPER_IN = {"cream": 0.0025, "white": 0.002252}
 # sakin çıktı (sırt 36,5 / 47,2 · yazar 33,0 / 57,1 · arka 27,4 / 29,2).
 # `wrap-02`nin ortasında görünür bir dikey çizgi var — promptun açıkça
 # yasakladığı "yapay sırt paneli".
-DEFAULT_ART = "codex-enigmatica-wrap-cover-option-01.png"
+# ⭑ 4× YÜKSELTİLMİŞ SÜRÜM KULLANILIR ⭑ (27 Ağu 2026)
+# ⚠ Kurucunun ham sarmal sanatı 1840 × 855 pikseldi. Kapak boyutuna
+# yayıldığında GERÇEK bilgi yalnızca 92 (ciltsiz) / 82 (ciltli) ppi
+# ediyordu — KDP'nin 300 ppi hedefinin %31'i. PDF 300 ppi'lık PİKSEL
+# taşıyordu ama o piksellerin arkasında o kadar BİLGİ yoktu.
+#
+# Depo bunun için zaten bir hat kurmuştu (ASSET_UPSCALING_REPORT.md,
+# Real-ESRGAN / upscayl-standard-4x) ve portföydeki diğer üç kitapta
+# kullanılmıştı; Codex Enigmatica'ya HİÇ uygulanmamıştı. Uygulandı:
+#
+#   1840 × 855  →  7360 × 3420   (4×, upscayl-standard-4x)
+#   ciltsiz     92 → 370 ppi
+#   ciltli      82 → 328 ppi     (ikisi de 300'ün ÜSTÜNDE)
+#
+# ⚠ VE BUNUN NE OLMADIĞI: Real-ESRGAN makul detay ÜRETİR, kaybolmuş
+# detayı GERİ GETİRMEZ. Dosya artık gerçekten 300 ppi'dır ve bikübik
+# büyütmeden belirgin olarak keskindir — ama 300 ppi'da ÜRETİLMİŞ bir
+# sanatla aynı şey değildir. Bu ayrım raporda da aynen durur.
+DEFAULT_ART = "codex-enigmatica-wrap-cover-option-01-4x-300dpi.png"
 
 
 def spine_in(pages: int, paper: str) -> float:
@@ -64,8 +82,19 @@ def spine_in(pages: int, paper: str) -> float:
 #   hardcover-calculator.png → 03_COVER/HARDCOVER_CALCULATOR_VALUES.md
 # Ciltsiz geometrisini ciltliye kopyalamak 1,45 inç dar bir kapak
 # üretir ve KDP reddeder.
+# ⭑ HESAPLAYICININ KOŞTUĞU TABAN ⭑ — bunlar GİRDİLERDİR, çıktı değil.
+# Sırt bu tabandan TÜRETİLİR (§ geometry) çünkü sırt sayfa sayısına ve
+# kâğıda bağlı TEK ölçüdür; kapak tahtası, oluk ve sarma payları sayfa
+# sayısından bağımsızdır ve doğrudan okunur.
+CALC_PAGES = 263
+CALC_PAPER = "white"
+CALC_SPINE = 0.781
+# Tahta payı = hesaplayıcının verdiği sırt − o sayfa sayısının kâğıt payı.
+# Bu, hesaplayıcının kendi çıktısından ÖLÇÜLEN bir sabittir; uydurulmadı.
+BOARD_IN = round(CALC_SPINE - CALC_PAGES * 0.002252, 5)   # 0.18872 in
+
 HARDCOVER = {
-    "pages": 263, "paper": "white",
+    "pages": CALC_PAGES, "paper": CALC_PAPER,
     "full_w": 14.356, "full_h": 10.417,
     "front_w": 6.197, "front_h": 9.236,
     "spine_w": 0.781,
@@ -82,20 +111,33 @@ def geometry(binding: str, pages: int, paper: str) -> dict:
     """Kapak geometrisi. Ciltsiz HESAPLANIR, ciltli OKUNUR."""
     if binding == "hardcover":
         g = dict(HARDCOVER)
-        # ⚠ Hesaplayıcı 263 sayfaya göre koştu; iç blok çift sayfaya
-        # tamamlanınca 264 oldu. "Eşit değil → bayat" demek DOĞRU AMA
-        # YETERSİZ: asıl soru farkın SIRTI ne kadar oynattığıdır.
+        # ⭑ SIRT TÜRETİLİR, YAMANMAZ ⭑
+        # ⚠ Önceki hâl hesaplayıcının 263 sayfalık sırtına bir "delta"
+        # ekliyordu. Sayısal olarak aynı yere varıyordu ama İKİ soruyu
+        # birbirine karıştırıyordu: sayfa farkı ve KÂĞIT farkı. İkincisi
+        # ölçülünce ortaya çıktı ki asıl tehlike orada:
         #
-        # Ciltli sırt = sayfa payı + tahta payı. Sayfa payı beyaz kâğıtta
-        # 0,002252 in/sayfa; bir sayfalık fark 0,0023 in eder. KDP'nin
-        # kapak toleransı ±0,0625 in — yani bu fark toleransın %3,6'sı.
-        # Kırmızı yakmak, gerçek olmayan bir sorunu üretimi durdurmak
-        # için kullanmaktır. Fark ölçülür ve tolerans aşılırsa kırılır.
-        delta_pages = pages - HARDCOVER["pages"]
-        g["spineDeltaIn"] = round(delta_pages * PAPER_IN["white"], 5)
-        g["deltaPages"] = delta_pages
-        g["stale"] = abs(g["spineDeltaIn"]) > 0.0625
-        g["spine_w"] = round(HARDCOVER["spine_w"] + g["spineDeltaIn"], 4)
+        #   274 sayfa · beyaz  → 0,8058 in
+        #   274 sayfa · krem   → 0,8737 in
+        #   fark 0,0680 in     → KDP toleransı ±0,0625 in AŞILIR
+        #
+        # Yani yanlış kâğıtla basılan bir ciltli kapak REDDEDİLİR.
+        # Sırt artık kâğıdı ve sayfa sayısını AÇIKÇA alır.
+        g["paper"] = paper
+        g["pages"] = pages
+        g["calcBasis"] = {"pages": CALC_PAGES, "paper": CALC_PAPER,
+                          "spine": CALC_SPINE, "boardIn": BOARD_IN}
+        g["boardIn"] = BOARD_IN
+        g["spine_w"] = round(pages * PAPER_IN.get(paper, PAPER_IN["cream"])
+                             + BOARD_IN, 4)
+        g["spineDeltaIn"] = round(g["spine_w"] - CALC_SPINE, 5)
+        g["deltaPages"] = pages - CALC_PAGES
+        g["paperMatchesCalculator"] = (paper == CALC_PAPER)
+        # ⚠ "Bayat" yalnızca sayfa farkının toleransı aşması DEĞİLDİR.
+        # Kâğıt hesaplayıcıdan farklıysa geometri BAŞKA bir üründür ve
+        # hesaplayıcı o ürün için hiç koşmamıştır.
+        g["stale"] = (abs(g["spineDeltaIn"]) > 0.0625
+                      or not g["paperMatchesCalculator"])
         g["full_w"] = round(2 * g["front_w"] + g["spine_w"]
                             + 2 * g["wrap"], 4)
         g["binding"] = "hardcover"
@@ -340,6 +382,9 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
             "staleCalculator": G.get("stale", False),
             "spineDeltaIn": G.get("spineDeltaIn", 0),
             "deltaPages": G.get("deltaPages", 0),
+            "paperMatchesCalculator": G.get("paperMatchesCalculator", True),
+            "calcBasis": G.get("calcBasis"),
+            "boardIn": G.get("boardIn"),
             "worstContrast": round(worst, 2),
             "haloUsed": sum(1 for m in measured if m["needsHalo"]),
             "typeRowsTotal": len(measured),
@@ -459,15 +504,32 @@ def main() -> int:
               % (CT.MIN_CONTRAST, info["edgeContrastMin"]))
     if args.binding == "hardcover":
         d = info.get("spineDeltaIn", 0)
+        # ⭑ KÂĞIT ÖNCE ÖLÇÜLÜR ⭑ — sayfa farkından DAHA TEHLİKELİDİR.
+        # 274 sayfada beyaz→krem geçişi sırtı 0,0680 in oynatır ve KDP'nin
+        # ±0,0625 in toleransını AŞAR. Sayfa farkının kendisi ise yalnızca
+        # 0,0248 in (toleransın %39,6'sı). Yani "hesaplayıcı eski" diye
+        # bakılan yerde asıl kusur başka yerdeydi.
+        rep.check(info.get("paperMatchesCalculator", True),
+                  "⭑ CİLTLİ KÂĞIDI HESAPLAYICININ KOŞTUĞU KÂĞITLA AYNI ⭑ "
+                  "(hesaplayıcı: %s · ürün: %s)"
+                  % (CALC_PAPER, info.get("paper"))
+                  + ("" if info.get("paperMatchesCalculator", True)
+                     else " — ⛔ FARKLI KÂĞIT = BAŞKA GEOMETRİ; "
+                          "hesaplayıcı bu ürün için hiç koşmadı"))
         rep.check(not info["staleCalculator"],
                   "⭑ HESAPLAYICI SAPMASI TOLERANS İÇİNDE ⭑ (%+d sayfa → "
                   "sırt %+.5f in · KDP toleransı ±0,0625)"
                   % (info.get("deltaPages", 0), d))
         if info.get("deltaPages"):
-            rep.warn("hesaplayıcı %d sayfaya göre koştu, iç blok %d — "
-                     "sırt %+.5f in düzeltildi; kesinlik isteniyorsa "
-                     "hesaplayıcı %d sayfayla yeniden koşturulmalı"
-                     % (HARDCOVER["pages"], pages, d, pages))
+            rep.warn("hesaplayıcı %d sayfa · %s kâğıtla koştu, iç blok %d "
+                     "sayfa · %s — sırt hesaplayıcının TAHTA PAYINDAN "
+                     "(%.5f in) yeniden TÜRETİLDİ: %.4f in. Sapma "
+                     "%+.5f in, toleransın %%%.1f'i. Tam kesinlik "
+                     "isteniyorsa hesaplayıcı %d sayfa + %s ile yeniden "
+                     "koşturulmalı (A15)."
+                     % (CALC_PAGES, CALC_PAPER, pages, info.get("paper"),
+                        BOARD_IN, info["spineIn"], d,
+                        abs(d) / 0.0625 * 100, pages, info.get("paper")))
     rep.check(info["spineIn"] > 0.06,
               "sırt yazı basmaya yeter (%.4f in)" % info["spineIn"])
     rep.check(os.path.isfile(out) and open(out, "rb").read(4) == b"%PDF",

@@ -170,6 +170,65 @@
         "Bu A7'nin 'evet' dalıdır ve ölçüyle REDDEDİLMİŞTİR. A7 yine de",
         "kurucuya aittir: bu kayıt bir öneridir, bir kapanış değil."
       ],
+      "temporary": {
+        "$comment": [
+          "⭑ KURUCU GEÇİCİ VERCEL GEÇERSİZ KILMASI — 27 Ağustos 2026 ⭑",
+          "",
+          "Kurucu kalıcı alan adını SONRA alacak. O güne kadar doğrulama",
+          "sistemi mevcut Vercel dağıtımı üzerinde CANLI test edilir.",
+          "Bu GEÇİCİ bir geliştirme/doğrulama durumudur.",
+          "",
+          "⛔ BU URL KİTABA BASILMAZ. Basılan adres KALICI adrestir",
+          "   (printedUrl) ve değişmedi. Basılmış bir URL düzeltilemez;",
+          "   bir KİRACI alan adı kitaba giremez.",
+          "",
+          "⚠ KALICI KURAL ZAYIFLATILMADI: qa_verification.py hâlâ",
+          "   *.vercel.app adreslerini printedUrl olarak REDDEDER.",
+          "   Kapı basım hedefiyle geçici test hedefini AYRI alanlardan",
+          "   okur; bu blok basım hedefine dokunmaz.",
+          "",
+          "Kalıcı alan adı bağlandığında bu blok SİLİNİR."
+        ],
+        "founderOverride": true,
+        "overrideName": "FOUNDER_TEMPORARY_VERCEL_OVERRIDE",
+        "authorisedAt": "2026-08-27",
+        "reason": "kalıcı alan adı henüz alınmadı; doğrulama uçtan uca canlı test edilebilsin diye mevcut Vercel üretim dağıtımı geçici hedef olarak kullanılır",
+        "temporaryVerificationBaseUrl": "https://enterprise-web-site.vercel.app",
+        "temporaryVerificationUrl": "https://enterprise-web-site.vercel.app/codex-enigmatica/verify",
+        "printedInBook": false,
+        "printedInBook$comment": "GEÇİCİ URL KİTABA BASILMAZ — basılan adres founder.verification.printedUrl",
+        "permanenceRule": "kalıcı üretim doğrulama adresi https://valicepress.com/codex-enigmatica/verify OLMAK ZORUNDADIR",
+        "removeWhen": "valicepress.com alındı, bağlandı ve canlı doğrulandı",
+        "liveState": {
+          "$comment": [
+            "27 Ağu 2026 ÖLÇÜMÜ — iddia değil, ölçüm.",
+            "",
+            "Sayfa CANLI ve herkese açık. Uç nokta ise KAPALI DÜŞÜYOR",
+            "ve bu DOĞRU davranıştır: hız sınırı arka ucu (Upstash)",
+            "üretimde YAPILANDIRILMAMIŞ — URL'nin ana makine adı YOK",
+            "(0 karakter), belirteç 11 karakter. Bunlar gerçek kimlik",
+            "bilgisi değil, 89 gün önce konmuş YER TUTUCULARDIR.",
+            "",
+            "⚠ KUSUR YENİ DEĞİL VE BİZİM DEĞİL: sitenin ÇEVRE hız",
+            "  sınırlayıcısı da aynı sebeple üretimde SESSİZCE AÇIK",
+            "  düşüyor ('[rate-limit] check failed; allowing request').",
+            "  Doğrulama uç noktası ise KAPALI düşer — çünkü",
+            "  sınırlayıcısız bir kâhin SINIRSIZ DENEMEDİR.",
+            "",
+            "Kapıyı yeşile boyamak için bu davranış ZAYIFLATILMADI."
+          ],
+          "pageLive": true,
+          "pageStatus": 200,
+          "httpsEnforced": true,
+          "getReturns405": true,
+          "endpointOperational": false,
+          "endpointBlockedBy": "UPSTASH_REDIS_REST_URL/TOKEN üretimde geçersiz — ana makine adı DNS'te çözülmüyor",
+          "failsClosedVerifiedLive": true,
+          "clientSideLeakBytesScanned": 901852,
+          "clientSideLeak": "none",
+          "measuredAt": "2026-08-27"
+        }
+      },
       "domainRegistered": false,
       "domainRegisteredAt": null,
       "domainAvailabilityCheckedAt": "2026-08-26",
@@ -660,10 +719,37 @@
       "founderOverride": true,
       "overrideAuthorisedAt": "2026-08-24",
       "overrideReason": "founder-authorized continuation",
+      "founderOverridePartial": true,
       "overrideScope": [
         "Faz 3 yazımı başlatılabilir",
-        "Kapı I ölçüm kanıtı yeterli SAYILIR — ama DOĞRULANMIŞ sayılmaz"
+        "Kapı I ölçüm kanıtı yeterli SAYILIR — ama DOĞRULANMIŞ sayılmaz",
+        "⭑ 27 Ağu 2026 · NİHAİ SÜRÜM ÇIKTISI ÜRETİLEBİLİR ⭑ — kurucu insan testi eksikliğini BİLEREK kabul etti (risk kabulü)"
       ],
+      "releaseBuildOverride": {
+        "$comment": [
+          "⚠ BU BİR DOĞRULAMA DEĞİL, BİR RİSK KABULÜDÜR.",
+          "",
+          "Kurucu 27 Ağustos 2026'da nihai KDP paketinin ÜRETİLMESİNE",
+          "açıkça izin verdi. İzin verilen şey ÜRETİMDİR — yayımlama",
+          "değil, ve kesinlikle 'kitap doğrulandı' değil.",
+          "",
+          "Üç alan bu blok yüzünden ASLA değişmez ve kill_gate.py bunu",
+          "mekanik olarak tutar: sessionsPerformed 0 · humanValidationPassed",
+          "false · measuredVerdict HARD-STOP.",
+          "",
+          "Her raporda görünmesi ZORUNLU cümle:",
+          "  'HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.'"
+        ],
+        "authorisedAt": "2026-08-27",
+        "permits": "final release package production only",
+        "doesNotPermit": [
+          "KDP'ye yükleme",
+          "yayımlama",
+          "sahte çözücü kaydı üretimi",
+          "'insan doğrulaması yapıldı' iddiası"
+        ],
+        "mandatoryReportLine": "HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE."
+      },
       "overrideDoesNotCover": [
         "harici insan doğrulaması (A12 · A12b) — hâlâ YAPILMADI",
         "'tested' durumu — hiçbir bulmaca test edilmiş sayılmaz",
@@ -918,7 +1004,32 @@
         "id": "hardcover",
         "list": 29.99,
         "enabled": true,
-        "priority": 1
+        "priority": 1,
+        "paper": "white",
+        "paper$comment": [
+          "⭑ CİLTLİ BEYAZ KÂĞITTIR — VE BU TÜRETİLMEDİ, OKUNDU. ⭑",
+          "",
+          "Kurucunun teslim ettiği KDP ciltli hesaplayıcı ekran görüntüsü",
+          "(03_COVER/HARDCOVER_CALCULATOR_VALUES.md) girdiler bölümünde",
+          "'Paper type: White paper' der. Ciltli geometrinin TEK yetkesi",
+          "o hesaplayıcıdır; kapak tahtası, oluk ve sarma payları başka",
+          "hiçbir yerden türetilemez.",
+          "",
+          "⚠ NEDEN AYRI BİR ALAN: `production.paper` TEK bir küresel",
+          "değerdi (cream) ve metadata bütün sürümlere onu yazıyordu —",
+          "yani ciltli, hesaplayıcının koştuğu kâğıttan FARKLI bir kâğıtla",
+          "listeleniyordu. Sessiz ama ürünü bitiren bir çelişki:",
+          "",
+          "  274 sayfa · beyaz  → sırt 0,8058 in   (kapak buna göre üretildi)",
+          "  274 sayfa · krem   → sırt 0,8737 in",
+          "  fark 0,0680 in  ·  KDP toleransı ±0,0625 in  → TOLERANS AŞILIR",
+          "",
+          "Yani kâğıt yanlış seçilirse kapak REDDEDİLİR ya da sırt kayar.",
+          "Ciltsiz KREM kalır (ayrı üründür, ayrı hesaptır).",
+          "",
+          "Kurucu ciltliyi KREM istiyorsa: hesaplayıcı 274 sayfa + krem",
+          "ile YENİDEN koşturulmalı ve bu alan güncellenmelidir (A15)."
+        ]
       },
       {
         "id": "paperback",

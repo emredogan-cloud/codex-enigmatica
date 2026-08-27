@@ -79,21 +79,29 @@ color:var(--mut);font-size:.82rem}
 </table></div>
 <div class="note stop"><b>⚠ ÜÇ ŞEY HENÜZ YOK VE BU BİLEREK BÖYLEDİR.</b><br>① <b>İç blok PDF'i</b> — dizgi <b>dondurulmadı</b> (K12) ve gerçek levhalar yeni geldi. Sayfa sayısı değişebilir, sırt genişliği ona bağlıdır.<br>② <b>Sarmal kapak</b> — elimizdeki kapak sanatı <b>yalnızca ön kapaktır</b>. Gerilerek sarmal yapılamaz; iki yeni sarmal promptu kütüphaneye eklendi ve <b>sizin üretmenizi bekliyor</b>.<br>③ <b>Fiziksel prova</b> — hiç alınmadı (A9).</div>
 <div class="note stop"><b>⭑ VE EN ÖNEMLİSİ ⭑</b><br>Bu kitap <b>hiçbir insanın elinde çözülmedi</b>. Harici çözücü oturumu <b>0 / 5</b> (A12b). Ölçülen öldürme kapısı kararı <b>HARD-STOP</b>. Yayımlama kararı bu gerçeği bilerek verilmelidir.</div>
+<div class="note stop"><b>⛔ HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.</b><br>Bu kitabı <b>hiçbir harici insan çözmedi</b>. Yapılan çözücü oturumu <b>0</b>. Ölçülen öldürme kapısı kararı <b>HARD-STOP</b>. Nihai paket kurucunun <b>bunu bilerek</b> verdiği izinle üretildi — bu bir <b>risk kabulüdür</b>, bir doğrulama değildir.</div>
 <h2 id="dogrulama">⭑ Doğrulama sayfası — basılan adres</h2>
+<div class="note stop"><b>⚠ ALAN ADI HENÜZ KALICI DEĞİL.</b><br>Kitaba <b>basılan</b> kalıcı adres: <code>valicepress.com/codex-enigmatica/verify</code><br>Bu adres <b>henüz yayında değil</b> — alan adı alınmadı. O güne kadar doğrulama <b>geçici olarak</b> şurada canlı test edilir: <code>enterprise-web-site.vercel.app</code><br>⛔ <b>Geçici adres kitaba BASILMAZ</b> ve basılmadı: bir önizleme alan adı <b>kiracıdır</b>, kitap ise basılmıştır.<br>⭑ Üretim, kurucu <code>valicepress.com</code> alan adını alıp bağlayana kadar <b>kalıcı olarak yayına alınmış sayılmaz</b>.</div>
 <div class="note stop"><b>⛔ BASKIYA HAZIR DEĞİL.</b><br>Kitap son yaprağına bir adres <b>basar</b>. O adres canlı değilken basmak okura <b>ölü bir kapı</b> vermektir — ve alan adı başkasının eline geçerse <b>satılmış her nüsha</b> okuru yabancı bir siteye gönderir. <b>Basılmış bir URL düzeltilemez.</b></div>
 <div class="scroll"><table>
-<tr><th>Kitaba basılan adres</th><td>valicepress.com/codex-enigmatica/verify</td></tr>
+<tr><th>Kitaba BASILAN adres (kalıcı)</th><td>valicepress.com/codex-enigmatica/verify</td></tr>
 <tr><th>Alan adı kurucunun elinde</th><td>⛔ HAYIR</td></tr>
-<tr><th>Site yayında</th><td>⛔ HAYIR</td></tr>
-<tr><th>Adres canlı doğrulandı</th><td>⛔ HİÇ</td></tr>
+<tr><th>Kalıcı alan adı yayında</th><td>⛔ HAYIR</td></tr>
+<tr><th>Kalıcı adres canlı doğrulandı</th><td>⛔ HİÇ</td></tr>
+<tr><th>— — —</th><td>— — —</td></tr>
+<tr><th>GEÇİCİ doğrulama adresi</th><td>enterprise-web-site.vercel.app</td></tr>
+<tr><th>Geçici adres KİTABA BASILIYOR mu</th><td>⛔ HAYIR</td></tr>
+<tr><th>Geçici sayfa canlı</th><td>✅ EVET</td></tr>
+<tr><th>Geçici uç nokta çalışıyor</th><td>⛔ HAYIR — UPSTASH_REDIS_REST_URL/TOKEN üretimde geçersiz — ana makine adı DNS&#x27;te çözülmüyor</td></tr>
 </table></div>
 <p class="sub">Karar için: <code>python3 04_BUILD/qa_verification.py --gate release --live</code> — üçü de yeşil olmadan <code>release</code> kapısı <b>KIRMIZIDIR</b>.</p>
 <h2 id="kurucu">🟢 Yalnızca sizin yapabileceğiniz işler</h2>
 <p class="sub">Ajan bunları yapmadı, yapamaz ve yaptığını söylemeyecek.</p><div class="scroll"><table>
 <tr><th>KDP hesabına giriş ve panel kullanımı</th><td>Ajan tarayıcıda hesabınıza giremez, giremeyecektir.</td></tr>
 <tr><th>Previewer&#x27;da sayfa sayfa görsel onay</th><td>Bir insanın bakması gerekir; ölçüm bunu değiştirmez.</td></tr>
-<tr><th>Yapay zekâ içerik beyanı</th><td>Hukuki bir beyandır ve yalnızca siz verebilirsiniz. `metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false.</td></tr>
-<tr><th>ISBN ve yayın hakkı kararı</th><td>`founderPending.isbn` boş. KDP ücretsiz ISBN mi, kendi ISBN&#x27;iniz mi?</td></tr>
+<tr><th>⭑ YAPAY ZEKÂ İÇERİK BEYANINI KDP PANELİNDE SİZ TAMAMLARSINIZ ⭑</th><td>Hukuki bir beyandır ve yalnızca siz verebilirsiniz. Ajan bir değer UYDURMADI ve uydurmayacak: `metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false ve öyle kalacak. KDP, YZ-ÜRETİMİ metin/görsel/çevirinin bildirilmesini ister; YZ-DESTEKLİ içerik için bildirim gerekmez — ayrımı siz yaparsınız.</td></tr>
+<tr><th>⭑ ISBN&#x27;İ KDP PANELİNDE SİZ GİRERSİNİZ ⭑</th><td>`founderPending.isbn` BOŞ ve bilerek boş. Ajan ISBN üretmedi, tahmin etmedi, yeniden kullanmadı ve YER TUTUCU BASMADI — basılmış yanlış bir ISBN geri alınamaz. KDP ücretsiz ISBN mi, kendi ISBN&#x27;iniz mi: karar sizin ve panelde girilir.</td></tr>
+<tr><th>⭑ KINDLE TELİF PLANINI SİZ SEÇERSİNİZ ⭑</th><td>Ölçüm: EPUB 46,3 MB → %70 planında teslimat ücreti 6,95 $ (46,3 × 0,15 $) ve telif 2,13 $; %35 planında telif 3,50 $. Yani BU DOSYADA %35 daha çok kazandırır ve başabaş nokta ~33,3 MB&#x27;dır. Formül KDP&#x27;nin kendi telif sayfasından alındı: %70 × (liste − KDV − teslimat). Seçim panelde sizindir.</td></tr>
 <tr><th>Yazar biyografisi</th><td>`founderPending.authorBio` boş. Yer tutucu basmak geri alınamaz.</td></tr>
 <tr><th>Fiziksel POD provası (A9)</th><td>Gravürlerin nokta yayılması altındaki davranışı YALNIZCA basılı provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir.</td></tr>
 <tr><th>⭑ DOĞRULAMA ALAN ADININ KAYDI ⭑</th><td>Kitap `valicepress.com/codex-enigmatica/verify` adresini SON YAPRAĞINA BASAR. Alan adı 26 Ağustos 2026&#x27;da KAYITSIZ ölçüldü (~11,25 $/yıl) — yani serbest, ama BİZİM DEĞİL. Alan adı kaydı bir ÖDEME işlemidir ve ajan yapamaz. ⚠ BASILMIŞ BİR URL DÜZELTİLEMEZ: alan adı başkasının eline geçerse satılmış her nüsha okuru yabancı bir siteye gönderir.</td></tr>

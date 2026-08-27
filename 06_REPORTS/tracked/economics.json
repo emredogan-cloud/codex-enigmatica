@@ -3,7 +3,7 @@
   "checks": 4,
   "errors": [],
   "warnings": [
-    "⚑ %70 PLANI BU DOSYADA DAHA AZ KAZANDIRIR (0.09 $ < 3.50 $): teslimat ücreti 46.0 MB × 0.15 $ = 6.90 $. %35 planı seçilmeli YA DA EPUB küçültülmeli — %70'in kârlı olduğu sınır ~23.3 MB.",
+    "⚑ %70 PLANI BU DOSYADA DAHA AZ KAZANDIRIR (2.13 $ < 3.50 $): teslimat ücreti 46.3 MB × 0.15 $ = 6.95 $. %35 planı seçilmeli YA DA EPUB küçültülmeli — %70'in kârlı olduğu sınır ~33.3 MB.",
     "paperback baskı maliyeti BRIEF'teki hipotezden 0.64 $ farklı (274 sayfa ölçüldü, model 208 varsaymıştı)",
     "hardcover baskı maliyeti BRIEF'teki hipotezden 0.79 $ farklı (274 sayfa ölçüldü, model 208 varsaymıştı)"
   ],
@@ -28,9 +28,9 @@
     ],
     "kindle": {
       "list": 9.99,
-      "fileMB": 46.0,
-      "deliveryFee": 6.9049,
-      "royalty70": 0.0881,
+      "fileMB": 46.3,
+      "deliveryFee": 6.9468,
+      "royalty70": 2.1302,
       "royalty35": 3.4965,
       "bestPlan": "35%"
     },

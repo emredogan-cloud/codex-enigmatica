@@ -2774,6 +2774,62 @@ def part15_verification(rep: Report, tmp: str) -> None:
               "⭑ HİÇ CANLI DOĞRULANMAMIŞ ADRESLE `release` KIRMIZI ⭑ "
               "(kayıtlı olmak yanıt vermek DEĞİLDİR)", out)
 
+    # ── ⭑ GEÇİCİ VERCEL GEÇERSİZ KILMASI ⭑ ────────────────────────────
+    # ⚠ Bir kiracı alan adının kitaba sızmasının en olası yolu, "geçici"
+    # diye açılmış bir alanın sessizce BASIM alanına kopyalanmasıdır.
+    # Bu fikstürler tam olarak o kaymayı arar — ve geçersiz kılmanın
+    # KALICI kuralı zayıflatmadığını ayrıca ispatlar.
+    TMP_OK = {
+        "founderOverride": True,
+        "overrideName": "FOUNDER_TEMPORARY_VERCEL_OVERRIDE",
+        "authorisedAt": "2026-08-27",
+        "reason": "kalıcı alan adı henüz alınmadı",
+        "removeWhen": "valicepress.com bağlandığında",
+        "temporaryVerificationBaseUrl": "https://enterprise-web-site.vercel.app",
+        "printedInBook": False,
+        "permanenceRule": "kalıcı adres https://valicepress.com/codex-enigmatica/verify olmalı",
+    }
+
+    def tmpblk(**over):
+        t = dict(TMP_OK)
+        t.update(over)
+        return t
+
+    code, out = gate(temporary=tmpblk())
+    rep.check(code == 0,
+              "geçici Vercel geçersiz kılması temiz hâlde GEÇER", out)
+
+    code, out = gate(temporary=tmpblk(printedInBook=True))
+    rep.check(code != 0,
+              "⭑ GEÇİCİ URL'İ KİTABA BASMAYA KALKMAK KIRMIZI ⭑ "
+              "(bir KİRACI alan adı basılı kitaba giremez — proje "
+              "silinince adres ölür, kitap ise basılmıştır)", out)
+
+    code, out = gate(temporary=tmpblk(
+        temporaryVerificationBaseUrl="https://valicepress.com/codex-enigmatica/verify"))
+    rep.check(code != 0,
+              "⭑ GEÇİCİ HEDEF BASIM HEDEFİNİN YERİNE GEÇERSE KIRMIZI ⭑ "
+              "(ikisi ayrı alanlardır ve ayrı kalmalıdır)", out)
+
+    code, out = gate(temporary=tmpblk(permanenceRule="bir gün düzeltiriz"))
+    rep.check(code != 0,
+              "kalıcılık kuralı KALICI alan adını adıyla anmıyorsa KIRMIZI "
+              "(kaldırma koşulu olmayan bir geçersiz kılma kalıcıdır)", out)
+
+    code, out = gate(temporary=tmpblk(removeWhen=""))
+    rep.check(code != 0,
+              "kaldırma koşulu YAZILMAMIŞ geçersiz kılma KIRMIZI", out)
+
+    # ⭑ VE KALICI KURAL ZAYIFLAMADI ⭑ — geçici blok VARKEN bile basılan
+    # adres bir önizleme alan adı olamaz.
+    code, out = gate(printedUrl="codex.vercel.app/verify",
+                     canonicalUrl="https://codex.vercel.app/verify",
+                     route="/verify", temporary=tmpblk())
+    rep.check(code != 0,
+              "⭑ GEÇİCİ GEÇERSİZ KILMA VARKEN BİLE *.vercel.app BASILAMAZ ⭑ "
+              "(geçersiz kılma bir TEST hedefidir, bir BASIM izni değil)",
+              out)
+
     # ── ⚠ KÖRLÜK TESTİ: kapı olağan İngilizceyi yer tutucu SANMAMALI ──
     import importlib.util as _ilu
     _spec = _ilu.spec_from_file_location(

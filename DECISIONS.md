@@ -29,9 +29,99 @@
 | **A12b** | ⭑ **İkinci tur oturumları** ⭑ | **KRİTİK** | **Faz 3 için** | ⛔ **AÇIK — TEK BLOKLAYICI** |
 | **A13** | Faz 3–5'e kurucu geçersiz kılmasıyla giriş | KRİTİK | Faz 3 | ⚑ **KURUCU KARARI** — ölçüm ezilmedi |
 | **A14** | ⭑ **İngilizce kaynak düzeyinde yeniden inşa** ⭑ | **KRİTİK** | Faz 6 | ✅ **KAPANDI → K42** · § aşağı |
-| **A15** | Ciltli hesaplayıcının **274 sayfayla** yenilenmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — betik sırtı +0,0203 in düzeltti ve bunu söylüyor |
-| **A16** | Kapak sarmalının **doğal çözünürlükte** yeniden üretilmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — ciltsiz 92,5 dpi · ciltli 82,0 dpi |
+| **A15** | Ciltli hesaplayıcının **274 sayfayla** yenilenmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — sapma toleransın %39,7'si · ama **kâğıt çelişkisi bulundu ve düzeltildi** · § aşağı |
+| **A16** | Kapak sarmalının **doğal çözünürlükte** yeniden üretilmesi | ORTA | KDP yüklemesinden önce | ✅ **KAPANDI** — 4× yükseltme · ciltsiz **369,7** · ciltli **328,3** dpi · § aşağı |
 | **A17** | 31 deterministik tabletin **gravür üslubuna yükseltilmesi** | DÜŞÜK | isteğe bağlı | **AÇIK** — bütçe kararı · § K42 ⑦ |
+| **A18** | Geçici Vercel doğrulama ortamı | ORTA | kalıcı alan adına kadar | ⚑ **KURUCU GEÇERSİZ KILMASI** · § aşağı |
+| **A19** | Nihai sürüm üretimi (insan testi yokken) | **KRİTİK** | — | ⚑ **KURUCU GEÇERSİZ KILMASI** · § aşağı |
+| **A20** | **Upstash** üretim kimlik bilgisi (yer tutucu) | **YÜKSEK** | doğrulama canlı olmadan önce | ⛔ **AÇIK** — uç nokta kapalı düşüyor |
+
+---
+
+### A16 · ✅ KAPANDI — kapak 300 ppi'ın ÜSTÜNE çıktı
+
+**27 Ağustos 2026.** Kurucunun ham sarmal sanatı **1840 × 855** pikseldi.
+PDF 300 ppi'lık **piksel** taşıyordu ama arkasında o kadar **bilgi**
+yoktu:
+
+| | önce | sonra |
+|---|---:|---:|
+| Ciltsiz doğal | **92,4 ppi** | **369,7 ppi** |
+| Ciltli doğal | **82,1 ppi** | **328,3 ppi** |
+
+Depo bunun için **zaten bir hat kurmuştu** (`ASSET_UPSCALING_REPORT.md` ·
+Real-ESRGAN / `upscayl-standard-4x`) ve portföydeki diğer üç kitapta
+kullanılmıştı; Codex Enigmatica'ya **hiç uygulanmamıştı**. Uygulandı:
+`1840 × 855 → 7360 × 3420`, sonra Pillow ile 300 dpi `pHYs` etiketi.
+
+⚠ **Ve bunun ne olmadığı:** Real-ESRGAN **makul detay üretir**, kaybolmuş
+detayı **geri getirmez**. Dosya artık gerçekten 300 ppi'dır ve bikübik
+büyütmeden belirgin olarak keskindir — ama **300 ppi'da üretilmiş bir
+sanatla aynı şey değildir.**
+
+---
+
+### A15 · AÇIK — ama asıl kusur başka yerdeydi
+
+**Aranan:** "hesaplayıcı 263 sayfayla koştu, iç blok 274." **Bulunan:**
+sayfa farkı toleransın **%39,7'si** — yani sorun değil. Asıl tehlike
+**kâğıttaydı** ve kimse oraya bakmıyordu:
+
+| | Sırta etkisi | KDP toleransı ±0,0625 in |
+|---|---:|---|
+| Sayfa farkı (263 → 274) | +0,0248 in | %39,7 — **içinde** |
+| **Kâğıt farkı (beyaz → krem)** | **+0,0680 in** | **%109 — AŞIYOR** |
+
+`metadata` ciltliyi **krem** listeliyordu; kurucunun hesaplayıcısı
+**beyaz** kâğıtla koşmuştu. Kapak beyaz matematiğiyle üretiliyor, ürün
+krem diye listeleniyordu — ve yanlış kâğıtla basılan bir ciltli kapak
+**reddedilir**.
+
+**Yapılan:** kâğıt **sürüm başına** taşındı (ciltli = beyaz · ciltsiz =
+krem), sırt hesaplayıcının kendi çıktısından ölçülen **tahta payından**
+(0,18872 in) türetiliyor, ve kâğıt hesaplayıcıdan farklıysa kapı artık
+**KIRMIZI** yanıyor.
+
+⚠ **A15 yine de AÇIK:** tam kesinlik için kurucu hesaplayıcıyı **274
+sayfa + beyaz** ile yeniden koşturmalıdır.
+
+---
+
+### ⚑ A18 · KURUCU GEÇİCİ VERCEL GEÇERSİZ KILMASI
+
+**27 Ağustos 2026.** Kalıcı alan adı (`valicepress.com`) **sonra**
+alınacak. O güne kadar doğrulama sistemi mevcut Vercel üretim dağıtımında
+**canlı** test edilir: `enterprise-web-site.vercel.app`.
+
+⛔ **Geçici adres kitaba BASILMADI** ve basılamaz — bir önizleme alan adı
+**kiracıdır**.
+
+⭑ **Kalıcı kural zayıflatılmadı:** `qa_verification.py` hâlâ
+`*.vercel.app` adreslerini **basım adresi olarak reddeder**, ve
+`selftest § ⑮` bunu geçici blok **varken bile** ispatlar.
+
+**Kaldırma koşulu:** kalıcı alan adı alınıp bağlandığında bu blok silinir.
+
+---
+
+### ⚑ A19 · NİHAİ SÜRÜM ÜRETİMİ — KURUCU GEÇERSİZ KILMASI
+
+**27 Ağustos 2026.** Kurucu nihai KDP paketinin **üretilmesine** açıkça
+izin verdi. İzin verilen şey **ÜRETİMDİR** — yayımlama değil, ve
+kesinlikle "kitap doğrulandı" değil.
+
+Üç alan bu karar yüzünden **değişmedi ve değişmeyecek**:
+
+```
+sessionsPerformed      = 0
+humanValidationPassed  = false
+measuredVerdict        = HARD-STOP
+```
+
+Her raporda görünmesi zorunlu cümle:
+**HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.**
+
+→ [`06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md`](06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md)
 
 ---
 

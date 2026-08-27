@@ -101,10 +101,16 @@ def build(cfg: dict, pages: int, puzzles: int, gates: int, hints: int,
         "keywords": KEYWORDS,
         "audience": {"minAge": 16, "adultContent": False},
         "editions": [
+            # ⚠ KÂĞIT SÜRÜM BAŞINADIR. `production.paper` tek bir küresel
+            # değerdir ve buraya olduğu gibi yazılırsa CİLTLİYİ yanlış
+            # listeler: ciltli geometri kurucunun KDP hesaplayıcısından
+            # okunur ve o hesaplayıcı BEYAZ kâğıtla koştu. Küresel değeri
+            # dayatmak 274 sayfada sırtı 0,0680 in kaydırırdı — KDP'nin
+            # ±0,0625 in toleransının ÜSTÜNDE.
             {"id": e.get("id"), "list": e.get("list"),
              "enabled": e.get("enabled"),
              "trim": "6x9", "interiorInk": prod.get("ink"),
-             "paper": prod.get("paper")}
+             "paper": e.get("paper") or prod.get("paper")}
             for e in (eds.get("editionsHypothesis") or [])
         ],
         "pageCount": pages,

@@ -282,6 +282,60 @@ def main() -> int:
                   + ("" if not bad else " — ⛔ %s" % bad))
     rep.facts["printedIn"] = seen
 
+    # ── ⑤b ⭑ GEÇİCİ VERCEL GEÇERSİZ KILMASI ⭑ ─────────────────────────
+    # ⚠ BU BÖLÜM KALICI KURALI ZAYIFLATMAZ VE ZAYIFLATAMAZ.
+    # Yukarıdaki ① hâlâ `printedUrl` içinde *.vercel.app görürse KIRMIZI
+    # yanar ve o denetim buraya BAKMAZ. Burada ölçülen tek şey şudur:
+    # geçici test hedefi, basım hedefinin YERİNE GEÇMİŞ Mİ?
+    #
+    # Gerekçe: bir kiracı alan adının kitaba sızmasının en olası yolu,
+    # "geçici" diye açılan bir alanın sessizce basım alanına kopyalanması
+    # olurdu. Kapı tam olarak onu arar.
+    tmp = ver.get("temporary") or {}
+    if tmp:
+        print("\n── geçici Vercel geçersiz kılması ──")
+        base = (tmp.get("temporaryVerificationBaseUrl") or "").strip()
+        rep.facts["temporary"] = {
+            "baseUrl": base,
+            "printedInBook": bool(tmp.get("printedInBook")),
+            "liveState": tmp.get("liveState") or {},
+        }
+        rep.check(tmp.get("overrideName") == "FOUNDER_TEMPORARY_VERCEL_OVERRIDE",
+                  "geçersiz kılma ADIYLA kayıtlı")
+        rep.check(bool(tmp.get("authorisedAt")),
+                  "geçersiz kılmanın TARİHİ var (%s)" % (tmp.get("authorisedAt") or "—"))
+        rep.check(bool(tmp.get("reason")), "geçersiz kılmanın GEREKÇESİ yazılı")
+        rep.check(bool(tmp.get("removeWhen")),
+                  "geçersiz kılmanın KALDIRMA KOŞULU yazılı")
+        # ⭑ EN ÖNEMLİ ÜÇ DENETİM ⭑
+        rep.check(tmp.get("printedInBook") is False,
+                  "⭑ GEÇİCİ URL KİTABA BASILMIYOR ⭑ (printedInBook=false)")
+        rep.check(flat(base) != flat(url) and flat(url) not in flat(base),
+                  "⭑ GEÇİCİ HEDEF, BASIM HEDEFİNİN YERİNE GEÇMEMİŞ ⭑")
+        rep.check("valicepress.com" in (tmp.get("permanenceRule") or "").lower(),
+                  "kalıcılık kuralı KALICI alan adını adıyla anıyor")
+        # Ve basılan adres HÂLÂ geçici olamaz — ① zaten bakıyor, ama bu
+        # kapının en pahalı hatası olduğu için İKİ KEZ ölçülür.
+        rep.check("vercel.app" not in url.lower(),
+                  "⭑ BASILAN ADRES BİR ÖNİZLEME ALAN ADI DEĞİL ⭑ "
+                  "(kiracı alan adı kitaba giremez)")
+
+        live = tmp.get("liveState") or {}
+        if live:
+            print("\n── geçici dağıtımın ÖLÇÜLEN durumu ──")
+            for lbl, key in (("sayfa canlı", "pageLive"),
+                             ("HTTPS zorunlu", "httpsEnforced"),
+                             ("GET 405", "getReturns405"),
+                             ("istemci sızıntısı yok",
+                              "failsClosedVerifiedLive")):
+                print("  %-28s %s" % (lbl, "EVET" if live.get(key) else "HAYIR"))
+            if not live.get("endpointOperational"):
+                rep.warn("⚠ GEÇİCİ UÇ NOKTA ÇALIŞMIYOR — %s"
+                         % (live.get("endpointBlockedBy") or "sebep yazılmamış"))
+                print("     ⭑ ve bu KAPALI DÜŞME davranışıdır, bir kusur")
+                print("       değil: sınırlayıcısız bir kâhin sınırsız")
+                print("       denemedir. Kapı bunun için zayıflatılmadı.")
+
     # ── ⑥ ALAN ADI VE CANLILIK — KURUCUYA AİT ──────────────────────────
     print("\n── alan adı ve canlılık ──")
     registered = bool(ver.get("domainRegistered"))

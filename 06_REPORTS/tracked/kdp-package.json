@@ -24,7 +24,7 @@
     },
     "cover": {
       "exists": true,
-      "bytes": 34655881,
+      "bytes": 33495765,
       "header": "%PDF-1.3",
       "pages": 1,
       "embeddedFontStreams": 2,
@@ -67,7 +67,7 @@
       },
       "cover": {
         "exists": true,
-        "bytes": 42490749,
+        "bytes": 41346312,
         "header": "%PDF-1.3",
         "pages": 1,
         "embeddedFontStreams": 2,
@@ -91,22 +91,22 @@
       "coverType": [
         {
           "text": "CODEX ENIGMATICA",
-          "contrast": 1.17,
+          "contrast": 1.38,
           "halo": true
         },
         {
           "text": "One Hundred Engraved Enigmas and",
-          "contrast": 1.7,
+          "contrast": 1.74,
           "halo": true
         },
         {
           "text": "a Single Unbroken Mystery",
-          "contrast": 1.36,
+          "contrast": 1.42,
           "halo": true
         },
         {
           "text": "EMRE DOĞAN",
-          "contrast": 1.17,
+          "contrast": 1.05,
           "halo": true
         }
       ],
@@ -117,7 +117,7 @@
       "metaWithheld": [
         "meta-001"
       ],
-      "bytes": 46032731,
+      "bytes": 46312114,
       "epub": "08_OUTPUT/KINDLE/codex-enigmatica.epub",
       "buyerNote": "About this digital edition — This is the complete Codex Enigmatica: all 101 puzzles, all 303 hints and the full solution section. Every engraved plate is reproduced digitally and can be enlarged on screen to examine the fine detail each puzzle depends on. The puzzles are solved by observation and inference, so nothing here requires you to write in the book. If you prefer to annotate the plates by hand, or want the engravings at their printed size, the paperback and hardcover editions are made for that."
     }

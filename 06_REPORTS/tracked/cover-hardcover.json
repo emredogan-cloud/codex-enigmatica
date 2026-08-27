@@ -1,10 +1,9 @@
 {
   "status": "pass",
-  "checks": 8,
+  "checks": 9,
   "errors": [],
   "warnings": [
-    "hesaplayıcı 263 sayfaya göre koştu, iç blok 274 — sırt +0.02477 in düzeltildi; kesinlik isteniyorsa hesaplayıcı 274 sayfayla yeniden koşturulmalı",
-    "⚑ SANAT DOĞAL 82 dpi — 300'e yükseltildi ama kazanılan detay TAHMİNDİR; baskıda YUMUŞAK görünebilir. Gereken: 4315 × 3125 px (bkz. COVER_ARTWORK_GENERATION_GUIDE)"
+    "hesaplayıcı 263 sayfa · white kâğıtla koştu, iç blok 274 sayfa · white — sırt hesaplayıcının TAHTA PAYINDAN (0.18872 in) yeniden TÜRETİLDİ: 0.8058 in. Sapma +0.02480 in, toleransın %39.7'i. Tam kesinlik isteniyorsa hesaplayıcı 274 sayfa + white ile yeniden koşturulmalı (A15)."
   ],
   "facts": {
     "binding": "hardcover",
@@ -14,10 +13,10 @@
     "pages": 274,
     "paper": "white",
     "artCropPx": [
-      1180,
-      855
+      4722,
+      3420
     ],
-    "nativeDpi": 82.0,
+    "nativeDpi": 328.3,
     "renderedPx": [
       4315,
       3125
@@ -34,13 +33,21 @@
     ],
     "spineTextPrinted": true,
     "staleCalculator": false,
-    "spineDeltaIn": 0.02477,
+    "spineDeltaIn": 0.0248,
     "deltaPages": 11,
+    "paperMatchesCalculator": true,
+    "calcBasis": {
+      "pages": 263,
+      "paper": "white",
+      "spine": 0.781,
+      "boardIn": 0.18872
+    },
+    "boardIn": 0.18872,
     "worstContrast": 1.01,
-    "haloUsed": 17,
+    "haloUsed": 18,
     "typeRowsTotal": 19,
     "edgeContrastMin": 17.69,
-    "art": "codex-enigmatica-wrap-cover-option-01.png",
+    "art": "codex-enigmatica-wrap-cover-option-01-4x-300dpi.png",
     "typeRows": 19
   }
 }

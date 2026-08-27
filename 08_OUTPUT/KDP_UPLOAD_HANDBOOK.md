@@ -16,7 +16,36 @@
 | İşlenmiş A+ | 6 / 6 |
 | Ajan tarafından hazır adım | 6 / 13 |
 
+## 0.0 · ⛔ İNSAN DOĞRULAMASI YAPILMADI
+
+> **HUMAN VALIDATION: NOT PERFORMED — FOUNDER OVERRIDE.**
+>
+> Bu kitabı **hiçbir harici insan çözmedi.** Yapılan çözücü
+> oturumu: **0**. Ölçülen öldürme kapısı kararı:
+> **HARD-STOP**. İnsan doğrulaması geçti mi: **HAYIR**.
+>
+> Nihai paket, kurucunun **bunu bilerek** verdiği izinle
+> üretildi (2026-08-27). Bu bir **risk kabulüdür**, bir doğrulama
+> değildir — ve hiçbir rapor onu doğrulama diye yazmaz.
+
 ## 0.1 · ⭑ DOĞRULAMA SAYFASI ⭑
+
+> ⚠ **ALAN ADI HENÜZ KALICI DEĞİL.**
+>
+> Kalıcı adres — ve **kitaba basılan** adres — şudur:
+> `valicepress.com/codex-enigmatica/verify`
+>
+> Bu adres **henüz yayında değildir**: alan adı alınmadı.
+> O güne kadar doğrulama sistemi **geçici olarak** şurada
+> canlı test edilir: `enterprise-web-site.vercel.app`
+>
+> ⛔ **Geçici adres kitaba BASILMAZ** ve basılmadı. Bir
+> önizleme alan adı kiracıdır; proje adı değişince ölür,
+> kitap ise basılmıştır.
+>
+> ⭑ **Üretim kalıcı olarak yayına alınmış SAYILMAZ**
+> ta ki kurucu `valicepress.com` alan adını alıp bağlayana
+> kadar.
 
 > ⛔ **BASKIYA HAZIR DEĞİL — VE BU BİR BİÇİM SORUNU DEĞİL.**
 >
@@ -28,10 +57,15 @@
 
 | | |
 |---|---|
-| Kitaba basılan adres | valicepress.com/codex-enigmatica/verify |
+| Kitaba BASILAN adres (kalıcı) | valicepress.com/codex-enigmatica/verify |
 | Alan adı kurucunun elinde | ⛔ HAYIR |
-| Site yayında | ⛔ HAYIR |
-| Adres canlı doğrulandı | ⛔ HİÇ |
+| Kalıcı alan adı yayında | ⛔ HAYIR |
+| Kalıcı adres canlı doğrulandı | ⛔ HİÇ |
+| — — — | — — — |
+| GEÇİCİ doğrulama adresi | enterprise-web-site.vercel.app |
+| Geçici adres KİTABA BASILIYOR mu | ⛔ HAYIR |
+| Geçici sayfa canlı | ✅ EVET |
+| Geçici uç nokta çalışıyor | ⛔ HAYIR — UPSTASH_REDIS_REST_URL/TOKEN üretimde geçersiz — ana makine adı DNS'te çözülmüyor |
 
 `python3 04_BUILD/qa_verification.py --gate release --live`
 koşturun ve **kararı okuyun**. Üçü de yeşil olmadan
@@ -44,8 +78,9 @@ bir rapor yanlıştır.
 
 - **KDP hesabına giriş ve panel kullanımı** — Ajan tarayıcıda hesabınıza giremez, giremeyecektir.
 - **Previewer'da sayfa sayfa görsel onay** — Bir insanın bakması gerekir; ölçüm bunu değiştirmez.
-- **Yapay zekâ içerik beyanı** — Hukuki bir beyandır ve yalnızca siz verebilirsiniz. `metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false.
-- **ISBN ve yayın hakkı kararı** — `founderPending.isbn` boş. KDP ücretsiz ISBN mi, kendi ISBN'iniz mi?
+- **⭑ YAPAY ZEKÂ İÇERİK BEYANINI KDP PANELİNDE SİZ TAMAMLARSINIZ ⭑** — Hukuki bir beyandır ve yalnızca siz verebilirsiniz. Ajan bir değer UYDURMADI ve uydurmayacak: `metadata.json → founderPending.aiDisclosureConfirmed` HÂLÂ false ve öyle kalacak. KDP, YZ-ÜRETİMİ metin/görsel/çevirinin bildirilmesini ister; YZ-DESTEKLİ içerik için bildirim gerekmez — ayrımı siz yaparsınız.
+- **⭑ ISBN'İ KDP PANELİNDE SİZ GİRERSİNİZ ⭑** — `founderPending.isbn` BOŞ ve bilerek boş. Ajan ISBN üretmedi, tahmin etmedi, yeniden kullanmadı ve YER TUTUCU BASMADI — basılmış yanlış bir ISBN geri alınamaz. KDP ücretsiz ISBN mi, kendi ISBN'iniz mi: karar sizin ve panelde girilir.
+- **⭑ KINDLE TELİF PLANINI SİZ SEÇERSİNİZ ⭑** — Ölçüm: EPUB 46,3 MB → %70 planında teslimat ücreti 6,95 $ (46,3 × 0,15 $) ve telif 2,13 $; %35 planında telif 3,50 $. Yani BU DOSYADA %35 daha çok kazandırır ve başabaş nokta ~33,3 MB'dır. Formül KDP'nin kendi telif sayfasından alındı: %70 × (liste − KDV − teslimat). Seçim panelde sizindir.
 - **Yazar biyografisi** — `founderPending.authorBio` boş. Yer tutucu basmak geri alınamaz.
 - **Fiziksel POD provası (A9)** — Gravürlerin nokta yayılması altındaki davranışı YALNIZCA basılı provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir.
 - **⭑ DOĞRULAMA ALAN ADININ KAYDI ⭑** — Kitap `valicepress.com/codex-enigmatica/verify` adresini SON YAPRAĞINA BASAR. Alan adı 26 Ağustos 2026'da KAYITSIZ ölçüldü (~11,25 $/yıl) — yani serbest, ama BİZİM DEĞİL. Alan adı kaydı bir ÖDEME işlemidir ve ajan yapamaz. ⚠ BASILMIŞ BİR URL DÜZELTİLEMEZ: alan adı başkasının eline geçerse satılmış her nüsha okuru yabancı bir siteye gönderir.

@@ -134,8 +134,56 @@
         "new": 3
       }
     },
-    "validationSiteUrl": null,
-    "validationSiteUrl$comment": "Journal 29 modeli: okur cevabı girer, doğru/yanlış görür. Faz 5'te canlı olmalı."
+    "validationSiteUrl": "https://valicepress.com/codex-enigmatica/verify",
+    "validationSiteUrl$comment": "Journal 29 modeli: okur cevabı girer, doğru/yanlış görür. Faz 5'te canlı olmalı.",
+    "verification": {
+      "$comment": [
+        "⭑ BU ADRES KİTABIN SON YAPRAĞINA BASILIR — GERİ ALINAMAZ. ⭑",
+        "",
+        "Basılmış bir URL düzeltilemez. Alan adı süresi dolarsa ya da",
+        "başkasının eline geçerse, satılmış her nüsha okuru YABANCI bir",
+        "siteye gönderir. Bu yüzden burada üç ayrı alan vardır ve",
+        "`qa_verification.py` üçünü de denetler:",
+        "",
+        "  printedUrl        → kitaba BASILAN dize (yer tutucu olamaz)",
+        "  domainRegistered  → alan adı kurucunun elinde mi (BASKIDAN ÖNCE)",
+        "  liveVerifiedAt    → adres gerçekten yanıt verdi mi, ne zaman",
+        "",
+        "İkincisi false iken `release` kapısı KIRMIZIDIR. Ajan alan adı",
+        "satın alamaz; bu bir ödeme işlemidir ve kurucuya aittir.",
+        "",
+        "26 Ağu 2026 ölçümü: valicepress.com KAYITSIZ ve müsait",
+        "(11,25 $/yıl). Yani adres serbest — ama HENÜZ BİZİM DEĞİL."
+      ],
+      "printedUrl": "valicepress.com/codex-enigmatica/verify",
+      "canonicalUrl": "https://valicepress.com/codex-enigmatica/verify",
+      "route": "/codex-enigmatica/verify",
+      "repo": "enterprise-web-site",
+      "scope": "final-answer-only",
+      "scope$comment": [
+        "YALNIZCA SON SORUNUN CEVABI doğrulanır — 101 cevap alanı DEĞİL.",
+        "Gerekçe ölçülmüştür, tercih değildir: cevap uzayının tamamı",
+        "5.086 aday dizedir (BOOK_STATS § 1). 101 cevabı kabul eden bir",
+        "kâhin, kitabı hiç satın almamış birine ~5.086 istekle ÇÖZÜM",
+        "KİTABININ TAMAMINI verir. Ürünün kendisi çözümlerdir.",
+        "",
+        "Bu A7'nin 'evet' dalıdır ve ölçüyle REDDEDİLMİŞTİR. A7 yine de",
+        "kurucuya aittir: bu kayıt bir öneridir, bir kapanış değil."
+      ],
+      "domainRegistered": false,
+      "domainRegisteredAt": null,
+      "domainAvailabilityCheckedAt": "2026-08-26",
+      "deployed": false,
+      "liveVerifiedAt": null,
+      "secretModel": "peppered-sha256",
+      "secretModel$comment": [
+        "Sunucuda düz cevap YOKTUR. CODEX_VERIFY_DIGEST =",
+        "sha256(pepper ‖ NUL ‖ normalize(cevap)). Biberi olmayan bir",
+        "saldırgan için tek başına özet işe yaramaz; biber olmadan",
+        "26^5 ≈ 11,9 milyon aday saniyeler içinde denenebilirdi.",
+        "İki değişken de depoda DEĞİLDİR (.env.local · Vercel gizli)."
+      ]
+    }
   },
   "audience": {
     "$comment": "ALICI = OKUR. Reklam matematiğini kolaylaştıran şey budur.",

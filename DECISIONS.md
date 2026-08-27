@@ -11,10 +11,10 @@
 | **A1** | Manuscript ve **çözüm katmanı** politikası | **YÜKSEK** | Faz 1 | ✅ **KAPANDI** → K10 + K14 (beş hatlı koruma) |
 | **A2** | 5 kapı teması onayı | YÜKSEK | **Faz 2 başlamadan** | AÇIK |
 | **A3** | **5 harici çözücü kim** | **YÜKSEK** | **Faz 2 başlamadan** | ✅ **KAPANDI** → K18 · § aşağı |
-| **A4** | Doğrulama sayfası barındırma | ORTA | Faz 5 | AÇIK |
+| **A4** | Doğrulama sayfası barındırma | ORTA | Faz 5 | ⬍ **YARIM** — mekanizma kuruldu, **yayın kurucuda** · § aşağı |
 | **A5** | Kalibre edilmiş `STYLE.md` onayı | ORTA | Faz 2 | AÇIK |
 | **A6** | Yazar biyografisi metni | ORTA | Faz 5 | AÇIK |
-| **A7** | **Bulmaca başına doğrulama** — doğrulama sayfası 100 cevap alanı taşısın mı | **YÜKSEK** | **Faz 2 başlamadan** | AÇIK — biçim kararı · **mekaniği K21 ile kuruldu** |
+| **A7** | **Bulmaca başına doğrulama** — doğrulama sayfası 100 cevap alanı taşısın mı | **YÜKSEK** | **Faz 2 başlamadan** | **AÇIK** — ölçülen öneri: **HAYIR** · § aşağı |
 | **A8** | **Sayfa hedefi 208 → 230** (telif 9,85 $ → 9,58 $) | **YÜKSEK** | **Faz 2 başlamadan** | ✅ **KAPANDI** → K17 onaylandı · § aşağı |
 | **A9** | **Pilot levhaların POD provası** Faz 2'ye alınsın mı | **YÜKSEK** | **Faz 2 başlamadan** | ⚑ **KURUCUYA DEVREDİLDİ** · § aşağı |
 | **A10** | Faz 3'e **ikinci öldürme kapısı** eklensin mi | ORTA | Faz 3 başlamadan | AÇIK |
@@ -32,6 +32,61 @@
 | **A15** | Ciltli hesaplayıcının **274 sayfayla** yenilenmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — betik sırtı +0,0203 in düzeltti ve bunu söylüyor |
 | **A16** | Kapak sarmalının **doğal çözünürlükte** yeniden üretilmesi | ORTA | KDP yüklemesinden önce | **AÇIK** — ciltsiz 92,5 dpi · ciltli 82,0 dpi |
 | **A17** | 31 deterministik tabletin **gravür üslubuna yükseltilmesi** | DÜŞÜK | isteğe bağlı | **AÇIK** — bütçe kararı · § K42 ⑦ |
+
+---
+
+### A4 · ⬍ YARIM — mekanizma var, adres yok
+
+**27 Ağustos 2026.** Doğrulama sayfası **yazıldı, test edildi ve kitap
+adresi bastı**. Ama A4 kapanmadı ve kapanmış gibi gösterilmiyor.
+
+| | Durum |
+|---|---|
+| Sayfa · uç nokta · güvenlik | ✅ **kuruldu** (`/codex-enigmatica/verify`) |
+| Kitapta basılan adres | ✅ s. 273 · Kindle son bölüm |
+| Kapı (`qa_verification.py`) | ✅ 21 denetim · `release`'te 24 |
+| **Alan adı kurucunun elinde** | ⛔ **HAYIR** — kayıtsız ölçüldü |
+| **Site yayında** | ⛔ **HAYIR** — Vercel `live: false` |
+| **Adres canlı doğrulandı** | ⛔ **HİÇ** |
+
+⚠ **Üçü ajanın yapamayacağı işlerdir:** alan adı kaydı bir **ödeme**
+işlemidir, yayına alma kurucunun hesabındadır. Yönerge § 26 zaten
+yayını yasaklıyordu.
+
+⭑ **Ve bu, kapanmamış olmasının en pahalı hâlidir:** basılmış bir URL
+düzeltilemez. `qa_verification.py` bu yüzden `release` kapısını üçü de
+tamamlanana kadar **KIRMIZI** tutar — belgeyle değil **mekanizmayla**.
+
+→ [`06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md`](06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md)
+
+---
+
+### A7 · AÇIK — ama artık bir ÖLÇÜMÜ var
+
+**Soru:** doğrulama sayfası 101 cevap alanı taşısın mı?
+
+**27 Ağustos 2026 ölçümü — "evet" dalının bedeli:**
+
+| | |
+|---|---:|
+| Cevap uzayının tamamı (elenen aday dize) | **5 086** |
+| 101 cevabı kabul eden bir kâhini tüketmek için gereken istek | **~5 086** |
+| Bunun için kitabı satın almak gerekir mi | **HAYIR** |
+
+Yani 101 cevap alanı, kitabı hiç almamış birine **çözüm kitabının
+tamamını** dağıtır. `PROJECT_CONTEXT § 5·②`: *"Bir bulmaca kitabının
+çözümleri ürünün kendisidir."*
+
+**Uygulanan:** `scope: final-answer-only` — sayfa **yalnızca son sorunun**
+cevabını doğrular. Ve sözleşme sayfasının o dala dayanan tek cümlesi
+(*"The verification page will tell you which"*) hakemi **kitabın kendi
+arka maddesine** verecek şekilde düzeltildi; dört söz cümlesine
+dokunulmadı.
+
+⚠ **A7 KAPANMADI.** Bu bir ölçüm ve bir öneridir, kurucu kararının
+yerine geçmez. Kurucu "evet" derse değişmesi gereken şey mekanizma
+değil **ürün modelidir** (ör. satın alma kanıtına bağlı kimlik) — ve o,
+B2 yönergesi § 19'un kapsam dışı bıraktığı ölçekte bir iştir.
 
 ---
 

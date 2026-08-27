@@ -102,6 +102,22 @@ FOUNDER_ONLY = [
     ("Fiziksel POD provası (A9)",
      "Gravürlerin nokta yayılması altındaki davranışı YALNIZCA basılı "
      "provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir."),
+    ("⭑ DOĞRULAMA ALAN ADININ KAYDI ⭑",
+     "Kitap `valicepress.com/codex-enigmatica/verify` adresini SON "
+     "YAPRAĞINA BASAR. Alan adı 26 Ağustos 2026'da KAYITSIZ ölçüldü "
+     "(~11,25 $/yıl) — yani serbest, ama BİZİM DEĞİL. Alan adı kaydı bir "
+     "ÖDEME işlemidir ve ajan yapamaz. ⚠ BASILMIŞ BİR URL DÜZELTİLEMEZ: "
+     "alan adı başkasının eline geçerse satılmış her nüsha okuru yabancı "
+     "bir siteye gönderir."),
+    ("⭑ DOĞRULAMA SAYFASININ YAYINA ALINMASI ⭑",
+     "Vercel projesi şu an `live: false` ve üretim hedefi `target: null` "
+     "— site HİÇBİR YERDE yayında değildir. Sayfa yayına alınmadan kitap "
+     "BASILAMAZ; `qa_verification.py` `release` kapısını KIRMIZI tutar."),
+    ("⭑ DOĞRULAMA SIRLARININ VERCEL'E GİRİLMESİ ⭑",
+     "`CODEX_VERIFY_PEPPER` ve `CODEX_VERIFY_DIGEST`. Üretimi: "
+     "`node scripts/codex-verify-digest.mjs` — cevabı STDIN'den okur, "
+     "dosyaya ve kabuk geçmişine YAZMAZ. ⚠ Sunucuda düz cevap saklanmaz; "
+     "saklanan şey biberli SHA-256 özetidir. İkisi de depoda DEĞİLDİR."),
     ("Publish düğmesi",
      "Yayımlama kararı kurucuya aittir."),
     ("A+ içeriğinin moderasyona gönderilmesi",
@@ -338,6 +354,35 @@ def copy_fields(meta: dict) -> list:
     return out
 
 
+def verification_state() -> dict:
+    """⭑ BASKIYA GİDEN KİTABIN İÇİNDEKİ ADRES ⭑
+
+    ⚠ Bu el kitabının en tehlikeli hâli, olmayan bir şeyi "hazır"
+    göstermesidir. Doğrulama adresi bu depodaki EN PAHALI TEK DİZEDİR:
+    basılmış bir URL düzeltilemez. Bu yüzden durum burada `metadata`dan
+    DEĞİL, tek yetkesinden — `project_config.json` — okunur ve üç ayrı
+    şey ayrı ayrı gösterilir; hiçbiri ötekinin yerine geçmez.
+    """
+    ver = ((pl.load_config().get("founder") or {}).get("verification")) or {}
+    return {
+        "url": ver.get("printedUrl") or "",
+        "registered": bool(ver.get("domainRegistered")),
+        "deployed": bool(ver.get("deployed")),
+        "live": ver.get("liveVerifiedAt"),
+    }
+
+
+def verification_rows(v: dict) -> list:
+    ok = "✅ EVET"
+    no = "⛔ HAYIR"
+    return [
+        ("Kitaba basılan adres", v["url"] or "⛔ SEÇİLMEDİ"),
+        ("Alan adı kurucunun elinde", ok if v["registered"] else no),
+        ("Site yayında", ok if v["deployed"] else no),
+        ("Adres canlı doğrulandı", v["live"] or "⛔ HİÇ"),
+    ]
+
+
 def render_md(meta: dict, files: dict, secs: list) -> str:
     """Başvuru metni — panelde değil, masada okunur."""
     L = ["# KDP YÜKLEME EL KİTABI — Codex Enigmatica", ""]
@@ -358,6 +403,26 @@ def render_md(meta: dict, files: dict, secs: list) -> str:
           "| İşlenmiş ön kapak | %d / 2 |" % files["coverFront"]["n"],
           "| İşlenmiş A+ | %d / 6 |" % files["aplus"]["n"],
           "| Ajan tarafından hazır adım | %d / %d |" % (ready, total), ""]
+
+    v = verification_state()
+    blocked = not (v["url"] and v["registered"] and v["deployed"] and v["live"])
+    L += ["## 0.1 · ⭑ DOĞRULAMA SAYFASI ⭑", ""]
+    if blocked:
+        L += ["> ⛔ **BASKIYA HAZIR DEĞİL — VE BU BİR BİÇİM SORUNU DEĞİL.**",
+              ">",
+              "> Kitap son yaprağına bir adres **basar**. O adres canlı",
+              "> değilken basmak, okura ölü bir kapı vermektir; ve alan adı",
+              "> başkasının eline geçerse **satılmış her nüsha** okuru",
+              "> yabancı bir siteye gönderir. Basılmış bir URL",
+              "> **düzeltilemez.**", ""]
+    L += ["| | |", "|---|---|"]
+    for k, val in verification_rows(v):
+        L += ["| %s | %s |" % (k, val)]
+    L += [""]
+    if blocked:
+        L += ["`python3 04_BUILD/qa_verification.py --gate release --live`",
+              "koşturun ve **kararı okuyun**. Üçü de yeşil olmadan",
+              "`release` kapısı **KIRMIZIDIR**.", ""]
 
     L += ["## 1 · ⭑ YALNIZCA KURUCUNUN YAPABİLECEĞİ İŞLER ⭑", "",
           "Ajan bunları **yapmadı ve yapamaz**. Yapıldığını iddia eden",
@@ -524,7 +589,8 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
       'üretildi — elle düzenlemeyin.</p>'
       % (e(meta["title"]), e(meta["author"]), meta["pageCount"]))
 
-    navs = [("durum", "Durum"), ("kurucu", "Kurucu işi")]
+    navs = [("durum", "Durum"), ("dogrulama", "Doğrulama"),
+            ("kurucu", "Kurucu işi")]
     navs += [(c.lower(), "%s · %s" % (c, n)) for c, n, _i, _x in secs]
     navs += [("alan", "Alanlar"), ("aplus", "A+ metni"),
              ("kindlenote", "Kindle notu"), ("liste", "Kontrol listesi")]
@@ -568,6 +634,32 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
       'oturumu <b>0 / 5</b> (A12b). Ölçülen öldürme kapısı kararı '
       '<b>HARD-STOP</b>. Yayımlama kararı bu gerçeği bilerek '
       'verilmelidir.</div>')
+
+    # ── ⭑ DOĞRULAMA SAYFASI ⭑ ──────────────────────────────────────────
+    # ⚠ Kitap son yaprağına bir ADRES BASAR. Bu tablo `metadata`dan
+    # değil tek yetkesinden okunur ve üç ayrı şeyi ayrı gösterir:
+    # alan adı BİZDE mi · site YAYINDA mı · adres YANIT VERDİ mi.
+    # Hiçbiri ötekinin yerine geçmez, ve üçü de yeşil olmadan bu kutu
+    # kırmızıdır.
+    v = verification_state()
+    blocked = not (v["url"] and v["registered"] and v["deployed"] and v["live"])
+    A('<h2 id="dogrulama">⭑ Doğrulama sayfası — basılan adres</h2>')
+    if blocked:
+        A('<div class="note stop"><b>⛔ BASKIYA HAZIR DEĞİL.</b><br>'
+          'Kitap son yaprağına bir adres <b>basar</b>. O adres canlı '
+          'değilken basmak okura <b>ölü bir kapı</b> vermektir — ve alan '
+          'adı başkasının eline geçerse <b>satılmış her nüsha</b> okuru '
+          'yabancı bir siteye gönderir. <b>Basılmış bir URL '
+          'düzeltilemez.</b></div>')
+    A('<div class="scroll"><table>')
+    for label, val in verification_rows(v):
+        A('<tr><th>%s</th><td>%s</td></tr>' % (e(label), e(str(val))))
+    A('</table></div>')
+    if blocked:
+        A('<p class="sub">Karar için: '
+          '<code>python3 04_BUILD/qa_verification.py --gate release '
+          '--live</code> — üçü de yeşil olmadan <code>release</code> '
+          'kapısı <b>KIRMIZIDIR</b>.</p>')
 
     # ── KURUCU İŞİ ─────────────────────────────────────────────────────
     A('<h2 id="kurucu">🟢 Yalnızca sizin yapabileceğiniz işler</h2>')

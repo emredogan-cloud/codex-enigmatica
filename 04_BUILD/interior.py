@@ -558,6 +558,35 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     A(Paragraph(e("%s · %s" % (meta.get("title") or "",
                                meta.get("publisher") or "")), st["small"]))
 
+    # ── ⑪ ⭑ THE LAST LEAF · THE VERIFICATION ADDRESS ⭑ ─────────────────
+    # ⚠ THE CONTRACT PAGE PROMISES THIS LEAF BY NAME: *"You enter it on
+    # the VERIFICATION PAGE, whose address is printed on the last leaf of
+    # this book."* It was promised on page 11 and never printed — the
+    # close then told the reader *"you know where to write it"* when the
+    # reader could not possibly know. This block is that leaf, and it is
+    # LAST on purpose: the final thing the book says is where the answer
+    # goes.
+    # ⚠ Not emitted when `verificationLeaf` is None. A leaf that says
+    # "THE VERIFICATION PAGE" above an empty line is worse than no leaf,
+    # and `qa_verification.py` holds `release` RED in that case anyway.
+    _leaf = flow(m.get("verificationLeaf"))
+    if _leaf:
+        # ⚠ The address is identified by VALUE, not by indentation:
+        # `pl.paragraphs` strips leading whitespace, so an indent test
+        # here would silently never fire and the URL would be justified
+        # into a body paragraph — the one line in the book that must not
+        # be re-wrapped.
+        _addr = (m.get("contract") or {}).get("verificationAddress") or ""
+        A(PageBreak())
+        A(Paragraph("THE VERIFICATION PAGE", st["h1"]))
+        for x in pl.drop_heading(_leaf, "THE VERIFICATION PAGE"):
+            if _addr and x.strip() == _addr:
+                A(Spacer(1, 0.14 * IN))
+                A(Paragraph("<b>%s</b>" % e(_addr), st["centre"]))
+                A(Spacer(1, 0.14 * IN))
+            else:
+                para(x, "lead")
+
     # ⭑ SAYFA SAYISI ÇİFT OLMALI ⭑
     # ⚠ Basılı bir kitabın YAPRAKLARI vardır: her yaprak iki sayfadır.
     # Tek sayılı bir iç blok sonuna boş sayfa eklenerek basılır — ama o

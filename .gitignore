@@ -141,6 +141,19 @@
 # ⚠ İkisi de CEVAP TAŞIMAZ ve kanarya ikisini de her koşuda tarar.
 !06_REPORTS/FINAL_ENGLISH_REBUILD_REPORT.md
 !06_REPORTS/FINAL_BRUTAL_AUDIT.md
+# ⭑ B2'NİN ÜÇ RAPORU DEPODA DURUR — ALTINCI KEZ AYNI DERS ⭑
+# `DECISIONS.md § A4 · A7` ve `CHANGELOG § 1.1.0` üçüne de BAĞ VERİR.
+# Gitignore'da kalmaları, klonlayan herkesin üç kırık bağ görmesi
+# demektir — ve bu ders bu depoda beş kez öğrenildi (K18 · yeniden
+# tasarım önerisi · .gitkeep · line editor · nihai varlık raporu).
+#
+# ⚠ ÜÇÜ DE CEVAP TAŞIMAZ ve kanarya üçünü de her koşuda tarar.
+# ⚠ Cevabın UZUNLUĞU bir sır değildir: kitabın kendisi son sorunun
+#   kısıtları arasında *"The answer has five letters."* diye BASAR.
+#   Raporda geçmesi bir sızıntı değil, basılı bir olgunun tekrarıdır.
+!06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md
+!06_REPORTS/WEBSITE_KDP_BUSINESS_STRATEGY.md
+!06_REPORTS/WEBSITE_CURRENT_STATE_AUDIT.md
 
 # ⚠ ÖNCE DİZİN AÇILIR, SONRA İÇERİĞİ KAPATILIR.
 # Bu üç satırın sırası önemlidir ve bir CI kırmızısıyla öğrenildi:

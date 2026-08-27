@@ -16,6 +16,27 @@
 | İşlenmiş A+ | 6 / 6 |
 | Ajan tarafından hazır adım | 6 / 13 |
 
+## 0.1 · ⭑ DOĞRULAMA SAYFASI ⭑
+
+> ⛔ **BASKIYA HAZIR DEĞİL — VE BU BİR BİÇİM SORUNU DEĞİL.**
+>
+> Kitap son yaprağına bir adres **basar**. O adres canlı
+> değilken basmak, okura ölü bir kapı vermektir; ve alan adı
+> başkasının eline geçerse **satılmış her nüsha** okuru
+> yabancı bir siteye gönderir. Basılmış bir URL
+> **düzeltilemez.**
+
+| | |
+|---|---|
+| Kitaba basılan adres | valicepress.com/codex-enigmatica/verify |
+| Alan adı kurucunun elinde | ⛔ HAYIR |
+| Site yayında | ⛔ HAYIR |
+| Adres canlı doğrulandı | ⛔ HİÇ |
+
+`python3 04_BUILD/qa_verification.py --gate release --live`
+koşturun ve **kararı okuyun**. Üçü de yeşil olmadan
+`release` kapısı **KIRMIZIDIR**.
+
 ## 1 · ⭑ YALNIZCA KURUCUNUN YAPABİLECEĞİ İŞLER ⭑
 
 Ajan bunları **yapmadı ve yapamaz**. Yapıldığını iddia eden
@@ -27,6 +48,9 @@ bir rapor yanlıştır.
 - **ISBN ve yayın hakkı kararı** — `founderPending.isbn` boş. KDP ücretsiz ISBN mi, kendi ISBN'iniz mi?
 - **Yazar biyografisi** — `founderPending.authorBio` boş. Yer tutucu basmak geri alınamaz.
 - **Fiziksel POD provası (A9)** — Gravürlerin nokta yayılması altındaki davranışı YALNIZCA basılı provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir.
+- **⭑ DOĞRULAMA ALAN ADININ KAYDI ⭑** — Kitap `valicepress.com/codex-enigmatica/verify` adresini SON YAPRAĞINA BASAR. Alan adı 26 Ağustos 2026'da KAYITSIZ ölçüldü (~11,25 $/yıl) — yani serbest, ama BİZİM DEĞİL. Alan adı kaydı bir ÖDEME işlemidir ve ajan yapamaz. ⚠ BASILMIŞ BİR URL DÜZELTİLEMEZ: alan adı başkasının eline geçerse satılmış her nüsha okuru yabancı bir siteye gönderir.
+- **⭑ DOĞRULAMA SAYFASININ YAYINA ALINMASI ⭑** — Vercel projesi şu an `live: false` ve üretim hedefi `target: null` — site HİÇBİR YERDE yayında değildir. Sayfa yayına alınmadan kitap BASILAMAZ; `qa_verification.py` `release` kapısını KIRMIZI tutar.
+- **⭑ DOĞRULAMA SIRLARININ VERCEL'E GİRİLMESİ ⭑** — `CODEX_VERIFY_PEPPER` ve `CODEX_VERIFY_DIGEST`. Üretimi: `node scripts/codex-verify-digest.mjs` — cevabı STDIN'den okur, dosyaya ve kabuk geçmişine YAZMAZ. ⚠ Sunucuda düz cevap saklanmaz; saklanan şey biberli SHA-256 özetidir. İkisi de depoda DEĞİLDİR.
 - **Publish düğmesi** — Yayımlama kararı kurucuya aittir.
 - **A+ içeriğinin moderasyona gönderilmesi** — Amazon insan moderasyonu uygular; ajan gönderemez.
 

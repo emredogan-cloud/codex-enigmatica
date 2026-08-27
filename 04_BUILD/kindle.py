@@ -461,6 +461,38 @@ def build_epub(book, sols, meta, out_dir):
                 + "".join("<p>%s</p>" % esc(x)
                           for x in pl.drop_heading(rows, head)))
 
+    # ⑩ ⭑ SON YAPRAK · DOĞRULAMA ADRESİ ⭑
+    # ⚠ Sözleşme sayfası bu yaprağı ADIYLA vaat eder ve baskıda son
+    # yapraktır. Kindle'da da SON bölüm olmalıdır — okurun cevabı
+    # nereye yazacağı, kitabın söylediği son şeydir.
+    # ⚠ ADRES KINDLE'DA GERÇEK BİR BAĞDIR — ve bu ölçülmüş bir karardır.
+    # İlk yapıda düz metindi; gerekçe olarak "KDP dış bağ taşıyan
+    # e-kitapları reddedebilir" yazılmıştı ve BU YANLIŞTI. KDP'nin kendi
+    # Hyperlink Guidelines belgesi yazarın kendi sitesine bağ vermeyi
+    # AÇIKÇA serbest bırakır ve "ek yardımcı malzeme"yi kabul edilebilir
+    # kullanım sayar — doğrulama sayfası tam olarak odur.
+    #   → kdp.amazon.com/en_US/help/topic/GQ6JQ7FM6C72HE4X
+    # Bir e-okuyucuda 39 karakterlik bir URL'yi ELLE yazdırmak, kabul
+    # edilebilir olduğu belgelenmiş bir bağı reddetmek için kötü bir
+    # bedeldir.
+    # ⚠ GÖRÜNEN METİN BASILI NÜSHAYLA BİREBİR AYNI KALIR: iki formatı
+    # okuyan aynı kişi aynı dizeyi görmelidir, ve `qa_verification`
+    # adresi EPUB metninde arar — bağın içine gizlenmiş bir adres o
+    # aramada bulunmazdı.
+    _leaf = flow(m.get("verificationLeaf"))
+    if _leaf:
+        _addr = (m.get("contract") or {}).get("verificationAddress") or ""
+        _b = "<h1>The Verification Page</h1>"
+        for x in pl.drop_heading(_leaf, "THE VERIFICATION PAGE"):
+            if _addr and x.strip() == _addr:
+                _href = _addr if _addr.startswith("http") else "https://" + _addr
+                _b += ('<p style="text-align:center"><b>'
+                       '<a href="%s">%s</a></b></p>'
+                       % (esc(_href), esc(_addr)))
+            else:
+                _b += "<p>%s</p>" % esc(x)
+        add("verification", "The Verification Page", _b)
+
     # ── kapak ──────────────────────────────────────────────────────────
     art = os.path.join(RAW, "codex-enigmatica-wrap-cover-option-01.png")
     cover_jpg = os.path.join(out_dir, "cover.jpg")
@@ -596,13 +628,26 @@ def main() -> int:
               + ("" if not bad else " — ⛔ %s" % bad[:3]))
 
     # ⚠ Kırık iç bağ = okurun ulaşamadığı bölüm.
+    # ⚠ AMA DIŞ BAĞ İÇ BAĞ DEĞİLDİR. Bu denetim başta HER `href`i EPUB
+    # içinde arıyordu; doğrulama adresi gerçek bir bağa dönüşünce kapı
+    # onu "kırık iç bağ" saydı — pakette `valicepress.com` adında bir
+    # dosya olmadığı için. Mutlak adresler AYRI ölçülür: burada varlığı
+    # değil BİÇİMİ denetlenir, çünkü bir dış adresin gerçekten yanıt
+    # verip vermediği `qa_verification --live`in sorusudur.
     hrefs = set()
     for n in xh:
         hrefs |= set(re.findall(r'href="([^"#]+)', z.read(n).decode("utf-8")))
+    external = {h for h in hrefs if re.match(r"^[a-z][a-z0-9+.-]*:", h)}
+    internal = hrefs - external
     inside = {n.split("/")[-1] for n in names}
-    broken = sorted(h for h in hrefs if h.split("/")[-1] not in inside)
+    broken = sorted(h for h in internal if h.split("/")[-1] not in inside)
     rep.check(not broken, "her iç bağ çözülüyor"
               + ("" if not broken else " — ⛔ %s" % broken[:4]))
+    # KDP dış bağa izin verir (Hyperlink Guidelines) ama HTTPS ister:
+    # bir e-kitapta düz HTTP bağ, okurun cihazında uyarı üretir.
+    bad_ext = sorted(h for h in external if not h.startswith("https://"))
+    rep.check(not bad_ext, "her dış bağ HTTPS (%d dış bağ)" % len(external)
+              + ("" if not bad_ext else " — ⛔ %s" % bad_ext[:4]))
 
     # ⚠ BASKIYA AİT HİÇBİR ŞEY: sırt, barkod, taşma, kırım.
     blob = " ".join(z.read(n).decode("utf-8", "ignore") for n in xh).lower()

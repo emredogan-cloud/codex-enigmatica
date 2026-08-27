@@ -5,6 +5,86 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [1.1.0] — 2026-08-27 · ⭑ B2 · DOĞRULAMA SAYFASI ⭑
+
+# ✅ KİTAP ARTIK VAAT ETTİĞİ ADRESİ BASIYOR
+
+Sözleşme sayfası 11. sayfada *"adres son yaprakta basılıdır"* diyordu;
+274 sayfanın hiçbirinde adres yoktu. Kapanış *"nereye yazacağını
+biliyorsun"* diyordu; okur **bilemezdi.** Bu sürüm o boşluğu kapatır.
+
+→ [`06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md`](06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md)
+→ [`06_REPORTS/WEBSITE_KDP_BUSINESS_STRATEGY.md`](06_REPORTS/WEBSITE_KDP_BUSINESS_STRATEGY.md)
+→ [`06_REPORTS/WEBSITE_CURRENT_STATE_AUDIT.md`](06_REPORTS/WEBSITE_CURRENT_STATE_AUDIT.md)
+
+> ## ⛔ VE B1 İLE B3 ÇÖZÜLMEDİ
+>
+> **B1** harici insan doğrulaması: **0 oturum**, öldürme kapısı
+> **HARD-STOP** — değişmedi. **B3** ISBN + YZ beyanı: iki alan hâlâ
+> **boş** ve bilerek boş. B2 bile **yarımdır**: alan adı alınmadı, site
+> yayına alınmadı.
+
+### Eklendi — SON YAPRAK
+
+`valicepress.com/codex-enigmatica/verify` · **s. 273** (son yaprağın ön
+yüzü, 274 boş arka yüz) ve Kindle'da son bölüm — orada **gerçek HTTPS
+bağ**, görünen metin basılı nüshayla birebir aynı.
+
+Adresin **tek yetkesi** `project_config.json § founder.verification`.
+`matter.py` onu yazmaz, **okur**; `emit345.py` yapılandırmadan geçirir.
+Adres yoksa yaprak **hiç basılmaz** — çünkü "THE VERIFICATION PAGE"
+başlığının altında boş bir satır, hiç yapraktan kötüdür.
+
+### Onarıldı — KARŞILIKSIZ ÜÇ CÜMLE
+
+* ⛔ **Birinci söz** *"The verification page will tell you which"* diyordu.
+  Sayfa bunu **yapamaz** — ve yapabilseydi ürünü bitirirdi: 101 cevabı
+  kabul eden bir kâhin, kitabı hiç almamış birine **~5 086 istekle**
+  çözüm kitabının tamamını verir. Hakem artık **kitabın kendi arka
+  maddesidir**; 100 çözüm zaten orada basılıdır. (`A7` · **açık kalır**)
+* `answerFormat` normalizasyonu **doğrulama sayfasına** atfediyordu; kural
+  kitabın kendi kuralıdır ve arka madde çözümleri için de geçerlidir.
+* `verificationPending` — kurucuya ait bir **iş kaydı** — artık adres
+  geldiğinde otomatik olarak düşer; ikisi aynı anda canlı olamaz.
+
+⚠ **Dört söz cümlesinin hiçbirine dokunulmadı** (`SOLVABILITY_STANDARD §
+1` başlıkları dondurur, açıklamaları değil).
+
+### Eklendi — `04_BUILD/qa_verification.py`
+
+Basılı bir URL **düzeltilemez**; bu depodaki en pahalı tek dizedir.
+Kapı üç ayrı şeyi ayrı ölçer ve **hiçbirini ötekinin yerine saymaz**:
+alan adı **bizde mi** · site **yayında mı** · adres **yanıt verdi mi**.
+
+`phase5`'te **21 denetim**, `release`'te **24** — ve `release`'te üçü de
+yeşil değilse **KIRMIZI**. Yer tutucu adresleri (`example.com`,
+`localhost`, `TODO`) ve **`*.vercel.app`** reddeder: önizleme alan adı
+**kiracıdır**, proje adı değişince ölür — ama kitap basılmıştır.
+
+`05_TESTS/selftest.py § ⑮` · **24 yeni denetim** — biri kapının kendi
+körlüğünü ölçer: *"The founder … a pending question on an A4 sheet"*
+cümlesi yer tutucu **değildir** ve kapı ona kırmızı yanmamalıdır.
+**249 → 273 denetim.**
+
+### Onarıldı — İKİ KUSUR DAHA
+
+* `kindle.py` **her** `href`i EPUB paketi içinde arıyordu; doğrulama
+  adresi gerçek bağa dönüşünce onu "kırık iç bağ" saydı. Mutlak adresler
+  artık ayrı ölçülür ve **HTTPS zorunludur**.
+* Kindle adresi ilk yapıda düz metindi; gerekçe *"KDP dış bağı
+  reddedebilir"* diye yazılmıştı ve **yanlıştı**. KDP'nin kendi Hyperlink
+  Guidelines belgesi yazarın kendi sitesine bağ vermeyi **açıkça** serbest
+  bırakır.
+
+### Değişti — KDP EL KİTABI
+
+`04_BUILD/kdp_handbook.py` artık doğrulama durumunu **tek yetkesinden**
+okur ve üçü tamam değilken el kitabının başına ⛔ **BASKIYA HAZIR DEĞİL**
+kutusunu basar. Kurucuya ait iş listesine üç madde eklendi: alan adı
+kaydı · yayına alma · Vercel sırları.
+
+---
+
 ## [1.0.0] — 2026-08-26 · ⭑ İNGİLİZCE TİCARİ SÜRÜM · KAYNAK DÜZEYİNDE YENİDEN İNŞA ⭑
 
 # ✅ DİL BLOKLAYICISI KALKTI — 9 533 → 0

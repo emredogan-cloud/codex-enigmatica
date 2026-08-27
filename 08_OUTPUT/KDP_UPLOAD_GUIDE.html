@@ -65,7 +65,7 @@ color:var(--mut);font-size:.82rem}
 <div class="wrap">
 <h1>KDP Yükleme Kılavuzu</h1>
 <p class="sub"><b>Codex Enigmatica</b> · Emre Doğan · ölçülen 274 sayfa · bu dosya <code>04_BUILD/kdp_handbook.py</code> tarafından üretildi — elle düzenlemeyin.</p>
-<nav><a href="#durum">Durum</a><a href="#kurucu">Kurucu işi</a><a href="#a">A · PAPERBACK</a><a href="#b">B · HARDCOVER</a><a href="#c">C · KINDLE</a><a href="#d">D · A+ İÇERİK</a><a href="#e">E · SON ÖNİZLEME</a><a href="#f">F · FİYAT</a><a href="#g">G · YAYIMLAMA</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
+<nav><a href="#durum">Durum</a><a href="#dogrulama">Doğrulama</a><a href="#kurucu">Kurucu işi</a><a href="#a">A · PAPERBACK</a><a href="#b">B · HARDCOVER</a><a href="#c">C · KINDLE</a><a href="#d">D · A+ İÇERİK</a><a href="#e">E · SON ÖNİZLEME</a><a href="#f">F · FİYAT</a><a href="#g">G · YAYIMLAMA</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
 <div class="bar"><span class="cnt" id="cnt">0 / 0</span><span class="track"><span class="fill" id="fill"></span></span><span class="pill p-wait" id="ready">EKSİK ADIM VAR</span></div>
 <h2 id="durum">Durum — ölçüm, iddia değil</h2>
 <div class="scroll"><table>
@@ -79,6 +79,15 @@ color:var(--mut);font-size:.82rem}
 </table></div>
 <div class="note stop"><b>⚠ ÜÇ ŞEY HENÜZ YOK VE BU BİLEREK BÖYLEDİR.</b><br>① <b>İç blok PDF'i</b> — dizgi <b>dondurulmadı</b> (K12) ve gerçek levhalar yeni geldi. Sayfa sayısı değişebilir, sırt genişliği ona bağlıdır.<br>② <b>Sarmal kapak</b> — elimizdeki kapak sanatı <b>yalnızca ön kapaktır</b>. Gerilerek sarmal yapılamaz; iki yeni sarmal promptu kütüphaneye eklendi ve <b>sizin üretmenizi bekliyor</b>.<br>③ <b>Fiziksel prova</b> — hiç alınmadı (A9).</div>
 <div class="note stop"><b>⭑ VE EN ÖNEMLİSİ ⭑</b><br>Bu kitap <b>hiçbir insanın elinde çözülmedi</b>. Harici çözücü oturumu <b>0 / 5</b> (A12b). Ölçülen öldürme kapısı kararı <b>HARD-STOP</b>. Yayımlama kararı bu gerçeği bilerek verilmelidir.</div>
+<h2 id="dogrulama">⭑ Doğrulama sayfası — basılan adres</h2>
+<div class="note stop"><b>⛔ BASKIYA HAZIR DEĞİL.</b><br>Kitap son yaprağına bir adres <b>basar</b>. O adres canlı değilken basmak okura <b>ölü bir kapı</b> vermektir — ve alan adı başkasının eline geçerse <b>satılmış her nüsha</b> okuru yabancı bir siteye gönderir. <b>Basılmış bir URL düzeltilemez.</b></div>
+<div class="scroll"><table>
+<tr><th>Kitaba basılan adres</th><td>valicepress.com/codex-enigmatica/verify</td></tr>
+<tr><th>Alan adı kurucunun elinde</th><td>⛔ HAYIR</td></tr>
+<tr><th>Site yayında</th><td>⛔ HAYIR</td></tr>
+<tr><th>Adres canlı doğrulandı</th><td>⛔ HİÇ</td></tr>
+</table></div>
+<p class="sub">Karar için: <code>python3 04_BUILD/qa_verification.py --gate release --live</code> — üçü de yeşil olmadan <code>release</code> kapısı <b>KIRMIZIDIR</b>.</p>
 <h2 id="kurucu">🟢 Yalnızca sizin yapabileceğiniz işler</h2>
 <p class="sub">Ajan bunları yapmadı, yapamaz ve yaptığını söylemeyecek.</p><div class="scroll"><table>
 <tr><th>KDP hesabına giriş ve panel kullanımı</th><td>Ajan tarayıcıda hesabınıza giremez, giremeyecektir.</td></tr>
@@ -87,6 +96,9 @@ color:var(--mut);font-size:.82rem}
 <tr><th>ISBN ve yayın hakkı kararı</th><td>`founderPending.isbn` boş. KDP ücretsiz ISBN mi, kendi ISBN&#x27;iniz mi?</td></tr>
 <tr><th>Yazar biyografisi</th><td>`founderPending.authorBio` boş. Yer tutucu basmak geri alınamaz.</td></tr>
 <tr><th>Fiziksel POD provası (A9)</th><td>Gravürlerin nokta yayılması altındaki davranışı YALNIZCA basılı provada ölçülür. Ekranda kusursuz görünen levha kâğıtta kapanabilir.</td></tr>
+<tr><th>⭑ DOĞRULAMA ALAN ADININ KAYDI ⭑</th><td>Kitap `valicepress.com/codex-enigmatica/verify` adresini SON YAPRAĞINA BASAR. Alan adı 26 Ağustos 2026&#x27;da KAYITSIZ ölçüldü (~11,25 $/yıl) — yani serbest, ama BİZİM DEĞİL. Alan adı kaydı bir ÖDEME işlemidir ve ajan yapamaz. ⚠ BASILMIŞ BİR URL DÜZELTİLEMEZ: alan adı başkasının eline geçerse satılmış her nüsha okuru yabancı bir siteye gönderir.</td></tr>
+<tr><th>⭑ DOĞRULAMA SAYFASININ YAYINA ALINMASI ⭑</th><td>Vercel projesi şu an `live: false` ve üretim hedefi `target: null` — site HİÇBİR YERDE yayında değildir. Sayfa yayına alınmadan kitap BASILAMAZ; `qa_verification.py` `release` kapısını KIRMIZI tutar.</td></tr>
+<tr><th>⭑ DOĞRULAMA SIRLARININ VERCEL&#x27;E GİRİLMESİ ⭑</th><td>`CODEX_VERIFY_PEPPER` ve `CODEX_VERIFY_DIGEST`. Üretimi: `node scripts/codex-verify-digest.mjs` — cevabı STDIN&#x27;den okur, dosyaya ve kabuk geçmişine YAZMAZ. ⚠ Sunucuda düz cevap saklanmaz; saklanan şey biberli SHA-256 özetidir. İkisi de depoda DEĞİLDİR.</td></tr>
 <tr><th>Publish düğmesi</th><td>Yayımlama kararı kurucuya aittir.</td></tr>
 <tr><th>A+ içeriğinin moderasyona gönderilmesi</th><td>Amazon insan moderasyonu uygular; ajan gönderemez.</td></tr>
 </table></div>

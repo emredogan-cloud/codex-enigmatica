@@ -2643,6 +2643,189 @@ def part12_editorial(rep: Report, tmp: str) -> None:
 
 
 
+def part15_verification(rep: Report, tmp: str) -> None:
+    """⑮ ⭑ DOĞRULAMA SAYFASI — BASILI BİR URL GERİ ALINAMAZ ⭑
+
+    Bu kapının koruduğu şey bu depodaki **en pahalı tek dizedir**. Bir
+    kitap basıldıktan sonra adresi düzeltilemez; yanlışsa, satılmış her
+    nüsha okuru yanlış yere gönderir ve bunun geri dönüşü yoktur.
+
+    Buradaki fikstürlerin her biri gerçekten olabilecek bir kusurdur:
+
+      · `verificationPending` — kurucuya ait açık bir İŞ KAYDI — bir ara
+        yapıda okura doğrulama adresi diye BASILMIŞTI;
+      · bir önizleme alan adı (`*.vercel.app`) kiracıdır ve proje adı
+        değişince ölür — ama kitap basılmıştır;
+      · 101 cevap alanı taşıyan bir sayfa, kitabı hiç almamış birine
+        ~5.086 istekle çözüm kitabının TAMAMINI verir;
+      · sunucuda düz cevap saklamak, tek bir sızıntıda ürünü bitirir.
+
+    ⚠ VE BİR KÖRLÜK TESTİ: kapı basılı metni tararken "founder",
+    "pending", "A4" gibi OLAĞAN İngilizce sözcükleri yer tutucu sanmamalı
+    — sanırsa her koşuda kırmızı yanar, ve her koşuda kırmızı yanan bir
+    kapı okunmaz, dolayısıyla YOKTUR.
+    """
+    print("\n⑮ ⭑ DOĞRULAMA SAYFASI ⭑")
+
+    GOOD = {"printedUrl": "valicepress.com/codex-enigmatica/verify",
+            "canonicalUrl": "https://valicepress.com/codex-enigmatica/verify",
+            "route": "/codex-enigmatica/verify",
+            "scope": "final-answer-only",
+            "secretModel": "peppered-sha256",
+            "domainRegistered": False, "deployed": False,
+            "liveVerifiedAt": None}
+
+    def vroot(**over):
+        _RUN_SEQ[0] += 1
+        d = os.path.join(tmp, "verify-%03d" % _RUN_SEQ[0])
+        os.makedirs(d, exist_ok=True)
+        cfg = clean_config()
+        ver = dict(GOOD)
+        ver.update(over)
+        cfg.setdefault("founder", {})["verification"] = ver
+        write(os.path.join(d, ".gate"), "phase5")
+        write(os.path.join(d, "project_config.json"),
+              json.dumps(cfg, ensure_ascii=False))
+        return d
+
+    def gate(level="phase5", **over):
+        return run_env_gate("qa_verification.py", vroot(**over), gate=level)
+
+    # ── temiz hâl ──────────────────────────────────────────────────────
+    code, out = gate()
+    rep.check(code == 0, "doğrulama kapısı temiz yapılandırmayı GEÇER", out)
+
+    # ── yer tutucular ──────────────────────────────────────────────────
+    for bad, why in (
+            ("example.com/verify", "example.com"),
+            ("localhost:3000/verify", "localhost"),
+            ("codex.vercel.app/verify", "önizleme alan adı — KİRACI"),
+            ("TODO/verify", "TODO")):
+        code, out = gate(printedUrl=bad, canonicalUrl="https://" + bad,
+                         route="/verify")
+        rep.check(code != 0,
+                  "⭑ YER TUTUCU ADRES KIRMIZI ⭑ (%s)" % why, out)
+
+    # ── biçim ──────────────────────────────────────────────────────────
+    code, out = gate(printedUrl="ValicePress.com/Codex-Enigmatica/Verify",
+                     canonicalUrl="https://valicepress.com/codex-enigmatica/verify",
+                     route="/codex-enigmatica/verify")
+    rep.check(code != 0,
+              "⭑ BÜYÜK HARFLİ ADRES KIRMIZI ⭑ (basılı bir URL'de "
+              "büyük/küçük fark okurun yazım hatasına dönüşür)", out)
+
+    code, out = gate(printedUrl="valicepress.com/a/b/c/d/e/verify",
+                     canonicalUrl="https://valicepress.com/a/b/c/d/e/verify",
+                     route="/a/b/c/d/e/verify")
+    rep.check(code != 0,
+              "④ elle yazılamayacak kadar derin adres KIRMIZI", out)
+
+    # ── yol ile rota ayrışması ─────────────────────────────────────────
+    code, out = gate(route="/some/other/route")
+    rep.check(code != 0,
+              "⭑ BASILAN ADRES SİTE ROTASINDAN AYRILIRSA KIRMIZI ⭑ "
+              "(kitap 404'e işaret eder ve düzeltilemez)", out)
+
+    # ── söz ile mekanizma ──────────────────────────────────────────────
+    code, out = gate(scope="all-answers")
+    rep.check(code != 0,
+              "⭑ 101 CEVAP ALANI KIRMIZI ⭑ (kitabı almamış birine "
+              "~5.086 istekle çözüm kitabının tamamını verir)", out)
+
+    code, out = gate(secretModel="plaintext")
+    rep.check(code != 0,
+              "⭑ SUNUCUDA DÜZ CEVAP KIRMIZI ⭑ (tek sızıntı ürünü "
+              "bitirir; saklanan şey biberli özet olmalı)", out)
+
+    # ── adres YOKKEN: kapı seviyesine göre ─────────────────────────────
+    code, out = gate(printedUrl="")
+    rep.check(code == 0,
+              "adres seçilmemişken phase5 UYARIR, kırmızı yanmaz "
+              "(henüz kurucu kararı)", out)
+    code, out = gate("release", printedUrl="")
+    rep.check(code != 0,
+              "⭑ ADRESSİZ `release` KIRMIZI ⭑ (sözleşme sayfası bir "
+              "adres VAAT EDİYOR — vaadi olmayan bir kitap basılamaz)",
+              out)
+
+    # ── alan adı ve canlılık: yalnızca `release` zorunlu ───────────────
+    code, out = gate("release")
+    rep.check(code != 0,
+              "⭑ KAYITSIZ ALAN ADIYLA `release` KIRMIZI ⭑ (kayıtlı "
+              "olmayan bir adrese işaret eden kitabı basmak, okuru "
+              "başkasının sitesine göndermektir)", out)
+
+    code, out = gate("release", domainRegistered=True, deployed=True,
+                     liveVerifiedAt="2026-08-27")
+    rep.check(code == 0,
+              "üçü de tamamlanınca `release` YEŞİL", out)
+
+    for one in ("domainRegistered", "deployed"):
+        over = {"domainRegistered": True, "deployed": True,
+                "liveVerifiedAt": "2026-08-27", one: False}
+        code, out = gate("release", **over)
+        rep.check(code != 0,
+                  "⭑ `%s` TEK BAŞINA EKSİKKEN `release` KIRMIZI ⭑ "
+                  "(üçü birbirinin yerine geçmez)" % one, out)
+
+    code, out = gate("release", domainRegistered=True, deployed=True,
+                     liveVerifiedAt=None)
+    rep.check(code != 0,
+              "⭑ HİÇ CANLI DOĞRULANMAMIŞ ADRESLE `release` KIRMIZI ⭑ "
+              "(kayıtlı olmak yanıt vermek DEĞİLDİR)", out)
+
+    # ── ⚠ KÖRLÜK TESTİ: kapı olağan İngilizceyi yer tutucu SANMAMALI ──
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location(
+        "_qv", os.path.join(BUILD, "qa_verification.py"))
+    _qv = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_qv)
+
+    INNOCENT = ("The founder of the house had left a pending question on "
+                "an A4 sheet, and the ship foundered off the coast.")
+    rep.check(_qv.PLACEHOLDER_IN_PRINT.search(INNOCENT) is None,
+              "⭑ BASILI METİN SÜZGECİ OLAĞAN İNGİLİZCEYİ YER TUTUCU "
+              "SANMIYOR ⭑ (founder · pending · A4 — hepsi olağan sözcük; "
+              "her koşuda kırmızı yanan bir kapı okunmaz, yani YOKTUR)")
+    rep.check(_qv.PLACEHOLDER.search(INNOCENT) is not None,
+              "ama ADRES süzgeci aynı sözcüklerde sert kalır "
+              "(bir URL'de 'founder' geçmez)")
+    rep.check(_qv.PLACEHOLDER_IN_PRINT.search(
+        "verification page address — A4 · Founder") is not None,
+              "⭑ BİR KEZ GERÇEKTEN DİZİLMİŞ OLAN YER TUTUCU DİZE "
+              "BASILI METİNDE YAKALANIYOR ⭑")
+
+    # ── satır sonunda bölünmüş URL bulunmalı ───────────────────────────
+    rep.check(_qv.flat("valicepress.com/codex-\nenigmatica/verify")
+              == "valicepress.com/codex-enigmatica/verify",
+              "⭑ SATIR SONUNDA BÖLÜNMÜŞ ADRES YİNE DE BULUNUR ⭑ "
+              "(pdftotext URL'yi ikiye ayırır; düz arama BULAMAZDI ve "
+              "kapı adres basılıyken 'basılı değil' derdi)")
+
+    # ── gerçek elyazması: karşılıksız söz kalmadı ──────────────────────
+    _bookp = os.path.join(ROOT, "02_MANUSCRIPT", "book.json")
+    real = None
+    if os.path.isfile(_bookp):
+        with open(_bookp, encoding="utf-8") as _fh:
+            real = json.load(_fh)
+    if real:
+        blob = json.dumps(real.get("matter") or {}, ensure_ascii=False)
+        flatblob = _qv.flat(blob)
+        left = [p for p in _qv.FORBIDDEN_PROMISES if _qv.flat(p) in flatblob]
+        rep.check(not left,
+                  "⭑ ELYAZMASI SAYFANIN YAPMADIĞI ŞEYİ VAAT ETMİYOR ⭑ "
+                  "(sayfa YALNIZCA son cevabı doğrular)"
+                  + ("" if not left else " — ⛔ %s" % left))
+        addr = ((real.get("matter") or {}).get("contract")
+                or {}).get("verificationAddress")
+        rep.check(bool(addr),
+                  "⭑ ELYAZMASI BASILACAK ADRESİ TAŞIYOR ⭑ (%s)" % addr)
+        rep.check(bool((real.get("matter") or {}).get("verificationLeaf")),
+                  "⭑ SON YAPRAK BLOĞU ÜRETİLDİ ⭑ (sözleşme sayfası onu "
+                  "ADIYLA vaat ediyor)")
+
+
+
 def part14_check_is_read_only(rep) -> None:
     """⭑⭑ `--check` KİPİ ÜRETMEZ — VE BU ÖLÇÜLÜR ⭑⭑
 
@@ -2760,6 +2943,7 @@ def main() -> int:
         part10_plate_readability(rep, tmp)
         part11_crossref(rep, tmp)
         part12_editorial(rep, tmp)
+        part15_verification(rep, tmp)
     part13_ci_signatures(rep)
     part14_check_is_read_only(rep)
 

@@ -193,6 +193,15 @@ run "KAPILARIN KENDİ TESTİ"     $PY 05_TESTS/selftest.py
   run "kurucu görsel envanteri" $PY 04_BUILD/asset_ingest.py
 [ -f 04_BUILD/qa_language.py ] && \
   run "⭑ DİL KAPISI ⭑"          $PY 04_BUILD/qa_language.py
+# ⭑ DOĞRULAMA SAYFASI: kitabın vaat ettiği adres GERÇEK mi.
+# ⚠ Basılı bir URL geri alınamaz — kapı `release` seviyesinde alan adı
+# kaydını ve canlılığı ZORUNLU kılar, altındaki seviyelerde UYARIR.
+# ⚠ Ağ çağrısı yoktur (`--live` ile açılır): CI'da ağ yok, alan adı
+# henüz kurucunun elinde değil, ve her koşuda kırmızı yanan bir denetim
+# kapıyı okunmaz hâle getirir.
+[ -f 04_BUILD/qa_verification.py ] && \
+  run "⭑ DOĞRULAMA SAYFASI ⭑"   $PY 04_BUILD/qa_verification.py --gate "$GATE" \
+                                   --json 06_REPORTS/tracked/qa-verification.json
 [ -f 04_BUILD/economics.py ] && \
   run "baskı ekonomisi"         $PY 04_BUILD/economics.py
 [ -f 04_BUILD/kdp_package.py ] && \

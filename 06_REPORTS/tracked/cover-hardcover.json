@@ -1,24 +1,24 @@
 {
   "status": "pass",
-  "checks": 9,
+  "checks": 10,
   "errors": [],
   "warnings": [
-    "hesaplayıcı 263 sayfa · white kâğıtla koştu, iç blok 274 sayfa · white — sırt hesaplayıcının TAHTA PAYINDAN (0.18872 in) yeniden TÜRETİLDİ: 0.8058 in. Sapma +0.02480 in, toleransın %39.7'i. Tam kesinlik isteniyorsa hesaplayıcı 274 sayfa + white ile yeniden koşturulmalı (A15)."
+    "hesaplayıcı 263 sayfa · white kâğıtla koştu, iç blok 276 sayfa · white — sırt hesaplayıcının TAHTA PAYINDAN (0.18872 in) yeniden TÜRETİLDİ: 0.8103 in. Sapma +0.02930 in, toleransın %46.9'i. Tam kesinlik isteniyorsa hesaplayıcı 276 sayfa + white ile yeniden koşturulmalı (A15)."
   ],
   "facts": {
     "binding": "hardcover",
-    "spineIn": 0.8058,
-    "widthIn": 14.3818,
+    "spineIn": 0.8103,
+    "widthIn": 14.3863,
     "heightIn": 10.417,
-    "pages": 274,
+    "pages": 276,
     "paper": "white",
     "artCropPx": [
-      4722,
+      4723,
       3420
     ],
     "nativeDpi": 328.3,
     "renderedPx": [
-      4315,
+      4316,
       3125
     ],
     "hingeIn": 0.394,
@@ -32,9 +32,28 @@
       0.375
     ],
     "spineTextPrinted": true,
+    "safeArea": {
+      "edgeMinIn": 0.716,
+      "spineMinIn": 0.4,
+      "toleranceIn": 0.06,
+      "frontBandIn": [
+        8.8463,
+        13.6103
+      ],
+      "backBandIn": [
+        0.776,
+        6.722
+      ],
+      "vBandIn": [
+        0.776,
+        9.641
+      ],
+      "frontSpineEdgeIn": 8.3863,
+      "spineLeftEdgeIn": 7.182
+    },
     "staleCalculator": false,
-    "spineDeltaIn": 0.0248,
-    "deltaPages": 11,
+    "spineDeltaIn": 0.0293,
+    "deltaPages": 13,
     "paperMatchesCalculator": true,
     "calcBasis": {
       "pages": 263,
@@ -43,8 +62,8 @@
       "boardIn": 0.18872
     },
     "boardIn": 0.18872,
-    "worstContrast": 1.01,
-    "haloUsed": 18,
+    "worstContrast": 1.02,
+    "haloUsed": 17,
     "typeRowsTotal": 19,
     "edgeContrastMin": 17.69,
     "art": "codex-enigmatica-wrap-cover-option-01-4x-300dpi.png",

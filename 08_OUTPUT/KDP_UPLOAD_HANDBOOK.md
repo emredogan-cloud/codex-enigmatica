@@ -171,7 +171,7 @@ bir rapor yanlıştır.
 
 | | |
 |---|---|
-| NE YAPACAĞIM | Tam kapak 14.382 × 10.417 in · sırt 0.8058 in · menteşe (hinge) 0.394 in · sarma (wrap) 0.591 in. ⚠ KÂĞIT: BEYAZ. |
+| NE YAPACAĞIM | Tam kapak 14.386 × 10.417 in · sırt 0.8103 in · menteşe (hinge) 0.394 in · sarma (wrap) 0.591 in. ⚠ KÂĞIT: BEYAZ. |
 | KDP'DE NEREYE | Hardcover Content → Book Cover → Upload a cover you already have |
 | NE GİRECEĞİM | — |
 | HANGİ DOSYA | `08_OUTPUT/HARDCOVER/cover.pdf` |
@@ -439,6 +439,79 @@ bir rapor yanlıştır.
 > Görsellerde **metin yoktur**; bu metin Amazon'un kendi
 > başlık ve gövde alanlarına girilir.
 
+## I.5 · ⛔ KDP'NİN GERÇEK ÖNİZLEMESİNDE HATA ÇIKARSA
+
+> **Bu bölüm bir tahmin değil, yaşanmış bir reddin kaydıdır.**
+> 28 Ağustos 2026'da KDP kitabı reddetti — ve o gün bütün
+> yerel kapılar **yeşildi**.
+
+### 1 · Yerel yeşile GÜVENMEYİN
+
+Yerel kapılar yalnızca **sordukları soruları** yanıtlar.
+O gün hiçbiri şunu sormuyordu: *yazı tipleri gömülü mü*,
+*her glif yüzünde var mı*, *metin sayfada kalıyor mu*.
+Kapak kapısı yalnızca **karşıtlık** ölçüyordu: yazının
+**okunur** olduğunu doğruluyor, **sayfada kaldığını** hiç
+sormuyordu.
+
+⭑ **Gerçek KDP Previewer, yerel preflight'tan ÜSTÜNDÜR.**
+
+### 2 · Hatayı BİREBİR kaydedin
+
+Amazon'un cümlesini ve verdiği **sayıları** olduğu gibi not
+edin — 0,716 in gibi bir sayı, düzeltmenin tek yetkesidir.
+Verdiği sayfa numarasını da yazın.
+
+### 3 · ⚠ Bildirilen sayfa bir ÖRNEKTİR, envanter DEĞİL
+
+İki kez yaşandı ve iki kez de aynı çıktı:
+
+| KDP'nin dediği | Ölçülen gerçek |
+|---|---|
+| "5 sayfa" (pay) | **140 sayfa** |
+| "s. 135" (dönüşüm) | **274 sayfanın hepsi** |
+
+Bildirilen sayfayı düzeltip durmak, kusuru bırakmaktır.
+
+### 4 · KAYNAĞA dönün, PDF'i yamamayın
+
+Düzeltme `04_BUILD/` ve `01_SOURCE/` içindedir. Nihai PDF'i
+elle düzenlemek, bir sonraki üretimde kusuru geri getirir.
+
+### 5 · Yeniden üretin ve ÖLÇÜN
+
+```
+python3 04_BUILD/interior.py
+python3 04_BUILD/interior.py --binding hardcover
+python3 04_BUILD/covers.py
+python3 04_BUILD/covers.py --binding hardcover
+python3 04_BUILD/kindle.py
+python3 04_BUILD/qa_kdp_conversion.py     # yazı tipi · glif · kapak
+python3 04_BUILD/qa_print_margins.py      # her sayfanın mürekkebi
+./04_BUILD/qa_all.sh --fix
+python3 04_BUILD/kdp_package.py           # sağlama toplamları
+```
+
+### 6 · ⚠ Sayfa sayısı değişebilir — ve her şey ona bağlıdır
+
+Tek bir karakter kaldırmak satır sonunu değiştirir. Bu onarımda
+ciltli **274 → 276** sayfaya çıktı ve şunların hepsi yeniden
+hesaplandı: **sırt · kapak genişliği · baskı maliyeti · telif ·
+arka kapağa basılan sayfa sayısı**. Sayfa sayısı değişirse
+kapağı da yeniden üretin.
+
+### 7 · Düzeltilmiş dosyayı yükleyin ve BİLDİRİLEN SAYFAYA bakın
+
+KDP Bookshelf → ilgili sürüm → *Upload a revised manuscript* /
+*Update a revised cover*. Sonra Previewer'da **Amazon'un
+saydığı sayfaları** tek tek açın.
+
+### 8 · KDP geçene kadar tekrarlayın
+
+> ⛔ **Yerel yeşil, yayımlama izni değildir.** Previewer gerçek
+> bir kusur gösteriyorsa yayımlamayın — kapıyı gevşetmek,
+> eşiği düşürmek ya da denetimi kaldırmak **çözüm değildir**.
+
 ## J · 📂 DOSYA HARİTASI — hangi dosya, nereye
 
 Her satır **tek bir dosyayı tek bir KDP alanına** bağlar.
@@ -462,7 +535,7 @@ Yol proje kökünden görelidir.
 | Sürüm | Liste | Baskı maliyeti | **Telif** | Marj |
 |---|---:|---:|---:|---:|
 | Ciltsiz | 19.99 $ | 4.14 $ | **7.86 $** | %39.3 |
-| Ciltli | 29.99 $ | 8.94 $ | **9.06 $** | %30.2 |
+| Ciltli | 29.99 $ | 8.96 $ | **9.03 $** | %30.1 |
 | Kindle · %35 planı · 46.3 MB | 9.99 $ | — | **3.50 $** | %35.0 |
 
 > ⚠ **Bunlar garanti edilmiş kazanç değildir.** Baskı maliyeti

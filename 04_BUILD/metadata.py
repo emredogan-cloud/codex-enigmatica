@@ -68,6 +68,13 @@ def build(cfg: dict, pages: int, puzzles: int, gates: int, hints: int,
     prod = cfg.get("production", {})
     eds = prod.get("editions", {}) or prod
 
+    # Her cildin KENDİ ölçülen sayfa sayısı.
+    _hc = (pl.load_json(os.path.join(
+        pl.ROOT, "06_REPORTS", "tracked",
+        "interior-hardcover.json")) or {}).get("facts") or {}
+    _edition_pages = {"paperback": pages, "hardcover": _hc.get("pages"),
+                      "kindle": None}
+
     description = (
         "One hundred engraved enigmas and a single unbroken mystery.\n\n"
         "Five gates. Twenty puzzles each. Every answer is a member of a "
@@ -110,7 +117,11 @@ def build(cfg: dict, pages: int, puzzles: int, gates: int, hints: int,
             {"id": e.get("id"), "list": e.get("list"),
              "enabled": e.get("enabled"),
              "trim": "6x9", "interiorInk": prod.get("ink"),
-             "paper": e.get("paper") or prod.get("paper")}
+             "paper": e.get("paper") or prod.get("paper"),
+             # ⚠ SAYFA SAYISI SÜRÜM BAŞINADIR. Tek bir `pageCount`
+             # yayımlamak, ciltli 276'ya çıktığında onu 274 sayfa diye
+             # LİSTELEMEK demekti — ölçülmemiş bir iddia.
+             "pages": _edition_pages.get(e.get("id"))}
             for e in (eds.get("editionsHypothesis") or [])
         ],
         "pageCount": pages,

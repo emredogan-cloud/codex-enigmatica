@@ -65,7 +65,7 @@ color:var(--mut);font-size:.82rem}
 <div class="wrap">
 <h1>KDP Yükleme Kılavuzu</h1>
 <p class="sub"><b>Codex Enigmatica</b> · Emre Doğan · ölçülen 274 sayfa · bu dosya <code>04_BUILD/kdp_handbook.py</code> tarafından üretildi — elle düzenlemeyin.</p>
-<nav><a href="#durum">Durum</a><a href="#dogrulama">Doğrulama</a><a href="#dosyalar">Dosya haritası</a><a href="#fiyat">Fiyat</a><a href="#kurucu">Kurucu işi</a><a href="#01">01 · KDP&#x27;Yİ AÇMADAN ÖNCE</a><a href="#02">02 · PAPERBACK</a><a href="#03">03 · HARDCOVER</a><a href="#04">04 · KINDLE</a><a href="#05">05 · A+ İÇERİK</a><a href="#06">06 · DOĞRULAMA SAYFASI</a><a href="#07">07 · METADATA</a><a href="#08">08 · FİYAT</a><a href="#09">09 · PREVIEWER — ZORUNLU</a><a href="#10">10 · SON GÖNDERİM</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
+<nav><a href="#durum">Durum</a><a href="#dogrulama">Doğrulama</a><a href="#ret">KDP reddi</a><a href="#dosyalar">Dosya haritası</a><a href="#fiyat">Fiyat</a><a href="#kurucu">Kurucu işi</a><a href="#01">01 · KDP&#x27;Yİ AÇMADAN ÖNCE</a><a href="#02">02 · PAPERBACK</a><a href="#03">03 · HARDCOVER</a><a href="#04">04 · KINDLE</a><a href="#05">05 · A+ İÇERİK</a><a href="#06">06 · DOĞRULAMA SAYFASI</a><a href="#07">07 · METADATA</a><a href="#08">08 · FİYAT</a><a href="#09">09 · PREVIEWER — ZORUNLU</a><a href="#10">10 · SON GÖNDERİM</a><a href="#alan">Alanlar</a><a href="#aplus">A+ metni</a><a href="#kindlenote">Kindle notu</a><a href="#liste">Kontrol listesi</a></nav>
 <div class="bar"><span class="cnt" id="cnt">0 / 0</span><span class="track"><span class="fill" id="fill"></span></span><span class="pill p-wait" id="ready">EKSİK ADIM VAR</span></div>
 <h2 id="durum">Durum — ölçüm, iddia değil</h2>
 <div class="scroll"><table>
@@ -169,7 +169,7 @@ color:var(--mut);font-size:.82rem}
 </table></div></div>
 <div class="card"><div class="hd"><input type="checkbox" id="hc-2"><h3><label for="hc-2">🔵 Sarmal kapak (ciltli)</label></h3><span style="margin-left:auto"><span class="pill p-ok">AJAN HAZIRLADI</span></span></div>
 <div class="scroll"><table>
-<tr><th>Ne yapacağım</th><td>Tam kapak 14.382 × 10.417 in · sırt 0.8058 in · menteşe (hinge) 0.394 in · sarma (wrap) 0.591 in. ⚠ KÂĞIT: BEYAZ.</td></tr>
+<tr><th>Ne yapacağım</th><td>Tam kapak 14.386 × 10.417 in · sırt 0.8103 in · menteşe (hinge) 0.394 in · sarma (wrap) 0.591 in. ⚠ KÂĞIT: BEYAZ.</td></tr>
 <tr><th>KDP panelinde nereye gideceğim</th><td>Hardcover Content → Book Cover → Upload a cover you already have</td></tr>
 <tr><th>Ne gireceğim</th><td>—</td></tr>
 <tr><th>Hangi dosyayı seçeceğim</th><td>08_OUTPUT/HARDCOVER/cover.pdf</td></tr>
@@ -336,6 +336,16 @@ color:var(--mut);font-size:.82rem}
 <tr><th>Neleri kontrol edeceğim</th><td>⚠ Bu kitabı HİÇBİR HARİCİ İNSAN ÇÖZMEDİ (0/5 oturum, ölçülen karar HARD-STOP). Yayımlama kararını bunu BİLEREK verin.</td></tr>
 <tr><th>Başarılı olursa ne göreceğim</th><td>Üç sürüm de &#x27;Live&#x27; olur.</td></tr>
 </table></div></div>
+<h2 id="ret">⛔ KDP'nin gerçek önizlemesinde hata çıkarsa</h2>
+<div class="note stop"><b>Bu bölüm bir tahmin değil, yaşanmış bir reddin kaydıdır.</b><br>28 Ağustos 2026'de KDP kitabı reddetti — ve o gün bütün yerel kapılar <b>yeşildi</b>. Yerel kapılar yalnızca <b>sordukları soruları</b> yanıtlar.</div>
+<div class="card"><h3>1 · Yerel yeşile güvenmeyin</h3><p>Gerçek KDP Previewer yerel preflight&#x27;tan ÜSTÜNDÜR. Kapak kapısı o gün yalnızca karşıtlık ölçüyordu: yazının OKUNUR olduğunu doğruluyor, SAYFADA KALDIĞINI hiç sormuyordu.</p></div>
+<div class="card"><h3>2 · Hatayı birebir kaydedin</h3><p>Amazon&#x27;un cümlesini ve verdiği SAYILARI olduğu gibi not edin. 0,716 in gibi bir sayı düzeltmenin tek yetkesidir.</p></div>
+<div class="card"><h3>3 · ⚠ Bildirilen sayfa bir ÖRNEKTİR, envanter değil</h3><p>İki kez yaşandı: &quot;5 sayfa&quot; denildi, ölçüm 140 buldu; &quot;s. 135&quot; denildi, kusur 274 sayfanın hepsindeydi. Bildirilen sayfayı düzeltip durmak, kusuru bırakmaktır.</p></div>
+<div class="card"><h3>4 · Kaynağa dönün, PDF&#x27;i yamamayın</h3><p>Düzeltme 04_BUILD/ ve 01_SOURCE/ içindedir. Nihai PDF&#x27;i elle düzenlemek, bir sonraki üretimde kusuru geri getirir.</p></div>
+<div class="card"><h3>5 · Yeniden üretin ve ölçün</h3><p>interior.py (iki cilt) → covers.py (iki cilt) → kindle.py → qa_kdp_conversion.py → qa_print_margins.py → qa_all.sh --fix → kdp_package.py</p></div>
+<div class="card"><h3>6 · ⚠ Sayfa sayısı değişebilir</h3><p>Tek bir karakter satır sonunu değiştirir. Bu onarımda ciltli 274 → 276 oldu ve sırt, kapak genişliği, baskı maliyeti, telif ve arka kapağa basılan sayfa sayısı yeniden hesaplandı.</p></div>
+<div class="card"><h3>7 · Yükleyin ve bildirilen sayfaya bakın</h3><p>Bookshelf → Upload a revised manuscript / Update a revised cover. Sonra Previewer&#x27;da Amazon&#x27;un saydığı sayfaları açın.</p></div>
+<div class="card"><h3>8 · KDP geçene kadar tekrarlayın</h3><p>Yerel yeşil yayımlama izni DEĞİLDİR. Previewer gerçek bir kusur gösteriyorsa yayımlamayın — kapıyı gevşetmek, eşiği düşürmek ya da denetimi kaldırmak çözüm değildir.</p></div>
 <h2 id="dosyalar">📂 Dosya haritası — hangi dosya, nereye</h2>
 <p class="sub">Her satır tek bir dosyayı tek bir KDP alanına bağlar. Yol proje kökünden görelidir.</p>
 <div class="scroll"><table>
@@ -355,7 +365,7 @@ color:var(--mut);font-size:.82rem}
 <div class="scroll"><table>
 <tr><th>Sürüm</th><th>Liste</th><th>Baskı maliyeti</th><th>Telif</th><th>Marj</th></tr>
 <tr><th>Ciltsiz</th><td>19.99 $</td><td>4.14 $</td><td><b>7.86 $</b></td><td>%39.3</td></tr>
-<tr><th>Ciltli</th><td>29.99 $</td><td>8.94 $</td><td><b>9.06 $</b></td><td>%30.2</td></tr>
+<tr><th>Ciltli</th><td>29.99 $</td><td>8.96 $</td><td><b>9.03 $</b></td><td>%30.1</td></tr>
 <tr><th>Kindle · %35 planı · 46.3 MB</th><td>9.99 $</td><td>—</td><td><b>3.50 $</b></td><td>%35.0</td></tr>
 </table></div>
 <div class="note"><b>⚠ Bunlar garanti edilmiş kazanç değildir.</b><br>Baskı maliyeti KDP'nin ABD fiyat modelinden <b>hesaplanmıştır</b> (alınmış bir teklif değildir); telif pazara ve dağıtım seçimine göre değişir; Kindle telifi seçtiğiniz plana bağlıdır.</div>

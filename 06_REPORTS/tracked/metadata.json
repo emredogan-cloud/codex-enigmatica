@@ -47,7 +47,8 @@
       "enabled": true,
       "trim": "6x9",
       "interiorInk": "black",
-      "paper": "white"
+      "paper": "white",
+      "pages": 276
     },
     {
       "id": "paperback",
@@ -55,7 +56,8 @@
       "enabled": true,
       "trim": "6x9",
       "interiorInk": "black",
-      "paper": "cream"
+      "paper": "cream",
+      "pages": 274
     },
     {
       "id": "kindle",
@@ -63,7 +65,8 @@
       "enabled": true,
       "trim": "6x9",
       "interiorInk": "black",
-      "paper": "cream"
+      "paper": "cream",
+      "pages": null
     }
   ],
   "pageCount": 274,

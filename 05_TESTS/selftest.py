@@ -2985,6 +2985,90 @@ def part16_print_margins(rep: Report, tmp: str) -> None:
 
 
 
+def part17_kdp_conversion(rep: Report, tmp: str) -> None:
+    """⑰ ⭑ KDP DÖNÜŞÜMÜ — AMAZON'UN GERÇEK REDDİ ⭑
+
+    28 Ağustos 2026'da KDP kitabı reddetti. Yerel kapıların HEPSİ
+    yeşildi. Sebep basit ve utandırıcı: hiçbiri bu soruları sormuyordu.
+
+      ① `Helvetica` GÖMÜLÜ DEĞİLDİ. reportlab kanvası varsayılan olarak
+        onunla açılır ve ad, hiç yazı basılmasa bile her sayfanın kaynak
+        sözlüğüne yazılır (`emb: no`). KDP gömülü olmayan tipi İKAME
+        eder — Amazon'un tarif ettiği "question marks or boxes".
+      ② `⚠` (U+26A0) DejaVu Sans MONO'da var, SERIF'te YOK. Gövde serif
+        dizilir. reportlab `.notdef` çizer ve karakter metin
+        çıkarımından TAMAMEN DÜŞER — yani `pdftotext` ile bakan biri
+        kusuru GÖREMEZ. Bu yüzden denetim ÇIKTIDA değil KAYNAKTA yapılır.
+      ③ Kapak güvenli alanı KESİMDEN ölçülüyordu; KDP DIŞ KENARDAN
+        ölçer. 0,25" kesimden = 0,375" dış kenardan, istenen 0,716".
+
+    ⚠ VE BİR KÖRLÜK TESTİ (yönerge § 7): `□` kitapta sekiz kez geçer ve
+    hepsi YAZILMIŞ cevap kutusudur. Dedektör onu tofu sanmamalı —
+    ölçüt görüntü değil, **yüzde glif var mı**.
+    """
+    print("\n⑰ ⭑ KDP DÖNÜŞÜMÜ ⭑")
+
+    import importlib.util as _ilu
+    spec = _ilu.spec_from_file_location(
+        "_qk", os.path.join(BUILD, "qa_kdp_conversion.py"))
+    qk = _ilu.module_from_spec(spec)
+    spec.loader.exec_module(qk)
+
+    # ── ① varsayılan yazı tipi gömülü bir yüz olmalı ───────────────────
+    src = open(os.path.join(BUILD, "interior.py"), encoding="utf-8").read()
+    rep.check("rl_config.canvas_basefontname" in src,
+              "⭑ KANVAS VARSAYILANI DEĞİŞTİRİLMİŞ ⭑ — yoksa reportlab "
+              "her sayfaya GÖMÜLMEYEN Helvetica yazar ve KDP ikame eder")
+    rep.check('canvas_basefontname = "Body"' in src,
+              "varsayılan GÖMÜLÜ bir yüze bağlı (Body)")
+
+    # ── ② dizgi anında glif koruması var mı ────────────────────────────
+    rep.check("def assert_glyphs" in src,
+              "⭑ EKSİK GLİF DİZGİ ANINDA YAKALANIYOR ⭑ — çıktıda değil, "
+              "çünkü eksik glif metin çıkarımından SESSİZCE düşer")
+    rep.check("assert_glyphs(txt," in src,
+              "glif koruması para() yolundan GERÇEKTEN çağrılıyor")
+
+    # ── ③ hata karakterleri listesi yazılmış sembolleri İÇERMEZ ────────
+    rep.check("□" not in qk.ERROR_CHARS,
+              "⭑ `□` HATA KARAKTERİ SAYILMIYOR ⭑ — kitapta sekiz kez "
+              "geçer ve hepsi YAZILMIŞ cevap kutusudur; dedektör "
+              "körleştirilmedi, KESKİNLEŞTİRİLDİ")
+    rep.check("�" in qk.ERROR_CHARS,
+              "gerçek ikame karakteri (U+FFFD) hata sayılıyor")
+
+    # ── ④ basılmayan çizelge atlanıyor, ama YALNIZCA açıkça işaretliyse ─
+    fn = qk.source_strings.__doc__ or ""
+    rep.check("printed" in fn and "false" in fn.lower(),
+              "basılmayan çizelge muafiyeti BELGELİ ve dar")
+
+    # ── ⑤ kapak eşiği KDP'nin sayısı olmalı, bizim payımız değil ───────
+    cov = open(os.path.join(BUILD, "covers.py"), encoding="utf-8").read()
+    rep.check("KDP_EDGE_IN = 0.716" in cov,
+              "⭑ KAPAK EŞİĞİ AMAZON'UN KENDİ SAYISI (0.716\") ⭑")
+    rep.check("KDP_SPINE_IN = 0.40" in cov,
+              "sırt eşiği Amazon'un kendi sayısı (0.40\")")
+    rep.check("COVER_SAFETY_IN" in cov,
+              "eşiğin ÜSTÜNE ayrıca pay ekleniyor (asgariye dayanmak "
+              "asgariyi aşmaktır)")
+
+    # ── ⑥ ⭑ ÇİZİM VE ÖLÇÜM TEK KAYNAKTAN ⭑ ─────────────────────────────
+    # Kusurun kendisi buydu: ölçüm bandın ortasına, çizim panelin
+    # ortasına yapılıyordu ve kapak "ölçüldü, temiz" derken taşıyordu.
+    rep.check("def draw_c(r, font):" in cov,
+              "⭑ ÇİZİM KOORDİNATI PARAMETRE DEĞİL ⭑ — ölçülen kayıttan "
+              "okunur; iki yer aynı yerleşimi tutamaz")
+    rep.check('centred(r, r["cxIn"], r["yIn"], font)' in cov,
+              "çizim, plan()'ın ÖLÇTÜĞÜ koordinatı kullanıyor")
+
+    # ── ⑦ her cilt kendi sayfa sayısını okur ───────────────────────────
+    rep.check("interior-hardcover.json" in cov,
+              "⭑ CİLTLİ KAPAK KENDİ İÇ BLOĞUNUN SAYFA SAYISINI OKUYOR ⭑ "
+              "— ikisi 274'te eşitken görünmeyen, ciltli 276'ya çıkınca "
+              "yanlış sırt üreten kusur")
+
+
+
 def part14_check_is_read_only(rep) -> None:
     """⭑⭑ `--check` KİPİ ÜRETMEZ — VE BU ÖLÇÜLÜR ⭑⭑
 
@@ -3104,6 +3188,7 @@ def main() -> int:
         part12_editorial(rep, tmp)
         part15_verification(rep, tmp)
         part16_print_margins(rep, tmp)
+        part17_kdp_conversion(rep, tmp)
     part13_ci_signatures(rep)
     part14_check_is_read_only(rep)
 

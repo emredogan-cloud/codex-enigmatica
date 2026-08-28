@@ -266,6 +266,14 @@ fi
 # denetlemelidir.
 # ⚠ Pillow + poppler ister; yoksa ATLANIR (çıkış 2). CI'da 08_OUTPUT
 # yoktur ve kapı "taranamadı" der — yerelde koşması ZORUNLUDUR.
+# ⭑ KDP DÖNÜŞÜM KAPISI — Amazon'un 28 Ağu 2026'da reddettiği üç şey ⭑
+# ⚠ Gömülmeyen yazı tipi · eksik glif · kapak güvenli alanı. Üçü de
+# yerel kapılar YEŞİLKEN gerçek KDP incelemesinde patladı, çünkü hiçbir
+# kapı bu soruları sormuyordu. Kapak ölçümü NİHAİ PDF'in metin
+# katmanından yapılır — "guide'ların içinde duruyor gibi" değil.
+[ -f 04_BUILD/qa_kdp_conversion.py ] && \
+  run_optional "⭑ KDP DÖNÜŞÜMÜ ⭑" $VENV_PY 04_BUILD/qa_kdp_conversion.py \
+                                   --json 06_REPORTS/tracked/qa-kdp-conversion.json
 [ -f 04_BUILD/qa_print_margins.py ] && \
   run_optional "⭑ BASKI PAYI ⭑"  $VENV_PY 04_BUILD/qa_print_margins.py \
                                    --json 06_REPORTS/tracked/qa-print-margins.json

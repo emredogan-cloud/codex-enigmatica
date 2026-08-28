@@ -5,6 +5,96 @@ Her faz kendi girdisini ekler. Format: ters kronolojik.
 
 ---
 
+## [1.4.0] — 2026-08-28 · ⛔ GERÇEK KDP REDDİ · KAPAK + DÖNÜŞÜM
+
+# Amazon kitabı reddetti — ve yerel kapıların hepsi yeşildi
+
+→ [`06_REPORTS/KDP_REJECTION_REPAIR_REPORT.md`](06_REPORTS/KDP_REJECTION_REPAIR_REPORT.md)
+
+Sebep utandırıcı ölçüde basit: hiçbir kapı **bu soruları sormuyordu**.
+`covers.py` yalnızca KARŞITLIK ölçüyordu — yazının **okunur** olduğunu
+doğruluyor, **sayfada kaldığını** hiç sormuyordu.
+
+### ⛔ ① `Helvetica` GÖMÜLÜ DEĞİLDİ — 274 sayfanın hepsinde
+
+```
+Helvetica   Type 1   WinAnsi   emb: no   sub: no   uni: no
+```
+
+reportlab kanvası varsayılan olarak onunla açılır ve ad, hiç yazı
+basılmasa bile her sayfanın kaynak sözlüğüne yazılır. KDP gömülü olmayan
+tipi **ikame eder** — Amazon'un tarif ettiği *"question marks or boxes
+in the place of text"* tam olarak budur.
+
+**Onarım:** varsayılan yamalanmadı, **değiştirildi**
+(`rl_config.canvas_basefontname = "Body"`). Helvetica artık doğmuyor.
+
+### ⛔ ② `⚠` (U+26A0) SERİF YÜZLERİNDE YOKTU
+
+DejaVu Sans **Mono**'da var, DejaVu **Serif**'te **yok** — ve gövde
+serif dizilir. reportlab `.notdef` çizer.
+
+⭑ **Ve karakter metin çıkarımından TAMAMEN DÜŞER:** sayfada kutu var,
+`pdftotext` çıktısında hiçbir şey. Kusuru çıktıya bakarak görmek
+İMKÂNSIZDI. Bu yüzden yeni denetim **kaynak metni, basılacağı yüze
+karşı** ölçer — ve dizgi anında bir koruma üretimi durdurur.
+
+### ⛔ ③ KAPAK GÜVENLİ ALANI YANLIŞ YERDEN ÖLÇÜLÜYORDU
+
+`SAFE = 0.25` **kesimden** ölçüyordu; KDP **dış kenardan** ölçer.
+0,125" taşmayla 0,375" ediyordu — istenen **0,716"**, yani yarısından az.
+
+### ⛔ ④ ÖLÇÜM VE ÇİZİM AYRI YERLERDEYDİ — ve kusuru GİZLEDİ
+
+İlk onarımdan sonra kapak *"ölçüldü, temiz"* dedi ama **nihai PDF hâlâ
+taşıyordu**: `plan()` yeni bandın ortasına ölçüyor, çizim döngüsü eski
+panel ortasını (`fcx`) kullanıyordu. Deponun dizgi yardımcılarında
+öğrendiği ders bir kez daha: **aynı yerleşimi iki yerde tutmak, birini
+düzeltip ötekini unutmaktır.** Çizim artık ölçülen kayıttan okur.
+
+### ⛔ ⑤ CİLTLİ KAPAK CİLTSİZİN SAYFA SAYISINI OKUYORDU
+
+İki cilt 274'te eşitken görünmezdi. Ciltli 276'ya çıkınca ciltli kapak
+hâlâ 274'e göre sırt hesapladı: 0,8058" — olması gereken **0,8103"**.
+
+### Ölçülen sonuç
+
+| | Önce | Sonra |
+|---|---|---|
+| Gömülmeyen yazı tipi | 1 (her sayfada) | **0** |
+| Serif yüzlerde eksik glif | 1 (`⚠`) | **0** |
+| Ciltsiz kapak · en dar pay | **−0,151"** | **+0,060"** |
+| Ciltli kapak · en dar pay | **−0,500"** | **+0,092"** |
+| Ciltli sırt | 0,8058" (yanlış) | **0,8103"** |
+
+⚠ **Ciltli 274 → 276 sayfa:** `⚠` kaldırılınca satır sonu değişti.
+Sırt, kapak genişliği, baskı maliyeti, telif ve **arka kapağa basılan
+sayfa sayısı** yeniden hesaplandı.
+
+### ⚠ Bir yanlış pozitif — dedektör KESKİNLEŞTİRİLDİ, körleştirilmedi
+
+`□` için 8 uyarı çıktı; sekizi de **yazılmış cevap kutusudur** ve her
+yüzde glifi vardır. Ölçüt görüntü değil, **yüzde glif olup olmadığıdır**.
+Aynı biçimde `printed: false` aday çizelgesi kapsama denetiminden
+**açıkça ve dar** bir kuralla çıkarıldı.
+
+⭑ Kitabın 67 ASCII dışı karakterinin **66'sı bulmaca sembolüdür ve
+hepsi korunmuştur.** Kaldırılan tek işaret editoryal bir vurguydu;
+hiçbir bulmaca zayıflatılmadı.
+
+### Eklendi — `04_BUILD/qa_kdp_conversion.py`
+
+Yazı tipi gömme · glif kapsaması · ikame karakteri · görsel gömme ·
+**nihai PDF'in metin katmanından kapak güvenli alanı**.
+`selftest` **289 → 302**.
+
+### Değişti — KDP el kitabı
+
+Yeni bölüm: **"KDP'nin Gerçek Önizlemesinde Hata Çıkarsa"** (MD + HTML).
+Bildirilen sayfanın bir **örnek** olduğunu iki ölçülmüş örnekle anlatır.
+
+---
+
 ## [1.3.1] — 2026-08-27 · ⛔ KDP REDDİ · BASKI PAYI ONARILDI
 
 # KDP Previewer haklıydı — ve bildirdiğinden çok daha fazlası vardı

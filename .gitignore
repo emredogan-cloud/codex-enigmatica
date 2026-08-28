@@ -155,6 +155,9 @@
 # PROJECT_CONTEXT ve CHANGELOG ona bağ verir; gitignore'da kalması
 # klonda kırık bağ demektir. Cevap TAŞIMAZ ve kanarya her koşuda tarar.
 # ⭑ PROJE KAPANIŞ RAPORU ⭑ — projenin son sözü; klonda bulunmalı.
+# ⭑ KDP RET ONARIM RAPORU ⭑ — gerçek bir Amazon reddinin kaydı;
+# bir sonraki oturum bu kusurları TEKRAR üretmemek için okumalı.
+!06_REPORTS/KDP_REJECTION_REPAIR_REPORT.md
 !06_REPORTS/FINAL_PROJECT_CLOSURE_REPORT.md
 !06_REPORTS/FINAL_RELEASE_READINESS_REPORT.md
 !06_REPORTS/B2_VERIFICATION_WEBSITE_REPORT.md
@@ -240,3 +243,7 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# ⚠ Kurucunun ilettiği KDP ret ekran görüntüleri — kanıt, kaynak değil.
+# Gmail arayüzü ve hesap ayrıntıları taşırlar; depoya girmezler.
+Screenshot from *.png

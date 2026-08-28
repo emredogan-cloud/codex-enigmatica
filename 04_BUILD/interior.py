@@ -147,6 +147,7 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
+    from reportlab import rl_config
     from reportlab.platypus import (BaseDocTemplate, Frame, PageTemplate,
                                     Paragraph, Spacer, Image, PageBreak,
                                     KeepTogether, Preformatted, NextPageTemplate)
@@ -160,6 +161,23 @@ def build(book: dict, sols: dict, gutter: float, path: str,
                                    os.path.join(F, "DejaVuSerif-Italic.ttf")))
     pdfmetrics.registerFont(TTFont("Mono",
                                    os.path.join(F, "DejaVuSansMono.ttf")))
+    # ⭑ GÖMÜLMEYEN HELVETICA'YI KÖKÜNDEN KALDIR ⭑
+    # ⚠ BU BİR KDP RET SEBEBİYDİ. reportlab kanvası varsayılan yazı
+    # tipi olarak `Helvetica` ile açılır ve o ad, hiç yazı basılmasa
+    # bile her sayfanın kaynak sözlüğüne yazılır. `pdffonts` çıktısı
+    # bunu açıkça söylüyordu:
+    #
+    #   Helvetica   Type 1   WinAnsi   emb: no   sub: no   uni: no
+    #
+    # KDP bütün yazı tiplerinin GÖMÜLÜ olmasını ister; gömülü olmayan
+    # bir tip okuyucuda İKAME EDİLİR ve ikame, Amazon'un ret mesajında
+    # tarif ettiği şeyi üretir: "question marks or boxes in the place
+    # of text".
+    #
+    # Çözüm yamalamak değil, varsayılanı DEĞİŞTİRMEKTİR: kanvas artık
+    # gömülü bir tiple açılır, Helvetica hiç doğmaz.
+    rl_config.canvas_basefontname = "Body"
+
     pdfmetrics.registerFontFamily("Body", normal="Body", bold="Body-B",
                                   italic="Body-I")
 
@@ -190,6 +208,33 @@ def build(book: dict, sols: dict, gutter: float, path: str,
                                 textColor="#6d6459"),
     }
     mono = ParagraphStyle("mono", fontName="Mono", fontSize=7.1, leading=8.6)
+
+    # ⭑ EKSİK GLİF SESSİZCE KAYBOLMAZ ⭑
+    # ⚠ İKİNCİ KDP RET SEBEBİ BUYDU. `⚠` (U+26A0) DejaVu Sans MONO'da
+    # vardır ama DejaVu SERIF'te YOKTUR — ve gövde metni serif dizilir.
+    # reportlab eksik glifi `.notdef` olarak çizer: sayfada boş bir kutu,
+    # metin çıkarımında ise HİÇBİR ŞEY (karakter tamamen düşer, yani
+    # `pdftotext` ile bakan biri kusuru GÖREMEZ).
+    #
+    # Bu yüzden denetim ÇIKTIDA değil, DİZGİ ANINDA yapılır: bir yüzün
+    # taşımadığı glif basılmaya kalkılırsa üretim DURUR.
+    _face_cache = {}
+
+    def assert_glyphs(text, font_name, where):
+        if not text:
+            return
+        face = _face_cache.get(font_name)
+        if face is None:
+            face = _face_cache[font_name] = pdfmetrics.getFont(font_name).face
+        miss = sorted({c for c in str(text)
+                       if ord(c) > 127 and not face.charToGlyph.get(ord(c))})
+        if miss:
+            raise AssertionError(
+                "EKSİK GLİF — %s yüzü şu karakter(ler)i taşımıyor: %s "
+                "(U+%s) · nerede: %s. Yüzü değiştirin ya da metni "
+                "düzeltin; sessizce basmak KDP reddidir."
+                % (font_name, " ".join(miss),
+                   " ".join("%04X" % ord(c) for c in miss), where))
 
     # ── sayfa şablonu: ⭑ İÇ KENAR AYNALANIR ⭑ ──────────────────────────
     # ⚠ Tek ve çift sayfalarda cilt payı KARŞI kenardadır. Tek bir sabit
@@ -257,8 +302,17 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     S = []
     A = S.append
 
+    # Hangi stil hangi yüzle dizilir — glif denetimi bunu bilmek zorunda.
+    _STYLE_FONT = {"body": "Body", "lead": "Body-I", "h1": "Body-B",
+                   "h2": "Body-B", "h3": "Body-B", "label": "Body-B",
+                   "centre": "Body", "small": "Body"}
+
     def para(txt, sty="body"):
         if txt:
+            # ⚠ Metin `e()`den GEÇMEDEN denetlenir: `e()` **kalın**
+            # işaretlerini <b>…</b>'ye çevirir, yani denetlenen dize
+            # basılacak dizeden farklı olurdu. Kaynak metin denetlenir.
+            assert_glyphs(txt, _STYLE_FONT.get(sty, "Body"), "para/%s" % sty)
             A(Paragraph(e(txt), st[sty]))
 
     def block(txt, keep=True):

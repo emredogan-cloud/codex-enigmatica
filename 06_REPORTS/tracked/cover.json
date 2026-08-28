@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "checks": 7,
+  "checks": 8,
   "errors": [],
   "warnings": [],
   "facts": {
@@ -30,17 +30,36 @@
       1.2
     ],
     "spineTextPrinted": true,
+    "safeArea": {
+      "edgeMinIn": 0.716,
+      "spineMinIn": 0.4,
+      "toleranceIn": 0.06,
+      "frontBandIn": [
+        7.27,
+        12.159
+      ],
+      "backBandIn": [
+        0.776,
+        5.665
+      ],
+      "vBandIn": [
+        0.776,
+        8.474
+      ],
+      "frontSpineEdgeIn": 6.81,
+      "spineLeftEdgeIn": 6.125
+    },
     "staleCalculator": false,
     "spineDeltaIn": 0,
     "deltaPages": 0,
     "paperMatchesCalculator": true,
     "calcBasis": null,
     "boardIn": null,
-    "worstContrast": 1.02,
-    "haloUsed": 18,
-    "typeRowsTotal": 19,
+    "worstContrast": 1.0,
+    "haloUsed": 19,
+    "typeRowsTotal": 20,
     "edgeContrastMin": 17.69,
     "art": "codex-enigmatica-wrap-cover-option-01-4x-300dpi.png",
-    "typeRows": 19
+    "typeRows": 20
   }
 }

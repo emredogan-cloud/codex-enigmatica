@@ -903,6 +903,61 @@ def render_md(meta: dict, files: dict, secs: list) -> str:
     L += ["", "> Görsellerde **metin yoktur**; bu metin Amazon'un kendi",
           "> başlık ve gövde alanlarına girilir.", ""]
 
+    L += ["## I.5 · ⛔ KDP'NİN GERÇEK ÖNİZLEMESİNDE HATA ÇIKARSA", "",
+          "> **Bu bölüm bir tahmin değil, yaşanmış bir reddin kaydıdır.**",
+          "> 28 Ağustos 2026'da KDP kitabı reddetti — ve o gün bütün",
+          "> yerel kapılar **yeşildi**.", "",
+          "### 1 · Yerel yeşile GÜVENMEYİN", "",
+          "Yerel kapılar yalnızca **sordukları soruları** yanıtlar.",
+          "O gün hiçbiri şunu sormuyordu: *yazı tipleri gömülü mü*,",
+          "*her glif yüzünde var mı*, *metin sayfada kalıyor mu*.",
+          "Kapak kapısı yalnızca **karşıtlık** ölçüyordu: yazının",
+          "**okunur** olduğunu doğruluyor, **sayfada kaldığını** hiç",
+          "sormuyordu.", "",
+          "⭑ **Gerçek KDP Previewer, yerel preflight'tan ÜSTÜNDÜR.**", "",
+          "### 2 · Hatayı BİREBİR kaydedin", "",
+          "Amazon'un cümlesini ve verdiği **sayıları** olduğu gibi not",
+          "edin — 0,716 in gibi bir sayı, düzeltmenin tek yetkesidir.",
+          "Verdiği sayfa numarasını da yazın.", "",
+          "### 3 · ⚠ Bildirilen sayfa bir ÖRNEKTİR, envanter DEĞİL", "",
+          "İki kez yaşandı ve iki kez de aynı çıktı:", "",
+          "| KDP'nin dediği | Ölçülen gerçek |",
+          "|---|---|",
+          "| \"5 sayfa\" (pay) | **140 sayfa** |",
+          "| \"s. 135\" (dönüşüm) | **274 sayfanın hepsi** |", "",
+          "Bildirilen sayfayı düzeltip durmak, kusuru bırakmaktır.", "",
+          "### 4 · KAYNAĞA dönün, PDF'i yamamayın", "",
+          "Düzeltme `04_BUILD/` ve `01_SOURCE/` içindedir. Nihai PDF'i",
+          "elle düzenlemek, bir sonraki üretimde kusuru geri getirir.", "",
+          "### 5 · Yeniden üretin ve ÖLÇÜN", "", "```",
+          "python3 04_BUILD/interior.py",
+          "python3 04_BUILD/interior.py --binding hardcover",
+          "python3 04_BUILD/covers.py",
+          "python3 04_BUILD/covers.py --binding hardcover",
+          "python3 04_BUILD/kindle.py",
+          "python3 04_BUILD/qa_kdp_conversion.py     # yazı tipi · glif · kapak",
+          "python3 04_BUILD/qa_print_margins.py      # her sayfanın mürekkebi",
+          "./04_BUILD/qa_all.sh --fix",
+          "python3 04_BUILD/kdp_package.py           # sağlama toplamları",
+          "```", "",
+          "### 6 · ⚠ Sayfa sayısı değişebilir — ve her şey ona bağlıdır",
+          "",
+          "Tek bir karakter kaldırmak satır sonunu değiştirir. Bu onarımda",
+          "ciltli **274 → 276** sayfaya çıktı ve şunların hepsi yeniden",
+          "hesaplandı: **sırt · kapak genişliği · baskı maliyeti · telif ·",
+          "arka kapağa basılan sayfa sayısı**. Sayfa sayısı değişirse",
+          "kapağı da yeniden üretin.", "",
+          "### 7 · Düzeltilmiş dosyayı yükleyin ve BİLDİRİLEN SAYFAYA bakın",
+          "",
+          "KDP Bookshelf → ilgili sürüm → *Upload a revised manuscript* /",
+          "*Update a revised cover*. Sonra Previewer'da **Amazon'un",
+          "saydığı sayfaları** tek tek açın.", "",
+          "### 8 · KDP geçene kadar tekrarlayın", "",
+          "> ⛔ **Yerel yeşil, yayımlama izni değildir.** Previewer gerçek",
+          "> bir kusur gösteriyorsa yayımlamayın — kapıyı gevşetmek,",
+          "> eşiği düşürmek ya da denetimi kaldırmak **çözüm değildir**.",
+          ""]
+
     L += ["## J · 📂 DOSYA HARİTASI — hangi dosya, nereye", "",
           "Her satır **tek bir dosyayı tek bir KDP alanına** bağlar.",
           "Yol proje kökünden görelidir.", "",
@@ -1066,7 +1121,8 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
       % (e(meta["title"]), e(meta["author"]), meta["pageCount"]))
 
     navs = [("durum", "Durum"), ("dogrulama", "Doğrulama"),
-            ("dosyalar", "Dosya haritası"), ("fiyat", "Fiyat"),
+            ("ret", "KDP reddi"), ("dosyalar", "Dosya haritası"),
+            ("fiyat", "Fiyat"),
             ("kurucu", "Kurucu işi")]
     navs += [(c.lower(), "%s · %s" % (c, n)) for c, n, _i, _x in secs]
     navs += [("alan", "Alanlar"), ("aplus", "A+ metni"),
@@ -1195,6 +1251,47 @@ def render_html(meta: dict, files: dict, secs: list) -> str:
     # ⚠ "Genel açıklama kullanma" (yönerge § 4): her satır TEK bir
     # dosyayı TEK bir KDP alanına bağlar. Kurucu paneldeyken hangi
     # dosyayı nereye sürükleyeceğini düşünmek zorunda kalmamalıdır.
+    # ── ⛔ GERÇEK ÖNİZLEMEDE HATA ÇIKARSA ⭑ (yönerge § 16) ────────────
+    A('<h2 id="ret">⛔ KDP\'nin gerçek önizlemesinde hata çıkarsa</h2>')
+    A('<div class="note stop"><b>Bu bölüm bir tahmin değil, yaşanmış bir '
+      'reddin kaydıdır.</b><br>28 Ağustos 2026\'de KDP kitabı reddetti — '
+      've o gün bütün yerel kapılar <b>yeşildi</b>. Yerel kapılar '
+      'yalnızca <b>sordukları soruları</b> yanıtlar.</div>')
+    RET = [
+        ("1 · Yerel yeşile güvenmeyin",
+         "Gerçek KDP Previewer yerel preflight'tan ÜSTÜNDÜR. Kapak kapısı "
+         "o gün yalnızca karşıtlık ölçüyordu: yazının OKUNUR olduğunu "
+         "doğruluyor, SAYFADA KALDIĞINI hiç sormuyordu."),
+        ("2 · Hatayı birebir kaydedin",
+         "Amazon'un cümlesini ve verdiği SAYILARI olduğu gibi not edin. "
+         "0,716 in gibi bir sayı düzeltmenin tek yetkesidir."),
+        ("3 · ⚠ Bildirilen sayfa bir ÖRNEKTİR, envanter değil",
+         "İki kez yaşandı: \"5 sayfa\" denildi, ölçüm 140 buldu; "
+         "\"s. 135\" denildi, kusur 274 sayfanın hepsindeydi. Bildirilen "
+         "sayfayı düzeltip durmak, kusuru bırakmaktır."),
+        ("4 · Kaynağa dönün, PDF'i yamamayın",
+         "Düzeltme 04_BUILD/ ve 01_SOURCE/ içindedir. Nihai PDF'i elle "
+         "düzenlemek, bir sonraki üretimde kusuru geri getirir."),
+        ("5 · Yeniden üretin ve ölçün",
+         "interior.py (iki cilt) → covers.py (iki cilt) → kindle.py → "
+         "qa_kdp_conversion.py → qa_print_margins.py → qa_all.sh --fix → "
+         "kdp_package.py"),
+        ("6 · ⚠ Sayfa sayısı değişebilir",
+         "Tek bir karakter satır sonunu değiştirir. Bu onarımda ciltli "
+         "274 → 276 oldu ve sırt, kapak genişliği, baskı maliyeti, telif "
+         "ve arka kapağa basılan sayfa sayısı yeniden hesaplandı."),
+        ("7 · Yükleyin ve bildirilen sayfaya bakın",
+         "Bookshelf → Upload a revised manuscript / Update a revised "
+         "cover. Sonra Previewer'da Amazon'un saydığı sayfaları açın."),
+        ("8 · KDP geçene kadar tekrarlayın",
+         "Yerel yeşil yayımlama izni DEĞİLDİR. Previewer gerçek bir kusur "
+         "gösteriyorsa yayımlamayın — kapıyı gevşetmek, eşiği düşürmek ya "
+         "da denetimi kaldırmak çözüm değildir."),
+    ]
+    for head, body in RET:
+        A('<div class="card"><h3>%s</h3><p>%s</p></div>'
+          % (e(head), e(body)))
+
     A('<h2 id="dosyalar">📂 Dosya haritası — hangi dosya, nereye</h2>')
     A('<p class="sub">Her satır tek bir dosyayı tek bir KDP alanına '
       'bağlar. Yol proje kökünden görelidir.</p>')

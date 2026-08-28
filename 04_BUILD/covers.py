@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -42,6 +43,27 @@ STATS = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "cover.json")
 TRIM_W, TRIM_H = 6.0, 9.0
 BLEED = 0.125
 SAFE = 0.25                       # kesim çizgisinden metne asgari uzaklık
+
+# ⭑ KDP'NİN GERÇEK REDDİNDEN GELEN GÜVENLİ ALAN ⭑
+# ⚠ BU SAYILAR TAHMİN DEĞİL, AMAZON'UN KENDİ RET MESAJINDAN ALINDI
+# (28 Ağustos 2026, "Attention needed: Please review your title"):
+#
+#   "Please make sure that all elements intended to be viewable appear
+#    at least 0.716in (18.175mm) away from the outside edges. All front
+#    cover text must also stop at least 0.4in (10mm) away from the edge
+#    of the spine."
+#
+# ⚠ VE ÖLÇÜ **DIŞ KENARDAN**DIR, kesim çizgisinden değil. Buradaki
+# `SAFE = 0.25` kesimden ölçüyordu: 0,125" taşmayla birlikte dış
+# kenardan yalnızca 0,375" ediyordu — KDP'nin istediğinin YARISINDAN AZ.
+# Reddin sebebi tam olarak buydu.
+KDP_EDGE_IN = 0.716               # dış kenardan görünür her öğeye
+KDP_SPINE_IN = 0.40               # sırt kenarından ÖN KAPAK METNİNE
+
+# ⚠ Asgariye dayanmak asgariyi aşmaktır (iç blokta aynı ders alındı):
+# yazı tipi ölçüleri, yuvarlama ve raster kenarı birkaç binde bir inç
+# oynatır. Pay eklenir.
+COVER_SAFETY_IN = 0.06
 
 # ⚠ KDP kâğıt kalınlıkları (sayfa başına inç). Krem kâğıt kalındır;
 # beyaz kâğıdın değeriyle hesaplamak sırtı DAR yapar ve sanat kayar.
@@ -203,6 +225,33 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
     bcx = back_x0 + G["front_w"] / 2
     scx = spine_x0 + G["spine_w"] / 2
 
+    # ── ⭑ KDP GÜVENLİ BANDI ⭑ ──────────────────────────────────────────
+    # ⚠ CİLTLİ İÇİN SAYI KOPYALANMAZ, TÜRETİLİR (yönerge § 9).
+    # Ciltli kapakta dış 0,591" **tahtanın arkasına SARILIR** ve
+    # görünmez; görünür alan ondan sonra başlar, üstüne hesaplayıcının
+    # kendi kenar payı (0,125") biner:
+    #     0,591 + 0,125 = 0,716"
+    # Ciltsizde ise KDP'nin ret mesajındaki sayı doğrudan 0,716"dır.
+    # İki bağımsız yoldan aynı sayıya varılır; yine de ikisi AYRI
+    # hesaplanır ve büyüğü alınır — biri değişirse öteki sürüklenmesin.
+    edge_min = (max(KDP_EDGE_IN, G["wrap"] + G["margin"])
+                if G["binding"] == "hardcover" else KDP_EDGE_IN)
+    lo = edge_min + COVER_SAFETY_IN
+    front_l = front_x0 + KDP_SPINE_IN + COVER_SAFETY_IN
+    front_r = W - lo
+    front_cx = (front_l + front_r) / 2
+    front_maxw = front_r - front_l
+    back_l = lo
+    back_r = spine_x0 - KDP_SPINE_IN - COVER_SAFETY_IN
+    top_lim = H - lo
+    bot_lim = lo
+    SAFE_BOX = {"edgeMinIn": round(edge_min, 4),
+                "spineMinIn": KDP_SPINE_IN,
+                "toleranceIn": COVER_SAFETY_IN,
+                "frontBandIn": [round(front_l, 4), round(front_r, 4)],
+                "backBandIn": [round(back_l, 4), round(back_r, 4)],
+                "vBandIn": [round(bot_lim, 4), round(top_lim, 4)]}
+
     measured = []
 
     def fit(txt, font, maxw_in, start, floor=9):
@@ -211,6 +260,21 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
             sz -= 0.5
         return sz
 
+    def ink_box(txt, font, size_pt, cx_in, y_in, rot=False):
+        """Bir satırın GERÇEK mürekkep kutusu (inç) — tahmin değil.
+
+        ⚠ Yükseklik yazı tipinin KENDİ ascent/descent değerlerinden
+        alınır; "boyutun %75'i" gibi bir yaklaşıklık KDP'nin 0,716"
+        eşiğinde binde birlerle oynar ve yanlış yeşil üretir.
+        """
+        w = pdfmetrics.stringWidth(txt, font, size_pt) / inch
+        face = pdfmetrics.getFont(font).face
+        asc = face.ascent / 1000.0 * size_pt / 72.0
+        dsc = abs(face.descent) / 1000.0 * size_pt / 72.0
+        if rot:                       # sırt yazısı 90° döner
+            return (cx_in - asc, y_in - w / 2, cx_in + dsc, y_in + w / 2)
+        return (cx_in - w / 2, y_in - dsc, cx_in + w / 2, y_in + asc)
+
     def plan(txt, bold, size_pt, cx_in, y_in, label, rot=False):
         """⭑ ÖLÇ, MÜREKKEBİ SEÇ, HÂLEYİ HAZIRLA ⭑ — sanat üstünde."""
         if not txt:
@@ -218,7 +282,17 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
         r = CT.place(im, txt, BOLD if bold else REG,
                      max(6, int(round(size_pt * PPI / 72.0))),
                      *px(cx_in, y_in), rotate=rot)
-        r.update(text=txt, label=label, sizePt=round(size_pt, 1))
+        # ⭑ ÖLÇÜLEN KOORDİNAT KAYDA GİRER ⭑
+        # ⚠ BU SATIR BİR KUSURDAN DOĞDU: ölçüm bandın ortasına, ÇİZİM
+        # ise panelin ortasına yapılıyordu (`front_cx` ↔ `fcx`). İki yer
+        # aynı yerleşimi tutunca biri düzeltilip öteki unutuldu ve kapak
+        # "ölçüldü, temiz" derken PDF'te taşıyordu. Artık tek kaynak:
+        # çizim bu kaydı okur.
+        r.update(text=txt, label=label, sizePt=round(size_pt, 1),
+                 cxIn=cx_in, yIn=y_in,
+                 boxIn=[round(v, 4) for v in
+                        ink_box(txt, "C-B" if bold else "C", size_pt,
+                                cx_in, y_in, rot)])
         measured.append(r)
         return r
 
@@ -227,16 +301,21 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
     pub = meta.get("publisher") or ""
     sub = meta.get("subtitle") or ""
 
-    t_size = fit(title, "C-B", G["front_w"] - 2 * SAFE - 0.30, 46, 16)
+    # ⚠ GENİŞLİK ARTIK ÖN PANELDEN DEĞİL, KDP BANDINDAN GELİR.
+    # Eskiden `front_w - 2*SAFE - 0.30` idi: 30,5 punto başlık 5,119"
+    # eder ve sağ dış kenara yalnızca 0,565" bırakırdı — KDP 0,716"
+    # istiyor. Başlık şimdi banda sığdırılır ve BANDIN ortasına
+    # yerleşir (panelin ortasına değil; ikisi artık aynı yer değildir).
+    t_size = fit(title, "C-B", front_maxw, 46, 16)
     t_y = H - edge - 1.45
-    r_title = plan(title, True, t_size, fcx, t_y, "ön başlık")
+    r_title = plan(title, True, t_size, front_cx, t_y, "ön başlık")
 
     sub_lines = []
     if sub:
         words, line = sub.split(), ""
         for w in words:
             t = (line + " " + w).strip()
-            if pdfmetrics.stringWidth(t, "C", 13) > (G["front_w"] - 1.35) * inch:
+            if pdfmetrics.stringWidth(t, "C", 13) > front_maxw * inch:
                 sub_lines.append(line)
                 line = w
             else:
@@ -245,12 +324,21 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
     r_sub = []
     sy = t_y - 0.62
     for ln in sub_lines[:3]:
-        r_sub.append(plan(ln, False, 13, fcx, sy, "alt başlık"))
+        r_sub.append(plan(ln, False, 13, front_cx, sy, "alt başlık"))
         sy -= 0.27
 
-    a_y = edge + 0.95
-    r_auth = plan(author, True, 21, fcx, a_y, "ön yazar")
-    r_pub = plan(pub, False, 10.5, fcx, edge + 0.60, "yayıncı")
+    # ⚠ DİKEY YERLEŞİM DE ÖLÇÜLÜR. Yayıncı satırı `edge + 0.60`da
+    # duruyordu; ciltsizde mürekkebin altı 0,689"e iniyor ve 0,716"
+    # eşiğini 0,027" ihlal ediyordu. Taban artık eşikten TÜRETİLİR.
+    def lift(size_pt, want_bottom):
+        """Mürekkebin altı `want_bottom`ın altına inmeyecek taban çizgisi."""
+        dsc = abs(pdfmetrics.getFont("C").face.descent) / 1000.0 * size_pt / 72.0
+        return want_bottom + dsc
+
+    pub_y = max(edge + 0.60, lift(10.5, bot_lim))
+    a_y = max(edge + 0.95, pub_y + 0.35)
+    r_auth = plan(author, True, 21, front_cx, a_y, "ön yazar")
+    r_pub = plan(pub, False, 10.5, front_cx, pub_y, "yayıncı")
 
     # ── SIRT ───────────────────────────────────────────────────────────
     spine_ok = G["spine_w"] >= 0.0625
@@ -265,8 +353,19 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
 
     # ── ARKA KAPAK metni ───────────────────────────────────────────────
     desc = (meta.get("description") or "").strip()
-    bx0 = back_x0 + SAFE + 0.28
-    bx1 = back_x0 + G["front_w"] - SAFE - 0.10
+    # ⚠ SAYFA SAYISI CİLDE GÖRE DÜZELTİLİR.
+    # `description` tek bir alandır ve ciltsizin sayfa sayısını taşır
+    # ("… · 274 pages"). Ciltli 276 sayfaya çıkınca aynı cümle CİLTLİ
+    # KAPAĞA basılacaktı: basılı, yanlış ve geri alınamaz bir sayı.
+    _ed_pages = next((e.get("pages") for e in (meta.get("editions") or [])
+                      if e.get("id") == G["binding"]), None)
+    if _ed_pages and _ed_pages != meta.get("pageCount"):
+        desc = re.sub(r"\b%d pages\b" % meta["pageCount"],
+                      "%d pages" % _ed_pages, desc)
+    # ⚠ Arka kapak da aynı fiziksel kesim riskini taşır. Eskiden
+    # `back_x0 + SAFE + 0.28` = 0,655" idi; 0,716" eşiğinin altında.
+    bx0 = max(back_x0 + SAFE + 0.28, back_l)
+    bx1 = min(back_x0 + G["front_w"] - SAFE - 0.10, back_r)
     bw_in = bx1 - bx0
     fs = 10.0
     lines = []
@@ -283,8 +382,9 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
             lines.append(line)
         lines.append("")
 
-    by = H - edge - 1.30
-    stop = edge + SAFE + G["barcode_h"] + 0.30
+    by = min(H - edge - 1.30, top_lim - 0.30)
+    stop = max(edge + SAFE + G["barcode_h"] + 0.30,
+               bot_lim + G["barcode_h"] + 0.20)
     back_rows = []
     for ln in lines:
         if by < stop:
@@ -293,7 +393,9 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
             w_in = pdfmetrics.stringWidth(ln, "C", fs) / inch
             r = CT.place(im, ln, REG, max(6, int(round(fs * PPI / 72.0))),
                          *px(bx0 + w_in / 2, by))
-            r.update(text=ln, label="arka kopya", sizePt=fs)
+            r.update(text=ln, label="arka kopya", sizePt=fs,
+                     boxIn=[round(v, 4) for v in
+                            ink_box(ln, "C", fs, bx0 + w_in / 2, by)])
             measured.append(r)
             back_rows.append((ln, by, r))
             by -= fs * 1.5 / 72.0
@@ -338,16 +440,16 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
         w = pdfmetrics.stringWidth(txt, font, r["sizePt"])
         haloed(cx_in * inch - w / 2, y_in * inch, txt, r, font)
 
-    def draw_c(r, cx_in, y_in, font):
-        centred(r, cx_in, y_in, font)
+    def draw_c(r, font):
+        """⚠ Koordinat ARTIK PARAMETRE DEĞİL — ölçülen kayıttan gelir."""
+        if r:
+            centred(r, r["cxIn"], r["yIn"], font)
 
-    draw_c(r_title, fcx, t_y, "C-B")
-    sy = t_y - 0.62
+    draw_c(r_title, "C-B")
     for r in r_sub:
-        draw_c(r, fcx, sy, "C")
-        sy -= 0.27
-    draw_c(r_auth, fcx, a_y, "C-B")
-    draw_c(r_pub, fcx, edge + 0.60, "C")
+        draw_c(r, "C")
+    draw_c(r_auth, "C-B")
+    draw_c(r_pub, "C")
 
     if spine_ok and r_spine:
         cv.saveState()
@@ -379,6 +481,9 @@ def build(art: str, pages: int, paper: str, meta: dict, path: str,
             "spineSafeIn": [G["spine_safe_w"], G["spine_safe_h"]],
             "barcodeBoxIn": [G["barcode_w"], G["barcode_h"]],
             "spineTextPrinted": spine_ok,
+            "safeArea": dict(SAFE_BOX,
+                             frontSpineEdgeIn=round(front_x0, 4),
+                             spineLeftEdgeIn=round(spine_x0, 4)),
             "staleCalculator": G.get("stale", False),
             "spineDeltaIn": G.get("spineDeltaIn", 0),
             "deltaPages": G.get("deltaPages", 0),
@@ -420,7 +525,16 @@ def main() -> int:
 
     rep = pl.Report(args.verbose)
     meta = pl.load_json(META) or {}
-    inter = (pl.load_json(INTERIOR) or {}).get("facts") or {}
+    # ⭑ HER CİLT KENDİ İÇ BLOĞUNUN SAYFA SAYISINI KULLANIR ⭑
+    # ⚠ BURASI HER ZAMAN `interior.json`u (CİLTSİZ) okuyordu. İki cilt
+    # aynı sayfa sayısında olduğu sürece kusur GÖRÜNMEZDİ — ve tam
+    # olarak öyleydi, ikisi de 274'tü. Ciltli 276'ya çıkınca ciltli
+    # kapak hâlâ 274'e göre sırt hesapladı: 0,8058" yerine 0,8103"
+    # olmalıydı. Sessiz, ölçülene kadar görünmez ve BASKIDA yanlış.
+    inter_path = (INTERIOR if args.binding == "paperback"
+                  else INTERIOR.replace("interior.json",
+                                        "interior-hardcover.json"))
+    inter = (pl.load_json(inter_path) or {}).get("facts") or {}
     pages = args.pages or inter.get("pages") or 0
 
     # ── ⭑ `--check` ÜRETMEZ ⭑ ─────────────────────────────────────────
@@ -530,6 +644,77 @@ def main() -> int:
                      % (CALC_PAGES, CALC_PAPER, pages, info.get("paper"),
                         BOARD_IN, info["spineIn"], d,
                         abs(d) / 0.0625 * 100, pages, info.get("paper")))
+    # ── ⭑ KDP GÜVENLİ ALANI · HER SATIR ÖLÇÜLÜR ⭑ ──────────────────────
+    # ⚠ BU DENETİM BİR KDP REDDİNDEN DOĞDU. Önceki kapı yalnızca
+    # KARŞITLIK ölçüyordu — yani yazının OKUNUR olduğunu doğruluyor,
+    # SAYFADA KALDIĞINI hiç sormuyordu. Amazon 28 Ağu 2026'da tam olarak
+    # bunu reddetti: "text/graphics that extend beyond the trim line".
+    #
+    # ⚠ Ve "guide'ların içinde duruyor gibi" yetmez (yönerge § 8):
+    # her satırın GERÇEK mürekkep kutusu, yazı tipinin kendi
+    # ascent/descent değerleriyle hesaplanır ve eşiğe vurulur.
+    sa = info.get("safeArea") or {}
+    if sa:
+        front_spine_edge = sa["frontSpineEdgeIn"]
+        spine_left_edge = sa["spineLeftEdgeIn"]
+        W, H = info["widthIn"], info["heightIn"]
+        fl, fr = sa["frontBandIn"]
+        bl, br = sa["backBandIn"]
+        vb, vt = sa["vBandIn"]
+        FRONT = {"ön başlık", "alt başlık", "ön yazar", "yayıncı"}
+        BACK = {"arka kopya"}
+        bad = []
+        for m in info["typeMeasured"]:
+            box = m.get("boxIn")
+            if not box:
+                continue
+            x0, y0, x1, y1 = box
+            lab = m.get("label", "")
+            if lab in FRONT:
+                lo_x, hi_x = fl, fr
+            elif lab in BACK:
+                lo_x, hi_x = bl, br
+            else:
+                continue                      # sırt: hesaplayıcının kendi alanı
+            if x0 < lo_x - 1e-6 or x1 > hi_x + 1e-6 or y0 < vb - 1e-6 \
+                    or y1 > vt + 1e-6:
+                bad.append("%s[%s] x %.3f–%.3f y %.3f–%.3f"
+                           % (lab, m["text"][:18], x0, x1, y0, y1))
+        rep.check(not bad,
+                  "⭑ HER ÖN/ARKA KAPAK SATIRI KDP GÜVENLİ ALANINDA ⭑ "
+                  "(dış kenar ≥%.3f\" · sırt ≥%.2f\")"
+                  % (sa["edgeMinIn"], sa["spineMinIn"])
+                  + ("" if not bad else " — ⛔ %d ihlal: %s"
+                     % (len(bad), bad[:3])))
+        print("\n── ⭑ KDP GÜVENLİ ALANI ⭑ ──")
+        print("  %-26s %.3f in" % ("dış kenar asgarisi", sa["edgeMinIn"]))
+        print("  %-26s %.3f in" % ("sırt asgarisi (ön metin)", sa["spineMinIn"]))
+        print("  %-26s %.3f … %.3f in" % ("ön kapak bandı", fl, fr))
+        print("  %-26s %.3f … %.3f in" % ("arka kapak bandı", bl, br))
+        print("  %-26s %.3f … %.3f in" % ("dikey band", vb, vt))
+        # ⚠ PAY **KDP'NİN EŞİĞİNE** GÖRE RAPORLANIR, BİZİM BANDIMIZA
+        # GÖRE DEĞİL. Kendi payımıza göre ölçmek, bandı genişletince
+        # sayının kendiliğinden düzelmesi demektir — kapının kendi
+        # kendini yeşil yakması. İç blokta aynı ders alınmıştı.
+        emin, smin = sa["edgeMinIn"], sa["spineMinIn"]
+        worst = (None, None)
+        for m in info["typeMeasured"]:
+            box, lab = m.get("boxIn"), m.get("label")
+            if not box or lab not in FRONT | BACK:
+                continue
+            x0, y0, x1, y1 = box
+            if lab in FRONT:
+                gaps = [x0 - (front_spine_edge + smin), (W - x1) - emin]
+            else:
+                gaps = [x0 - emin, (spine_left_edge - smin) - x1]
+            gaps += [y0 - emin, (H - y1) - emin]
+            g = min(gaps)
+            if worst[0] is None or g < worst[0]:
+                worst = (g, lab)
+        if worst[0] is not None:
+            print("  %-26s %+.3f in (%s) — KDP eşiğine göre"
+                  % ("en dar pay", worst[0], worst[1]))
+
     rep.check(info["spineIn"] > 0.06,
               "sırt yazı basmaya yeter (%.4f in)" % info["spineIn"])
     rep.check(os.path.isfile(out) and open(out, "rb").read(4) == b"%PDF",

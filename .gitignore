@@ -247,3 +247,11 @@ __pycache__/
 # ⚠ Kurucunun ilettiği KDP ret ekran görüntüleri — kanıt, kaynak değil.
 # Gmail arayüzü ve hesap ayrıntıları taşırlar; depoya girmezler.
 Screenshot from *.png
+
+# ⚠ READY/ 08_OUTPUT gibi bir ÜRÜN paketidir ve kapalıdır.
+# İçindeki iç blok 67 MB'lık bir PDF; depoya girmesi anlamsız ve GitHub'ın
+# blob sınırlarına yaklaşır. Kaynak ve üretim betiği izlenir, ürün izlenmez —
+# betik deterministik olduğu için ürün her zaman yeniden üretilebilir.
+READY/**/*
+!READY/**/*.json
+!READY/**/*.md

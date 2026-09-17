@@ -4,19 +4,19 @@
   "errors": [],
   "warnings": [],
   "facts": {
-    "pages": 274,
-    "gutterIn": 0.625,
+    "pages": 478,
+    "gutterIn": 0.75,
     "binding": "paperback",
     "hintsTypeset": 303,
     "solutionsTypeset": 100,
     "metaWithheld": [
       "meta-001"
     ],
-    "pdfMB": 70.39,
+    "pdfMB": 67.48,
     "trim": [
       6.0,
       9.0
     ],
-    "path": "08_OUTPUT/PAPERBACK/interior.pdf"
+    "path": "08_OUTPUT/LARGEPRINT/interior.pdf"
   }
 }

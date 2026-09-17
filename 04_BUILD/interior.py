@@ -41,6 +41,20 @@ BOOK = os.path.join(pl.ROOT, "02_MANUSCRIPT", "book.json")
 SOLDIR = os.path.join(pl.ROOT, "01_SOURCE", "solutions")
 PLATES = os.path.join(pl.ROOT, "07_ASSETS", "plates")
 OUTDIR = os.path.join(pl.ROOT, "08_OUTPUT", "PAPERBACK")
+
+# ⭑ LARGE PRINT ⭑ — every type size below is multiplied by this. 1.0 is the
+# standard edition and nothing about it changes. The large-print edition sets
+# it so the 9.5 pt body lands on 16 pt, the floor RNIB Clear Print and APH use.
+# The engraved plates need no separate rule: they are already scaled to the
+# text measure (`sc = min(maxw/iw, maxh/ih)`), so they follow the block.
+TYPE_SCALE = 1.0
+
+# Large print is set RAGGED RIGHT. RNIB Clear Print and the APH large-print
+# guidance both call for left-aligned text: justifying 16 pt across this book's
+# 4.6 in measure leaves five or six words to absorb the slack and the gaps
+# between them turn into rivers. The standard edition stays justified.
+BODY_ALIGN = None          # None = leave each style's own alignment alone
+
 META = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "metadata.json")
 STATS = os.path.join(pl.ROOT, "06_REPORTS", "tracked", "interior.json")
 CACHE = os.path.join(pl.ROOT, "07_ASSETS", "processed", "pdf-cache")
@@ -185,29 +199,70 @@ def build(book: dict, sols: dict, gutter: float, path: str,
     body_w = W - (gutter + OUT_M) * inch
 
     st = {
-        "body": ParagraphStyle("body", fontName="Body", fontSize=9.5,
-                               leading=14.2, alignment=TA_JUSTIFY,
-                               spaceAfter=5),
-        "lead": ParagraphStyle("lead", fontName="Body-I", fontSize=9.5,
-                               leading=14.5, alignment=TA_JUSTIFY,
-                               spaceAfter=7, textColor="#3a332a"),
-        "h1": ParagraphStyle("h1", fontName="Body-B", fontSize=19,
-                             leading=24, alignment=TA_CENTER, spaceAfter=16),
-        "h2": ParagraphStyle("h2", fontName="Body-B", fontSize=12.5,
-                             leading=17, spaceBefore=4, spaceAfter=7),
-        "h3": ParagraphStyle("h3", fontName="Body-B", fontSize=10,
-                             leading=14, spaceBefore=8, spaceAfter=3),
-        "label": ParagraphStyle("label", fontName="Body-B", fontSize=7.6,
-                                leading=11, spaceAfter=2,
+        "body": ParagraphStyle("body", fontName="Body", fontSize=9.5 * TYPE_SCALE,
+                               leading=14.2 * TYPE_SCALE, alignment=TA_JUSTIFY,
+                               spaceAfter=5.0 * TYPE_SCALE),
+        "lead": ParagraphStyle("lead", fontName="Body-I", fontSize=9.5 * TYPE_SCALE,
+                               leading=14.5 * TYPE_SCALE, alignment=TA_JUSTIFY,
+                               spaceAfter=7.0 * TYPE_SCALE, textColor="#3a332a"),
+        "h1": ParagraphStyle("h1", fontName="Body-B", fontSize=19.0 * TYPE_SCALE,
+                             leading=24.0 * TYPE_SCALE, alignment=TA_CENTER, spaceAfter=16.0 * TYPE_SCALE),
+        "h2": ParagraphStyle("h2", fontName="Body-B", fontSize=12.5 * TYPE_SCALE,
+                             leading=17.0 * TYPE_SCALE, spaceBefore=4.0 * TYPE_SCALE, spaceAfter=7.0 * TYPE_SCALE),
+        "h3": ParagraphStyle("h3", fontName="Body-B", fontSize=10.0 * TYPE_SCALE,
+                             leading=14.0 * TYPE_SCALE, spaceBefore=8.0 * TYPE_SCALE, spaceAfter=3.0 * TYPE_SCALE),
+        "label": ParagraphStyle("label", fontName="Body-B", fontSize=7.6 * TYPE_SCALE,
+                                leading=11.0 * TYPE_SCALE, spaceAfter=2.0 * TYPE_SCALE,
                                 textColor="#6d6459"),
-        "centre": ParagraphStyle("centre", fontName="Body", fontSize=9.5,
-                                 leading=15, alignment=TA_CENTER,
-                                 spaceAfter=6),
-        "small": ParagraphStyle("small", fontName="Body", fontSize=8,
-                                leading=12, alignment=TA_CENTER,
+        "centre": ParagraphStyle("centre", fontName="Body", fontSize=9.5 * TYPE_SCALE,
+                                 leading=15.0 * TYPE_SCALE, alignment=TA_CENTER,
+                                 spaceAfter=6.0 * TYPE_SCALE),
+        "small": ParagraphStyle("small", fontName="Body", fontSize=8.0 * TYPE_SCALE,
+                                leading=12.0 * TYPE_SCALE, alignment=TA_CENTER,
                                 textColor="#6d6459"),
     }
-    mono = ParagraphStyle("mono", fontName="Mono", fontSize=7.1, leading=8.6)
+    mono = ParagraphStyle("mono", fontName="Mono", fontSize=7.1 * TYPE_SCALE,
+                      leading=8.6 * TYPE_SCALE)
+
+    # ⭑ ŞEKİL, ÖLÇÜYE SIĞDIRILIR — SIĞDIRILMAZSA OLUĞA TAŞAR ⭑
+    # ⚠ BU BİR KDP RET SEBEBİYDİ VE PAY AYARI SANILDI. `Preformatted` ne
+    # sarar ne de küçültür: satırı verilen punto ile aynen çizer. Gövde
+    # punto ölçeği büyük punto baskıda 16/9,5 = 1,684 olunca 7,1 pt'lik
+    # şekil yazısı 11,96 pt'ye çıktı ve 61 karakterlik bir çerçeve satırı
+    # 351 pt'lik ölçüye karşı 438 pt oldu: 25. sayfada kesim hattının
+    # DIŞINA, 44. sayfada oluğun İÇİNE taştı. Pay 0,75" idi ve hiç
+    # oynamadı; şekil çerçeveden kendi çıktı.
+    #
+    # ⚠ ÇÖZÜM SABİT BİR KÜÇÜLTME DEĞİLDİR. Her şekil KENDİ en uzun
+    # satırına göre ölçülür: 48 karaktere kadar olanlar tam 11,96 pt'de
+    # kalır (şekil satırlarının %90'ı), yalnız geniş olanlar iner ve en
+    # geniş şekil bile 9,5 pt'nin altına düşmez — yani büyük punto baskı
+    # her şekilde standart baskının 7,1 pt'sinin ÜSTÜNDE kalır. Bir
+    # erişilebilir baskı, standart baskıdan küçük diyagram basamaz.
+    _mono_cache = {}
+
+    def mono_fit(txt):
+        """Bu şeklin en uzun satırını ölçüye sığdıran mono biçem."""
+        lines = [x.rstrip() for x in str(txt).splitlines()]
+        widest = max(lines, key=lambda l: pdfmetrics.stringWidth(l, "Mono", 100.0),
+                     default="")
+        w100 = pdfmetrics.stringWidth(widest, "Mono", 100.0)
+        size = 7.1 * TYPE_SCALE
+        if w100 > 0:
+            # 0,5 pt emniyet: yaslama yok ama son glifin ilerleme genişliği
+            # mürekkebi birkaç yüzde inç aşabiliyor (§ SAFETY_IN).
+            size = min(size, 100.0 * (body_w - 0.5) / w100)
+        size = max(size, 7.1)          # standart baskının altına asla inme
+        key = round(size, 3)
+        if key not in _mono_cache:
+            _mono_cache[key] = ParagraphStyle(
+                "mono%s" % key, fontName="Mono", fontSize=key,
+                leading=key * (8.6 / 7.1))
+        return _mono_cache[key]
+
+    if BODY_ALIGN is not None:
+        for _k in ("body", "lead"):
+            st[_k].alignment = BODY_ALIGN
 
     # ⭑ EKSİK GLİF SESSİZCE KAYBOLMAZ ⭑
     # ⚠ İKİNCİ KDP RET SEBEBİ BUYDU. `⚠` (U+26A0) DejaVu Sans MONO'da
@@ -330,7 +385,8 @@ def build(book: dict, sols: dict, gutter: float, path: str,
         and keeping them together would overflow the frame."""
         if not txt:
             return
-        lines = [Preformatted(x.rstrip() or " ", mono)
+        _st = mono_fit(txt)
+        lines = [Preformatted(x.rstrip() or " ", _st)
                  for x in str(txt).splitlines()]
         A(Spacer(1, 4))
         if keep and len(lines) <= 40:
@@ -567,7 +623,8 @@ def build(book: dict, sols: dict, gutter: float, path: str,
             for lab, key in (("FIGURE", "figure"), ("CHART", "printedTable")):
                 if not p.get(key):
                     continue
-                lines = [Preformatted(x.rstrip() or " ", mono)
+                _st = mono_fit(p[key])
+                lines = [Preformatted(x.rstrip() or " ", _st)
                          for x in str(p[key]).splitlines()]
                 A(Spacer(1, 4))
                 grp = [Paragraph(lab, st["label"])] + lines
@@ -737,6 +794,9 @@ def main() -> int:
                     help="ÜRETME — çıktı var mı ve ölçümle tutarlı mı")
     ap.add_argument("--binding", default="paperback",
                     choices=("paperback", "hardcover"))
+    ap.add_argument("--edition", default="standard",
+                    choices=("standard", "largeprint"),
+                    help="largeprint: 9.5 pt body -> 16 pt, own output folder")
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
@@ -760,8 +820,15 @@ def main() -> int:
 
     # ⭑ İKİ GEÇİŞ ⭑ birincisi sayfayı SAYAR, ikincisi doğru payla dizer.
     meta = pl.load_json(META) or {}
-    args.out = args.out or os.path.join(
-        pl.ROOT, "08_OUTPUT", args.binding.upper(), "interior.pdf")
+    if args.edition == "largeprint":
+        globals()["TYPE_SCALE"] = 16.0 / 9.5      # body 9.5 pt -> 16.0 pt
+        from reportlab.lib.enums import TA_LEFT
+        globals()["BODY_ALIGN"] = TA_LEFT         # ragged right, see BODY_ALIGN
+        args.out = args.out or os.path.join(
+            pl.ROOT, "08_OUTPUT", "LARGEPRINT", "interior.pdf")
+    else:
+        args.out = args.out or os.path.join(
+            pl.ROOT, "08_OUTPUT", args.binding.upper(), "interior.pdf")
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
 
     # ── ⭑ `--check` ÜRETMEZ ⭑ ─────────────────────────────────────────
